@@ -16,10 +16,10 @@ public class HTMLExport extends FileExport {
 	@Override
 	void writeHeader(String[] columnNames) {
 		mPrintWriter.println("<html><body><table>");
-		mPrintWriter.println("<th>");
+		mPrintWriter.println("  <tr>");
 		for (String columnName : columnNames)
-			mPrintWriter.println("<td>" + columnName + "</td>");
-		mPrintWriter.println("</tr>");
+			mPrintWriter.println("    <th>" + columnName + "</th>");
+		mPrintWriter.println("  </tr>");
 	}
 
 	@Override
