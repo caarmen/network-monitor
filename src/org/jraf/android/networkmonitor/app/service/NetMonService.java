@@ -35,13 +35,13 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import org.jraf.android.networkmonitor.Constants;
+import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -73,40 +73,18 @@ public class NetMonService extends Service {
 	private TelephonyManager mTelephonyManager;
 	private ConnectivityManager mConnectivityManager;
 	private volatile boolean mDestroyed;
-	private static final String COLUMN_DATE = "Date";
-	private static final String COLUMN_NETWORK_TYPE = "Network Type";
-	private static final String COLUMN_MOBILE_DATA_NETWORK_TYPE = "Mobile Data Network Type";
-	private static final String COLUMN_GOOGLE_CONNECTION_TEST = "Google Connection Test";
-	private static final String COLUMN_SIM_STATE = "Sim State";
-	private static final String COLUMN_DETAILED_STATE = "Detailed State";
-	private static final String COLUMN_IS_CONNECTED = "Is Connected";
-	private static final String COLUMN_IS_ROAMING = "Is Roaming";
-	private static final String COLUMN_IS_AVAILABLE = "Is Available";
-	private static final String COLUMN_IS_FAILOVER = "Is Failover";
-	private static final String COLUMN_DATA_ACTIVITY = "Data Activity";
-	private static final String COLUMN_DATA_STATE = "Data State";
-	private static final String COLUMN_REASON = "Reason";
-	private static final String COLUMN_EXTRA_INFO = "Extra Info";
-	private static final String COLUMN_IS_NETWORK_METERED = "Is Metered";
-	private static final String COLUMN_CDMA_CELL_BASE_STATION_ID = "CDMA Cell Base Station Id";
-	private static final String COLUMN_CDMA_CELL_LATITUDE = "CDMA Cell Latitude";
-	private static final String COLUMN_CDMA_CELL_LONGITUDE = "CDMA Cell Longitude";
-	private static final String COLUMN_CDMA_CELL_NETWORK_ID = "CDMA Cell Network Id";
-	private static final String COLUMN_CDMA_CELL_SYSTEM_ID = "CDMA Cell System Id";
-	private static final String COLUMN_GSM_CELL_ID = "GSM Cell Id";
-	private static final String COLUMN_GSM_CELL_LAC = "GSM Cell Lac";
-	private static final String COLUMN_GSM_CELL_PSC = "GSM Cell Psc";
 
-	private static final String[] COLUMNS = new String[] { COLUMN_DATE,
-			COLUMN_NETWORK_TYPE, COLUMN_MOBILE_DATA_NETWORK_TYPE,
-			COLUMN_GOOGLE_CONNECTION_TEST, COLUMN_SIM_STATE,
-			COLUMN_DETAILED_STATE, COLUMN_IS_CONNECTED, COLUMN_IS_ROAMING,
-			COLUMN_IS_AVAILABLE, COLUMN_IS_FAILOVER, COLUMN_DATA_ACTIVITY,
-			COLUMN_DATA_STATE, COLUMN_REASON, COLUMN_EXTRA_INFO,
-			COLUMN_IS_NETWORK_METERED, COLUMN_CDMA_CELL_BASE_STATION_ID,
-			COLUMN_CDMA_CELL_LATITUDE, COLUMN_CDMA_CELL_LONGITUDE,
-			COLUMN_CDMA_CELL_NETWORK_ID, COLUMN_CDMA_CELL_SYSTEM_ID,
-			COLUMN_GSM_CELL_ID, COLUMN_GSM_CELL_LAC, COLUMN_GSM_CELL_PSC };
+
+	private static final String[] COLUMNS = new String[] { NetMonColumns.TIMESTAMP,
+			NetMonColumns.NETWORK_TYPE, NetMonColumns.MOBILE_DATA_NETWORK_TYPE,
+			NetMonColumns.GOOGLE_CONNECTION_TEST, NetMonColumns.SIM_STATE,
+			NetMonColumns.DETAILED_STATE, NetMonColumns.IS_CONNECTED, NetMonColumns.IS_ROAMING,
+			NetMonColumns.IS_AVAILABLE, NetMonColumns.IS_FAILOVER, NetMonColumns.DATA_ACTIVITY,
+			NetMonColumns.DATA_STATE, NetMonColumns.REASON, NetMonColumns.EXTRA_INFO,
+			NetMonColumns.IS_NETWORK_METERED, NetMonColumns.CDMA_CELL_BASE_STATION_ID,
+			NetMonColumns.CDMA_CELL_LATITUDE, NetMonColumns.CDMA_CELL_LONGITUDE,
+			NetMonColumns.CDMA_CELL_NETWORK_ID, NetMonColumns.CDMA_CELL_SYSTEM_ID,
+			NetMonColumns.GSM_CELL_ID, NetMonColumns.GSM_CELL_LAC, NetMonColumns.GSM_CELL_PSC };
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -159,17 +137,17 @@ public class NetMonService extends Service {
 
 	protected void monitorLoop() {
 		while (!mDestroyed) {
-			Map<String, Object> values = new HashMap<String, Object>();
-			values.put(COLUMN_DATE, DATE_FORMAT.format(new Date()));
-			values.put(COLUMN_GOOGLE_CONNECTION_TEST, isNetworkUp() ? "PASS"
+			ContentValues values = new ContentValues();
+			values.put(NetMonColumns.TIMESTAMP, DATE_FORMAT.format(new Date()));
+			values.put(NetMonColumns.GOOGLE_CONNECTION_TEST, isNetworkUp() ? "PASS"
 					: "FAIL");
 			values.putAll(getActiveNetworkInfo());
-			values.put(COLUMN_MOBILE_DATA_NETWORK_TYPE, getDataNetworkType());
+			values.put(NetMonColumns.MOBILE_DATA_NETWORK_TYPE, getDataNetworkType());
 			values.putAll(getCellLocation());
-			values.put(COLUMN_DATA_ACTIVITY, getDataActivity());
-			values.put(COLUMN_DATA_STATE, getDataState());
-			values.put(COLUMN_SIM_STATE, getSimState());
-			values.put(COLUMN_IS_NETWORK_METERED,
+			values.put(NetMonColumns.DATA_ACTIVITY, getDataActivity());
+			values.put(NetMonColumns.DATA_STATE, getDataState());
+			values.put(NetMonColumns.SIM_STATE, getSimState());
+			values.put(NetMonColumns.IS_NETWORK_METERED,
 					mConnectivityManager.isActiveNetworkMetered());
 			writeValuesToFile(values);
 
@@ -188,11 +166,12 @@ public class NetMonService extends Service {
 		}
 	}
 
-	private void writeValuesToFile(Map<String, Object> values) {
-		Log.d(TAG, "writeValuesToFile " + values);
+	private void writeValuesToFile(ContentValues contentValues) {
+		Log.d(TAG, "writeValuesToFile " + contentValues);
+		
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < COLUMNS.length; i++) {
-			Object value = values.get(COLUMNS[i]);
+			Object value = contentValues.get(COLUMNS[i]);
 			String valueString = value == null ? UNKNOWN : String
 					.valueOf(value);
 			if (valueString.contains(",")) {
@@ -202,9 +181,12 @@ public class NetMonService extends Service {
 			sb.append(valueString);
 			if (i < COLUMNS.length - 1)
 				sb.append(",");
+			contentValues.put(COLUMNS[i],valueString);
 		}
 		mOutputStream.println(sb);
 		mOutputStream.flush();
+		
+		getContentResolver().insert(NetMonColumns.CONTENT_URI, contentValues);
 	}
 
 	private long getUpdateInterval() {
@@ -257,22 +239,22 @@ public class NetMonService extends Service {
 		}
 	}
 
-	private Map<String, Object> getActiveNetworkInfo() {
-		Map<String, Object> values = new HashMap<String, Object>();
+	private ContentValues getActiveNetworkInfo() {
+		ContentValues values = new ContentValues();
 
 		NetworkInfo activeNetworkInfo = mConnectivityManager
 				.getActiveNetworkInfo();
 		if (activeNetworkInfo == null)
 			return values;
-		values.put(COLUMN_NETWORK_TYPE, activeNetworkInfo.getTypeName() + "/"
+		values.put(NetMonColumns.NETWORK_TYPE, activeNetworkInfo.getTypeName() + "/"
 				+ activeNetworkInfo.getSubtypeName());
-		values.put(COLUMN_IS_ROAMING, activeNetworkInfo.isRoaming());
-		values.put(COLUMN_IS_AVAILABLE, activeNetworkInfo.isAvailable());
-		values.put(COLUMN_IS_CONNECTED, activeNetworkInfo.isConnected());
-		values.put(COLUMN_IS_FAILOVER, activeNetworkInfo.isFailover());
-		values.put(COLUMN_DETAILED_STATE, activeNetworkInfo.getDetailedState());
-		values.put(COLUMN_REASON, activeNetworkInfo.getReason());
-		values.put(COLUMN_EXTRA_INFO, activeNetworkInfo.getExtraInfo());
+		values.put(NetMonColumns.IS_ROAMING, activeNetworkInfo.isRoaming());
+		values.put(NetMonColumns.IS_AVAILABLE, activeNetworkInfo.isAvailable());
+		values.put(NetMonColumns.IS_CONNECTED, activeNetworkInfo.isConnected());
+		values.put(NetMonColumns.IS_FAILOVER, activeNetworkInfo.isFailover());
+		values.put(NetMonColumns.DETAILED_STATE, activeNetworkInfo.getDetailedState().toString());
+		values.put(NetMonColumns.REASON, activeNetworkInfo.getReason());
+		values.put(NetMonColumns.EXTRA_INFO, activeNetworkInfo.getExtraInfo());
 		return values;
 	}
 
@@ -370,25 +352,25 @@ public class NetMonService extends Service {
 		}
 	}
 
-	private Map<String, Object> getCellLocation() {
-		Map<String, Object> values = new HashMap<String, Object>();
+	private ContentValues getCellLocation() {
+		ContentValues values = new ContentValues();
 		CellLocation cellLocation = mTelephonyManager.getCellLocation();
 		if (cellLocation instanceof GsmCellLocation) {
 			GsmCellLocation gsmCellLocation = (GsmCellLocation) cellLocation;
-			values.put(COLUMN_GSM_CELL_ID, gsmCellLocation.getCid());
-			values.put(COLUMN_GSM_CELL_LAC, gsmCellLocation.getLac());
-			values.put(COLUMN_GSM_CELL_PSC, gsmCellLocation.getPsc());
+			values.put(NetMonColumns.GSM_CELL_ID, gsmCellLocation.getCid());
+			values.put(NetMonColumns.GSM_CELL_LAC, gsmCellLocation.getLac());
+			values.put(NetMonColumns.GSM_CELL_PSC, gsmCellLocation.getPsc());
 		} else if (cellLocation instanceof CdmaCellLocation) {
 			CdmaCellLocation cdmaCellLocation = (CdmaCellLocation) cellLocation;
-			values.put(COLUMN_CDMA_CELL_BASE_STATION_ID,
+			values.put(NetMonColumns.CDMA_CELL_BASE_STATION_ID,
 					cdmaCellLocation.getBaseStationId());
-			values.put(COLUMN_CDMA_CELL_LATITUDE,
+			values.put(NetMonColumns.CDMA_CELL_LATITUDE,
 					cdmaCellLocation.getBaseStationLatitude());
-			values.put(COLUMN_CDMA_CELL_LONGITUDE,
+			values.put(NetMonColumns.CDMA_CELL_LONGITUDE,
 					cdmaCellLocation.getBaseStationLongitude());
-			values.put(COLUMN_CDMA_CELL_NETWORK_ID,
+			values.put(NetMonColumns.CDMA_CELL_NETWORK_ID,
 					cdmaCellLocation.getNetworkId());
-			values.put(COLUMN_CDMA_CELL_SYSTEM_ID,
+			values.put(NetMonColumns.CDMA_CELL_SYSTEM_ID,
 					cdmaCellLocation.getSystemId());
 		}
 		return values;

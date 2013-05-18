@@ -35,6 +35,7 @@
             android:name="org.jraf.android.networkmonitor.app.log.LogActivity"
             android:label="@string/log_title" >
         </activity>
+        <provider android:name=".provider.NetMonProvider" android:authorities="org.jraf.android.networkmonitor.provider"></provider>
     </application>
 
 </manifest>
