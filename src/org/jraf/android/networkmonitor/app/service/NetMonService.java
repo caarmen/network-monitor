@@ -23,29 +23,24 @@
  */
 package org.jraf.android.networkmonitor.app.service;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
+import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -53,15 +48,12 @@ import android.telephony.CellLocation;
 import android.telephony.TelephonyManager;
 import android.telephony.cdma.CdmaCellLocation;
 import android.telephony.gsm.GsmCellLocation;
-import android.text.TextUtils;
 import android.util.Log;
 
 public class NetMonService extends Service {
 	private static final String TAG = Constants.TAG
 			+ NetMonService.class.getSimpleName();
 
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
-			"yyyy-MM-dd' 'HH:mm:ss", Locale.US);
 	// private static final String HOST = "www.google.com";
 	private static final String HOST = "173.194.34.16";
 	private static final int PORT = 80;
@@ -69,22 +61,9 @@ public class NetMonService extends Service {
 	private static final String HTTP_GET = "GET / HTTP/1.1\r\n\r\n";
 	private static final String UNKNOWN = "";
 
-	private PrintWriter mOutputStream;
 	private TelephonyManager mTelephonyManager;
 	private ConnectivityManager mConnectivityManager;
 	private volatile boolean mDestroyed;
-
-
-	private static final String[] COLUMNS = new String[] { NetMonColumns.TIMESTAMP,
-			NetMonColumns.NETWORK_TYPE, NetMonColumns.MOBILE_DATA_NETWORK_TYPE,
-			NetMonColumns.GOOGLE_CONNECTION_TEST, NetMonColumns.SIM_STATE,
-			NetMonColumns.DETAILED_STATE, NetMonColumns.IS_CONNECTED, NetMonColumns.IS_ROAMING,
-			NetMonColumns.IS_AVAILABLE, NetMonColumns.IS_FAILOVER, NetMonColumns.DATA_ACTIVITY,
-			NetMonColumns.DATA_STATE, NetMonColumns.REASON, NetMonColumns.EXTRA_INFO,
-			NetMonColumns.IS_NETWORK_METERED, NetMonColumns.CDMA_CELL_BASE_STATION_ID,
-			NetMonColumns.CDMA_CELL_LATITUDE, NetMonColumns.CDMA_CELL_LONGITUDE,
-			NetMonColumns.CDMA_CELL_NETWORK_ID, NetMonColumns.CDMA_CELL_SYSTEM_ID,
-			NetMonColumns.GSM_CELL_ID, NetMonColumns.GSM_CELL_LAC, NetMonColumns.GSM_CELL_PSC };
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -102,12 +81,6 @@ public class NetMonService extends Service {
 		new Thread() {
 			@Override
 			public void run() {
-				try {
-					initFile();
-				} catch (IOException e) {
-					Log.e(TAG, "run Could not init file", e);
-					return;
-				}
 				mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 				mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 				monitorLoop();
@@ -123,33 +96,27 @@ public class NetMonService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		return START_STICKY;
-	}
-
-	protected void initFile() throws IOException {
-		File file = new File(getExternalFilesDir(null), Constants.FILE_NAME_LOG);
-		mOutputStream = new PrintWriter(new BufferedWriter(new FileWriter(file,
-				true)));
-		String header = TextUtils.join(",", COLUMNS);
-		mOutputStream.println(header);
-		mOutputStream.flush();
+		return Service.START_STICKY;
 	}
 
 	protected void monitorLoop() {
 		while (!mDestroyed) {
 			ContentValues values = new ContentValues();
-			values.put(NetMonColumns.TIMESTAMP, DATE_FORMAT.format(new Date()));
-			values.put(NetMonColumns.GOOGLE_CONNECTION_TEST, isNetworkUp() ? "PASS"
-					: "FAIL");
+			values.put(NetMonColumns.TIMESTAMP, System.currentTimeMillis());
+			values.put(NetMonColumns.GOOGLE_CONNECTION_TEST,
+					isNetworkUp() ? "PASS" : "FAIL");
 			values.putAll(getActiveNetworkInfo());
-			values.put(NetMonColumns.MOBILE_DATA_NETWORK_TYPE, getDataNetworkType());
+			values.put(NetMonColumns.MOBILE_DATA_NETWORK_TYPE,
+					getDataNetworkType());
 			values.putAll(getCellLocation());
 			values.put(NetMonColumns.DATA_ACTIVITY, getDataActivity());
 			values.put(NetMonColumns.DATA_STATE, getDataState());
 			values.put(NetMonColumns.SIM_STATE, getSimState());
-			values.put(NetMonColumns.IS_NETWORK_METERED,
-					mConnectivityManager.isActiveNetworkMetered());
-			writeValuesToFile(values);
+			if (Build.VERSION.SDK_INT >= 16)
+				values.put(NetMonColumns.IS_NETWORK_METERED,
+						isActiveNetworkMetered());
+			getContentResolver().insert(NetMonColumns.CONTENT_URI, values);
+
 
 			// Sleep
 			long updateInterval = getUpdateInterval();
@@ -166,27 +133,9 @@ public class NetMonService extends Service {
 		}
 	}
 
-	private void writeValuesToFile(ContentValues contentValues) {
-		Log.d(TAG, "writeValuesToFile " + contentValues);
-		
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < COLUMNS.length; i++) {
-			Object value = contentValues.get(COLUMNS[i]);
-			String valueString = value == null ? UNKNOWN : String
-					.valueOf(value);
-			if (valueString.contains(",")) {
-				valueString.replaceAll("\"", "\"\"");
-				valueString = "\"" + valueString + "\"";
-			}
-			sb.append(valueString);
-			if (i < COLUMNS.length - 1)
-				sb.append(",");
-			contentValues.put(COLUMNS[i],valueString);
-		}
-		mOutputStream.println(sb);
-		mOutputStream.flush();
-		
-		getContentResolver().insert(NetMonColumns.CONTENT_URI, contentValues);
+	@TargetApi(16)
+	private boolean isActiveNetworkMetered() {
+		return mConnectivityManager.isActiveNetworkMetered();
 	}
 
 	private long getUpdateInterval() {
@@ -246,13 +195,14 @@ public class NetMonService extends Service {
 				.getActiveNetworkInfo();
 		if (activeNetworkInfo == null)
 			return values;
-		values.put(NetMonColumns.NETWORK_TYPE, activeNetworkInfo.getTypeName() + "/"
-				+ activeNetworkInfo.getSubtypeName());
+		values.put(NetMonColumns.NETWORK_TYPE, activeNetworkInfo.getTypeName()
+				+ "/" + activeNetworkInfo.getSubtypeName());
 		values.put(NetMonColumns.IS_ROAMING, activeNetworkInfo.isRoaming());
 		values.put(NetMonColumns.IS_AVAILABLE, activeNetworkInfo.isAvailable());
 		values.put(NetMonColumns.IS_CONNECTED, activeNetworkInfo.isConnected());
 		values.put(NetMonColumns.IS_FAILOVER, activeNetworkInfo.isFailover());
-		values.put(NetMonColumns.DETAILED_STATE, activeNetworkInfo.getDetailedState().toString());
+		values.put(NetMonColumns.DETAILED_STATE, activeNetworkInfo
+				.getDetailedState().toString());
 		values.put(NetMonColumns.REASON, activeNetworkInfo.getReason());
 		values.put(NetMonColumns.EXTRA_INFO, activeNetworkInfo.getExtraInfo());
 		return values;
@@ -359,7 +309,8 @@ public class NetMonService extends Service {
 			GsmCellLocation gsmCellLocation = (GsmCellLocation) cellLocation;
 			values.put(NetMonColumns.GSM_CELL_ID, gsmCellLocation.getCid());
 			values.put(NetMonColumns.GSM_CELL_LAC, gsmCellLocation.getLac());
-			values.put(NetMonColumns.GSM_CELL_PSC, gsmCellLocation.getPsc());
+			if (Build.VERSION.SDK_INT >= 9)
+				values.put(NetMonColumns.GSM_CELL_PSC, getPsc(gsmCellLocation));
 		} else if (cellLocation instanceof CdmaCellLocation) {
 			CdmaCellLocation cdmaCellLocation = (CdmaCellLocation) cellLocation;
 			values.put(NetMonColumns.CDMA_CELL_BASE_STATION_ID,
@@ -376,11 +327,14 @@ public class NetMonService extends Service {
 		return values;
 	}
 
+	@TargetApi(9)
+	private int getPsc(GsmCellLocation gsmCellLocation) {
+		return gsmCellLocation.getPsc();
+	}
+
 	@Override
 	public void onDestroy() {
 		mDestroyed = true;
-		if (mOutputStream != null)
-			mOutputStream.close();
 		super.onDestroy();
 	}
 }

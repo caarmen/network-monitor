@@ -26,6 +26,9 @@ package org.jraf.android.networkmonitor.app.log;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
@@ -49,6 +52,8 @@ public class LogActivity extends Activity {
 	private static final String TAG = Constants.TAG
 			+ LogActivity.class.getSimpleName();
 	private static final String CSV_FILE = "networkmonitor.csv";
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
+			"yyyy-MM-dd' 'HH:mm:ss", Locale.US);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +75,8 @@ public class LogActivity extends Activity {
 
 				@Override
 				protected File doInBackground(Void... params) {
-					if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
+					if (!Environment.MEDIA_MOUNTED.equals(Environment
+							.getExternalStorageState()))
 						return null;
 
 					File file = new File(getExternalFilesDir(null), CSV_FILE);
@@ -87,9 +93,18 @@ public class LogActivity extends Activity {
 									StringBuilder sb = new StringBuilder();
 
 									for (int i = 0; i < columnNames.length; i++) {
-										String cellValue = c
-												.getString(c
-														.getColumnIndex(columnNames[i]));
+										String cellValue;
+										if (NetMonColumns.TIMESTAMP
+												.equals(columnNames[i])) {
+											long timestamp = c.getLong(i);
+											Date date = new Date(timestamp);
+											cellValue = DATE_FORMAT
+													.format(date);
+										} else {
+											cellValue = c.getString(i);
+										}
+										if (cellValue == null)
+											cellValue = "";
 										if (cellValue.contains(",")) {
 											cellValue.replaceAll("\"", "\"\"");
 											cellValue = "\"" + cellValue + "\"";
@@ -114,7 +129,8 @@ public class LogActivity extends Activity {
 					}
 					Intent sendIntent = new Intent();
 					sendIntent.setAction(Intent.ACTION_SEND);
-					sendIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject_send_log));
+					sendIntent.putExtra(Intent.EXTRA_SUBJECT,
+							getString(R.string.subject_send_log));
 					sendIntent.putExtra(Intent.EXTRA_STREAM,
 							Uri.parse("file://" + file.getAbsolutePath()));
 					sendIntent.setType("message/rfc822");
