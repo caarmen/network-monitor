@@ -76,11 +76,18 @@ public class NetMonService extends Service {
 	private static final String COLUMN_DATE = "Date";
 	private static final String COLUMN_NETWORK_TYPE = "Network Type";
 	private static final String COLUMN_MOBILE_DATA_NETWORK_TYPE = "Mobile Data Network Type";
-	private static final String COLUMN_CONNECTION_STATUS = "Connection Status";
+	private static final String COLUMN_GOOGLE_CONNECTION_TEST = "Google Connection Test";
 	private static final String COLUMN_SIM_STATE = "Sim State";
+	private static final String COLUMN_DETAILED_STATE = "Detailed State";
+	private static final String COLUMN_IS_CONNECTED = "Is Connected";
 	private static final String COLUMN_IS_ROAMING = "Is Roaming";
+	private static final String COLUMN_IS_AVAILABLE = "Is Available";
+	private static final String COLUMN_IS_FAILOVER = "Is Failover";
 	private static final String COLUMN_DATA_ACTIVITY = "Data Activity";
 	private static final String COLUMN_DATA_STATE = "Data State";
+	private static final String COLUMN_REASON = "Reason";
+	private static final String COLUMN_EXTRA_INFO = "Extra Info";
+	private static final String COLUMN_IS_NETWORK_METERED = "Is Metered";
 	private static final String COLUMN_CDMA_CELL_BASE_STATION_ID = "CDMA Cell Base Station Id";
 	private static final String COLUMN_CDMA_CELL_LATITUDE = "CDMA Cell Latitude";
 	private static final String COLUMN_CDMA_CELL_LONGITUDE = "CDMA Cell Longitude";
@@ -92,12 +99,14 @@ public class NetMonService extends Service {
 
 	private static final String[] COLUMNS = new String[] { COLUMN_DATE,
 			COLUMN_NETWORK_TYPE, COLUMN_MOBILE_DATA_NETWORK_TYPE,
-			COLUMN_CONNECTION_STATUS, COLUMN_SIM_STATE, COLUMN_IS_ROAMING,
-			COLUMN_DATA_ACTIVITY, COLUMN_DATA_STATE,
-			COLUMN_CDMA_CELL_BASE_STATION_ID, COLUMN_CDMA_CELL_LATITUDE,
-			COLUMN_CDMA_CELL_LONGITUDE, COLUMN_CDMA_CELL_NETWORK_ID,
-			COLUMN_CDMA_CELL_SYSTEM_ID, COLUMN_GSM_CELL_ID,
-			COLUMN_GSM_CELL_LAC, COLUMN_GSM_CELL_PSC };
+			COLUMN_GOOGLE_CONNECTION_TEST, COLUMN_SIM_STATE,
+			COLUMN_DETAILED_STATE, COLUMN_IS_CONNECTED, COLUMN_IS_ROAMING,
+			COLUMN_IS_AVAILABLE, COLUMN_IS_FAILOVER, COLUMN_DATA_ACTIVITY,
+			COLUMN_DATA_STATE, COLUMN_REASON, COLUMN_EXTRA_INFO,
+			COLUMN_IS_NETWORK_METERED, COLUMN_CDMA_CELL_BASE_STATION_ID,
+			COLUMN_CDMA_CELL_LATITUDE, COLUMN_CDMA_CELL_LONGITUDE,
+			COLUMN_CDMA_CELL_NETWORK_ID, COLUMN_CDMA_CELL_SYSTEM_ID,
+			COLUMN_GSM_CELL_ID, COLUMN_GSM_CELL_LAC, COLUMN_GSM_CELL_PSC };
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -152,13 +161,16 @@ public class NetMonService extends Service {
 		while (!mDestroyed) {
 			Map<String, Object> values = new HashMap<String, Object>();
 			values.put(COLUMN_DATE, DATE_FORMAT.format(new Date()));
-			values.put(COLUMN_CONNECTION_STATUS, isNetworkUp() ? "UP" : "DOWN");
+			values.put(COLUMN_GOOGLE_CONNECTION_TEST, isNetworkUp() ? "PASS"
+					: "FAIL");
 			values.putAll(getActiveNetworkInfo());
 			values.put(COLUMN_MOBILE_DATA_NETWORK_TYPE, getDataNetworkType());
 			values.putAll(getCellLocation());
 			values.put(COLUMN_DATA_ACTIVITY, getDataActivity());
 			values.put(COLUMN_DATA_STATE, getDataState());
 			values.put(COLUMN_SIM_STATE, getSimState());
+			values.put(COLUMN_IS_NETWORK_METERED,
+					mConnectivityManager.isActiveNetworkMetered());
 			writeValuesToFile(values);
 
 			// Sleep
@@ -255,6 +267,12 @@ public class NetMonService extends Service {
 		values.put(COLUMN_NETWORK_TYPE, activeNetworkInfo.getTypeName() + "/"
 				+ activeNetworkInfo.getSubtypeName());
 		values.put(COLUMN_IS_ROAMING, activeNetworkInfo.isRoaming());
+		values.put(COLUMN_IS_AVAILABLE, activeNetworkInfo.isAvailable());
+		values.put(COLUMN_IS_CONNECTED, activeNetworkInfo.isConnected());
+		values.put(COLUMN_IS_FAILOVER, activeNetworkInfo.isFailover());
+		values.put(COLUMN_DETAILED_STATE, activeNetworkInfo.getDetailedState());
+		values.put(COLUMN_REASON, activeNetworkInfo.getReason());
+		values.put(COLUMN_EXTRA_INFO, activeNetworkInfo.getExtraInfo());
 		return values;
 	}
 
