@@ -34,7 +34,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -46,6 +45,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -91,21 +91,13 @@ public class NetMonService extends Service {
 	private static final String COLUMN_GSM_CELL_PSC = "GSM Cell Psc";
 
 	private static final String[] COLUMNS = new String[] { COLUMN_DATE,
-			COLUMN_NETWORK_TYPE,
-			COLUMN_MOBILE_DATA_NETWORK_TYPE,
-			COLUMN_CONNECTION_STATUS,
-			COLUMN_SIM_STATE,
-			COLUMN_IS_ROAMING,
-			COLUMN_DATA_ACTIVITY,
-			COLUMN_DATA_STATE,
-			COLUMN_CDMA_CELL_BASE_STATION_ID,
-			COLUMN_CDMA_CELL_LATITUDE,
-			COLUMN_CDMA_CELL_LONGITUDE,
-			COLUMN_CDMA_CELL_NETWORK_ID,
-			COLUMN_CDMA_CELL_SYSTEM_ID,
-			COLUMN_GSM_CELL_ID,
-			COLUMN_GSM_CELL_LAC,
-			COLUMN_GSM_CELL_PSC};
+			COLUMN_NETWORK_TYPE, COLUMN_MOBILE_DATA_NETWORK_TYPE,
+			COLUMN_CONNECTION_STATUS, COLUMN_SIM_STATE, COLUMN_IS_ROAMING,
+			COLUMN_DATA_ACTIVITY, COLUMN_DATA_STATE,
+			COLUMN_CDMA_CELL_BASE_STATION_ID, COLUMN_CDMA_CELL_LATITUDE,
+			COLUMN_CDMA_CELL_LONGITUDE, COLUMN_CDMA_CELL_NETWORK_ID,
+			COLUMN_CDMA_CELL_SYSTEM_ID, COLUMN_GSM_CELL_ID,
+			COLUMN_GSM_CELL_LAC, COLUMN_GSM_CELL_PSC };
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -158,13 +150,15 @@ public class NetMonService extends Service {
 
 	protected void monitorLoop() {
 		while (!mDestroyed) {
-			Map<String,Object> values = new HashMap<String,Object>();
-			values.put(COLUMN_DATE,DATE_FORMAT.format(new Date()));
-			values.put(COLUMN_CONNECTION_STATUS, isNetworkUp()? "UP":"DOWN");
-			values.put(COLUMN_NETWORK_TYPE,mConnectivityManager.getActiveNetworkInfo()
-					.getTypeName());
-			values.put(COLUMN_MOBILE_DATA_NETWORK_TYPE,getDataNetworkType());
+			Map<String, Object> values = new HashMap<String, Object>();
+			values.put(COLUMN_DATE, DATE_FORMAT.format(new Date()));
+			values.put(COLUMN_CONNECTION_STATUS, isNetworkUp() ? "UP" : "DOWN");
+			values.putAll(getActiveNetworkInfo());
+			values.put(COLUMN_MOBILE_DATA_NETWORK_TYPE, getDataNetworkType());
 			values.putAll(getCellLocation());
+			values.put(COLUMN_DATA_ACTIVITY, getDataActivity());
+			values.put(COLUMN_DATA_STATE, getDataState());
+			values.put(COLUMN_SIM_STATE, getSimState());
 			writeValuesToFile(values);
 
 			// Sleep
@@ -182,7 +176,7 @@ public class NetMonService extends Service {
 		}
 	}
 
-	private void writeValuesToFile(Map<String,Object> values) {
+	private void writeValuesToFile(Map<String, Object> values) {
 		Log.d(TAG, "writeValuesToFile " + values);
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < COLUMNS.length; i++) {
@@ -251,6 +245,19 @@ public class NetMonService extends Service {
 		}
 	}
 
+	private Map<String, Object> getActiveNetworkInfo() {
+		Map<String, Object> values = new HashMap<String, Object>();
+
+		NetworkInfo activeNetworkInfo = mConnectivityManager
+				.getActiveNetworkInfo();
+		if (activeNetworkInfo == null)
+			return values;
+		values.put(COLUMN_NETWORK_TYPE, activeNetworkInfo.getTypeName() + "/"
+				+ activeNetworkInfo.getSubtypeName());
+		values.put(COLUMN_IS_ROAMING, activeNetworkInfo.isRoaming());
+		return values;
+	}
+
 	private String getDataNetworkType() {
 		int networkType = mTelephonyManager.getNetworkType();
 		switch (networkType) {
@@ -284,25 +291,87 @@ public class NetMonService extends Service {
 			return "LTE";
 		case TelephonyManager.NETWORK_TYPE_UMTS:
 			return "UMTS";
+		case TelephonyManager.NETWORK_TYPE_UNKNOWN:
+			return "UNKNOWN";
 		default:
 			return UNKNOWN;
 		}
 	}
-	private Map<String,Object> getCellLocation(){
-		Map<String,Object> values = new HashMap<String,Object>();
+
+	private String getDataActivity() {
+		int dataActivity = mTelephonyManager.getDataActivity();
+		switch (dataActivity) {
+		case TelephonyManager.DATA_ACTIVITY_DORMANT:
+			return "DORMANT";
+		case TelephonyManager.DATA_ACTIVITY_IN:
+			return "IN";
+		case TelephonyManager.DATA_ACTIVITY_INOUT:
+			return "INOUT";
+		case TelephonyManager.DATA_ACTIVITY_NONE:
+			return "NONE";
+		case TelephonyManager.DATA_ACTIVITY_OUT:
+			return "OUT";
+		default:
+			return UNKNOWN;
+		}
+	}
+
+	private String getDataState() {
+		int dataState = mTelephonyManager.getDataState();
+		switch (dataState) {
+		case TelephonyManager.DATA_CONNECTED:
+			return "CONNECTED";
+		case TelephonyManager.DATA_CONNECTING:
+			return "CONNECTING";
+		case TelephonyManager.DATA_DISCONNECTED:
+			return "DISCONNECTED";
+		case TelephonyManager.DATA_SUSPENDED:
+			return "SUSPENDED";
+		default:
+			return UNKNOWN;
+		}
+	}
+
+	private String getSimState() {
+		int simState = mTelephonyManager.getSimState();
+		switch (simState) {
+		case TelephonyManager.SIM_STATE_ABSENT:
+			return "ABSENT";
+		case TelephonyManager.SIM_STATE_NETWORK_LOCKED:
+			return "NETWORK LOCKED";
+		case TelephonyManager.SIM_STATE_PIN_REQUIRED:
+			return "PIN REQUIRED";
+		case TelephonyManager.SIM_STATE_PUK_REQUIRED:
+			return "PUK REQUIRED";
+		case TelephonyManager.SIM_STATE_READY:
+			return "READY";
+		case TelephonyManager.SIM_STATE_UNKNOWN:
+			return "UNKNOWN";
+		default:
+			return UNKNOWN;
+		}
+	}
+
+	private Map<String, Object> getCellLocation() {
+		Map<String, Object> values = new HashMap<String, Object>();
 		CellLocation cellLocation = mTelephonyManager.getCellLocation();
-		if(cellLocation instanceof GsmCellLocation) {
+		if (cellLocation instanceof GsmCellLocation) {
 			GsmCellLocation gsmCellLocation = (GsmCellLocation) cellLocation;
 			values.put(COLUMN_GSM_CELL_ID, gsmCellLocation.getCid());
 			values.put(COLUMN_GSM_CELL_LAC, gsmCellLocation.getLac());
 			values.put(COLUMN_GSM_CELL_PSC, gsmCellLocation.getPsc());
-		} else if(cellLocation instanceof CdmaCellLocation) {
+		} else if (cellLocation instanceof CdmaCellLocation) {
 			CdmaCellLocation cdmaCellLocation = (CdmaCellLocation) cellLocation;
-			values.put(COLUMN_CDMA_CELL_BASE_STATION_ID, cdmaCellLocation.getBaseStationId());
-			values.put(COLUMN_CDMA_CELL_LATITUDE, cdmaCellLocation.getBaseStationLatitude());
-			values.put(COLUMN_CDMA_CELL_LONGITUDE, cdmaCellLocation.getBaseStationLongitude());
-			values.put(COLUMN_CDMA_CELL_NETWORK_ID, cdmaCellLocation.getNetworkId());
-			values.put(COLUMN_CDMA_CELL_SYSTEM_ID, cdmaCellLocation.getSystemId());
+			values.put(COLUMN_CDMA_CELL_BASE_STATION_ID,
+					cdmaCellLocation.getBaseStationId());
+			values.put(COLUMN_CDMA_CELL_LATITUDE,
+					cdmaCellLocation.getBaseStationLatitude());
+			values.put(COLUMN_CDMA_CELL_LONGITUDE,
+					cdmaCellLocation.getBaseStationLongitude());
+			values.put(COLUMN_CDMA_CELL_NETWORK_ID,
+					cdmaCellLocation.getNetworkId());
+			values.put(COLUMN_CDMA_CELL_SYSTEM_ID,
+					cdmaCellLocation.getSystemId());
 		}
 		return values;
 	}
