@@ -7,5 +7,7 @@
     <string name="preferences_serviceEnabled_title">Enable service</string>
     <string name="preferences_showLogFile_title">Show log file</string>
     <string name="preferences_about_title">About</string>
+    <string name="log_title">Log file</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jraf.android.networkmonitor.app;
+package org.jraf.android.networkmonitor.app.main;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,6 +32,7 @@ import android.preference.PreferenceManager;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
+import org.jraf.android.networkmonitor.app.service.NetMonService;
 
 public class MainActivity extends PreferenceActivity {
 
