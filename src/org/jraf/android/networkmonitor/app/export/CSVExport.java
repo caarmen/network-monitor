@@ -23,7 +23,7 @@ public class CSVExport extends FileExport {
 	}
 
 	@Override
-	void writeRow(String[] cellValues) {
+	void writeRow(int rowNumber, String[] cellValues) {
 
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < cellValues.length; i++) {

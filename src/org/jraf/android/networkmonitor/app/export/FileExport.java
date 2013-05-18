@@ -21,7 +21,7 @@ public abstract class FileExport {
 			"yyyy-MM-dd' 'HH:mm:ss", Locale.US);
 
 	protected final PrintWriter mPrintWriter;
-	private final Context mContext;
+	protected final Context mContext;
 	private final File mFile;
 
 	public FileExport(Context context, File file) throws FileNotFoundException {
@@ -34,7 +34,7 @@ public abstract class FileExport {
 
 	abstract void writeFooter();
 
-	abstract void writeRow(String[] cellValues);
+	abstract void writeRow(int rowNumber, String[] cellValues);
 
 	public File export() {
 		Log.v(TAG, "export");
@@ -43,11 +43,14 @@ public abstract class FileExport {
 				NetMonColumns.TIMESTAMP);
 		if (c != null) {
 			try {
-				writeHeader(c.getColumnNames());
+				String[] columnNames = c.getColumnNames();
+				String[] usedColumnNames = new String[c.getColumnCount()-1];
+				System.arraycopy(columnNames, 1, usedColumnNames, 0, c.getColumnCount()-1);
+				writeHeader(usedColumnNames);
 				if (c.moveToFirst()) {
 					while (c.moveToNext()) {
-						String[] cellValues = new String[c.getColumnCount()];
-						for (int i = 0; i < c.getColumnCount(); i++) {
+						String[] cellValues = new String[c.getColumnCount()-1];
+						for (int i = 1; i < c.getColumnCount(); i++) {
 							String cellValue;
 							if (NetMonColumns.TIMESTAMP.equals(c
 									.getColumnName(i))) {
@@ -59,9 +62,9 @@ public abstract class FileExport {
 							}
 							if (cellValue == null)
 								cellValue = "";
-							cellValues[i] = cellValue;
+							cellValues[i-1] = cellValue;
 						}
-						writeRow(cellValues);
+						writeRow(c.getPosition(), cellValues);
 						mPrintWriter.flush();
 					}
 				}
