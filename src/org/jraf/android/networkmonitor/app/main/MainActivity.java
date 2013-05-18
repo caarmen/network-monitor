@@ -42,6 +42,7 @@ public class MainActivity extends PreferenceActivity {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         addPreferencesFromResource(R.xml.preferences);
         updateIntervalSummary();
+        startService(new Intent(MainActivity.this, NetMonService.class));
     }
 
     @Override
