@@ -37,15 +37,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.jraf.android.networkmonitor.Constants;
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
-import org.jraf.android.networkmonitor.Config;
-import org.jraf.android.networkmonitor.Constants;
 
 public class NetMonService extends Service {
     private static final String TAG = Constants.TAG + NetMonService.class.getSimpleName();
@@ -68,11 +67,11 @@ public class NetMonService extends Service {
     @Override
     public void onCreate() {
         if (!isServiceEnabled()) {
-            if (Config.LOGD) Log.d(TAG, "onCreate Service is disabled: stopping now");
+            Log.d(TAG, "onCreate Service is disabled: stopping now");
             stopSelf();
             return;
         }
-        if (Config.LOGD) Log.d(TAG, "onCreate Service is enabled: starting monitor loop");
+        Log.d(TAG, "onCreate Service is enabled: starting monitor loop");
         new Thread() {
             @Override
             public void run() {
@@ -104,18 +103,18 @@ public class NetMonService extends Service {
     protected void monitorLoop() {
         while (!mDestroyed) {
             boolean networkUp = isNetworkUp();
-            if (Config.LOGD) Log.d(TAG, "mainLoop networkUp=" + networkUp);
+            Log.d(TAG, "mainLoop networkUp=" + networkUp);
             mOutputStream.println(DATE_FORMAT.format(new Date()) + " " + (networkUp ? "UP" : "DOWN"));
             mOutputStream.flush();
 
             // Sleep
             long updateInterval = getUpdateInterval();
-            if (Config.LOGD) Log.d(TAG, "monitorLoop Sleeping " + updateInterval / 1000 + " seconds...");
+            Log.d(TAG, "monitorLoop Sleeping " + updateInterval / 1000 + " seconds...");
             SystemClock.sleep(updateInterval);
 
             // Loop if service is still enabled, otherwise stop
             if (!isServiceEnabled()) {
-                if (Config.LOGD) Log.d(TAG, "onCreate Service is disabled: stopping now");
+                Log.d(TAG, "onCreate Service is disabled: stopping now");
                 stopSelf();
                 return;
             }
@@ -134,30 +133,30 @@ public class NetMonService extends Service {
         try {
             socket = new Socket();
             socket.setSoTimeout(TIMEOUT);
-            if (Config.LOGD) Log.d(TAG, "isNetworkUp Resolving " + HOST);
+            Log.d(TAG, "isNetworkUp Resolving " + HOST);
             InetSocketAddress remoteAddr = new InetSocketAddress(HOST, PORT);
             InetAddress address = remoteAddr.getAddress();
             if (address == null) {
-                if (Config.LOGD) Log.d(TAG, "isNetworkUp Could not resolve");
+                Log.d(TAG, "isNetworkUp Could not resolve");
                 return false;
             }
-            if (Config.LOGD) Log.d(TAG, "isNetworkUp Resolved " + address.getHostAddress());
-            if (Config.LOGD) Log.d(TAG, "isNetworkUp Connecting...");
+            Log.d(TAG, "isNetworkUp Resolved " + address.getHostAddress());
+            Log.d(TAG, "isNetworkUp Connecting...");
             socket.connect(remoteAddr, TIMEOUT);
-            if (Config.LOGD) Log.d(TAG, "isNetworkUp Connected");
+            Log.d(TAG, "isNetworkUp Connected");
 
-            if (Config.LOGD) Log.d(TAG, "isNetworkUp Sending GET...");
+            Log.d(TAG, "isNetworkUp Sending GET...");
             OutputStream outputStream = socket.getOutputStream();
             outputStream.write(HTTP_GET.getBytes("utf-8"));
             outputStream.flush();
-            if (Config.LOGD) Log.d(TAG, "isNetworkUp Sent GET");
+            Log.d(TAG, "isNetworkUp Sent GET");
             InputStream inputStream = socket.getInputStream();
-            if (Config.LOGD) Log.d(TAG, "isNetworkUp Reading...");
+            Log.d(TAG, "isNetworkUp Reading...");
             int read = inputStream.read();
-            if (Config.LOGD) Log.d(TAG, "isNetworkUp Read read=" + read);
+            Log.d(TAG, "isNetworkUp Read read=" + read);
             return read != -1;
         } catch (Throwable t) {
-            if (Config.LOGD) Log.d(TAG, "isNetworkUp Caught an exception", t);
+            Log.d(TAG, "isNetworkUp Caught an exception", t);
             return false;
         } finally {
             if (socket != null) {
