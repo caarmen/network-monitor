@@ -40,7 +40,10 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class LogActivity extends Activity {
@@ -80,8 +83,16 @@ public class LogActivity extends Activity {
 				}
 				WebView webView = (WebView) findViewById(R.id.web_view);
 				webView.loadUrl("file://" + result.getAbsolutePath());
+				webView.setWebViewClient(new WebViewClient(){
+
+					@Override
+					public void onPageFinished(WebView view, String url) {
+						super.onPageFinished(view, url);
+						ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+						progressBar.setVisibility(View.GONE);
+					}
+				});
 			}
-			
 		};
 		asyncTask.execute();
 	}
