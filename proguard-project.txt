@@ -22,3 +22,6 @@
     public static *** d(...);
     public static *** v(...);
 }
+-keep class * extends java.util.ListResourceBundle {
+    protected Object[][] getContents();
+}

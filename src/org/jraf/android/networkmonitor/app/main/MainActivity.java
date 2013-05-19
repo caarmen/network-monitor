@@ -28,7 +28,11 @@ import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.service.NetMonService;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -53,9 +57,26 @@ public class MainActivity extends PreferenceActivity {
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 		addPreferencesFromResource(R.xml.preferences);
 		updateIntervalSummary();
+		findPreference(Constants.PREF_RESET_LOG_FILE)
+				.setOnPreferenceClickListener(mOnPreferenceClickListener);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		int playServicesAvailable = GooglePlayServicesUtil
+				.isGooglePlayServicesAvailable(this);
+		if (playServicesAvailable != ConnectionResult.SUCCESS) {
+			Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
+					playServicesAvailable, this, 1);
+			if (errorDialog != null)
+				errorDialog.show();
+			else
+				Toast.makeText(this, "Google Play Services must be installed",
+						Toast.LENGTH_LONG).show();
+			return;
+		}
 		startService(new Intent(MainActivity.this, NetMonService.class));
-		findPreference(Constants.PREF_RESET_LOG_FILE).setOnPreferenceClickListener(
-				mOnPreferenceClickListener);
 	}
 
 	@Override

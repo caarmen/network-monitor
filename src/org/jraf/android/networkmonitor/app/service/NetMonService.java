@@ -34,6 +34,11 @@ import java.util.List;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
+import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationClient;
+
 import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.ContentValues;
@@ -44,6 +49,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -68,6 +74,7 @@ public class NetMonService extends Service {
 	private TelephonyManager mTelephonyManager;
 	private ConnectivityManager mConnectivityManager;
 	private LocationManager mLocationManager;
+	private LocationClient mLocationClient;
 	private volatile boolean mDestroyed;
 
 	@Override
@@ -84,11 +91,15 @@ public class NetMonService extends Service {
 		}
 		Log.d(TAG, "onCreate Service is enabled: starting monitor loop");
 		new Thread() {
+
 			@Override
 			public void run() {
 				mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 				mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 				mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+				mLocationClient = new LocationClient(NetMonService.this,
+						mConnectionCallbacks, mConnectionFailedListener);
+				mLocationClient.connect();
 				monitorLoop();
 			}
 		}.start();
@@ -342,18 +353,29 @@ public class NetMonService extends Service {
 	}
 
 	private double[] getLatestLocation() {
-		List<String> providers = mLocationManager.getProviders(true);
 		Location mostRecentLocation = null;
-		long mostRecentFix = 0;
-		for (String provider : providers) {
-			Location location = mLocationManager.getLastKnownLocation(provider);
-			Log.v(TAG, "Location for provider " + provider + ": " + location);
-			if(location == null)
-				continue;
-			long time = location.getTime();
-			if (time > mostRecentFix) {
-				time = mostRecentFix;
-				mostRecentLocation = location;
+		// Try getting the location from the LocationClient
+		if (mLocationClient.isConnected()) {
+			mostRecentLocation = mLocationClient.getLastLocation();
+			Log.v(TAG, "Got location from LocationClient: "
+					+ mostRecentLocation);
+		}
+		// Fall back to the old way.
+		if (mostRecentLocation == null) {
+			List<String> providers = mLocationManager.getProviders(true);
+			long mostRecentFix = 0;
+			for (String provider : providers) {
+				Location location = mLocationManager
+						.getLastKnownLocation(provider);
+				Log.v(TAG, "Location for provider " + provider + ": "
+						+ location);
+				if (location == null)
+					continue;
+				long time = location.getTime();
+				if (time > mostRecentFix) {
+					time = mostRecentFix;
+					mostRecentLocation = location;
+				}
 			}
 		}
 		Log.v(TAG, "Most recent location: " + mostRecentLocation);
@@ -371,6 +393,28 @@ public class NetMonService extends Service {
 	@Override
 	public void onDestroy() {
 		mDestroyed = true;
+		mLocationClient.disconnect();
 		super.onDestroy();
 	}
+
+	private ConnectionCallbacks mConnectionCallbacks = new ConnectionCallbacks() {
+
+		@Override
+		public void onConnected(Bundle bundle) {
+			Log.v(TAG, "onConnected: " + bundle);
+		}
+
+		@Override
+		public void onDisconnected() {
+			Log.v(TAG, "onDisconnected");
+		}
+	};
+	private OnConnectionFailedListener mConnectionFailedListener = new OnConnectionFailedListener() {
+
+		@Override
+		public void onConnectionFailed(ConnectionResult result) {
+			Log.v(TAG, "onConnectionFailed: " + result);
+		}
+	};
+
 }
