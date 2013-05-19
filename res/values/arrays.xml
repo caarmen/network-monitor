@@ -26,5 +26,9 @@
         <item>1800000</item>
         <item>3600000</item>
     </string-array>
+    <string-array name="export_choices">
+        <item>@string/export_choice_csv</item>
+        <item>@string/export_choice_html</item>
+    </string-array>
 
 </resources>

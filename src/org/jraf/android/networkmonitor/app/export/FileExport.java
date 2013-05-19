@@ -14,7 +14,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
-abstract class FileExport {
+public abstract class FileExport {
 	private static final String TAG = Constants.TAG
 			+ FileExport.class.getSimpleName();
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(

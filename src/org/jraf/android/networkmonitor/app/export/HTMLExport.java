@@ -11,7 +11,7 @@ public class HTMLExport extends FileExport {
 	private static final String HTML_FILE = "networkmonitor.html";
 
 	public HTMLExport(Context context) throws FileNotFoundException {
-		super(context, new File(context.getCacheDir(), HTML_FILE));
+		super(context, new File(context.getExternalFilesDir(null), HTML_FILE));
 	}
 
 	@Override

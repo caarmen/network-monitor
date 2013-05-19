@@ -29,6 +29,7 @@ import java.io.FileNotFoundException;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.export.CSVExport;
+import org.jraf.android.networkmonitor.app.export.FileExport;
 import org.jraf.android.networkmonitor.app.export.HTMLExport;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
@@ -74,7 +75,7 @@ public class LogActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_share:
-			sendCSVFile();
+			share();
 			return true;
 		case R.id.action_refresh:
 			loadHTMLFile();
@@ -86,8 +87,45 @@ public class LogActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void sendCSVFile() {
-		Log.v(TAG, "sendCSVFile");
+	private void share() {
+		Log.v(TAG, "share");
+		AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(
+				R.string.export_choice_title).setItems(R.array.export_choices,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						String[] exportChoices = getResources().getStringArray(
+								R.array.export_choices);
+						FileExport fileExport;
+						try {
+							if (getString(R.string.export_choice_csv).equals(
+									exportChoices[which])) {
+								fileExport = new CSVExport(LogActivity.this);
+
+							} else if (getString(R.string.export_choice_html)
+									.equals(exportChoices[which])) {
+								fileExport = new HTMLExport(LogActivity.this);
+							} else {
+								Log.w(TAG, "Invalid file format chosen: "
+										+ which);
+								return;
+							}
+							shareFile(fileExport);
+						} catch (FileNotFoundException e) {
+							Log.w(TAG, "Error sharing file: " + e.getMessage(),
+									e);
+						}
+					}
+				});
+		builder.create().show();
+	}
+
+	private void shareFile(final FileExport fileExport) {
+		Log.v(TAG, "shareFile " + fileExport);
+		final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+		progressBar.setVisibility(View.VISIBLE);
+
 		AsyncTask<Void, Void, File> asyncTask = new AsyncTask<Void, Void, File>() {
 
 			@Override
@@ -95,28 +133,23 @@ public class LogActivity extends Activity {
 				if (!Environment.MEDIA_MOUNTED.equals(Environment
 						.getExternalStorageState()))
 					return null;
-				try {
-					CSVExport csvExport = new CSVExport(LogActivity.this);
-					File file = csvExport.export();
-					Intent sendIntent = new Intent();
-					sendIntent.setAction(Intent.ACTION_SEND);
-					sendIntent.putExtra(Intent.EXTRA_SUBJECT,
-							getString(R.string.subject_send_log));
-					sendIntent.putExtra(Intent.EXTRA_STREAM,
-							Uri.parse("file://" + file.getAbsolutePath()));
-					sendIntent.setType("message/rfc822");
-					startActivity(Intent.createChooser(sendIntent,
-							getResources().getText(R.string.action_share)));
-					return file;
-				} catch (FileNotFoundException e) {
-					Log.v(TAG, "Error exporting file: " + e.getMessage(), e);
-					return null;
-				}
+				File file = fileExport.export();
+				Intent sendIntent = new Intent();
+				sendIntent.setAction(Intent.ACTION_SEND);
+				sendIntent.putExtra(Intent.EXTRA_SUBJECT,
+						getString(R.string.subject_send_log));
+				sendIntent.putExtra(Intent.EXTRA_STREAM,
+						Uri.parse("file://" + file.getAbsolutePath()));
+				sendIntent.setType("message/rfc822");
+				startActivity(Intent.createChooser(sendIntent, getResources()
+						.getText(R.string.action_share)));
+				return file;
 			}
 
 			@Override
 			protected void onPostExecute(File result) {
 				super.onPostExecute(result);
+				progressBar.setVisibility(View.GONE);
 				if (result == null)
 					Toast.makeText(LogActivity.this,
 							R.string.error_sdcard_unmounted, Toast.LENGTH_LONG)
