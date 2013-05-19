@@ -3,6 +3,7 @@ package org.jraf.android.networkmonitor.app.export;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 
 import android.content.Context;
@@ -24,7 +25,7 @@ public class HTMLExport extends FileExport {
 
 		mPrintWriter.println("  <tr>");
 		for (String columnName : columnNames) {
-			columnName = columnName.replaceAll("_"," ");
+			columnName = columnName.replaceAll("_", " ");
 			mPrintWriter.println("    <th>" + columnName + "</th>");
 		}
 		mPrintWriter.println("  </tr></thead><tbody>");
@@ -38,11 +39,19 @@ public class HTMLExport extends FileExport {
 	@Override
 	void writeRow(int rowNumber, String[] cellValues) {
 		String tdClass = "odd";
-		if(rowNumber % 2 == 0)
+		if (rowNumber % 2 == 0)
 			tdClass = "even";
-		mPrintWriter.println("  <tr class=\""+ tdClass+ "\">");
-		for (String cellValue : cellValues)
-			mPrintWriter.println("    <td>" + cellValue + "</td>");
+		mPrintWriter.println("  <tr class=\"" + tdClass + "\">");
+		for (String cellValue : cellValues) {
+			if (Constants.CONNECTION_TEST_FAIL.equals(cellValue))
+				mPrintWriter.println("    <td class=\"fail\">" + cellValue
+						+ "</td>");
+			else if (Constants.CONNECTION_TEST_PASS.equals(cellValue))
+				mPrintWriter.println("    <td class=\"pass\">" + cellValue
+						+ "</td>");
+			else
+				mPrintWriter.println("    <td>" + cellValue + "</td>");
+		}
 		mPrintWriter.println("  </tr>");
 	}
 }

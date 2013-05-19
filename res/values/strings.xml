@@ -42,6 +42,14 @@ tr.even td {
 tr.odd td {
  background-color:#fff;
 }
+td.pass { 
+ color:#0A0; 
+ font-weight:bold;
+}
+td.fail { 
+ color:#F00; 
+ font-weight:bold;
+}
 </style>]]></string>
     
 </resources>
