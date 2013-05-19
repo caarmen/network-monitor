@@ -33,7 +33,9 @@ public class HTMLExport extends FileExport {
 
 	@Override
 	void writeFooter() {
-		mPrintWriter.println("</tbody></table></body></html>");
+		mPrintWriter.println("</tbody></table>");
+		mPrintWriter.println("<a name=\"end\"/>");
+		mPrintWriter.println("</body></html>");
 	}
 
 	@Override

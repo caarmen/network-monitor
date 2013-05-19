@@ -195,14 +195,17 @@ public class LogActivity extends Activity {
 							.show();
 					return;
 				}
-				WebView webView = (WebView) findViewById(R.id.web_view);
-				webView.loadUrl("file://" + result.getAbsolutePath());
+				final WebView webView = (WebView) findViewById(R.id.web_view);
+				webView.getSettings().setUseWideViewPort(true);
+				webView.getSettings().setBuiltInZoomControls(true);
+				webView.loadUrl("file://" + result.getAbsolutePath() + "#end");
 				webView.setWebViewClient(new WebViewClient() {
 
 					@Override
 					public void onPageFinished(WebView view, String url) {
 						super.onPageFinished(view, url);
 						progressBar.setVisibility(View.GONE);
+						webView.pageDown(true);
 					}
 				});
 			}
