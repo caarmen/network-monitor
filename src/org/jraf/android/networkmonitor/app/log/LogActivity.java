@@ -33,6 +33,8 @@ import org.jraf.android.networkmonitor.app.export.HTMLExport;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -79,7 +81,6 @@ public class LogActivity extends Activity {
 			return true;
 		case R.id.action_reset:
 			resetLogs();
-			loadHTMLFile();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -174,27 +175,40 @@ public class LogActivity extends Activity {
 
 	private void resetLogs() {
 		Log.v(TAG, "resetLogs");
-		final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-		progressBar.setVisibility(View.VISIBLE);
-		AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
+		new AlertDialog.Builder(this)
+				.setTitle(R.string.action_reset)
+				.setMessage(R.string.confirm_logs_reset)
+				.setPositiveButton(android.R.string.yes,
+						new DialogInterface.OnClickListener() {
 
-			@Override
-			protected Void doInBackground(Void... params) {
-				Log.v(TAG, "resetLogs:doInBackground");
-				getContentResolver().delete(NetMonColumns.CONTENT_URI, null,
-						null);
-				return null;
-			}
+							public void onClick(DialogInterface dialog,
+									int whichButton) {
+								final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+								progressBar.setVisibility(View.VISIBLE);
+								AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
 
-			@Override
-			protected void onPostExecute(Void result) {
-				Log.v(TAG, "resetLogs:onPostExecute");
-				super.onPostExecute(result);
-				progressBar.setVisibility(View.GONE);
-				Toast.makeText(LogActivity.this, R.string.success_logs_reset,
-						Toast.LENGTH_LONG).show();
-			}
-		};
-		asyncTask.execute();
+									@Override
+									protected Void doInBackground(
+											Void... params) {
+										Log.v(TAG, "resetLogs:doInBackground");
+										getContentResolver().delete(
+												NetMonColumns.CONTENT_URI,
+												null, null);
+										return null;
+									}
+
+									@Override
+									protected void onPostExecute(Void result) {
+										Log.v(TAG, "resetLogs:onPostExecute");
+										super.onPostExecute(result);
+										Toast.makeText(LogActivity.this,
+												R.string.success_logs_reset,
+												Toast.LENGTH_LONG).show();
+										loadHTMLFile();
+									}
+								};
+								asyncTask.execute();
+							}
+						}).setNegativeButton(android.R.string.no, null).show();
 	}
 }
