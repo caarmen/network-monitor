@@ -27,8 +27,8 @@ public class CSVExport extends FileExport {
 
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < cellValues.length; i++) {
-			if (cellValues[i].contains(",")) {
-				cellValues[i].replaceAll("\"", "\"\"");
+			if (cellValues[i].contains(",") || cellValues[i].contains("\"")) {
+				cellValues[i] = cellValues[i].replaceAll("\"", "\"\"");
 				cellValues[i] = "\"" + cellValues[i] + "\"";
 			}
 			sb.append(cellValues[i]);

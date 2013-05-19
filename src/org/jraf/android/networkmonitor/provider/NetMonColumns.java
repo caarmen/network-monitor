@@ -25,6 +25,8 @@ public class NetMonColumns implements BaseColumns {
 	public static final String REASON = "reason";
 	public static final String EXTRA_INFO = "extra_info";
 	public static final String IS_NETWORK_METERED = "is_network_metered";
+	public static final String DEVICE_LATITUDE = "device_latitude";
+	public static final String DEVICE_LONGITUDE = "device_longitude";
 	public static final String CDMA_CELL_BASE_STATION_ID = "cdma_cell_base_station_id";
 	public static final String CDMA_CELL_LATITUDE = "cdma_cell_latitude";
 	public static final String CDMA_CELL_LONGITUDE = "cdma_cell_longitude";

@@ -29,6 +29,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.List;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
@@ -38,6 +39,8 @@ import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -64,6 +67,7 @@ public class NetMonService extends Service {
 
 	private TelephonyManager mTelephonyManager;
 	private ConnectivityManager mConnectivityManager;
+	private LocationManager mLocationManager;
 	private volatile boolean mDestroyed;
 
 	@Override
@@ -84,6 +88,7 @@ public class NetMonService extends Service {
 			public void run() {
 				mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 				mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+				mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 				monitorLoop();
 			}
 		}.start();
@@ -116,8 +121,12 @@ public class NetMonService extends Service {
 			if (Build.VERSION.SDK_INT >= 16)
 				values.put(NetMonColumns.IS_NETWORK_METERED,
 						isActiveNetworkMetered());
+			double[] location = getLatestLocation();
+			if (location != null) {
+				values.put(NetMonColumns.DEVICE_LATITUDE, location[0]);
+				values.put(NetMonColumns.DEVICE_LONGITUDE, location[1]);
+			}
 			getContentResolver().insert(NetMonColumns.CONTENT_URI, values);
-
 
 			// Sleep
 			long updateInterval = getUpdateInterval();
@@ -198,7 +207,7 @@ public class NetMonService extends Service {
 			return values;
 		String networkType = activeNetworkInfo.getTypeName();
 		String networkSubType = activeNetworkInfo.getSubtypeName();
-		if(!TextUtils.isEmpty(networkSubType))
+		if (!TextUtils.isEmpty(networkSubType))
 			networkType += "/" + networkSubType;
 		values.put(NetMonColumns.NETWORK_TYPE, networkType);
 		values.put(NetMonColumns.IS_ROAMING, activeNetworkInfo.isRoaming());
@@ -329,6 +338,18 @@ public class NetMonService extends Service {
 					cdmaCellLocation.getSystemId());
 		}
 		return values;
+	}
+
+	private double[] getLatestLocation() {
+		List<String> providers = mLocationManager.getProviders(true);
+		Location location = null;
+		for (int i = providers.size() - 1; i >= 0; i--) {
+			location = mLocationManager.getLastKnownLocation(providers.get(i));
+			if (location != null)
+				return new double[] { location.getLatitude(),
+						location.getLongitude() };
+		}
+		return null;
 	}
 
 	@TargetApi(9)

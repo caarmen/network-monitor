@@ -32,6 +32,8 @@ class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.REASON + " TEXT, "
             + NetMonColumns.EXTRA_INFO + " TEXT, "
             + NetMonColumns.IS_NETWORK_METERED + " INTEGER, "
+            + NetMonColumns.DEVICE_LATITUDE + " REAL, "
+            + NetMonColumns.DEVICE_LONGITUDE + " REAL, "
             + NetMonColumns.CDMA_CELL_BASE_STATION_ID + " INTEGER, "
             + NetMonColumns.CDMA_CELL_LATITUDE + " INTEGER, "
             + NetMonColumns.CDMA_CELL_LONGITUDE + " INTEGER, "
