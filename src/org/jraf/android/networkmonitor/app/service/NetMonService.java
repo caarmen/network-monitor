@@ -110,7 +110,8 @@ public class NetMonService extends Service {
 			ContentValues values = new ContentValues();
 			values.put(NetMonColumns.TIMESTAMP, System.currentTimeMillis());
 			values.put(NetMonColumns.GOOGLE_CONNECTION_TEST,
-					isNetworkUp() ? "PASS" : "FAIL");
+					isNetworkUp() ? Constants.CONNECTION_TEST_PASS
+							: Constants.CONNECTION_TEST_FAIL);
 			values.putAll(getActiveNetworkInfo());
 			values.put(NetMonColumns.MOBILE_DATA_NETWORK_TYPE,
 					getDataNetworkType());

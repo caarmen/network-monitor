@@ -48,6 +48,8 @@ public class ExcelExport extends FileExport {
 			mSheet = mWorkbook.createSheet(
 					mContext.getString(R.string.app_name), 0);
 			mSheet.insertRow(0);
+			mSheet.getSettings().setHorizontalFreeze(2);
+			mSheet.getSettings().setVerticalFreeze(1);
 			createCellFormats();
 			for (int i = 0; i < columnNames.length; i++) {
 				mSheet.insertColumn(i);
@@ -75,31 +77,28 @@ public class ExcelExport extends FileExport {
 		mSheet.insertRow(rowNumber);
 		for (int i = 0; i < cellValues.length; i++) {
 			CellFormat cellFormat = null;
-			if("PASS".equals(cellValues[i]))
+			if (Constants.CONNECTION_TEST_PASS.equals(cellValues[i]))
 				cellFormat = mGreenFormat;
-			else if("FAIL".equals(cellValues[i]))
+			else if (Constants.CONNECTION_TEST_FAIL.equals(cellValues[i]))
 				cellFormat = mRedFormat;
 			insertCell(cellValues[i], rowNumber, i, cellFormat);
 		}
 	}
 
-	private WritableCell insertCell(String text, int row, int column,
-			CellFormat format) {
+	private void insertCell(String text, int row, int column, CellFormat format) {
 		Label label = format == null ? new Label(column, row, text)
 				: new Label(column, row, text, format);
 		try {
 			mSheet.addCell(label);
-			return label;
 		} catch (JXLException e) {
 			Log.e(TAG, "writeHeader Could not insert cell " + text + " at row="
 					+ row + ", col=" + column, e);
-			return null;
 		}
 	}
 
 	private void createCellFormats() {
-		Label cell = new Label(0,0," ");
-		
+		Label cell = new Label(0, 0, " ");
+
 		CellFormat cellFormat = cell.getCellFormat();
 
 		WritableFont boldFont = new WritableFont(cellFormat.getFont());
@@ -114,7 +113,8 @@ public class ExcelExport extends FileExport {
 			mRedFormat.setFont(redFont);
 
 			mGreenFormat = new WritableCellFormat(cellFormat);
-			final WritableFont greenFont = new WritableFont(cellFormat.getFont());
+			final WritableFont greenFont = new WritableFont(
+					cellFormat.getFont());
 			greenFont.setColour(Colour.GREEN);
 			mGreenFormat.setFont(greenFont);
 		} catch (WriteException e) {
