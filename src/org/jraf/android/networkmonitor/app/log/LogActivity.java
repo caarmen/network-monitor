@@ -51,50 +51,15 @@ public class LogActivity extends Activity {
 	private static final String TAG = Constants.TAG
 			+ LogActivity.class.getSimpleName();
 
+	private static final String EXTRA_HAS_LOADED_HTML_FILE = "has_loaded_html_file";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.v(TAG, "onCreate " + savedInstanceState);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.log);
-	}
-	
-	@Override
-	protected void onStart() {
-		super.onStart();
-		AsyncTask<Void,Void,File> asyncTask = new AsyncTask<Void,Void,File>(){
+		loadHTMLFile();
 
-			@Override
-			protected File doInBackground(Void... params) {
-				try {
-					HTMLExport htmlExport = new HTMLExport(LogActivity.this);
-					File file = htmlExport.export();
-					return file;
-				} catch (FileNotFoundException e) {
-					Log.e(TAG, "doInBackground Could not load data into html file: " + e.getMessage(), e);
-				}
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(File result) {
-				super.onPostExecute(result);
-				if(result == null) {
-					Toast.makeText(LogActivity.this, R.string.error_reading_log, Toast.LENGTH_LONG).show();
-					return;
-				}
-				WebView webView = (WebView) findViewById(R.id.web_view);
-				webView.loadUrl("file://" + result.getAbsolutePath());
-				webView.setWebViewClient(new WebViewClient(){
-
-					@Override
-					public void onPageFinished(WebView view, String url) {
-						super.onPageFinished(view, url);
-						ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-						progressBar.setVisibility(View.GONE);
-					}
-				});
-			}
-		};
-		asyncTask.execute();
 	}
 
 	@Override
@@ -106,46 +71,102 @@ public class LogActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.action_send) {
-			AsyncTask<Void, Void, File> asyncTask = new AsyncTask<Void, Void, File>() {
-
-				@Override
-				protected File doInBackground(Void... params) {
-					if (!Environment.MEDIA_MOUNTED.equals(Environment
-							.getExternalStorageState()))
-						return null;
-					try {
-						CSVExport csvExport = new CSVExport(LogActivity.this);
-						File file = csvExport.export();
-						Intent sendIntent = new Intent();
-						sendIntent.setAction(Intent.ACTION_SEND);
-						sendIntent.putExtra(Intent.EXTRA_SUBJECT,
-								getString(R.string.subject_send_log));
-						sendIntent.putExtra(Intent.EXTRA_STREAM,
-								Uri.parse("file://" + file.getAbsolutePath()));
-						sendIntent.setType("message/rfc822");
-						startActivity(Intent.createChooser(sendIntent,
-								getResources().getText(R.string.action_send)));
-						return file;
-					} catch (FileNotFoundException e) {
-						Log.v(TAG, "Error exporting file: " + e.getMessage(), e);
-						return null;
-					}
-				}
-
-				@Override
-				protected void onPostExecute(File result) {
-					super.onPostExecute(result);
-					if (result == null)
-						Toast.makeText(LogActivity.this,
-								R.string.error_sdcard_unmounted,
-								Toast.LENGTH_LONG).show();
-				}
-
-			};
-			asyncTask.execute();
+		switch (item.getItemId()) {
+		case R.id.action_send:
+			sendCSVFile();
+			return true;
+		case R.id.action_refresh:
+			loadHTMLFile();
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void sendCSVFile() {
+		Log.v(TAG, "sendCSVFile");
+		AsyncTask<Void, Void, File> asyncTask = new AsyncTask<Void, Void, File>() {
+
+			@Override
+			protected File doInBackground(Void... params) {
+				if (!Environment.MEDIA_MOUNTED.equals(Environment
+						.getExternalStorageState()))
+					return null;
+				try {
+					CSVExport csvExport = new CSVExport(LogActivity.this);
+					File file = csvExport.export();
+					Intent sendIntent = new Intent();
+					sendIntent.setAction(Intent.ACTION_SEND);
+					sendIntent.putExtra(Intent.EXTRA_SUBJECT,
+							getString(R.string.subject_send_log));
+					sendIntent.putExtra(Intent.EXTRA_STREAM,
+							Uri.parse("file://" + file.getAbsolutePath()));
+					sendIntent.setType("message/rfc822");
+					startActivity(Intent.createChooser(sendIntent,
+							getResources().getText(R.string.action_send)));
+					return file;
+				} catch (FileNotFoundException e) {
+					Log.v(TAG, "Error exporting file: " + e.getMessage(), e);
+					return null;
+				}
+			}
+
+			@Override
+			protected void onPostExecute(File result) {
+				super.onPostExecute(result);
+				if (result == null)
+					Toast.makeText(LogActivity.this,
+							R.string.error_sdcard_unmounted, Toast.LENGTH_LONG)
+							.show();
+			}
+
+		};
+		asyncTask.execute();
+	}
+
+	private void loadHTMLFile() {
+		Log.v(TAG, "loadHTMLFile");
+		final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+		progressBar.setVisibility(View.VISIBLE);
+		AsyncTask<Void, Void, File> asyncTask = new AsyncTask<Void, Void, File>() {
+
+			@Override
+			protected File doInBackground(Void... params) {
+				Log.v(TAG, "loadHTMLFile:doInBackground");
+				try {
+					HTMLExport htmlExport = new HTMLExport(LogActivity.this);
+					File file = htmlExport.export();
+					return file;
+				} catch (FileNotFoundException e) {
+					Log.e(TAG,
+							"doInBackground Could not load data into html file: "
+									+ e.getMessage(), e);
+				}
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(File result) {
+				Log.v(TAG, "loadHTMLFile:onPostExecute, result=" + result);
+				super.onPostExecute(result);
+				if (result == null) {
+					Toast.makeText(LogActivity.this,
+							R.string.error_reading_log, Toast.LENGTH_LONG)
+							.show();
+					return;
+				}
+				WebView webView = (WebView) findViewById(R.id.web_view);
+				webView.loadUrl("file://" + result.getAbsolutePath());
+				webView.setWebViewClient(new WebViewClient() {
+
+					@Override
+					public void onPageFinished(WebView view, String url) {
+						super.onPageFinished(view, url);
+						progressBar.setVisibility(View.GONE);
+					}
+				});
+			}
+		};
+		asyncTask.execute();
 	}
 
 }

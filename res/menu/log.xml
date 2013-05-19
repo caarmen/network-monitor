@@ -2,8 +2,10 @@
 
     <item
         android:id="@+id/action_send"
-        android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/action_send"/>
-
+    <item
+        android:id="@+id/action_refresh"
+        android:showAsAction="never"
+        android:title="@string/action_refresh"/>
 </menu>

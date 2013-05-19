@@ -9,6 +9,7 @@
     <string name="preferences_about_title">About</string>
     <string name="log_title">Log file</string>
     <string name="action_send">Send log file</string>
+    <string name="action_refresh">Refresh</string>
     <string name="subject_send_log">Network Monitor Log</string>
     <string name="error_sdcard_unmounted">Could not create log file.</string>
     <string name="error_reading_log">Could not read log file.</string>

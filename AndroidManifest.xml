@@ -11,8 +11,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -33,9 +33,15 @@
 
         <activity
             android:name="org.jraf.android.networkmonitor.app.log.LogActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/log_title" >
         </activity>
-        <provider android:name=".provider.NetMonProvider" android:authorities="org.jraf.android.networkmonitor.provider"></provider>
+
+        <provider
+            android:name=".provider.NetMonProvider"
+            android:authorities="org.jraf.android.networkmonitor.provider"
+            android:exported="false" >
+        </provider>
     </application>
 
 </manifest>

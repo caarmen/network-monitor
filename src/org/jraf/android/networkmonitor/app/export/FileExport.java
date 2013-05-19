@@ -20,12 +20,11 @@ public abstract class FileExport {
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
 			"yyyy-MM-dd' 'HH:mm:ss", Locale.US);
 
-	protected final PrintWriter mPrintWriter;
+	protected PrintWriter mPrintWriter;
 	protected final Context mContext;
 	private final File mFile;
 
 	public FileExport(Context context, File file) throws FileNotFoundException {
-		mPrintWriter = new PrintWriter(file);
 		mContext = context;
 		mFile = file;
 	}
@@ -43,6 +42,7 @@ public abstract class FileExport {
 				NetMonColumns.TIMESTAMP);
 		if (c != null) {
 			try {
+				mPrintWriter = new PrintWriter(mFile);
 				String[] columnNames = c.getColumnNames();
 				String[] usedColumnNames = new String[c.getColumnCount()-1];
 				System.arraycopy(columnNames, 1, usedColumnNames, 0, c.getColumnCount()-1);
@@ -71,6 +71,8 @@ public abstract class FileExport {
 				writeFooter();
 				mPrintWriter.close();
 				return mFile;
+			} catch (FileNotFoundException e) {
+				Log.e(TAG, "export Could not export file " + mFile + ": " + e.getMessage(), e);
 			} finally {
 				c.close();
 			}
