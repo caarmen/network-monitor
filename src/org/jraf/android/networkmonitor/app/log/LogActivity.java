@@ -30,6 +30,7 @@ import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.export.CSVExport;
 import org.jraf.android.networkmonitor.app.export.HTMLExport;
+import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -51,7 +52,6 @@ public class LogActivity extends Activity {
 	private static final String TAG = Constants.TAG
 			+ LogActivity.class.getSimpleName();
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.v(TAG, "onCreate " + savedInstanceState);
@@ -71,10 +71,14 @@ public class LogActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_send:
+		case R.id.action_share:
 			sendCSVFile();
 			return true;
 		case R.id.action_refresh:
+			loadHTMLFile();
+			return true;
+		case R.id.action_reset:
+			resetLogs();
 			loadHTMLFile();
 			return true;
 		}
@@ -101,7 +105,7 @@ public class LogActivity extends Activity {
 							Uri.parse("file://" + file.getAbsolutePath()));
 					sendIntent.setType("message/rfc822");
 					startActivity(Intent.createChooser(sendIntent,
-							getResources().getText(R.string.action_send)));
+							getResources().getText(R.string.action_share)));
 					return file;
 				} catch (FileNotFoundException e) {
 					Log.v(TAG, "Error exporting file: " + e.getMessage(), e);
@@ -168,4 +172,29 @@ public class LogActivity extends Activity {
 		asyncTask.execute();
 	}
 
+	private void resetLogs() {
+		Log.v(TAG, "resetLogs");
+		final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+		progressBar.setVisibility(View.VISIBLE);
+		AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				Log.v(TAG, "resetLogs:doInBackground");
+				getContentResolver().delete(NetMonColumns.CONTENT_URI, null,
+						null);
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void result) {
+				Log.v(TAG, "resetLogs:onPostExecute");
+				super.onPostExecute(result);
+				progressBar.setVisibility(View.GONE);
+				Toast.makeText(LogActivity.this, R.string.success_logs_reset,
+						Toast.LENGTH_LONG).show();
+			}
+		};
+		asyncTask.execute();
+	}
 }
