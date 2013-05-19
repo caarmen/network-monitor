@@ -173,6 +173,7 @@ public class LogActivity extends Activity {
 		asyncTask.execute();
 	}
 
+	// TODO cleanup copy/paste between here and MainActivity.resetLogs
 	private void resetLogs() {
 		Log.v(TAG, "resetLogs");
 		new AlertDialog.Builder(this)

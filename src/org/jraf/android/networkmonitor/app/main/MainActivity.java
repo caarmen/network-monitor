@@ -111,7 +111,9 @@ public class MainActivity extends PreferenceActivity {
 				labels[labelIndex]);
 	}
 
+	// TODO cleanup copy/paste between here and LogActivity.resetLogs
 	private void resetLogs() {
+		Log.v(TAG, "resetLogs");
 		new AlertDialog.Builder(this)
 				.setTitle(R.string.action_reset)
 				.setMessage(R.string.confirm_logs_reset)
