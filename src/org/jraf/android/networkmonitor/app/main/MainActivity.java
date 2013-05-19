@@ -67,14 +67,18 @@ public class MainActivity extends PreferenceActivity {
 		int playServicesAvailable = GooglePlayServicesUtil
 				.isGooglePlayServicesAvailable(this);
 		if (playServicesAvailable != ConnectionResult.SUCCESS) {
-			Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-					playServicesAvailable, this, 1);
+			Dialog errorDialog = null;
+
+			if (GooglePlayServicesUtil
+					.isUserRecoverableError(playServicesAvailable)) {
+				errorDialog = GooglePlayServicesUtil.getErrorDialog(
+						playServicesAvailable, this, 1);
+			}
 			if (errorDialog != null)
 				errorDialog.show();
 			else
 				Toast.makeText(this, "Google Play Services must be installed",
 						Toast.LENGTH_LONG).show();
-			return;
 		}
 		startService(new Intent(MainActivity.this, NetMonService.class));
 	}
