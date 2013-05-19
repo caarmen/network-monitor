@@ -19,6 +19,7 @@
     <string name="export_choice_title">Choose the format to export</string>
     <string name="export_choice_csv">CSV</string>
     <string name="export_choice_html">HTML</string>
+    <string name="export_choice_excel">Excel</string>
     <string name="css"><![CDATA[<style type="text/css">
 table {
  border-collapse: collapse;

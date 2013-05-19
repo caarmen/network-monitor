@@ -29,6 +29,7 @@
     <string-array name="export_choices">
         <item>@string/export_choice_csv</item>
         <item>@string/export_choice_html</item>
-    </string-array>
+        <item>@string/export_choice_excel</item>
+        </string-array>
 
 </resources>

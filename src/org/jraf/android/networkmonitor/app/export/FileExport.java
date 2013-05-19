@@ -22,7 +22,7 @@ public abstract class FileExport {
 
 	protected PrintWriter mPrintWriter;
 	protected final Context mContext;
-	private final File mFile;
+	protected final File mFile;
 
 	FileExport(Context context, File file) throws FileNotFoundException {
 		mContext = context;
