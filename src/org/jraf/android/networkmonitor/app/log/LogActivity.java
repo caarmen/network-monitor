@@ -198,7 +198,7 @@ public class LogActivity extends Activity {
 				final WebView webView = (WebView) findViewById(R.id.web_view);
 				webView.getSettings().setUseWideViewPort(true);
 				webView.getSettings().setBuiltInZoomControls(true);
-				webView.loadUrl("file://" + result.getAbsolutePath() + "#end");
+				webView.loadUrl("file://" + result.getAbsolutePath());
 				webView.setWebViewClient(new WebViewClient() {
 
 					@Override

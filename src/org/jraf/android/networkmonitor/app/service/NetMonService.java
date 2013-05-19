@@ -343,13 +343,23 @@ public class NetMonService extends Service {
 
 	private double[] getLatestLocation() {
 		List<String> providers = mLocationManager.getProviders(true);
-		Location location = null;
-		for (int i = providers.size() - 1; i >= 0; i--) {
-			location = mLocationManager.getLastKnownLocation(providers.get(i));
-			if (location != null)
-				return new double[] { location.getLatitude(),
-						location.getLongitude() };
+		Location mostRecentLocation = null;
+		long mostRecentFix = 0;
+		for (String provider : providers) {
+			Location location = mLocationManager.getLastKnownLocation(provider);
+			Log.v(TAG, "Location for provider " + provider + ": " + location);
+			if(location == null)
+				continue;
+			long time = location.getTime();
+			if (time > mostRecentFix) {
+				time = mostRecentFix;
+				mostRecentLocation = location;
+			}
 		}
+		Log.v(TAG, "Most recent location: " + mostRecentLocation);
+		if (mostRecentLocation != null)
+			return new double[] { mostRecentLocation.getLatitude(),
+					mostRecentLocation.getLongitude() };
 		return null;
 	}
 
