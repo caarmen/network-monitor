@@ -48,6 +48,7 @@ import android.telephony.CellLocation;
 import android.telephony.TelephonyManager;
 import android.telephony.cdma.CdmaCellLocation;
 import android.telephony.gsm.GsmCellLocation;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class NetMonService extends Service {
@@ -195,8 +196,11 @@ public class NetMonService extends Service {
 				.getActiveNetworkInfo();
 		if (activeNetworkInfo == null)
 			return values;
-		values.put(NetMonColumns.NETWORK_TYPE, activeNetworkInfo.getTypeName()
-				+ "/" + activeNetworkInfo.getSubtypeName());
+		String networkType = activeNetworkInfo.getTypeName();
+		String networkSubType = activeNetworkInfo.getSubtypeName();
+		if(!TextUtils.isEmpty(networkSubType))
+			networkType += "/" + networkSubType;
+		values.put(NetMonColumns.NETWORK_TYPE, networkType);
 		values.put(NetMonColumns.IS_ROAMING, activeNetworkInfo.isRoaming());
 		values.put(NetMonColumns.IS_AVAILABLE, activeNetworkInfo.isAvailable());
 		values.put(NetMonColumns.IS_CONNECTED, activeNetworkInfo.isConnected());

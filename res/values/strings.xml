@@ -21,6 +21,7 @@ th {
  background-color: #080;
  color: #fff;
  border-right: 1px #fff solid;
+ text-transform: capitalize;
 }
 td {
  white-space: pre;

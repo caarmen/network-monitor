@@ -20,19 +20,19 @@ public class HTMLExport extends FileExport {
 		mPrintWriter.println("  <head>");
 		mPrintWriter.println(mContext.getString(R.string.css));
 		mPrintWriter.println("  </head>");
-		mPrintWriter.println("<table>");
+		mPrintWriter.println("<table><thead>");
 
 		mPrintWriter.println("  <tr>");
 		for (String columnName : columnNames) {
 			columnName = columnName.replaceAll("_"," ");
 			mPrintWriter.println("    <th>" + columnName + "</th>");
 		}
-		mPrintWriter.println("  </tr>");
+		mPrintWriter.println("  </tr></thead><tbody>");
 	}
 
 	@Override
 	void writeFooter() {
-		mPrintWriter.println("</table></body></html>");
+		mPrintWriter.println("</tbody></table></body></html>");
 	}
 
 	@Override
