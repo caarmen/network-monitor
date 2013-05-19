@@ -22,6 +22,9 @@
             android:targetPackage="org.jraf.android.networkmonitor" />
     </Preference>
     <Preference
+        android:key="PREF_RESET_LOG_FILE"
+        android:title="@string/action_reset" />
+    <Preference
         android:key="PREF_ABOUT"
         android:title="@string/preferences_about_title" />
 
