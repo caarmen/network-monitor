@@ -51,7 +51,6 @@ public class LogActivity extends Activity {
 	private static final String TAG = Constants.TAG
 			+ LogActivity.class.getSimpleName();
 
-	private static final String EXTRA_HAS_LOADED_HTML_FILE = "has_loaded_html_file";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

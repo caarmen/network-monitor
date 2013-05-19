@@ -32,7 +32,4 @@ public class Constants {
     public static final String PREF_SERVICE_ENABLED = "PREF_SERVICE_ENABLED";
     public static final boolean PREF_SERVICE_ENABLED_DEFAULT = false;
 
-    public static final String FILE_NAME_LOG = "data.txt";
-
-
 }

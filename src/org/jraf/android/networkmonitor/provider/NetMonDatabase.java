@@ -7,7 +7,7 @@ import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
 
-public class NetMonDatabase extends SQLiteOpenHelper {
+class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
     public static final String DATABASE_NAME = "networkmonitor.db";
@@ -44,7 +44,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
 
     // @formatter:on
 
-    public NetMonDatabase(Context context) {
+    NetMonDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

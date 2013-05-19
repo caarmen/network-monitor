@@ -100,7 +100,7 @@ public class NetMonService extends Service {
 		return Service.START_STICKY;
 	}
 
-	protected void monitorLoop() {
+	private void monitorLoop() {
 		while (!mDestroyed) {
 			ContentValues values = new ContentValues();
 			values.put(NetMonColumns.TIMESTAMP, System.currentTimeMillis());
