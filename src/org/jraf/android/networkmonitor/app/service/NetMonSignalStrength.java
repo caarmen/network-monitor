@@ -8,7 +8,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 /**
- * The logic in this class comes from the Android sources. It is copied here
+ * The logic in this class comes from the Android source code. It is copied here
  * because some of this logic is available only on API level 17+.
  */
 public class NetMonSignalStrength {
@@ -141,9 +141,9 @@ public class NetMonSignalStrength {
 		return level;
 	}
 
-    /**
-     * Get signal level as an int from 0..4
-     */
+	/**
+	 * Get signal level as an int from 0..4
+	 */
 	private int getGSMSignalStrength(SignalStrength signalStrength) {
 		Log.v(TAG, "getGSMSignalStrength " + signalStrength);
 
