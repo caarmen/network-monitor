@@ -88,8 +88,14 @@ public class LogActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	/**
+	 * Ask the user to choose an export format, generate the file in that
+	 * format, then bring up the share chooser intent so the user can choose how
+	 * to share the file.
+	 */
 	private void share() {
 		Log.v(TAG, "share");
+		// Build a chooser dialog for the file format.
 		AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(
 				R.string.export_choice_title).setItems(R.array.export_choices,
 				new DialogInterface.OnClickListener() {
@@ -103,7 +109,6 @@ public class LogActivity extends Activity {
 							if (getString(R.string.export_choice_csv).equals(
 									exportChoices[which])) {
 								fileExport = new CSVExport(LogActivity.this);
-
 							} else if (getString(R.string.export_choice_html)
 									.equals(exportChoices[which])) {
 								fileExport = new HTMLExport(LogActivity.this);
@@ -125,6 +130,12 @@ public class LogActivity extends Activity {
 		builder.create().show();
 	}
 
+	/**
+	 * Run the given file export, then bring up the chooser intent to share the
+	 * exported file.
+	 * 
+	 * @param fileExport
+	 */
 	private void shareFile(final FileExport fileExport) {
 		Log.v(TAG, "shareFile " + fileExport);
 		final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
@@ -137,7 +148,11 @@ public class LogActivity extends Activity {
 				if (!Environment.MEDIA_MOUNTED.equals(Environment
 						.getExternalStorageState()))
 					return null;
+				// Export the file in the background.
 				File file = fileExport.export();
+				if (file == null)
+					return null;
+				// Bring up the chooser to share the file.
 				Intent sendIntent = new Intent();
 				sendIntent.setAction(Intent.ACTION_SEND);
 				sendIntent.putExtra(Intent.EXTRA_SUBJECT,
@@ -164,6 +179,10 @@ public class LogActivity extends Activity {
 		asyncTask.execute();
 	}
 
+	/**
+	 * Read the data from the DB, export it to an HTML file, and load the HTML
+	 * file in the WebView.
+	 */
 	private void loadHTMLFile() {
 		Log.v(TAG, "loadHTMLFile");
 		final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
@@ -174,6 +193,7 @@ public class LogActivity extends Activity {
 			protected File doInBackground(Void... params) {
 				Log.v(TAG, "loadHTMLFile:doInBackground");
 				try {
+					// Export the DB to the HTML file.
 					HTMLExport htmlExport = new HTMLExport(LogActivity.this);
 					File file = htmlExport.export();
 					return file;
@@ -195,6 +215,7 @@ public class LogActivity extends Activity {
 							.show();
 					return;
 				}
+				// Load the exported HTML file into the WebView.
 				final WebView webView = (WebView) findViewById(R.id.web_view);
 				webView.getSettings().setUseWideViewPort(true);
 				webView.getSettings().setBuiltInZoomControls(true);
@@ -214,8 +235,13 @@ public class LogActivity extends Activity {
 	}
 
 	// TODO cleanup copy/paste between here and MainActivity.resetLogs
+	/**
+	 * Purge the DB.
+	 */
 	private void resetLogs() {
 		Log.v(TAG, "resetLogs");
+
+		// Bring up a confirmation dialog.
 		new AlertDialog.Builder(this)
 				.setTitle(R.string.action_reset)
 				.setMessage(R.string.confirm_logs_reset)
@@ -224,6 +250,8 @@ public class LogActivity extends Activity {
 
 							public void onClick(DialogInterface dialog,
 									int whichButton) {
+								// If the user agrees to delete the logs, run
+								// the delete in the background.
 								final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 								progressBar.setVisibility(View.VISIBLE);
 								AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
@@ -240,6 +268,7 @@ public class LogActivity extends Activity {
 
 									@Override
 									protected void onPostExecute(Void result) {
+										// Once the DB is deleted, reload the WebView.
 										Log.v(TAG, "resetLogs:onPostExecute");
 										super.onPostExecute(result);
 										Toast.makeText(LogActivity.this,

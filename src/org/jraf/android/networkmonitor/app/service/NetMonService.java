@@ -46,6 +46,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.telephony.CellLocation;
@@ -94,9 +95,8 @@ public class NetMonService extends Service {
 			return;
 		}
 		Log.d(TAG, "onCreate Service is enabled: starting monitor loop");
+		mPhoneStateListener = new NetMonPhoneStateListener(NetMonService.this);
 
-		mPhoneStateListener = new NetMonPhoneStateListener(
-				NetMonService.this);
 
 		new Thread() {
 
@@ -128,6 +128,7 @@ public class NetMonService extends Service {
 
 	private void monitorLoop() {
 		while (!mDestroyed) {
+			// Put all the data we want to log, into a ContentValues.
 			ContentValues values = new ContentValues();
 			values.put(NetMonColumns.TIMESTAMP, System.currentTimeMillis());
 			values.put(NetMonColumns.GOOGLE_CONNECTION_TEST,
@@ -149,6 +150,8 @@ public class NetMonService extends Service {
 				values.put(NetMonColumns.DEVICE_LATITUDE, location[0]);
 				values.put(NetMonColumns.DEVICE_LONGITUDE, location[1]);
 			}
+
+			// Insert this ContentValues into the DB.
 			getContentResolver().insert(NetMonColumns.CONTENT_URI, values);
 
 			// Sleep
@@ -166,11 +169,6 @@ public class NetMonService extends Service {
 		}
 	}
 
-	@TargetApi(16)
-	private boolean isActiveNetworkMetered() {
-		return mConnectivityManager.isActiveNetworkMetered();
-	}
-
 	private long getUpdateInterval() {
 		String updateIntervalStr = PreferenceManager
 				.getDefaultSharedPreferences(this).getString(
@@ -180,6 +178,14 @@ public class NetMonService extends Service {
 		return updateInterval;
 	}
 
+	/**
+	 * Try to open a connection to an HTTP server, and execute a simple GET
+	 * request. If we can read a response to the GET request, we consider that
+	 * the network is up.
+	 * 
+	 * @return true if we were able to read a response to a GET request, false
+	 *         if any error occurred trying to execute the GET.
+	 */
 	private boolean isNetworkUp() {
 		Socket socket = null;
 		try {
@@ -221,6 +227,9 @@ public class NetMonService extends Service {
 		}
 	}
 
+	/**
+	 * @return information from the currently active {@link NetworkInfo}.
+	 */
 	private ContentValues getActiveNetworkInfo() {
 		ContentValues values = new ContentValues();
 
@@ -338,6 +347,9 @@ public class NetMonService extends Service {
 		}
 	}
 
+	/**
+	 * @return information from the current cell we are connected to.
+	 */
 	private ContentValues getCellLocation() {
 		ContentValues values = new ContentValues();
 		CellLocation cellLocation = mTelephonyManager.getCellLocation();
@@ -369,6 +381,12 @@ public class NetMonService extends Service {
 		return values;
 	}
 
+	/**
+	 * @return the last location the device recorded as an array of latitude and
+	 *         longitude. Tries to use Google Play Services if available.
+	 *         Otherwise falls back to the most recently retrieved location
+	 *         among all the providers.
+	 */
 	private double[] getLatestLocation() {
 		Location mostRecentLocation = null;
 		// Try getting the location from the LocationClient
@@ -405,6 +423,11 @@ public class NetMonService extends Service {
 	@TargetApi(9)
 	private int getPsc(GsmCellLocation gsmCellLocation) {
 		return gsmCellLocation.getPsc();
+	}
+
+	@TargetApi(16)
+	private boolean isActiveNetworkMetered() {
+		return mConnectivityManager.isActiveNetworkMetered();
 	}
 
 	@Override

@@ -137,6 +137,9 @@ public class MainActivity extends PreferenceActivity {
 	}
 
 	// TODO cleanup copy/paste between here and LogActivity.resetLogs
+	/**
+	 * Purge the DB.
+	 */
 	private void resetLogs() {
 		Log.v(TAG, "resetLogs");
 		new AlertDialog.Builder(this)
@@ -173,6 +176,8 @@ public class MainActivity extends PreferenceActivity {
 						}).setNegativeButton(android.R.string.no, null).show();
 	}
 
+	// When the user taps on the "reset logs" item, bring up a confirmation
+	// dialog, then purge the DB.
 	OnPreferenceClickListener mOnPreferenceClickListener = new OnPreferenceClickListener() {
 
 		@Override
