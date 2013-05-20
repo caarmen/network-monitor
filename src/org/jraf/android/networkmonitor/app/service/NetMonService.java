@@ -34,11 +34,6 @@ import java.util.List;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
-import com.google.android.gms.location.LocationClient;
-
 import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.ContentValues;
@@ -54,11 +49,18 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.telephony.CellLocation;
+import android.telephony.PhoneStateListener;
+import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.telephony.cdma.CdmaCellLocation;
 import android.telephony.gsm.GsmCellLocation;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
+import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationClient;
 
 public class NetMonService extends Service {
 	private static final String TAG = Constants.TAG
@@ -75,6 +77,8 @@ public class NetMonService extends Service {
 	private ConnectivityManager mConnectivityManager;
 	private LocationManager mLocationManager;
 	private LocationClient mLocationClient;
+	private NetMonPhoneStateListener mPhoneStateListener;
+	private int mLastSignalStrength;
 	private volatile boolean mDestroyed;
 
 	@Override
@@ -90,6 +94,10 @@ public class NetMonService extends Service {
 			return;
 		}
 		Log.d(TAG, "onCreate Service is enabled: starting monitor loop");
+
+		mPhoneStateListener = new NetMonPhoneStateListener(
+				NetMonService.this);
+
 		new Thread() {
 
 			@Override
@@ -100,6 +108,8 @@ public class NetMonService extends Service {
 				mLocationClient = new LocationClient(NetMonService.this,
 						mConnectionCallbacks, mConnectionFailedListener);
 				mLocationClient.connect();
+				mTelephonyManager.listen(mPhoneStateListener,
+						PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
 				monitorLoop();
 			}
 		}.start();
@@ -127,6 +137,7 @@ public class NetMonService extends Service {
 			values.put(NetMonColumns.MOBILE_DATA_NETWORK_TYPE,
 					getDataNetworkType());
 			values.putAll(getCellLocation());
+			values.put(NetMonColumns.CELL_SIGNAL_STRENGTH, mLastSignalStrength);
 			values.put(NetMonColumns.DATA_ACTIVITY, getDataActivity());
 			values.put(NetMonColumns.DATA_STATE, getDataState());
 			values.put(NetMonColumns.SIM_STATE, getSimState());
@@ -332,7 +343,13 @@ public class NetMonService extends Service {
 		CellLocation cellLocation = mTelephonyManager.getCellLocation();
 		if (cellLocation instanceof GsmCellLocation) {
 			GsmCellLocation gsmCellLocation = (GsmCellLocation) cellLocation;
-			values.put(NetMonColumns.GSM_CELL_ID, gsmCellLocation.getCid());
+			int cid = gsmCellLocation.getCid();
+			// The javadoc says the cell id should be less than FFFF, but this
+			// isn't always so. We'll report both the full cell id returned by
+			// Android, and the truncated one (taking only the last 2 bytes).
+			int shortCid = cid & 0xFFFF;
+			values.put(NetMonColumns.GSM_FULL_CELL_ID, cid);
+			values.put(NetMonColumns.GSM_SHORT_CELL_ID, shortCid);
 			values.put(NetMonColumns.GSM_CELL_LAC, gsmCellLocation.getLac());
 			if (Build.VERSION.SDK_INT >= 9)
 				values.put(NetMonColumns.GSM_CELL_PSC, getPsc(gsmCellLocation));
@@ -393,7 +410,11 @@ public class NetMonService extends Service {
 	@Override
 	public void onDestroy() {
 		mDestroyed = true;
-		mLocationClient.disconnect();
+		if (mLocationClient != null)
+			mLocationClient.disconnect();
+		if (mTelephonyManager != null)
+			mTelephonyManager.listen(mPhoneStateListener,
+					PhoneStateListener.LISTEN_NONE);
 		super.onDestroy();
 	}
 
@@ -414,6 +435,19 @@ public class NetMonService extends Service {
 		@Override
 		public void onConnectionFailed(ConnectionResult result) {
 			Log.v(TAG, "onConnectionFailed: " + result);
+		}
+	};
+
+	private class NetMonPhoneStateListener extends PhoneStateListener {
+		private final NetMonSignalStrength mNetMonSignalStrength;
+
+		public NetMonPhoneStateListener(Context context) {
+			mNetMonSignalStrength = new NetMonSignalStrength(context);
+		}
+
+		public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+			mLastSignalStrength = mNetMonSignalStrength
+					.getLevel(signalStrength);
 		}
 	};
 

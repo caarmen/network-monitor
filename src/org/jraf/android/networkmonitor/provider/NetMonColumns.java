@@ -27,12 +27,14 @@ public class NetMonColumns implements BaseColumns {
 	public static final String IS_NETWORK_METERED = "is_network_metered";
 	public static final String DEVICE_LATITUDE = "device_latitude";
 	public static final String DEVICE_LONGITUDE = "device_longitude";
+	public static final String CELL_SIGNAL_STRENGTH = "cell_signal_strength";
 	public static final String CDMA_CELL_BASE_STATION_ID = "cdma_cell_base_station_id";
 	public static final String CDMA_CELL_LATITUDE = "cdma_cell_latitude";
 	public static final String CDMA_CELL_LONGITUDE = "cdma_cell_longitude";
 	public static final String CDMA_CELL_NETWORK_ID = "cdma_cell_network_id";
 	public static final String CDMA_CELL_SYSTEM_ID = "cdma_cell_system_id";
-	public static final String GSM_CELL_ID = "gsm_cell_id";
+	public static final String GSM_FULL_CELL_ID = "gsm_full_cell_id";
+	public static final String GSM_SHORT_CELL_ID = "gsm_short_cell_id";
 	public static final String GSM_CELL_LAC = "gsm_cell_lac";
 	public static final String GSM_CELL_PSC = "gsm_cell_psc";
 
