@@ -51,6 +51,7 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.telephony.CellLocation;
 import android.telephony.PhoneStateListener;
+import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.telephony.cdma.CdmaCellLocation;
@@ -97,7 +98,6 @@ public class NetMonService extends Service {
 		Log.d(TAG, "onCreate Service is enabled: starting monitor loop");
 		mPhoneStateListener = new NetMonPhoneStateListener(NetMonService.this);
 
-
 		new Thread() {
 
 			@Override
@@ -109,7 +109,7 @@ public class NetMonService extends Service {
 						mConnectionCallbacks, mConnectionFailedListener);
 				mLocationClient.connect();
 				mTelephonyManager.listen(mPhoneStateListener,
-						PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+						PhoneStateListener.LISTEN_SIGNAL_STRENGTHS|PhoneStateListener.LISTEN_SERVICE_STATE);
 				monitorLoop();
 			}
 		}.start();
@@ -135,10 +135,10 @@ public class NetMonService extends Service {
 					isNetworkUp() ? Constants.CONNECTION_TEST_PASS
 							: Constants.CONNECTION_TEST_FAIL);
 			values.putAll(getActiveNetworkInfo());
+			values.put(NetMonColumns.CELL_SIGNAL_STRENGTH, mLastSignalStrength);
 			values.put(NetMonColumns.MOBILE_DATA_NETWORK_TYPE,
 					getDataNetworkType());
 			values.putAll(getCellLocation());
-			values.put(NetMonColumns.CELL_SIGNAL_STRENGTH, mLastSignalStrength);
 			values.put(NetMonColumns.DATA_ACTIVITY, getDataActivity());
 			values.put(NetMonColumns.DATA_STATE, getDataState());
 			values.put(NetMonColumns.SIM_STATE, getSimState());
@@ -471,6 +471,12 @@ public class NetMonService extends Service {
 		public void onSignalStrengthsChanged(SignalStrength signalStrength) {
 			mLastSignalStrength = mNetMonSignalStrength
 					.getLevel(signalStrength);
+		}
+
+		public void onServiceStateChanged(ServiceState serviceState) {
+			Log.v(TAG, "onServiceStateChanged " + serviceState);
+			if (serviceState.getState() != ServiceState.STATE_IN_SERVICE)
+				mLastSignalStrength = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
 		}
 	};
 
