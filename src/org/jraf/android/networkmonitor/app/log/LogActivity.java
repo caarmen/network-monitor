@@ -29,6 +29,7 @@ import java.io.FileNotFoundException;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.export.CSVExport;
+import org.jraf.android.networkmonitor.app.export.DBExport;
 import org.jraf.android.networkmonitor.app.export.ExcelExport;
 import org.jraf.android.networkmonitor.app.export.FileExport;
 import org.jraf.android.networkmonitor.app.export.HTMLExport;
@@ -115,6 +116,9 @@ public class LogActivity extends Activity {
 							} else if (getString(R.string.export_choice_excel)
 									.equals(exportChoices[which])) {
 								fileExport = new ExcelExport(LogActivity.this);
+							} else if (getString(R.string.export_choice_db)
+									.equals(exportChoices[which])) {
+								fileExport = new DBExport(LogActivity.this);
 							} else {
 								Log.w(TAG, "Invalid file format chosen: "
 										+ which);

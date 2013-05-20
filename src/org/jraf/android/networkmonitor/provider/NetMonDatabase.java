@@ -7,10 +7,10 @@ import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
 
-class NetMonDatabase extends SQLiteOpenHelper {
+public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
-    private static final String DATABASE_NAME = "networkmonitor.db";
+    public static final String DATABASE_NAME = "networkmonitor.db";
     private static final int DATABASE_VERSION = 1;
 
     // @formatter:off
