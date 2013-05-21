@@ -26,6 +26,10 @@
         android:title="@string/action_reset" />
     <Preference
         android:key="PREF_ABOUT"
-        android:title="@string/preferences_about_title" />
+        android:title="@string/preferences_about_title" >
+        <intent
+            android:targetClass="org.jraf.android.networkmonitor.app.about.AboutActivity"
+            android:targetPackage="org.jraf.android.networkmonitor" />
+    </Preference>
 
 </PreferenceScreen>
