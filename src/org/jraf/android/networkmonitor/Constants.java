@@ -34,4 +34,5 @@ public class Constants {
     public static final boolean PREF_SERVICE_ENABLED_DEFAULT = false;
     public static final String CONNECTION_TEST_PASS = "PASS";
     public static final String CONNECTION_TEST_FAIL = "FAIL";
+    public static final String DATA_STATE_CONNECTED = "CONNECTED";
 }

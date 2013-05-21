@@ -31,6 +31,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
@@ -49,12 +50,14 @@ public class NetMonProvider extends ContentProvider {
 
     private static final int URI_TYPE_NETWORKMONITOR = 0;
     private static final int URI_TYPE_NETWORKMONITOR_ID = 1;
+    private static final int URI_TYPE_GSM_SUMMARY = 2;
 
     private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
         URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME, URI_TYPE_NETWORKMONITOR);
         URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME + "/#", URI_TYPE_NETWORKMONITOR_ID);
+        URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME + NetMonColumns.GSM_SUMMARY, URI_TYPE_GSM_SUMMARY);
     }
 
     private NetMonDatabase mNetworkMonitorDatabase;
@@ -73,6 +76,8 @@ public class NetMonProvider extends ContentProvider {
                 return TYPE_CURSOR_DIR + NetMonColumns.TABLE_NAME;
             case URI_TYPE_NETWORKMONITOR_ID:
                 return TYPE_CURSOR_ITEM + NetMonColumns.TABLE_NAME;
+            case URI_TYPE_GSM_SUMMARY:
+                return TYPE_CURSOR_DIR + NetMonColumns.TABLE_NAME;
 
         }
         return null;
@@ -144,18 +149,64 @@ public class NetMonProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         final String groupBy = uri.getQueryParameter(QUERY_GROUP_BY);
         Log.d(TAG, "query uri=" + uri + " selection=" + selection + " sortOrder=" + sortOrder + " groupBy=" + groupBy);
-        final QueryParams queryParams = getQueryParams(uri, selection, true);
-        final Cursor res = mNetworkMonitorDatabase.getReadableDatabase().query(queryParams.tableWithJoins, projection, queryParams.whereClause, selectionArgs,
-                groupBy, null, sortOrder == null ? queryParams.orderBy : sortOrder);
+
+        final int matchedId = URI_MATCHER.match(uri);
+        final Cursor res;
+        switch (matchedId) {
+            case URI_TYPE_NETWORKMONITOR:
+            case URI_TYPE_NETWORKMONITOR_ID:
+
+                final QueryParams queryParams = getQueryParams(uri, selection, true);
+                res = mNetworkMonitorDatabase.getReadableDatabase().query(queryParams.table, projection, queryParams.whereClause, selectionArgs, groupBy, null,
+                        sortOrder == null ? queryParams.orderBy : sortOrder);
+                break;
+            case URI_TYPE_GSM_SUMMARY:
+                String[] gsmCellIdColumns = new String[] { NetMonColumns.GSM_CELL_LAC, NetMonColumns.GSM_SHORT_CELL_ID, NetMonColumns.GSM_FULL_CELL_ID };
+                res = buildGoogleConnectionTestCursor(gsmCellIdColumns);
+                break;
+            default:
+                return null;
+        }
         res.setNotificationUri(getContext().getContentResolver(), uri);
         return res;
     }
 
     private static class QueryParams {
         public String table;
-        public String tableWithJoins;
         public String whereClause;
         public String orderBy;
+    }
+
+    private Cursor buildGoogleConnectionTestCursor(String[] cellIdColumns) {
+        String mainTableAlias = "n";
+        String passSubquery = buildGoogleConnectionTestSubQuery("pass", cellIdColumns, mainTableAlias, NetMonColumns.PASS_COUNT);
+        String failSubquery = buildGoogleConnectionTestSubQuery("fail", cellIdColumns, mainTableAlias, NetMonColumns.FAIL_COUNT);
+        String[] dbProjection = new String[cellIdColumns.length + 2];
+        System.arraycopy(cellIdColumns, 0, dbProjection, 0, cellIdColumns.length);
+        dbProjection[dbProjection.length - 2] = passSubquery;
+        dbProjection[dbProjection.length - 1] = failSubquery;
+        String dbTable = NetMonColumns.TABLE_NAME + " as " + mainTableAlias;
+        String dbSelection = mainTableAlias + "." + NetMonColumns.DATA_STATE + " = ?";
+        String[] dbSelectionArgs = new String[] { Constants.CONNECTION_TEST_PASS, Constants.DATA_STATE_CONNECTED, Constants.CONNECTION_TEST_FAIL,
+                Constants.DATA_STATE_CONNECTED, Constants.DATA_STATE_CONNECTED };
+        String dbGroupBy = TextUtils.join(",", cellIdColumns);
+        String dbOrderBy = dbGroupBy;
+
+        Cursor cursor = mNetworkMonitorDatabase.getReadableDatabase().query(dbTable, dbProjection, dbSelection, dbSelectionArgs, dbGroupBy, null, dbOrderBy);
+        return cursor;
+    }
+
+    private String buildGoogleConnectionTestSubQuery(String googleConnectionTestValue, String[] cellIdColumns, String mainTableAlias, String subqueryAlias) {
+        String tableAlias = NetMonColumns.TABLE_NAME + "_" + googleConnectionTestValue;
+        String query = "( SELECT COUNT(" + NetMonColumns.GOOGLE_CONNECTION_TEST + ") " + " FROM " + NetMonColumns.TABLE_NAME + " " + tableAlias + " WHERE ";
+        StringBuilder join = new StringBuilder();
+        for (String cellIdColumn : cellIdColumns) {
+            join.append(tableAlias + "." + cellIdColumn + "=" + mainTableAlias + "." + cellIdColumn + " AND ");
+        }
+        query += join.toString();
+        query += tableAlias + "." + NetMonColumns.GOOGLE_CONNECTION_TEST + "=? " + " AND " + tableAlias + "." + NetMonColumns.DATA_STATE + "=?";
+        query += ") as " + subqueryAlias;
+        return query;
     }
 
     private QueryParams getQueryParams(Uri uri, String selection, boolean isQuery) {
@@ -165,10 +216,11 @@ public class NetMonProvider extends ContentProvider {
         switch (matchedId) {
             case URI_TYPE_NETWORKMONITOR:
             case URI_TYPE_NETWORKMONITOR_ID:
-                res.table = res.tableWithJoins = NetMonColumns.TABLE_NAME;
+                res.table = NetMonColumns.TABLE_NAME;
                 res.orderBy = NetMonColumns.DEFAULT_ORDER;
                 break;
-
+            case URI_TYPE_GSM_SUMMARY:
+                res.table = NetMonColumns.TABLE_NAME;
             default:
                 throw new IllegalArgumentException("The uri '" + uri + "' is not supported by this ContentProvider");
         }

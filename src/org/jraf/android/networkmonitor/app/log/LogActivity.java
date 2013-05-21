@@ -51,6 +51,7 @@ import org.jraf.android.networkmonitor.app.export.DBExport;
 import org.jraf.android.networkmonitor.app.export.ExcelExport;
 import org.jraf.android.networkmonitor.app.export.FileExport;
 import org.jraf.android.networkmonitor.app.export.HTMLExport;
+import org.jraf.android.networkmonitor.app.export.SummaryExport;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 public class LogActivity extends Activity {
@@ -139,10 +140,12 @@ public class LogActivity extends Activity {
                 // Export the file in the background.
                 File file = fileExport.export();
                 if (file == null) return null;
+                String summary = SummaryExport.getSummary(LogActivity.this);
                 // Bring up the chooser to share the file.
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject_send_log));
+                sendIntent.putExtra(Intent.EXTRA_TEXT, summary);
                 sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getAbsolutePath()));
                 sendIntent.setType("message/rfc822");
                 startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.action_share)));
