@@ -5,6 +5,7 @@ import org.jraf.android.networkmonitor.Constants;
 import android.content.Context;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
+import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 
 /**
@@ -38,7 +39,8 @@ public class NetMonSignalStrength {
 	public int getLevel(SignalStrength signalStrength) {
 		Log.v(TAG, "getLevel " + signalStrength);
 		int phoneType = mTelephonyManager.getPhoneType();
-		if (phoneType == TelephonyManager.PHONE_TYPE_GSM) {
+		if (phoneType == TelephonyManager.PHONE_TYPE_GSM
+				|| mTelephonyManager.getCellLocation() instanceof GsmCellLocation) {
 			return getGSMSignalStrength(signalStrength);
 		} else if (phoneType == TelephonyManager.PHONE_TYPE_CDMA) {
 			return getCDMASignalStrength(signalStrength);
