@@ -2,6 +2,7 @@ Notice for all the files in this folder.
 ------------------------------------------------------------
 
 
+   Copyright (C) 2013 Carmen Alvarez (c@rmen.ca)
    Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
 
 
