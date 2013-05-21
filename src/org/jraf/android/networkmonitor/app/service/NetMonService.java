@@ -32,9 +32,6 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.List;
 
-import org.jraf.android.networkmonitor.Constants;
-import org.jraf.android.networkmonitor.provider.NetMonColumns;
-
 import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.ContentValues;
@@ -59,425 +56,390 @@ import android.telephony.gsm.GsmCellLocation;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.jraf.android.networkmonitor.Constants;
+import org.jraf.android.networkmonitor.provider.NetMonColumns;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
 import com.google.android.gms.location.LocationClient;
 
 public class NetMonService extends Service {
-	private static final String TAG = Constants.TAG
-			+ NetMonService.class.getSimpleName();
+    private static final String TAG = Constants.TAG + NetMonService.class.getSimpleName();
 
-	// private static final String HOST = "www.google.com";
-	private static final String HOST = "173.194.34.16";
-	private static final int PORT = 80;
-	private static final int TIMEOUT = 15000;
-	private static final String HTTP_GET = "GET / HTTP/1.1\r\n\r\n";
-	private static final String UNKNOWN = "";
+    // private static final String HOST = "www.google.com";
+    private static final String HOST = "173.194.34.16";
+    private static final int PORT = 80;
+    private static final int TIMEOUT = 15000;
+    private static final String HTTP_GET = "GET / HTTP/1.1\r\n\r\n";
+    private static final String UNKNOWN = "";
 
-	private TelephonyManager mTelephonyManager;
-	private ConnectivityManager mConnectivityManager;
-	private LocationManager mLocationManager;
-	private LocationClient mLocationClient;
-	private NetMonPhoneStateListener mPhoneStateListener;
-	private int mLastSignalStrength;
-	private volatile boolean mDestroyed;
+    private TelephonyManager mTelephonyManager;
+    private ConnectivityManager mConnectivityManager;
+    private LocationManager mLocationManager;
+    private LocationClient mLocationClient;
+    private NetMonPhoneStateListener mPhoneStateListener;
+    private int mLastSignalStrength;
+    private volatile boolean mDestroyed;
 
-	@Override
-	public IBinder onBind(Intent intent) {
-		return null;
-	}
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
-	@Override
-	public void onCreate() {
-		if (!isServiceEnabled()) {
-			Log.d(TAG, "onCreate Service is disabled: stopping now");
-			stopSelf();
-			return;
-		}
-		Log.d(TAG, "onCreate Service is enabled: starting monitor loop");
-		mPhoneStateListener = new NetMonPhoneStateListener(NetMonService.this);
+    @Override
+    public void onCreate() {
+        if (!isServiceEnabled()) {
+            Log.d(TAG, "onCreate Service is disabled: stopping now");
+            stopSelf();
+            return;
+        }
+        Log.d(TAG, "onCreate Service is enabled: starting monitor loop");
+        mPhoneStateListener = new NetMonPhoneStateListener(NetMonService.this);
 
-		new Thread() {
+        new Thread() {
 
-			@Override
-			public void run() {
-				mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-				mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-				mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-				mLocationClient = new LocationClient(NetMonService.this,
-						mConnectionCallbacks, mConnectionFailedListener);
-				mLocationClient.connect();
-				mTelephonyManager.listen(mPhoneStateListener,
-						PhoneStateListener.LISTEN_SIGNAL_STRENGTHS|PhoneStateListener.LISTEN_SERVICE_STATE);
-				monitorLoop();
-			}
-		}.start();
-	}
+            @Override
+            public void run() {
+                mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                mLocationClient = new LocationClient(NetMonService.this, mConnectionCallbacks, mConnectionFailedListener);
+                mLocationClient.connect();
+                mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_SERVICE_STATE);
+                monitorLoop();
+            }
+        }.start();
+    }
 
-	private boolean isServiceEnabled() {
-		return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
-				Constants.PREF_SERVICE_ENABLED,
-				Constants.PREF_SERVICE_ENABLED_DEFAULT);
-	}
+    private boolean isServiceEnabled() {
+        return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.PREF_SERVICE_ENABLED, Constants.PREF_SERVICE_ENABLED_DEFAULT);
+    }
 
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		return Service.START_STICKY;
-	}
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return Service.START_STICKY;
+    }
 
-	private void monitorLoop() {
-		while (!mDestroyed) {
-			// Put all the data we want to log, into a ContentValues.
-			ContentValues values = new ContentValues();
-			values.put(NetMonColumns.TIMESTAMP, System.currentTimeMillis());
-			values.put(NetMonColumns.GOOGLE_CONNECTION_TEST,
-					isNetworkUp() ? Constants.CONNECTION_TEST_PASS
-							: Constants.CONNECTION_TEST_FAIL);
-			values.putAll(getActiveNetworkInfo());
-			values.put(NetMonColumns.CELL_SIGNAL_STRENGTH, mLastSignalStrength);
-			values.put(NetMonColumns.MOBILE_DATA_NETWORK_TYPE,
-					getDataNetworkType());
-			values.putAll(getCellLocation());
-			values.put(NetMonColumns.DATA_ACTIVITY, getDataActivity());
-			values.put(NetMonColumns.DATA_STATE, getDataState());
-			values.put(NetMonColumns.SIM_STATE, getSimState());
-			if (Build.VERSION.SDK_INT >= 16)
-				values.put(NetMonColumns.IS_NETWORK_METERED,
-						isActiveNetworkMetered());
-			double[] location = getLatestLocation();
-			if (location != null) {
-				values.put(NetMonColumns.DEVICE_LATITUDE, location[0]);
-				values.put(NetMonColumns.DEVICE_LONGITUDE, location[1]);
-			}
+    private void monitorLoop() {
+        while (!mDestroyed) {
+            // Put all the data we want to log, into a ContentValues.
+            ContentValues values = new ContentValues();
+            values.put(NetMonColumns.TIMESTAMP, System.currentTimeMillis());
+            values.put(NetMonColumns.GOOGLE_CONNECTION_TEST, isNetworkUp() ? Constants.CONNECTION_TEST_PASS : Constants.CONNECTION_TEST_FAIL);
+            values.putAll(getActiveNetworkInfo());
+            values.put(NetMonColumns.CELL_SIGNAL_STRENGTH, mLastSignalStrength);
+            values.put(NetMonColumns.MOBILE_DATA_NETWORK_TYPE, getDataNetworkType());
+            values.putAll(getCellLocation());
+            values.put(NetMonColumns.DATA_ACTIVITY, getDataActivity());
+            values.put(NetMonColumns.DATA_STATE, getDataState());
+            values.put(NetMonColumns.SIM_STATE, getSimState());
+            if (Build.VERSION.SDK_INT >= 16) values.put(NetMonColumns.IS_NETWORK_METERED, isActiveNetworkMetered());
+            double[] location = getLatestLocation();
+            if (location != null) {
+                values.put(NetMonColumns.DEVICE_LATITUDE, location[0]);
+                values.put(NetMonColumns.DEVICE_LONGITUDE, location[1]);
+            }
 
-			// Insert this ContentValues into the DB.
-			getContentResolver().insert(NetMonColumns.CONTENT_URI, values);
+            // Insert this ContentValues into the DB.
+            getContentResolver().insert(NetMonColumns.CONTENT_URI, values);
 
-			// Sleep
-			long updateInterval = getUpdateInterval();
-			Log.d(TAG, "monitorLoop Sleeping " + updateInterval / 1000
-					+ " seconds...");
-			SystemClock.sleep(updateInterval);
+            // Sleep
+            long updateInterval = getUpdateInterval();
+            Log.d(TAG, "monitorLoop Sleeping " + updateInterval / 1000 + " seconds...");
+            SystemClock.sleep(updateInterval);
 
-			// Loop if service is still enabled, otherwise stop
-			if (!isServiceEnabled()) {
-				Log.d(TAG, "onCreate Service is disabled: stopping now");
-				stopSelf();
-				return;
-			}
-		}
-	}
+            // Loop if service is still enabled, otherwise stop
+            if (!isServiceEnabled()) {
+                Log.d(TAG, "onCreate Service is disabled: stopping now");
+                stopSelf();
+                return;
+            }
+        }
+    }
 
-	private long getUpdateInterval() {
-		String updateIntervalStr = PreferenceManager
-				.getDefaultSharedPreferences(this).getString(
-						Constants.PREF_UPDATE_INTERVAL,
-						Constants.PREF_UPDATE_INTERVAL_DEFAULT);
-		long updateInterval = Long.valueOf(updateIntervalStr);
-		return updateInterval;
-	}
+    private long getUpdateInterval() {
+        String updateIntervalStr = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.PREF_UPDATE_INTERVAL,
+                Constants.PREF_UPDATE_INTERVAL_DEFAULT);
+        long updateInterval = Long.valueOf(updateIntervalStr);
+        return updateInterval;
+    }
 
-	/**
-	 * Try to open a connection to an HTTP server, and execute a simple GET
-	 * request. If we can read a response to the GET request, we consider that
-	 * the network is up.
-	 * 
-	 * @return true if we were able to read a response to a GET request, false
-	 *         if any error occurred trying to execute the GET.
-	 */
-	private boolean isNetworkUp() {
-		Socket socket = null;
-		try {
-			socket = new Socket();
-			socket.setSoTimeout(TIMEOUT);
-			Log.d(TAG, "isNetworkUp Resolving " + HOST);
-			InetSocketAddress remoteAddr = new InetSocketAddress(HOST, PORT);
-			InetAddress address = remoteAddr.getAddress();
-			if (address == null) {
-				Log.d(TAG, "isNetworkUp Could not resolve");
-				return false;
-			}
-			Log.d(TAG, "isNetworkUp Resolved " + address.getHostAddress());
-			Log.d(TAG, "isNetworkUp Connecting...");
-			socket.connect(remoteAddr, TIMEOUT);
-			Log.d(TAG, "isNetworkUp Connected");
+    /**
+     * Try to open a connection to an HTTP server, and execute a simple GET request. If we can read a response to the GET request, we consider that the network
+     * is up.
+     * 
+     * @return {@code true} if we were able to read a response to a GET request, {@code false} if any error occurred trying to execute the GET.
+     */
+    private boolean isNetworkUp() {
+        Socket socket = null;
+        try {
+            socket = new Socket();
+            socket.setSoTimeout(TIMEOUT);
+            Log.d(TAG, "isNetworkUp Resolving " + HOST);
+            InetSocketAddress remoteAddr = new InetSocketAddress(HOST, PORT);
+            InetAddress address = remoteAddr.getAddress();
+            if (address == null) {
+                Log.d(TAG, "isNetworkUp Could not resolve");
+                return false;
+            }
+            Log.d(TAG, "isNetworkUp Resolved " + address.getHostAddress());
+            Log.d(TAG, "isNetworkUp Connecting...");
+            socket.connect(remoteAddr, TIMEOUT);
+            Log.d(TAG, "isNetworkUp Connected");
 
-			Log.d(TAG, "isNetworkUp Sending GET...");
-			OutputStream outputStream = socket.getOutputStream();
-			outputStream.write(HTTP_GET.getBytes("utf-8"));
-			outputStream.flush();
-			Log.d(TAG, "isNetworkUp Sent GET");
-			InputStream inputStream = socket.getInputStream();
-			Log.d(TAG, "isNetworkUp Reading...");
-			int read = inputStream.read();
-			Log.d(TAG, "isNetworkUp Read read=" + read);
-			return read != -1;
-		} catch (Throwable t) {
-			Log.d(TAG, "isNetworkUp Caught an exception", t);
-			return false;
-		} finally {
-			if (socket != null) {
-				try {
-					socket.close();
-				} catch (IOException e) {
-					Log.w(TAG, "isNetworkUp Could not close socket", e);
-				}
-			}
-		}
-	}
+            Log.d(TAG, "isNetworkUp Sending GET...");
+            OutputStream outputStream = socket.getOutputStream();
+            outputStream.write(HTTP_GET.getBytes("utf-8"));
+            outputStream.flush();
+            Log.d(TAG, "isNetworkUp Sent GET");
+            InputStream inputStream = socket.getInputStream();
+            Log.d(TAG, "isNetworkUp Reading...");
+            int read = inputStream.read();
+            Log.d(TAG, "isNetworkUp Read read=" + read);
+            return read != -1;
+        } catch (Throwable t) {
+            Log.d(TAG, "isNetworkUp Caught an exception", t);
+            return false;
+        } finally {
+            if (socket != null) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    Log.w(TAG, "isNetworkUp Could not close socket", e);
+                }
+            }
+        }
+    }
 
-	/**
-	 * @return information from the currently active {@link NetworkInfo}.
-	 */
-	private ContentValues getActiveNetworkInfo() {
-		ContentValues values = new ContentValues();
+    /**
+     * @return information from the currently active {@link NetworkInfo}.
+     */
+    private ContentValues getActiveNetworkInfo() {
+        ContentValues values = new ContentValues();
 
-		NetworkInfo activeNetworkInfo = mConnectivityManager
-				.getActiveNetworkInfo();
-		if (activeNetworkInfo == null)
-			return values;
-		String networkType = activeNetworkInfo.getTypeName();
-		String networkSubType = activeNetworkInfo.getSubtypeName();
-		if (!TextUtils.isEmpty(networkSubType))
-			networkType += "/" + networkSubType;
-		values.put(NetMonColumns.NETWORK_TYPE, networkType);
-		values.put(NetMonColumns.IS_ROAMING, activeNetworkInfo.isRoaming());
-		values.put(NetMonColumns.IS_AVAILABLE, activeNetworkInfo.isAvailable());
-		values.put(NetMonColumns.IS_CONNECTED, activeNetworkInfo.isConnected());
-		values.put(NetMonColumns.IS_FAILOVER, activeNetworkInfo.isFailover());
-		values.put(NetMonColumns.DETAILED_STATE, activeNetworkInfo
-				.getDetailedState().toString());
-		values.put(NetMonColumns.REASON, activeNetworkInfo.getReason());
-		values.put(NetMonColumns.EXTRA_INFO, activeNetworkInfo.getExtraInfo());
-		return values;
-	}
+        NetworkInfo activeNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo == null) return values;
+        String networkType = activeNetworkInfo.getTypeName();
+        String networkSubType = activeNetworkInfo.getSubtypeName();
+        if (!TextUtils.isEmpty(networkSubType)) networkType += "/" + networkSubType;
+        values.put(NetMonColumns.NETWORK_TYPE, networkType);
+        values.put(NetMonColumns.IS_ROAMING, activeNetworkInfo.isRoaming());
+        values.put(NetMonColumns.IS_AVAILABLE, activeNetworkInfo.isAvailable());
+        values.put(NetMonColumns.IS_CONNECTED, activeNetworkInfo.isConnected());
+        values.put(NetMonColumns.IS_FAILOVER, activeNetworkInfo.isFailover());
+        values.put(NetMonColumns.DETAILED_STATE, activeNetworkInfo.getDetailedState().toString());
+        values.put(NetMonColumns.REASON, activeNetworkInfo.getReason());
+        values.put(NetMonColumns.EXTRA_INFO, activeNetworkInfo.getExtraInfo());
+        return values;
+    }
 
-	private String getDataNetworkType() {
-		int networkType = mTelephonyManager.getNetworkType();
-		switch (networkType) {
-		case TelephonyManager.NETWORK_TYPE_1xRTT:
-			return "1xRTT";
-		case TelephonyManager.NETWORK_TYPE_CDMA:
-			return "CDMA";
-		case TelephonyManager.NETWORK_TYPE_EDGE:
-			return "EDGE";
-		case TelephonyManager.NETWORK_TYPE_EHRPD:
-			return "EHRPD";
-		case TelephonyManager.NETWORK_TYPE_EVDO_0:
-			return "EVDO_0";
-		case TelephonyManager.NETWORK_TYPE_EVDO_A:
-			return "EVDO_A";
-		case TelephonyManager.NETWORK_TYPE_EVDO_B:
-			return "EVDO_B";
-		case TelephonyManager.NETWORK_TYPE_GPRS:
-			return "GPRS";
-		case TelephonyManager.NETWORK_TYPE_HSDPA:
-			return "HSDPA";
-		case TelephonyManager.NETWORK_TYPE_HSPA:
-			return "HSPA";
-		case TelephonyManager.NETWORK_TYPE_HSPAP:
-			return "HSPAP";
-		case TelephonyManager.NETWORK_TYPE_HSUPA:
-			return "HSUPA";
-		case TelephonyManager.NETWORK_TYPE_IDEN:
-			return "IDEN";
-		case TelephonyManager.NETWORK_TYPE_LTE:
-			return "LTE";
-		case TelephonyManager.NETWORK_TYPE_UMTS:
-			return "UMTS";
-		case TelephonyManager.NETWORK_TYPE_UNKNOWN:
-			return "UNKNOWN";
-		default:
-			return UNKNOWN;
-		}
-	}
+    private String getDataNetworkType() {
+        int networkType = mTelephonyManager.getNetworkType();
+        switch (networkType) {
+            case TelephonyManager.NETWORK_TYPE_1xRTT:
+                return "1xRTT";
+            case TelephonyManager.NETWORK_TYPE_CDMA:
+                return "CDMA";
+            case TelephonyManager.NETWORK_TYPE_EDGE:
+                return "EDGE";
+            case TelephonyManager.NETWORK_TYPE_EHRPD:
+                return "EHRPD";
+            case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                return "EVDO_0";
+            case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                return "EVDO_A";
+            case TelephonyManager.NETWORK_TYPE_EVDO_B:
+                return "EVDO_B";
+            case TelephonyManager.NETWORK_TYPE_GPRS:
+                return "GPRS";
+            case TelephonyManager.NETWORK_TYPE_HSDPA:
+                return "HSDPA";
+            case TelephonyManager.NETWORK_TYPE_HSPA:
+                return "HSPA";
+            case TelephonyManager.NETWORK_TYPE_HSPAP:
+                return "HSPAP";
+            case TelephonyManager.NETWORK_TYPE_HSUPA:
+                return "HSUPA";
+            case TelephonyManager.NETWORK_TYPE_IDEN:
+                return "IDEN";
+            case TelephonyManager.NETWORK_TYPE_LTE:
+                return "LTE";
+            case TelephonyManager.NETWORK_TYPE_UMTS:
+                return "UMTS";
+            case TelephonyManager.NETWORK_TYPE_UNKNOWN:
+                return "UNKNOWN";
+            default:
+                return UNKNOWN;
+        }
+    }
 
-	private String getDataActivity() {
-		int dataActivity = mTelephonyManager.getDataActivity();
-		switch (dataActivity) {
-		case TelephonyManager.DATA_ACTIVITY_DORMANT:
-			return "DORMANT";
-		case TelephonyManager.DATA_ACTIVITY_IN:
-			return "IN";
-		case TelephonyManager.DATA_ACTIVITY_INOUT:
-			return "INOUT";
-		case TelephonyManager.DATA_ACTIVITY_NONE:
-			return "NONE";
-		case TelephonyManager.DATA_ACTIVITY_OUT:
-			return "OUT";
-		default:
-			return UNKNOWN;
-		}
-	}
+    private String getDataActivity() {
+        int dataActivity = mTelephonyManager.getDataActivity();
+        switch (dataActivity) {
+            case TelephonyManager.DATA_ACTIVITY_DORMANT:
+                return "DORMANT";
+            case TelephonyManager.DATA_ACTIVITY_IN:
+                return "IN";
+            case TelephonyManager.DATA_ACTIVITY_INOUT:
+                return "INOUT";
+            case TelephonyManager.DATA_ACTIVITY_NONE:
+                return "NONE";
+            case TelephonyManager.DATA_ACTIVITY_OUT:
+                return "OUT";
+            default:
+                return UNKNOWN;
+        }
+    }
 
-	private String getDataState() {
-		int dataState = mTelephonyManager.getDataState();
-		switch (dataState) {
-		case TelephonyManager.DATA_CONNECTED:
-			return "CONNECTED";
-		case TelephonyManager.DATA_CONNECTING:
-			return "CONNECTING";
-		case TelephonyManager.DATA_DISCONNECTED:
-			return "DISCONNECTED";
-		case TelephonyManager.DATA_SUSPENDED:
-			return "SUSPENDED";
-		default:
-			return UNKNOWN;
-		}
-	}
+    private String getDataState() {
+        int dataState = mTelephonyManager.getDataState();
+        switch (dataState) {
+            case TelephonyManager.DATA_CONNECTED:
+                return "CONNECTED";
+            case TelephonyManager.DATA_CONNECTING:
+                return "CONNECTING";
+            case TelephonyManager.DATA_DISCONNECTED:
+                return "DISCONNECTED";
+            case TelephonyManager.DATA_SUSPENDED:
+                return "SUSPENDED";
+            default:
+                return UNKNOWN;
+        }
+    }
 
-	private String getSimState() {
-		int simState = mTelephonyManager.getSimState();
-		switch (simState) {
-		case TelephonyManager.SIM_STATE_ABSENT:
-			return "ABSENT";
-		case TelephonyManager.SIM_STATE_NETWORK_LOCKED:
-			return "NETWORK LOCKED";
-		case TelephonyManager.SIM_STATE_PIN_REQUIRED:
-			return "PIN REQUIRED";
-		case TelephonyManager.SIM_STATE_PUK_REQUIRED:
-			return "PUK REQUIRED";
-		case TelephonyManager.SIM_STATE_READY:
-			return "READY";
-		case TelephonyManager.SIM_STATE_UNKNOWN:
-			return "UNKNOWN";
-		default:
-			return UNKNOWN;
-		}
-	}
+    private String getSimState() {
+        int simState = mTelephonyManager.getSimState();
+        switch (simState) {
+            case TelephonyManager.SIM_STATE_ABSENT:
+                return "ABSENT";
+            case TelephonyManager.SIM_STATE_NETWORK_LOCKED:
+                return "NETWORK LOCKED";
+            case TelephonyManager.SIM_STATE_PIN_REQUIRED:
+                return "PIN REQUIRED";
+            case TelephonyManager.SIM_STATE_PUK_REQUIRED:
+                return "PUK REQUIRED";
+            case TelephonyManager.SIM_STATE_READY:
+                return "READY";
+            case TelephonyManager.SIM_STATE_UNKNOWN:
+                return "UNKNOWN";
+            default:
+                return UNKNOWN;
+        }
+    }
 
-	/**
-	 * @return information from the current cell we are connected to.
-	 */
-	private ContentValues getCellLocation() {
-		ContentValues values = new ContentValues();
-		CellLocation cellLocation = mTelephonyManager.getCellLocation();
-		if (cellLocation instanceof GsmCellLocation) {
-			GsmCellLocation gsmCellLocation = (GsmCellLocation) cellLocation;
-			int cid = gsmCellLocation.getCid();
-			// The javadoc says the cell id should be less than FFFF, but this
-			// isn't always so. We'll report both the full cell id returned by
-			// Android, and the truncated one (taking only the last 2 bytes).
-			int shortCid = cid >0? cid & 0xFFFF : cid;
-			values.put(NetMonColumns.GSM_FULL_CELL_ID, cid);
-			values.put(NetMonColumns.GSM_SHORT_CELL_ID, shortCid);
-			values.put(NetMonColumns.GSM_CELL_LAC, gsmCellLocation.getLac());
-			if (Build.VERSION.SDK_INT >= 9)
-				values.put(NetMonColumns.GSM_CELL_PSC, getPsc(gsmCellLocation));
-		} else if (cellLocation instanceof CdmaCellLocation) {
-			CdmaCellLocation cdmaCellLocation = (CdmaCellLocation) cellLocation;
-			values.put(NetMonColumns.CDMA_CELL_BASE_STATION_ID,
-					cdmaCellLocation.getBaseStationId());
-			values.put(NetMonColumns.CDMA_CELL_LATITUDE,
-					cdmaCellLocation.getBaseStationLatitude());
-			values.put(NetMonColumns.CDMA_CELL_LONGITUDE,
-					cdmaCellLocation.getBaseStationLongitude());
-			values.put(NetMonColumns.CDMA_CELL_NETWORK_ID,
-					cdmaCellLocation.getNetworkId());
-			values.put(NetMonColumns.CDMA_CELL_SYSTEM_ID,
-					cdmaCellLocation.getSystemId());
-		}
-		return values;
-	}
+    /**
+     * @return information from the current cell we are connected to.
+     */
+    private ContentValues getCellLocation() {
+        ContentValues values = new ContentValues();
+        CellLocation cellLocation = mTelephonyManager.getCellLocation();
+        if (cellLocation instanceof GsmCellLocation) {
+            GsmCellLocation gsmCellLocation = (GsmCellLocation) cellLocation;
+            int cid = gsmCellLocation.getCid();
+            // The javadoc says the cell id should be less than FFFF, but this
+            // isn't always so. We'll report both the full cell id returned by
+            // Android, and the truncated one (taking only the last 2 bytes).
+            int shortCid = cid > 0 ? cid & 0xFFFF : cid;
+            values.put(NetMonColumns.GSM_FULL_CELL_ID, cid);
+            values.put(NetMonColumns.GSM_SHORT_CELL_ID, shortCid);
+            values.put(NetMonColumns.GSM_CELL_LAC, gsmCellLocation.getLac());
+            if (Build.VERSION.SDK_INT >= 9) values.put(NetMonColumns.GSM_CELL_PSC, getPsc(gsmCellLocation));
+        } else if (cellLocation instanceof CdmaCellLocation) {
+            CdmaCellLocation cdmaCellLocation = (CdmaCellLocation) cellLocation;
+            values.put(NetMonColumns.CDMA_CELL_BASE_STATION_ID, cdmaCellLocation.getBaseStationId());
+            values.put(NetMonColumns.CDMA_CELL_LATITUDE, cdmaCellLocation.getBaseStationLatitude());
+            values.put(NetMonColumns.CDMA_CELL_LONGITUDE, cdmaCellLocation.getBaseStationLongitude());
+            values.put(NetMonColumns.CDMA_CELL_NETWORK_ID, cdmaCellLocation.getNetworkId());
+            values.put(NetMonColumns.CDMA_CELL_SYSTEM_ID, cdmaCellLocation.getSystemId());
+        }
+        return values;
+    }
 
-	/**
-	 * @return the last location the device recorded as an array of latitude and
-	 *         longitude. Tries to use Google Play Services if available.
-	 *         Otherwise falls back to the most recently retrieved location
-	 *         among all the providers.
-	 */
-	private double[] getLatestLocation() {
-		Location mostRecentLocation = null;
-		// Try getting the location from the LocationClient
-		if (mLocationClient.isConnected()) {
-			mostRecentLocation = mLocationClient.getLastLocation();
-			Log.v(TAG, "Got location from LocationClient: "
-					+ mostRecentLocation);
-		}
-		// Fall back to the old way.
-		if (mostRecentLocation == null) {
-			List<String> providers = mLocationManager.getProviders(true);
-			long mostRecentFix = 0;
-			for (String provider : providers) {
-				Location location = mLocationManager
-						.getLastKnownLocation(provider);
-				Log.v(TAG, "Location for provider " + provider + ": "
-						+ location);
-				if (location == null)
-					continue;
-				long time = location.getTime();
-				if (time > mostRecentFix) {
-					time = mostRecentFix;
-					mostRecentLocation = location;
-				}
-			}
-		}
-		Log.v(TAG, "Most recent location: " + mostRecentLocation);
-		if (mostRecentLocation != null)
-			return new double[] { mostRecentLocation.getLatitude(),
-					mostRecentLocation.getLongitude() };
-		return null;
-	}
+    /**
+     * @return the last location the device recorded as an array of latitude and longitude. Tries to use Google Play Services if available. Otherwise falls back
+     *         to the most recently retrieved location among all the providers.
+     */
+    private double[] getLatestLocation() {
+        Location mostRecentLocation = null;
+        // Try getting the location from the LocationClient
+        if (mLocationClient.isConnected()) {
+            mostRecentLocation = mLocationClient.getLastLocation();
+            Log.v(TAG, "Got location from LocationClient: " + mostRecentLocation);
+        }
+        // Fall back to the old way.
+        if (mostRecentLocation == null) {
+            List<String> providers = mLocationManager.getProviders(true);
+            long mostRecentFix = 0;
+            for (String provider : providers) {
+                Location location = mLocationManager.getLastKnownLocation(provider);
+                Log.v(TAG, "Location for provider " + provider + ": " + location);
+                if (location == null) continue;
+                long time = location.getTime();
+                if (time > mostRecentFix) {
+                    time = mostRecentFix;
+                    mostRecentLocation = location;
+                }
+            }
+        }
+        Log.v(TAG, "Most recent location: " + mostRecentLocation);
+        if (mostRecentLocation != null) return new double[] { mostRecentLocation.getLatitude(), mostRecentLocation.getLongitude() };
+        return null;
+    }
 
-	@TargetApi(9)
-	private int getPsc(GsmCellLocation gsmCellLocation) {
-		return gsmCellLocation.getPsc();
-	}
+    @TargetApi(9)
+    private int getPsc(GsmCellLocation gsmCellLocation) {
+        return gsmCellLocation.getPsc();
+    }
 
-	@TargetApi(16)
-	private boolean isActiveNetworkMetered() {
-		return mConnectivityManager.isActiveNetworkMetered();
-	}
+    @TargetApi(16)
+    private boolean isActiveNetworkMetered() {
+        return mConnectivityManager.isActiveNetworkMetered();
+    }
 
-	@Override
-	public void onDestroy() {
-		mDestroyed = true;
-		if (mLocationClient != null)
-			mLocationClient.disconnect();
-		if (mTelephonyManager != null)
-			mTelephonyManager.listen(mPhoneStateListener,
-					PhoneStateListener.LISTEN_NONE);
-		super.onDestroy();
-	}
+    @Override
+    public void onDestroy() {
+        mDestroyed = true;
+        if (mLocationClient != null) mLocationClient.disconnect();
+        if (mTelephonyManager != null) mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+        super.onDestroy();
+    }
 
-	private ConnectionCallbacks mConnectionCallbacks = new ConnectionCallbacks() {
+    private ConnectionCallbacks mConnectionCallbacks = new ConnectionCallbacks() {
+        @Override
+        public void onConnected(Bundle bundle) {
+            Log.v(TAG, "onConnected: " + bundle);
+        }
 
-		@Override
-		public void onConnected(Bundle bundle) {
-			Log.v(TAG, "onConnected: " + bundle);
-		}
+        @Override
+        public void onDisconnected() {
+            Log.v(TAG, "onDisconnected");
+        }
+    };
 
-		@Override
-		public void onDisconnected() {
-			Log.v(TAG, "onDisconnected");
-		}
-	};
-	private OnConnectionFailedListener mConnectionFailedListener = new OnConnectionFailedListener() {
+    private OnConnectionFailedListener mConnectionFailedListener = new OnConnectionFailedListener() {
+        @Override
+        public void onConnectionFailed(ConnectionResult result) {
+            Log.v(TAG, "onConnectionFailed: " + result);
+        }
+    };
 
-		@Override
-		public void onConnectionFailed(ConnectionResult result) {
-			Log.v(TAG, "onConnectionFailed: " + result);
-		}
-	};
+    private class NetMonPhoneStateListener extends PhoneStateListener {
+        private final NetMonSignalStrength mNetMonSignalStrength;
 
-	private class NetMonPhoneStateListener extends PhoneStateListener {
-		private final NetMonSignalStrength mNetMonSignalStrength;
+        public NetMonPhoneStateListener(Context context) {
+            mNetMonSignalStrength = new NetMonSignalStrength(context);
+        }
 
-		public NetMonPhoneStateListener(Context context) {
-			mNetMonSignalStrength = new NetMonSignalStrength(context);
-		}
+        @Override
+        public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+            mLastSignalStrength = mNetMonSignalStrength.getLevel(signalStrength);
+        }
 
-		public void onSignalStrengthsChanged(SignalStrength signalStrength) {
-			mLastSignalStrength = mNetMonSignalStrength
-					.getLevel(signalStrength);
-		}
-
-		public void onServiceStateChanged(ServiceState serviceState) {
-			Log.v(TAG, "onServiceStateChanged " + serviceState);
-			if (serviceState.getState() != ServiceState.STATE_IN_SERVICE)
-				mLastSignalStrength = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
-		}
-	};
-
+        @Override
+        public void onServiceStateChanged(ServiceState serviceState) {
+            Log.v(TAG, "onServiceStateChanged " + serviceState);
+            if (serviceState.getState() != ServiceState.STATE_IN_SERVICE) mLastSignalStrength = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+        }
+    }
 }

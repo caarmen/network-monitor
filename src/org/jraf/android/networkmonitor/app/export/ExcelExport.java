@@ -38,114 +38,107 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 
-import org.jraf.android.networkmonitor.Constants;
-import org.jraf.android.networkmonitor.R;
-
 import android.content.Context;
 import android.util.Log;
+
+import org.jraf.android.networkmonitor.Constants;
+import org.jraf.android.networkmonitor.R;
 
 /**
  * Export the Network Monitor data to an Excel file.
  */
 public class ExcelExport extends FileExport {
+    private static final String TAG = Constants.TAG + ExcelExport.class.getSimpleName();
 
-	private static final String TAG = Constants.TAG
-			+ ExcelExport.class.getSimpleName();
-	private static final String EXCEL_FILE = "networkmonitor.xls";
+    private static final String EXCEL_FILE = "networkmonitor.xls";
 
-	private WritableWorkbook mWorkbook;
-	private WritableSheet mSheet;
-	private WritableCellFormat mBoldFormat;
-	private WritableCellFormat mRedFormat;
-	private WritableCellFormat mGreenFormat;
+    private WritableWorkbook mWorkbook;
+    private WritableSheet mSheet;
+    private WritableCellFormat mBoldFormat;
+    private WritableCellFormat mRedFormat;
+    private WritableCellFormat mGreenFormat;
 
-	public ExcelExport(Context context) throws FileNotFoundException {
-		super(context, new File(context.getExternalFilesDir(null), EXCEL_FILE));
-	}
+    public ExcelExport(Context context) throws FileNotFoundException {
+        super(context, new File(context.getExternalFilesDir(null), EXCEL_FILE));
+    }
 
-	@Override
-	void writeHeader(String[] columnNames) throws IOException {
-		// Create the workbook, sheet, custom cell formats, and freeze
-		// row/column.
-		mWorkbook = Workbook.createWorkbook(mFile);
-		mSheet = mWorkbook
-				.createSheet(mContext.getString(R.string.app_name), 0);
-		mSheet.insertRow(0);
-		mSheet.getSettings().setHorizontalFreeze(2);
-		mSheet.getSettings().setVerticalFreeze(1);
-		createCellFormats();
-		for (int i = 0; i < columnNames.length; i++) {
-			mSheet.insertColumn(i);
-			insertCell(columnNames[i], 0, i, mBoldFormat);
-		}
-	}
+    @Override
+    void writeHeader(String[] columnNames) throws IOException {
+        // Create the workbook, sheet, custom cell formats, and freeze
+        // row/column.
+        mWorkbook = Workbook.createWorkbook(mFile);
+        mSheet = mWorkbook.createSheet(mContext.getString(R.string.app_name), 0);
+        mSheet.insertRow(0);
+        mSheet.getSettings().setHorizontalFreeze(2);
+        mSheet.getSettings().setVerticalFreeze(1);
+        createCellFormats();
+        for (int i = 0; i < columnNames.length; i++) {
+            mSheet.insertColumn(i);
+            insertCell(columnNames[i], 0, i, mBoldFormat);
+        }
+    }
 
-	@Override
-	void writeRow(int rowNumber, String[] cellValues) throws IOException {
-		mSheet.insertRow(rowNumber);
-		for (int i = 0; i < cellValues.length; i++) {
-			CellFormat cellFormat = null;
-			if (Constants.CONNECTION_TEST_PASS.equals(cellValues[i]))
-				cellFormat = mGreenFormat;
-			else if (Constants.CONNECTION_TEST_FAIL.equals(cellValues[i]))
-				cellFormat = mRedFormat;
-			insertCell(cellValues[i], rowNumber, i, cellFormat);
-		}
-	}
+    @Override
+    void writeRow(int rowNumber, String[] cellValues) throws IOException {
+        mSheet.insertRow(rowNumber);
+        for (int i = 0; i < cellValues.length; i++) {
+            CellFormat cellFormat = null;
+            if (Constants.CONNECTION_TEST_PASS.equals(cellValues[i])) cellFormat = mGreenFormat;
+            else if (Constants.CONNECTION_TEST_FAIL.equals(cellValues[i])) cellFormat = mRedFormat;
+            insertCell(cellValues[i], rowNumber, i, cellFormat);
+        }
+    }
 
-	@Override
-	void writeFooter() throws IOException {
-		try {
-			mWorkbook.write();
-			mWorkbook.close();
-		} catch (JXLException e) {
-			Log.e(TAG, "writeHeader Could not close file", e);
-		}
-	}
+    @Override
+    void writeFooter() throws IOException {
+        try {
+            mWorkbook.write();
+            mWorkbook.close();
+        } catch (JXLException e) {
+            Log.e(TAG, "writeHeader Could not close file", e);
+        }
+    }
 
-	private void insertCell(String text, int row, int column, CellFormat format) {
-		Label label = format == null ? new Label(column, row, text)
-				: new Label(column, row, text, format);
-		try {
-			mSheet.addCell(label);
-		} catch (JXLException e) {
-			Log.e(TAG, "writeHeader Could not insert cell " + text + " at row="
-					+ row + ", col=" + column, e);
-		}
-	}
+    private void insertCell(String text, int row, int column, CellFormat format) {
+        Label label = format == null ? new Label(column, row, text) : new Label(column, row, text, format);
+        try {
+            mSheet.addCell(label);
+        } catch (JXLException e) {
+            Log.e(TAG, "writeHeader Could not insert cell " + text + " at row=" + row + ", col=" + column, e);
+        }
+    }
 
-	/**
-	 * In order to set text to bold, red, or green, we need to create cell
-	 * formats for each style.
-	 */
-	private void createCellFormats() {
+    /**
+     * In order to set text to bold, red, or green, we need to create cell
+     * formats for each style.
+     */
+    private void createCellFormats() {
 
-		// Insert a dummy empty cell, so we can obtain its cell. This allows to
-		// start with a default cell format.
-		Label cell = new Label(0, 0, " ");
-		CellFormat cellFormat = cell.getCellFormat();
+        // Insert a dummy empty cell, so we can obtain its cell. This allows to
+        // start with a default cell format.
+        Label cell = new Label(0, 0, " ");
+        CellFormat cellFormat = cell.getCellFormat();
 
-		try {
-			// Create the bold format
-			final WritableFont boldFont = new WritableFont(cellFormat.getFont());
-			mBoldFormat = new WritableCellFormat(cellFormat);
-			boldFont.setBoldStyle(WritableFont.BOLD);
-			mBoldFormat.setFont(boldFont);
+        try {
+            // Create the bold format
+            final WritableFont boldFont = new WritableFont(cellFormat.getFont());
+            mBoldFormat = new WritableCellFormat(cellFormat);
+            boldFont.setBoldStyle(WritableFont.BOLD);
+            mBoldFormat.setFont(boldFont);
 
-			// Create the red format
-			mRedFormat = new WritableCellFormat(cellFormat);
-			final WritableFont redFont = new WritableFont(cellFormat.getFont());
-			redFont.setColour(Colour.RED);
-			mRedFormat.setFont(redFont);
+            // Create the red format
+            mRedFormat = new WritableCellFormat(cellFormat);
+            final WritableFont redFont = new WritableFont(cellFormat.getFont());
+            redFont.setColour(Colour.RED);
+            mRedFormat.setFont(redFont);
 
-			// Create the green format
-			mGreenFormat = new WritableCellFormat(cellFormat);
-			final WritableFont greenFont = new WritableFont(
-					cellFormat.getFont());
-			greenFont.setColour(Colour.GREEN);
-			mGreenFormat.setFont(greenFont);
-		} catch (WriteException e) {
-			Log.e(TAG, "createCellFormats Could not create cell formats", e);
-		}
-	}
+            // Create the green format
+            mGreenFormat = new WritableCellFormat(cellFormat);
+            final WritableFont greenFont = new WritableFont(cellFormat.getFont());
+            greenFont.setColour(Colour.GREEN);
+            mGreenFormat.setFont(greenFont);
+        } catch (WriteException e) {
+            Log.e(TAG, "createCellFormats Could not create cell formats", e);
+        }
+    }
 }

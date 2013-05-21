@@ -30,58 +30,50 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
+
+import android.content.Context;
+import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.provider.NetMonDatabase;
-
-import android.content.Context;
-import android.text.TextUtils;
-import android.util.Log;
 
 /**
  * Export the Network Monitor DB file.
  */
 public class DBExport extends FileExport {
+    private static final String TAG = Constants.TAG + DBExport.class.getSimpleName();
 
-	private static final String TAG = Constants.TAG
-			+ DBExport.class.getSimpleName();
+    public DBExport(Context context) throws FileNotFoundException {
+        super(context, new File(context.getExternalFilesDir(null), NetMonDatabase.DATABASE_NAME));
+    }
 
-	public DBExport(Context context) throws FileNotFoundException {
-		super(context, new File(context.getExternalFilesDir(null),
-				NetMonDatabase.DATABASE_NAME));
-	}
+    @Override
+    void writeHeader(String[] columnNames) throws IOException {}
 
-	@Override
-	void writeHeader(String[] columnNames) throws IOException {
-	}
+    @Override
+    void writeRow(int rowNumber, String[] cellValues) throws IOException {}
 
-	@Override
-	void writeRow(int rowNumber, String[] cellValues) throws IOException {
-	}
+    @Override
+    void writeFooter() throws IOException {}
 
-	@Override
-	void writeFooter() throws IOException {
-	}
-
-	@Override
-	public File export() {
-		File db = mContext.getDatabasePath(NetMonDatabase.DATABASE_NAME);
-		try {
-			InputStream is = new FileInputStream(db);
-			OutputStream os = new FileOutputStream(mFile);
-			byte[] buffer = new byte[1024];
-			int len;
-			while ((len = is.read(buffer)) > 0) {
-				os.write(buffer, 0, len);
-			}
-			is.close();
-			os.close();
-			return mFile;
-		} catch (IOException e) {
-			Log.v(TAG, "Could not copy DB file: " + e.getMessage(), e);
-			return null;
-		}
-	}
+    @Override
+    public File export() {
+        File db = mContext.getDatabasePath(NetMonDatabase.DATABASE_NAME);
+        try {
+            InputStream is = new FileInputStream(db);
+            OutputStream os = new FileOutputStream(mFile);
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = is.read(buffer)) > 0) {
+                os.write(buffer, 0, len);
+            }
+            is.close();
+            os.close();
+            return mFile;
+        } catch (IOException e) {
+            Log.v(TAG, "Could not copy DB file: " + e.getMessage(), e);
+            return null;
+        }
+    }
 
 }

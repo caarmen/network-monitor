@@ -35,40 +35,39 @@ import android.text.TextUtils;
  * Export the Network Monitor data to a CSV file.
  */
 public class CSVExport extends FileExport {
-	private static final String CSV_FILE = "networkmonitor.csv";
-	private PrintWriter mPrintWriter;
+    private static final String CSV_FILE = "networkmonitor.csv";
+    private PrintWriter mPrintWriter;
 
-	public CSVExport(Context context) throws FileNotFoundException {
-		super(context, new File(context.getExternalFilesDir(null), CSV_FILE));
-	}
+    public CSVExport(Context context) throws FileNotFoundException {
+        super(context, new File(context.getExternalFilesDir(null), CSV_FILE));
+    }
 
-	@Override
-	void writeHeader(String[] columnNames) throws IOException {
-		mPrintWriter = new PrintWriter(mFile);
-		mPrintWriter.println(TextUtils.join(",", columnNames));
-	}
+    @Override
+    void writeHeader(String[] columnNames) throws IOException {
+        mPrintWriter = new PrintWriter(mFile);
+        mPrintWriter.println(TextUtils.join(",", columnNames));
+    }
 
-	@Override
-	void writeRow(int rowNumber, String[] cellValues) throws IOException {
+    @Override
+    void writeRow(int rowNumber, String[] cellValues) throws IOException {
 
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < cellValues.length; i++) {
-			// Escape commas and quotes.
-			if (cellValues[i].contains(",") || cellValues[i].contains("\"")) {
-				cellValues[i] = cellValues[i].replaceAll("\"", "\"\"");
-				cellValues[i] = "\"" + cellValues[i] + "\"";
-			}
-			sb.append(cellValues[i]);
-			if (i < cellValues.length - 1)
-				sb.append(",");
-		}
-		mPrintWriter.println(sb);
-		mPrintWriter.flush();
-	}
-	
-	@Override
-	void writeFooter() throws IOException {
-		mPrintWriter.flush();
-		mPrintWriter.close();
-	}
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < cellValues.length; i++) {
+            // Escape commas and quotes.
+            if (cellValues[i].contains(",") || cellValues[i].contains("\"")) {
+                cellValues[i] = cellValues[i].replaceAll("\"", "\"\"");
+                cellValues[i] = "\"" + cellValues[i] + "\"";
+            }
+            sb.append(cellValues[i]);
+            if (i < cellValues.length - 1) sb.append(",");
+        }
+        mPrintWriter.println(sb);
+        mPrintWriter.flush();
+    }
+
+    @Override
+    void writeFooter() throws IOException {
+        mPrintWriter.flush();
+        mPrintWriter.close();
+    }
 }

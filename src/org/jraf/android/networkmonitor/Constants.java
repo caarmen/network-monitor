@@ -25,7 +25,6 @@
 package org.jraf.android.networkmonitor;
 
 public class Constants {
-
     public static final String TAG = "NetMon/";
 
     public static final String PREF_UPDATE_INTERVAL = "PREF_UPDATE_INTERVAL";
@@ -35,5 +34,4 @@ public class Constants {
     public static final boolean PREF_SERVICE_ENABLED_DEFAULT = false;
     public static final String CONNECTION_TEST_PASS = "PASS";
     public static final String CONNECTION_TEST_FAIL = "FAIL";
-
 }
