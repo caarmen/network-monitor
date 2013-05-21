@@ -51,6 +51,7 @@ public class NetMonProvider extends ContentProvider {
     private static final int URI_TYPE_NETWORKMONITOR = 0;
     private static final int URI_TYPE_NETWORKMONITOR_ID = 1;
     private static final int URI_TYPE_GSM_SUMMARY = 2;
+    private static final int URI_TYPE_CDMA_SUMMARY = 3;
 
     private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -58,6 +59,7 @@ public class NetMonProvider extends ContentProvider {
         URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME, URI_TYPE_NETWORKMONITOR);
         URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME + "/#", URI_TYPE_NETWORKMONITOR_ID);
         URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME + NetMonColumns.GSM_SUMMARY, URI_TYPE_GSM_SUMMARY);
+        URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME + NetMonColumns.CDMA_SUMMARY, URI_TYPE_CDMA_SUMMARY);
     }
 
     private NetMonDatabase mNetworkMonitorDatabase;
@@ -77,6 +79,8 @@ public class NetMonProvider extends ContentProvider {
             case URI_TYPE_NETWORKMONITOR_ID:
                 return TYPE_CURSOR_ITEM + NetMonColumns.TABLE_NAME;
             case URI_TYPE_GSM_SUMMARY:
+                return TYPE_CURSOR_DIR + NetMonColumns.TABLE_NAME;
+            case URI_TYPE_CDMA_SUMMARY:
                 return TYPE_CURSOR_DIR + NetMonColumns.TABLE_NAME;
 
         }
@@ -164,6 +168,11 @@ public class NetMonProvider extends ContentProvider {
                 String[] gsmCellIdColumns = new String[] { NetMonColumns.GSM_CELL_LAC, NetMonColumns.GSM_SHORT_CELL_ID, NetMonColumns.GSM_FULL_CELL_ID };
                 res = buildGoogleConnectionTestCursor(gsmCellIdColumns);
                 break;
+            case URI_TYPE_CDMA_SUMMARY:
+                String[] cdmaCellIdColumns = new String[] { NetMonColumns.CDMA_CELL_BASE_STATION_ID, NetMonColumns.CDMA_CELL_NETWORK_ID,
+                        NetMonColumns.CDMA_CELL_SYSTEM_ID };
+                res = buildGoogleConnectionTestCursor(cdmaCellIdColumns);
+                break;
             default:
                 return null;
         }
@@ -220,6 +229,7 @@ public class NetMonProvider extends ContentProvider {
                 res.orderBy = NetMonColumns.DEFAULT_ORDER;
                 break;
             case URI_TYPE_GSM_SUMMARY:
+            case URI_TYPE_CDMA_SUMMARY:
                 res.table = NetMonColumns.TABLE_NAME;
             default:
                 throw new IllegalArgumentException("The uri '" + uri + "' is not supported by this ContentProvider");

@@ -26,15 +26,16 @@ package org.jraf.android.networkmonitor.provider;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.telephony.gsm.GsmCellLocation;
 
 public class NetMonColumns implements BaseColumns {
     public static final String TABLE_NAME = "networkmonitor";
     public static final Uri CONTENT_URI = Uri.parse(NetMonProvider.CONTENT_URI_BASE + "/" + TABLE_NAME);
     static final String GSM_SUMMARY = "/gsm_summary";
+    static final String CDMA_SUMMARY = "/cdma_summary";
     public static final Uri CONTENT_URI_GSM_SUMMARY = Uri.parse(NetMonProvider.CONTENT_URI_BASE + "/" + TABLE_NAME + GSM_SUMMARY);
+    public static final Uri CONTENT_URI_CDMA_SUMMARY = Uri.parse(NetMonProvider.CONTENT_URI_BASE + "/" + TABLE_NAME + CDMA_SUMMARY);
 
-    
+
     public static final String _ID = BaseColumns._ID;
 
     public static final String TIMESTAMP = "timestamp";
