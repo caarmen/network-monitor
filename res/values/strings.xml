@@ -25,7 +25,6 @@
 \n\nThe worst cells are at the top of the list.
 \n\nAttached is a file with the full data of all tests.  Note that tests on WiFi or tests when the data connection was not "CONNECTED" are not included in the below summary.
 \n\n</string>
-    
     <string name="css">
 <![CDATA[<style type="text/css">
 table {
@@ -63,5 +62,9 @@ td.fail {
     <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
     <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
     <string name="about_projectUrl">https://github.com/BoD/network-monitor</string>
+    <string name="service_notification_ticker">Network Monitor is collecting data</string>
+    <string name="service_notification_text">Collecting data.</string>
+    <string name="service_notification_action_stop">Stop</string>
+    <string name="service_notification_action_logs">Logs</string>
 
 </resources>

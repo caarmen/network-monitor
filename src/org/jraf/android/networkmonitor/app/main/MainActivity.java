@@ -40,6 +40,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.jraf.android.backport.switchwidget.SwitchPreference;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.service.NetMonService;
@@ -51,6 +52,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 public class MainActivity extends PreferenceActivity {
     private static final String TAG = Constants.TAG + MainActivity.class.getSimpleName();
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +60,7 @@ public class MainActivity extends PreferenceActivity {
         addPreferencesFromResource(R.xml.preferences);
         updateIntervalSummary();
         findPreference(Constants.PREF_RESET_LOG_FILE).setOnPreferenceClickListener(mOnPreferenceClickListener);
+        startService(new Intent(MainActivity.this, NetMonService.class));
     }
 
     @Override
@@ -70,11 +73,12 @@ public class MainActivity extends PreferenceActivity {
             if (GooglePlayServicesUtil.isUserRecoverableError(playServicesAvailable)) {
                 errorDialog = GooglePlayServicesUtil.getErrorDialog(playServicesAvailable, this, 1);
             }
-            if (errorDialog != null) errorDialog.show();
-            else
+            if (errorDialog != null) {
+                errorDialog.show();
+            } else {
                 Toast.makeText(this, "Google Play Services must be installed", Toast.LENGTH_LONG).show();
+            }
         }
-        startService(new Intent(MainActivity.this, NetMonService.class));
     }
 
     @Override
@@ -87,6 +91,17 @@ public class MainActivity extends PreferenceActivity {
     protected void onStop() {
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
         super.onStop();
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onWindowFocusChanged(boolean hasFocus) {
+        if (hasFocus) {
+            // Refresh the 'enabled' preference view
+            boolean enabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.PREF_SERVICE_ENABLED,
+                    Constants.PREF_SERVICE_ENABLED_DEFAULT);
+            ((SwitchPreference) findPreference(Constants.PREF_SERVICE_ENABLED)).setChecked(enabled);
+        }
     }
 
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {

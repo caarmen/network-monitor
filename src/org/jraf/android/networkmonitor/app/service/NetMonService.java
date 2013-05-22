@@ -33,6 +33,8 @@ import java.net.Socket;
 import java.util.List;
 
 import android.annotation.TargetApi;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
@@ -47,6 +49,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.CellLocation;
 import android.telephony.PhoneStateListener;
@@ -59,6 +62,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
+import org.jraf.android.networkmonitor.R;
+import org.jraf.android.networkmonitor.app.log.LogActivity;
+import org.jraf.android.networkmonitor.app.main.MainActivity;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -71,6 +77,7 @@ public class NetMonService extends Service {
     private static final String PREFIX = NetMonService.class.getName() + ".";
 
     public static final String ACTION_PREF_CHANGED = PREFIX + "ACTION_PREF_CHANGED";
+    public static final String ACTION_DISABLE = PREFIX + "ACTION_DISABLE";
 
     // private static final String HOST = "www.google.com";
     private static final String HOST = "173.194.34.16";
@@ -79,6 +86,7 @@ public class NetMonService extends Service {
     private static final String HTTP_GET = "GET / HTTP/1.1\r\n\r\n";
     private static final String UNKNOWN = "";
     private static final Object SYNC = new Object();
+    private static final int NOTIFICATION_ID = 0;
 
     private TelephonyManager mTelephonyManager;
     private ConnectivityManager mConnectivityManager;
@@ -105,6 +113,8 @@ public class NetMonService extends Service {
 
         registerBroadcastReceiver();
 
+        showNotification();
+
         new Thread() {
             @Override
             public void run() {
@@ -118,6 +128,16 @@ public class NetMonService extends Service {
             }
         }.start();
     }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return Service.START_STICKY;
+    }
+
+
+    /*
+     * Broadcast.
+     */
 
     private void registerBroadcastReceiver() {
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, new IntentFilter(ACTION_PREF_CHANGED));
@@ -136,13 +156,34 @@ public class NetMonService extends Service {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
     }
 
-    private boolean isServiceEnabled() {
-        return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.PREF_SERVICE_ENABLED, Constants.PREF_SERVICE_ENABLED_DEFAULT);
+
+    /*
+     * Notification.
+     */
+
+    private void showNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setOngoing(true);
+        builder.setSmallIcon(R.drawable.ic_stat_service_running);
+        builder.setTicker(getString(R.string.service_notification_ticker));
+        builder.setContentTitle(getString(R.string.app_name));
+        builder.setContentText(getString(R.string.service_notification_text));
+        builder.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        builder.addAction(R.drawable.ic_action_stop, getString(R.string.service_notification_action_stop),
+                PendingIntent.getBroadcast(this, 0, new Intent(ACTION_DISABLE), PendingIntent.FLAG_CANCEL_CURRENT));
+        builder.addAction(R.drawable.ic_action_logs, getString(R.string.service_notification_action_logs),
+                PendingIntent.getActivity(this, 0, new Intent(this, LogActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return Service.START_STICKY;
+    private void dismissNotification() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(NOTIFICATION_ID);
+    }
+
+    private boolean isServiceEnabled() {
+        return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.PREF_SERVICE_ENABLED, Constants.PREF_SERVICE_ENABLED_DEFAULT);
     }
 
     private void monitorLoop() {
@@ -434,6 +475,7 @@ public class NetMonService extends Service {
         if (mLocationClient != null) mLocationClient.disconnect();
         if (mTelephonyManager != null) mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
         unregisterBroadcastReceiver();
+        dismissNotification();
         super.onDestroy();
     }
 

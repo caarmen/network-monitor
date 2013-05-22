@@ -26,6 +26,14 @@
 
         <service android:name="org.jraf.android.networkmonitor.app.service.NetMonService" />
 
+        <receiver
+            android:name="org.jraf.android.networkmonitor.app.service.DisableBroadcastReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="org.jraf.android.networkmonitor.app.service.NetMonService.ACTION_DISABLE" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name="org.jraf.android.networkmonitor.app.main.MainActivity"
             android:label="@string/app_name" >
