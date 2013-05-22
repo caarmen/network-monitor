@@ -21,6 +21,11 @@
     <string name="export_choice_html">HTML</string>
     <string name="export_choice_excel">Excel</string>
     <string name="export_choice_db">Raw database</string>
+    <string name="mail_body">The following summary lists the mobile cells and their connection test results.  For each cell you can see the cell ids, the % of connection tests which succeeded, and the number of attempted connection tests. 
+\n\nThe worst cells are at the top of the list.
+\n\nAttached is a file with the full data of all tests.  Note that tests on WiFi or tests when the data connection was not "CONNECTED" are not included in the below summary.
+\n\n</string>
+    
     <string name="css">
 <![CDATA[<style type="text/css">
 table {

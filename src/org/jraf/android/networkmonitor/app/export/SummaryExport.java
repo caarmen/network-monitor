@@ -1,3 +1,26 @@
+/*
+ * This source is part of the
+ *      _____  ___   ____
+ *  __ / / _ \/ _ | / __/___  _______ _
+ * / // / , _/ __ |/ _/_/ _ \/ __/ _ `/
+ * \___/_/|_/_/ |_/_/ (_)___/_/  \_, /
+ *                              /___/
+ * repository.
+ *
+ * Copyright (C) 2013 Carmen Alvarez (c@rmen.ca)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.jraf.android.networkmonitor.app.export;
 
 import java.util.SortedSet;
@@ -12,10 +35,17 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
 import org.jraf.android.networkmonitor.util.TelephonyUtil;
 
 public class SummaryExport {
+    /**
+     * Contains data for cell tests common to all cell types.
+     */
     static class CellResult implements Comparable<CellResult> {
         final int passRate;
         final int testCount;
 
+        /**
+         * @param passRate the percent of tests which pass (0..100)
+         * @param testCount the number of tests on this cell.
+         */
         public CellResult(int passRate, int testCount) {
             this.passRate = passRate;
             this.testCount = testCount;
@@ -37,6 +67,9 @@ public class SummaryExport {
         }
     }
 
+    /**
+     * Test data and GSM cell identifiers for a cell.
+     */
     static class GsmCellResult extends CellResult {
         final int lac;
         final int longCellId;
@@ -65,9 +98,11 @@ public class SummaryExport {
             }
             return -1;
         }
-
     }
 
+    /**
+     * Test data and CDMA cell identifiers for a cell.
+     */
     static class CdmaCellResult extends CellResult {
         final int baseStationId;
         final int networkId;
@@ -100,7 +135,9 @@ public class SummaryExport {
 
     }
 
-
+    /**
+     * @return a summary report listing the tested cells: the cell ids, % pass rate, and number of tests are shown.
+     */
     public static final String getSummary(Context context) {
         Uri uri = null;
         int phoneType = TelephonyUtil.getDeviceType(context);
