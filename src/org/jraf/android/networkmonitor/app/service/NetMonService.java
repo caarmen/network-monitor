@@ -34,9 +34,11 @@ import java.util.List;
 
 import android.annotation.TargetApi;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -44,8 +46,8 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.CellLocation;
 import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
@@ -66,6 +68,9 @@ import com.google.android.gms.location.LocationClient;
 
 public class NetMonService extends Service {
     private static final String TAG = Constants.TAG + NetMonService.class.getSimpleName();
+    private static final String PREFIX = NetMonService.class.getName() + ".";
+
+    public static final String ACTION_PREF_CHANGED = PREFIX + "ACTION_PREF_CHANGED";
 
     // private static final String HOST = "www.google.com";
     private static final String HOST = "173.194.34.16";
@@ -73,6 +78,7 @@ public class NetMonService extends Service {
     private static final int TIMEOUT = 15000;
     private static final String HTTP_GET = "GET / HTTP/1.1\r\n\r\n";
     private static final String UNKNOWN = "";
+    private static final Object SYNC = new Object();
 
     private TelephonyManager mTelephonyManager;
     private ConnectivityManager mConnectivityManager;
@@ -97,8 +103,9 @@ public class NetMonService extends Service {
         Log.d(TAG, "onCreate Service is enabled: starting monitor loop");
         mPhoneStateListener = new NetMonPhoneStateListener(NetMonService.this);
 
-        new Thread() {
+        registerBroadcastReceiver();
 
+        new Thread() {
             @Override
             public void run() {
                 mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -110,6 +117,23 @@ public class NetMonService extends Service {
                 monitorLoop();
             }
         }.start();
+    }
+
+    private void registerBroadcastReceiver() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, new IntentFilter(ACTION_PREF_CHANGED));
+    }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            synchronized (SYNC) {
+                SYNC.notifyAll();
+            }
+        }
+    };
+
+    public void unregisterBroadcastReceiver() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
     }
 
     private boolean isServiceEnabled() {
@@ -147,7 +171,14 @@ public class NetMonService extends Service {
             // Sleep
             long updateInterval = getUpdateInterval();
             Log.d(TAG, "monitorLoop Sleeping " + updateInterval / 1000 + " seconds...");
-            SystemClock.sleep(updateInterval);
+            synchronized (SYNC) {
+                try {
+                    SYNC.wait(updateInterval);
+                } catch (InterruptedException e) {
+                    // Should never happen
+                    Log.w(TAG, "monitorLoop wait() was interrupted", e);
+                }
+            }
 
             // Loop if service is still enabled, otherwise stop
             if (!isServiceEnabled()) {
@@ -402,6 +433,7 @@ public class NetMonService extends Service {
         mDestroyed = true;
         if (mLocationClient != null) mLocationClient.disconnect();
         if (mTelephonyManager != null) mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+        unregisterBroadcastReceiver();
         super.onDestroy();
     }
 

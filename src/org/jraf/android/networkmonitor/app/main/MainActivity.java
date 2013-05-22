@@ -36,6 +36,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -91,13 +92,19 @@ public class MainActivity extends PreferenceActivity {
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            boolean broadcastPrefChanged = false;
             if (Constants.PREF_SERVICE_ENABLED.equals(key)) {
                 if (sharedPreferences.getBoolean(Constants.PREF_SERVICE_ENABLED, Constants.PREF_SERVICE_ENABLED_DEFAULT)) {
                     startService(new Intent(MainActivity.this, NetMonService.class));
+                } else {
+                    broadcastPrefChanged = true;
                 }
             } else if (Constants.PREF_UPDATE_INTERVAL.equals(key)) {
                 updateIntervalSummary();
+                broadcastPrefChanged = true;
             }
+
+            if (broadcastPrefChanged) LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(new Intent(NetMonService.ACTION_PREF_CHANGED));
         }
     };
 
