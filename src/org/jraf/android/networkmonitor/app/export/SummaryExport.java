@@ -155,8 +155,8 @@ public class SummaryExport {
                         for (int i = 0; i < c.getColumnCount(); i++) {
                             int passCount = c.getInt(c.getColumnIndex(NetMonColumns.PASS_COUNT));
                             int failCount = c.getInt(c.getColumnIndex(NetMonColumns.FAIL_COUNT));
-                            int passRate = 100 * passCount / (passCount + failCount);
                             int testCount = passCount + failCount;
+                            int passRate = testCount > 0 ? 100 * passCount / testCount : 0;
                             CellResult cellResult = null;
                             if (phoneType == TelephonyManager.PHONE_TYPE_GSM) cellResult = readGsmCellResult(c, passRate, testCount);
                             else if (phoneType == TelephonyManager.PHONE_TYPE_CDMA) cellResult = readCdmaCellResult(c, passRate, testCount);
