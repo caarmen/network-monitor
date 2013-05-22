@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.telephony.TelephonyManager;
 
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
+import org.jraf.android.networkmonitor.util.TelephonyUtil;
 
 public class SummaryExport {
     static class CellResult implements Comparable<CellResult> {
@@ -100,8 +101,9 @@ public class SummaryExport {
     }
 
 
-    public static final String getSummary(Context context, int phoneType) {
+    public static final String getSummary(Context context) {
         Uri uri = null;
+        int phoneType = TelephonyUtil.getDeviceType(context);
         if (phoneType == TelephonyManager.PHONE_TYPE_GSM) uri = NetMonColumns.CONTENT_URI_GSM_SUMMARY;
         else if (phoneType == TelephonyManager.PHONE_TYPE_CDMA) uri = NetMonColumns.CONTENT_URI_CDMA_SUMMARY;
         else

@@ -35,7 +35,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -142,7 +141,7 @@ public class LogActivity extends Activity {
                 File file = fileExport.export();
                 if (file == null) return null;
 
-                String summary = SummaryExport.getSummary(LogActivity.this, TelephonyManager.PHONE_TYPE_GSM);//TODO
+                String summary = SummaryExport.getSummary(LogActivity.this);
                 // Bring up the chooser to share the file.
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);

@@ -3,10 +3,10 @@ package org.jraf.android.networkmonitor.app.service;
 import android.content.Context;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
-import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
+import org.jraf.android.networkmonitor.util.TelephonyUtil;
 
 /**
  * The logic in this class comes from the Android source code. It is copied here because some of this logic is available only on API level 17+.
@@ -14,7 +14,7 @@ import org.jraf.android.networkmonitor.Constants;
 public class NetMonSignalStrength {
     private static final String TAG = Constants.TAG + NetMonSignalStrength.class.getSimpleName();
 
-    private TelephonyManager mTelephonyManager;
+    private Context mContext;
     public static final int SIGNAL_STRENGTH_NONE_OR_UNKNOWN = 0;
     public static final int SIGNAL_STRENGTH_POOR = 1;
     public static final int SIGNAL_STRENGTH_MODERATE = 2;
@@ -26,7 +26,7 @@ public class NetMonSignalStrength {
     private static final int GSM_SIGNAL_STRENGTH_MODERATE = 8;// WTF? good = moderate?
 
     public NetMonSignalStrength(Context context) {
-        mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        mContext = context;
     }
 
     /**
@@ -34,8 +34,8 @@ public class NetMonSignalStrength {
      */
     public int getLevel(SignalStrength signalStrength) {
         Log.v(TAG, "getLevel " + signalStrength);
-        int phoneType = mTelephonyManager.getPhoneType();
-        if (phoneType == TelephonyManager.PHONE_TYPE_GSM || mTelephonyManager.getCellLocation() instanceof GsmCellLocation) {
+        int phoneType = TelephonyUtil.getDeviceType(mContext);
+        if (phoneType == TelephonyManager.PHONE_TYPE_GSM) {
             return getGSMSignalStrength(signalStrength);
         } else if (phoneType == TelephonyManager.PHONE_TYPE_CDMA) {
             return getCDMASignalStrength(signalStrength);

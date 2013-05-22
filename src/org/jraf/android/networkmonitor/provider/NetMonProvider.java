@@ -186,10 +186,14 @@ public class NetMonProvider extends ContentProvider {
         public String orderBy;
     }
 
+    /**
+     * @param cellIdColumns the columns in the networkmonitor table which uniquely identify a cell.
+     * @return a Cursor which returns the number of passes and fails for each cell.
+     */
     private Cursor buildGoogleConnectionTestCursor(String[] cellIdColumns) {
         String mainTableAlias = "n";
-        String passSubquery = buildGoogleConnectionTestSubQuery("pass", cellIdColumns, mainTableAlias, NetMonColumns.PASS_COUNT);
-        String failSubquery = buildGoogleConnectionTestSubQuery("fail", cellIdColumns, mainTableAlias, NetMonColumns.FAIL_COUNT);
+        String passSubquery = buildGoogleConnectionTestSubQuery(cellIdColumns, mainTableAlias, "pass", NetMonColumns.PASS_COUNT);
+        String failSubquery = buildGoogleConnectionTestSubQuery(cellIdColumns, mainTableAlias, "fail", NetMonColumns.FAIL_COUNT);
         String[] dbProjection = new String[cellIdColumns.length + 2];
         System.arraycopy(cellIdColumns, 0, dbProjection, 0, cellIdColumns.length);
         dbProjection[dbProjection.length - 2] = passSubquery;
@@ -199,20 +203,30 @@ public class NetMonProvider extends ContentProvider {
         String[] dbSelectionArgs = new String[] { Constants.CONNECTION_TEST_PASS, Constants.DATA_STATE_CONNECTED, Constants.CONNECTION_TEST_FAIL,
                 Constants.DATA_STATE_CONNECTED, Constants.DATA_STATE_CONNECTED };
         String dbGroupBy = TextUtils.join(",", cellIdColumns);
-        String dbOrderBy = dbGroupBy;
+        String dbOrderBy = null;
 
         Cursor cursor = mNetworkMonitorDatabase.getReadableDatabase().query(dbTable, dbProjection, dbSelection, dbSelectionArgs, dbGroupBy, null, dbOrderBy);
         return cursor;
     }
 
-    private String buildGoogleConnectionTestSubQuery(String googleConnectionTestValue, String[] cellIdColumns, String mainTableAlias, String subqueryAlias) {
-        String tableAlias = NetMonColumns.TABLE_NAME + "_" + googleConnectionTestValue;
+    /**
+     * @param cellIdColumns the columns in the networkmonitor table which uniquely identify a cell
+     * @param mainTableAlias the alias for the networkmonitor table in the main query
+     * @param subQueryTableAlias the alias for the networkmonitor table in the subquery
+     * @param subqueryAlias the alias of the whole subquery.
+     * @return a query which returns the number of passes or fails
+     */
+    private String buildGoogleConnectionTestSubQuery(String[] cellIdColumns, String mainTableAlias, String subQueryTableAlias, String subqueryAlias) {
+        String tableAlias = NetMonColumns.TABLE_NAME + "_" + subQueryTableAlias;
         String query = "( SELECT COUNT(" + NetMonColumns.GOOGLE_CONNECTION_TEST + ") " + " FROM " + NetMonColumns.TABLE_NAME + " " + tableAlias + " WHERE ";
+        // Join the subquery to the main query.
         StringBuilder join = new StringBuilder();
         for (String cellIdColumn : cellIdColumns) {
             join.append(tableAlias + "." + cellIdColumn + "=" + mainTableAlias + "." + cellIdColumn + " AND ");
         }
         query += join.toString();
+        // Filter on the pass/fail value.
+        // Include only tests where the data connection was CONNECTED.
         query += tableAlias + "." + NetMonColumns.GOOGLE_CONNECTION_TEST + "=? " + " AND " + tableAlias + "." + NetMonColumns.DATA_STATE + "=?";
         query += ") as " + subqueryAlias;
         return query;
@@ -230,7 +244,8 @@ public class NetMonProvider extends ContentProvider {
                 break;
             case URI_TYPE_GSM_SUMMARY:
             case URI_TYPE_CDMA_SUMMARY:
-                res.table = NetMonColumns.TABLE_NAME;
+                // Nothing to do here.  We will construct our query params in query().
+                break;
             default:
                 throw new IllegalArgumentException("The uri '" + uri + "' is not supported by this ContentProvider");
         }
