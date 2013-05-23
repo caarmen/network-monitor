@@ -48,6 +48,8 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -83,16 +85,19 @@ public class NetMonService extends Service {
     private static final String HOST = "173.194.34.16";
     private static final int PORT = 80;
     private static final int TIMEOUT = 15000;
+    private static final int WAKE_UP_FREQUENCY = 25 * 60 * 1000;
     private static final String HTTP_GET = "GET / HTTP/1.1\r\n\r\n";
     private static final String UNKNOWN = "";
     private static final Object SYNC = new Object();
     private static final int NOTIFICATION_ID = 0;
 
+    private PowerManager mPowerManager;
     private TelephonyManager mTelephonyManager;
     private ConnectivityManager mConnectivityManager;
     private LocationManager mLocationManager;
     private LocationClient mLocationClient;
     private NetMonPhoneStateListener mPhoneStateListener;
+    private long mLastWakeUp = 0;
     private int mLastSignalStrength;
     private volatile boolean mDestroyed;
 
@@ -118,6 +123,7 @@ public class NetMonService extends Service {
         new Thread() {
             @Override
             public void run() {
+                mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
                 mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                 mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                 mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -245,7 +251,15 @@ public class NetMonService extends Service {
      */
     private boolean isNetworkUp() {
         Socket socket = null;
+        WakeLock wakeLock = null;
         try {
+            // Prevent the system from closing the connection after 30 minutes of screen off.
+            long now = System.currentTimeMillis();
+            if (now - mLastWakeUp > WAKE_UP_FREQUENCY) {
+                wakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, TAG);
+                wakeLock.acquire();
+                mLastWakeUp = now;
+            }
             socket = new Socket();
             socket.setSoTimeout(TIMEOUT);
             Log.d(TAG, "isNetworkUp Resolving " + HOST);
@@ -281,6 +295,7 @@ public class NetMonService extends Service {
                     Log.w(TAG, "isNetworkUp Could not close socket", e);
                 }
             }
+            if (wakeLock != null && wakeLock.isHeld()) wakeLock.release();
         }
     }
 
