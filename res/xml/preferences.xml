@@ -16,14 +16,14 @@
 
     <Preference
         android:key="PREF_SHOW_LOG_FILE"
-        android:title="@string/preferences_showLogFile_title" >
+        android:title="@string/preferences_showLogFile_title" android:icon="@drawable/ic_pref_show_log">
         <intent
             android:targetClass="org.jraf.android.networkmonitor.app.log.LogActivity"
             android:targetPackage="org.jraf.android.networkmonitor" />
     </Preference>
     <Preference
         android:key="PREF_RESET_LOG_FILE"
-        android:title="@string/action_reset" />
+        android:title="@string/action_reset" android:icon="@drawable/ic_pref_reset"/>
  
     <ListPreference
         android:defaultValue="0"
@@ -31,11 +31,11 @@
         android:entryValues="@array/preferences_wake_interval_values"
         android:key="PREF_WAKE_INTERVAL"
         android:title="@string/preferences_wake_interval_title"
-        android:summary="@string/preferences_wake_interval_summary"/>
+        android:summary="@string/preferences_wake_interval_summary" android:icon="@drawable/ic_pref_wake_interval"/>
     
     <Preference
         android:key="PREF_ABOUT"
-        android:title="@string/preferences_about_title" >
+        android:title="@string/preferences_about_title" android:icon="@drawable/ic_pref_about">
         <intent
             android:targetClass="org.jraf.android.networkmonitor.app.about.AboutActivity"
             android:targetPackage="org.jraf.android.networkmonitor" />
