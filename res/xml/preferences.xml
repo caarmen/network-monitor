@@ -12,7 +12,7 @@
         android:entries="@array/preferences_updateInterval_labels"
         android:entryValues="@array/preferences_updateInterval_values"
         android:key="PREF_UPDATE_INTERVAL"
-        android:title="@string/preferences_updateInterval_title" />
+        android:title="@string/preferences_updateInterval_title" android:icon="@drawable/ic_pref_update_interval"/>
 
     <Preference
         android:key="PREF_SHOW_LOG_FILE"
