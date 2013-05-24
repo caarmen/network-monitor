@@ -23,13 +23,18 @@
  */
 package org.jraf.android.networkmonitor.app.export;
 
+import java.util.Set;
+import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 import org.jraf.android.networkmonitor.util.TelephonyUtil;
@@ -59,7 +64,7 @@ public class SummaryExport {
         @Override
         public int compareTo(CellResult other) {
             CellResult otherCell = other;
-            double rateDiff = passRate - otherCell.passRate;
+            int rateDiff = passRate - otherCell.passRate;
             if (rateDiff > 0) return 1;
             else if (rateDiff < 0) return -1;
             else
@@ -148,11 +153,13 @@ public class SummaryExport {
 
         Cursor c = context.getContentResolver().query(uri, null, null, null, null);
         if (c != null) {
-            SortedSet<CellResult> cellResults = new TreeSet<CellResult>();
+            SortedMap<String, SortedSet<CellResult>> cellResults = new TreeMap<String, SortedSet<CellResult>>();
             try {
                 if (c.moveToFirst()) {
                     do {
                         for (int i = 0; i < c.getColumnCount(); i++) {
+                            String extraInfo = c.getString(c.getColumnIndex(NetMonColumns.EXTRA_INFO));
+                            if (TextUtils.isEmpty(extraInfo)) extraInfo = "*";
                             int passCount = c.getInt(c.getColumnIndex(NetMonColumns.PASS_COUNT));
                             int failCount = c.getInt(c.getColumnIndex(NetMonColumns.FAIL_COUNT));
                             int testCount = passCount + failCount;
@@ -160,19 +167,40 @@ public class SummaryExport {
                             CellResult cellResult = null;
                             if (phoneType == TelephonyManager.PHONE_TYPE_GSM) cellResult = readGsmCellResult(c, passRate, testCount);
                             else if (phoneType == TelephonyManager.PHONE_TYPE_CDMA) cellResult = readCdmaCellResult(c, passRate, testCount);
-                            if (cellResult != null) cellResults.add(cellResult);
+                            if (cellResult != null) {
+                                SortedSet<CellResult> cellResultsForExtraInfo = cellResults.get(extraInfo);
+                                if (cellResultsForExtraInfo == null) {
+                                    cellResultsForExtraInfo = new TreeSet<CellResult>();
+                                    cellResults.put(extraInfo, cellResultsForExtraInfo);
+                                }
+                                cellResultsForExtraInfo.add(cellResult);
+                            }
                         }
                     } while (c.moveToNext());
-                    StringBuilder sb = new StringBuilder();
-                    for (CellResult cellResult : cellResults)
-                        sb.append(cellResult).append("\n");
-                    return sb.toString();
+                    return generateReport(cellResults);
                 }
             } finally {
                 c.close();
             }
         }
         return null;
+    }
+
+    private static String generateReport(SortedMap<String, SortedSet<CellResult>> cellResults) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(Build.MODEL + "/" + Build.VERSION.RELEASE + "\n");
+        for (String extraInfo : cellResults.keySet()) {
+            sb.append(extraInfo + ":\n");
+            for (int i = 0; i < extraInfo.length(); i++)
+                sb.append("-");
+            sb.append("\n");
+            Set<CellResult> cellResultsForExtraInfo = cellResults.get(extraInfo);
+            for (CellResult cellResult : cellResultsForExtraInfo)
+                sb.append(cellResult).append("\n");
+            sb.append("\n");
+        }
+        return sb.toString();
+
     }
 
     private static GsmCellResult readGsmCellResult(Cursor c, int passRate, int testCount) {

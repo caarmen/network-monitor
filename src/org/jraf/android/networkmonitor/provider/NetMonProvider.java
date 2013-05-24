@@ -194,8 +194,9 @@ public class NetMonProvider extends ContentProvider {
         String mainTableAlias = "n";
         String passSubquery = buildGoogleConnectionTestSubQuery(cellIdColumns, mainTableAlias, "pass", NetMonColumns.PASS_COUNT);
         String failSubquery = buildGoogleConnectionTestSubQuery(cellIdColumns, mainTableAlias, "fail", NetMonColumns.FAIL_COUNT);
-        String[] dbProjection = new String[cellIdColumns.length + 2];
+        String[] dbProjection = new String[cellIdColumns.length + 3];
         System.arraycopy(cellIdColumns, 0, dbProjection, 0, cellIdColumns.length);
+        dbProjection[dbProjection.length - 3] = NetMonColumns.EXTRA_INFO;
         dbProjection[dbProjection.length - 2] = passSubquery;
         dbProjection[dbProjection.length - 1] = failSubquery;
         String dbTable = NetMonColumns.TABLE_NAME + " as " + mainTableAlias;
