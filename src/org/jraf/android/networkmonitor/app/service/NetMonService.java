@@ -85,7 +85,6 @@ public class NetMonService extends Service {
     private static final String HOST = "173.194.34.16";
     private static final int PORT = 80;
     private static final int TIMEOUT = 15000;
-    private static final int WAKE_UP_FREQUENCY = 25 * 60 * 1000;
     private static final String HTTP_GET = "GET / HTTP/1.1\r\n\r\n";
     private static final String UNKNOWN = "";
     private static final Object SYNC = new Object();
@@ -236,11 +235,18 @@ public class NetMonService extends Service {
         }
     }
 
+    private long getLongPreference(String key, String defaultValue) {
+        String valueStr = PreferenceManager.getDefaultSharedPreferences(this).getString(key, defaultValue);
+        long valueLong = Long.valueOf(valueStr);
+        return valueLong;
+    }
+
     private long getUpdateInterval() {
-        String updateIntervalStr = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.PREF_UPDATE_INTERVAL,
-                Constants.PREF_UPDATE_INTERVAL_DEFAULT);
-        long updateInterval = Long.valueOf(updateIntervalStr);
-        return updateInterval;
+        return getLongPreference(Constants.PREF_UPDATE_INTERVAL, Constants.PREF_UPDATE_INTERVAL_DEFAULT);
+    }
+
+    private long getWakeInterval() {
+        return getLongPreference(Constants.PREF_WAKE_INTERVAL, Constants.PREF_WAKE_INTERVAL_DEFAULT);
     }
 
     /**
@@ -255,7 +261,8 @@ public class NetMonService extends Service {
         try {
             // Prevent the system from closing the connection after 30 minutes of screen off.
             long now = System.currentTimeMillis();
-            if (now - mLastWakeUp > WAKE_UP_FREQUENCY) {
+            long wakeInterval = getWakeInterval();
+            if (wakeInterval > 0 && now - mLastWakeUp > wakeInterval) {
                 wakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, TAG);
                 wakeLock.acquire();
                 mLastWakeUp = now;

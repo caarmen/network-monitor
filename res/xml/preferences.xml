@@ -24,6 +24,15 @@
     <Preference
         android:key="PREF_RESET_LOG_FILE"
         android:title="@string/action_reset" />
+ 
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/preferences_wake_interval_labels"
+        android:entryValues="@array/preferences_wake_interval_values"
+        android:key="PREF_WAKE_INTERVAL"
+        android:title="@string/preferences_wake_interval_title"
+        android:summary="@string/preferences_wake_interval_summary"/>
+    
     <Preference
         android:key="PREF_ABOUT"
         android:title="@string/preferences_about_title" >
