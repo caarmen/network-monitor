@@ -33,6 +33,7 @@ import java.net.Socket;
 import java.util.List;
 
 import android.annotation.TargetApi;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -88,7 +89,7 @@ public class NetMonService extends Service {
     private static final String HTTP_GET = "GET / HTTP/1.1\r\n\r\n";
     private static final String UNKNOWN = "";
     private static final Object SYNC = new Object();
-    private static final int NOTIFICATION_ID = 0;
+    private static final int NOTIFICATION_ID = 1;
 
     private PowerManager mPowerManager;
     private TelephonyManager mTelephonyManager;
@@ -116,8 +117,9 @@ public class NetMonService extends Service {
         mPhoneStateListener = new NetMonPhoneStateListener(NetMonService.this);
 
         registerBroadcastReceiver();
+        Notification notification = createNotification();
+        startForeground(NOTIFICATION_ID, notification);
 
-        showNotification();
 
         new Thread() {
             @Override
@@ -166,7 +168,7 @@ public class NetMonService extends Service {
      * Notification.
      */
 
-    private void showNotification() {
+    private Notification createNotification() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setOngoing(true);
         builder.setSmallIcon(R.drawable.ic_stat_service_running);
@@ -174,12 +176,12 @@ public class NetMonService extends Service {
         builder.setContentTitle(getString(R.string.app_name));
         builder.setContentText(getString(R.string.service_notification_text));
         builder.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         builder.addAction(R.drawable.ic_action_stop, getString(R.string.service_notification_action_stop),
                 PendingIntent.getBroadcast(this, 0, new Intent(ACTION_DISABLE), PendingIntent.FLAG_CANCEL_CURRENT));
         builder.addAction(R.drawable.ic_action_logs, getString(R.string.service_notification_action_logs),
                 PendingIntent.getActivity(this, 0, new Intent(this, LogActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
+        Notification notification = builder.build();
+        return notification;
     }
 
     private void dismissNotification() {
