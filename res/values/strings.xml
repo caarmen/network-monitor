@@ -3,10 +3,11 @@
 
     <string name="app_name">Network Monitor</string>
     <string name="preferences_updateInterval_title">Update frequency</string>
+    <string name="preferences_updateInterval_summary">%s</string>
     <string name="preferences_serviceEnabled_summary">Enable or disable the service</string>
     <string name="preferences_serviceEnabled_title">Enable service</string>
     <string name="preferences_wake_interval_title">Prevent sleep</string>
-    <string name="preferences_wake_interval_summary">Wake up the phone periodically to make sure the data connection stays on (drains battery)</string>
+    <string name="preferences_wake_interval_summary">Wake up the phone periodically to make sure the data connection stays on (drains battery): %s</string>
     <string name="preferences_showLogFile_title">Show log file</string>
     <string name="preferences_about_title">About</string>
     <string name="log_title">Log file</string>

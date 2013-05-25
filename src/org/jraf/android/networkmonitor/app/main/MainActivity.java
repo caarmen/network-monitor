@@ -32,6 +32,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
@@ -58,7 +59,6 @@ public class MainActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         addPreferencesFromResource(R.xml.preferences);
-        updateIntervalSummary();
         findPreference(Constants.PREF_RESET_LOG_FILE).setOnPreferenceClickListener(mOnPreferenceClickListener);
         startService(new Intent(MainActivity.this, NetMonService.class));
     }
@@ -115,28 +115,24 @@ public class MainActivity extends PreferenceActivity {
                     broadcastPrefChanged = true;
                 }
             } else if (Constants.PREF_UPDATE_INTERVAL.equals(key)) {
-                updateIntervalSummary();
+                updateListPreferenceSummary(Constants.PREF_UPDATE_INTERVAL, R.string.preferences_updateInterval_summary);
                 broadcastPrefChanged = true;
+
+            } else if (Constants.PREF_WAKE_INTERVAL.equals(key)) {
+                updateListPreferenceSummary(Constants.PREF_WAKE_INTERVAL, R.string.preferences_wake_interval_summary);
             }
 
             if (broadcastPrefChanged) LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(new Intent(NetMonService.ACTION_PREF_CHANGED));
         }
     };
 
-    private void updateIntervalSummary() {
-        String value = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.PREF_UPDATE_INTERVAL, Constants.PREF_UPDATE_INTERVAL_DEFAULT);
-        int labelIndex = 0;
-        int i = 0;
-        for (String v : getResources().getStringArray(R.array.preferences_updateInterval_values)) {
-            if (v.equals(value)) {
-                labelIndex = i;
-                break;
-            }
-            i++;
-        }
-        String[] labels = getResources().getStringArray(R.array.preferences_updateInterval_labels);
-        findPreference(Constants.PREF_UPDATE_INTERVAL).setSummary(labels[labelIndex]);
+    private void updateListPreferenceSummary(CharSequence key, int summaryResId) {
+        ListPreference pref = (ListPreference) getPreferenceManager().findPreference(key);
+        CharSequence entry = pref.getEntry();
+        String summary = getString(summaryResId, entry);
+        pref.setSummary(summary);
     }
+
 
     // TODO cleanup copy/paste between here and LogActivity.resetLogs
     /**
