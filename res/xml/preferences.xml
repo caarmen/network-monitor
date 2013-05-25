@@ -4,6 +4,7 @@
     <org.jraf.android.backport.switchwidget.SwitchPreference
         android:defaultValue="false"
         android:key="PREF_SERVICE_ENABLED"
+        android:icon="@drawable/ic_pref_enable_service"
         android:summary="@string/preferences_serviceEnabled_summary"
         android:title="@string/preferences_serviceEnabled_title" />
 
