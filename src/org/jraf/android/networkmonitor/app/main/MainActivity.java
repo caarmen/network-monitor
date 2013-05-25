@@ -60,6 +60,8 @@ public class MainActivity extends PreferenceActivity {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         addPreferencesFromResource(R.xml.preferences);
         findPreference(Constants.PREF_RESET_LOG_FILE).setOnPreferenceClickListener(mOnPreferenceClickListener);
+        updateListPreferenceSummary(Constants.PREF_WAKE_INTERVAL, R.string.preferences_wake_interval_summary);
+        updateListPreferenceSummary(Constants.PREF_UPDATE_INTERVAL, R.string.preferences_updateInterval_summary);
         startService(new Intent(MainActivity.this, NetMonService.class));
     }
 
