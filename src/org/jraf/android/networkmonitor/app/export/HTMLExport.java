@@ -63,16 +63,16 @@ public class HTMLExport extends FileExport {
     @Override
     void writeRow(int rowNumber, String[] cellValues) {
         // Alternating styles for odd and even rows.
-        String tdClass = "odd";
-        if (rowNumber % 2 == 0) tdClass = "even";
-        mPrintWriter.println("  <tr class=\"" + tdClass + "\">");
+        String trClass = "odd";
+        if (rowNumber % 2 == 0) trClass = "even";
+        mPrintWriter.println("  <tr class=\"" + trClass + "\">");
 
         for (String cellValue : cellValues) {
+            String tdClass = "";
             // Highlight PASS in green and FAIL in red.
-            if (Constants.CONNECTION_TEST_FAIL.equals(cellValue)) mPrintWriter.println("    <td class=\"fail\">" + cellValue + "</td>");
-            else if (Constants.CONNECTION_TEST_PASS.equals(cellValue)) mPrintWriter.println("    <td class=\"pass\">" + cellValue + "</td>");
-            else
-                mPrintWriter.println("    <td>" + cellValue + "</td>");
+            if (Constants.CONNECTION_TEST_FAIL.equals(cellValue)) tdClass = "fail";
+            else if (Constants.CONNECTION_TEST_PASS.equals(cellValue)) tdClass = "pass";
+            mPrintWriter.println("    <td class=\"" + tdClass + "\">" + cellValue + "</td>");
         }
         mPrintWriter.println("  </tr>");
         mPrintWriter.flush();

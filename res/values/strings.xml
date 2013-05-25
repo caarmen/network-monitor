@@ -32,11 +32,12 @@
 <![CDATA[<style type="text/css">
 table {
  border-collapse: collapse;
+ border: 1px #fd8900 solid;
 }
 th {
  background-color: #fff300;
  color: #fd8900;
- border-right: 1px #fd8900 solid;
+ border: 1px #fd8900 solid;
  text-transform: capitalize;
 }
 td {
