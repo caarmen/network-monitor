@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Network Monitor" >
 
-    <!-- copied thie -package-resources target from the standard build.xml file and added a manifestpackage attribute. -->
+    <!-- copied the -package-resources target from the standard build.xml file and added a manifestpackage attribute. -->
 
     <target
         name="-package-resources"
