@@ -40,17 +40,27 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="org.jraf.android.networkmonitor.app.log.LogActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/log_title" />
+            android:label="@string/log_title"
+            android:exported="false" >
+                <intent-filter>
+                    <action android:name="org.jraf.android.networkmonitor.app.log.LogActivity" />
+                    <category android:name="android.intent.category.DEFAULT" />
+                </intent-filter>
+        </activity>
         <activity
             android:name="org.jraf.android.networkmonitor.app.about.AboutActivity"
-            android:label="@string/about_title" />
+            android:label="@string/about_title"
+            android:exported="false" >
+                <intent-filter>
+                    <action android:name="org.jraf.android.networkmonitor.app.about.AboutActivity" />
+                    <category android:name="android.intent.category.DEFAULT" />
+                </intent-filter>
+        </activity>
     </application>
-
 </manifest>
