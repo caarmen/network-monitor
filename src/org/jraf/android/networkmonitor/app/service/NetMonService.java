@@ -194,7 +194,12 @@ public class NetMonService extends Service {
     }
 
     private void monitorLoop() {
-        while (!mDestroyed) {
+        while (true) {
+            Log.d(TAG, "monitorLoop iteration: destroyed = " + mDestroyed);
+            if (mDestroyed) {
+                Log.d(TAG, "mDestroyed is true, exiting");
+                return;
+            }
             // Put all the data we want to log, into a ContentValues.
             ContentValues values = new ContentValues();
             values.put(NetMonColumns.TIMESTAMP, System.currentTimeMillis());
@@ -214,19 +219,23 @@ public class NetMonService extends Service {
             }
 
             // Insert this ContentValues into the DB.
+            Log.v(TAG, "Inserting data into DB");
             getContentResolver().insert(NetMonColumns.CONTENT_URI, values);
 
             // Sleep
             long updateInterval = getUpdateInterval();
-            Log.d(TAG, "monitorLoop Sleeping " + updateInterval / 1000 + " seconds...");
+            Log.d(TAG, "Waiting for synchronized lock to sleep");
             synchronized (SYNC) {
                 try {
+                    Log.d(TAG, "monitorLoop Sleeping " + updateInterval / 1000 + " seconds...");
                     SYNC.wait(updateInterval);
+                    Log.d(TAG, "monitorLoop slept");
                 } catch (InterruptedException e) {
                     // Should never happen
                     Log.w(TAG, "monitorLoop wait() was interrupted", e);
                 }
             }
+            Log.d(TAG, "Exited synchronized block");
 
             // Loop if service is still enabled, otherwise stop
             if (!isServiceEnabled()) {
@@ -264,7 +273,10 @@ public class NetMonService extends Service {
             // Prevent the system from closing the connection after 30 minutes of screen off.
             long now = System.currentTimeMillis();
             long wakeInterval = getWakeInterval();
-            if (wakeInterval > 0 && now - mLastWakeUp > wakeInterval) {
+            long timeSinceLastWake = now - mLastWakeUp;
+            Log.d(TAG, "wakeInterval = " + wakeInterval + ", lastWakeUp = " + mLastWakeUp + ", timeSinceLastWake = " + timeSinceLastWake);
+            if (wakeInterval > 0 && timeSinceLastWake > wakeInterval) {
+                Log.d(TAG, "acquiring lock");
                 wakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, TAG);
                 wakeLock.acquire();
                 mLastWakeUp = now;
