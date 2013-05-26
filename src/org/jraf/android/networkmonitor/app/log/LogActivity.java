@@ -106,7 +106,7 @@ public class LogActivity extends Activity {
                             if (getString(R.string.export_choice_csv).equals(exportChoices[which])) {
                                 fileExport = new CSVExport(LogActivity.this);
                             } else if (getString(R.string.export_choice_html).equals(exportChoices[which])) {
-                                fileExport = new HTMLExport(LogActivity.this);
+                                fileExport = new HTMLExport(LogActivity.this, true);
                             } else if (getString(R.string.export_choice_excel).equals(exportChoices[which])) {
                                 fileExport = new ExcelExport(LogActivity.this);
                             } else if (getString(R.string.export_choice_db).equals(exportChoices[which])) {
@@ -189,7 +189,7 @@ public class LogActivity extends Activity {
                 Log.v(TAG, "loadHTMLFile:doInBackground");
                 try {
                     // Export the DB to the HTML file.
-                    HTMLExport htmlExport = new HTMLExport(LogActivity.this);
+                    HTMLExport htmlExport = new HTMLExport(LogActivity.this, false);
                     File file = htmlExport.export();
                     return file;
                 } catch (FileNotFoundException e) {
