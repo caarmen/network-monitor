@@ -31,6 +31,7 @@
         <item>@string/export_choice_html</item>
         <item>@string/export_choice_excel</item>
         <item>@string/export_choice_db</item>
+        <item>@string/export_choice_text</item>
     </string-array>
     <string-array name="preferences_wake_interval_labels">
         <item>Never</item>

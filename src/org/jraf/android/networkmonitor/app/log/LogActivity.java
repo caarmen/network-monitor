@@ -101,7 +101,7 @@ public class LogActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String[] exportChoices = getResources().getStringArray(R.array.export_choices);
-                        FileExport fileExport;
+                        FileExport fileExport = null;
                         try {
                             if (getString(R.string.export_choice_csv).equals(exportChoices[which])) {
                                 fileExport = new CSVExport(LogActivity.this);
@@ -112,8 +112,7 @@ public class LogActivity extends Activity {
                             } else if (getString(R.string.export_choice_db).equals(exportChoices[which])) {
                                 fileExport = new DBExport(LogActivity.this);
                             } else {
-                                Log.w(TAG, "Invalid file format chosen: " + which);
-                                return;
+                                // Text summary only
                             }
                             shareFile(fileExport);
                         } catch (FileNotFoundException e) {
@@ -136,21 +135,30 @@ public class LogActivity extends Activity {
 
             @Override
             protected File doInBackground(Void... params) {
-                if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) return null;
-                // Export the file in the background.
-                File file = fileExport.export();
-                if (file == null) return null;
+                File file = null;
+                if (fileExport != null) {
+                    if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) return null;
+                    // Export the file in the background.
+                    file = fileExport.export();
+                    if (file == null) return null;
+                }
 
                 String reportSummary = SummaryExport.getSummary(LogActivity.this);
                 // Bring up the chooser to share the file.
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject_send_log));
-                String mailBody = getString(R.string.mail_body);
-                String body = mailBody + reportSummary;
-                sendIntent.putExtra(Intent.EXTRA_TEXT, body);
-                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getAbsolutePath()));
-                sendIntent.setType("message/rfc822");
+                String messageBody = getString(R.string.export_message_text);
+                if (file != null) {
+                    sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getAbsolutePath()));
+                    sendIntent.setType("message/rfc822");
+                    messageBody += getString(R.string.export_message_text_file_attached);
+                } else {
+                    sendIntent.setType("text/plain");
+                }
+                messageBody += reportSummary;
+                sendIntent.putExtra(Intent.EXTRA_TEXT, messageBody);
+
                 startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.action_share)));
                 return file;
             }
@@ -159,7 +167,8 @@ public class LogActivity extends Activity {
             protected void onPostExecute(File result) {
                 super.onPostExecute(result);
                 progressBar.setVisibility(View.GONE);
-                if (result == null) Toast.makeText(LogActivity.this, R.string.error_sdcard_unmounted, Toast.LENGTH_LONG).show();
+                // Show a toast if we failed to export a file.
+                if (fileExport != null && result == null) Toast.makeText(LogActivity.this, R.string.error_sdcard_unmounted, Toast.LENGTH_LONG).show();
             }
 
         };

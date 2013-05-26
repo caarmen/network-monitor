@@ -36,6 +36,7 @@ import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 import org.jraf.android.networkmonitor.util.TelephonyUtil;
 
@@ -152,8 +153,8 @@ public class SummaryExport {
             throw new IllegalArgumentException("Error: unknown phone type " + phoneType);
 
         Cursor c = context.getContentResolver().query(uri, null, null, null, null);
+        SortedMap<String, SortedSet<CellResult>> cellResults = new TreeMap<String, SortedSet<CellResult>>();
         if (c != null) {
-            SortedMap<String, SortedSet<CellResult>> cellResults = new TreeMap<String, SortedSet<CellResult>>();
             try {
                 if (c.moveToFirst()) {
                     do {
@@ -177,28 +178,30 @@ public class SummaryExport {
                             }
                         }
                     } while (c.moveToNext());
-                    return generateReport(cellResults);
                 }
             } finally {
                 c.close();
             }
         }
-        return null;
+        return generateReport(context, cellResults);
     }
 
-    private static String generateReport(SortedMap<String, SortedSet<CellResult>> cellResults) {
+    private static String generateReport(Context context, SortedMap<String, SortedSet<CellResult>> cellResults) {
         StringBuilder sb = new StringBuilder();
         sb.append(Build.MODEL + "/" + Build.VERSION.RELEASE + "\n");
-        for (String extraInfo : cellResults.keySet()) {
-            sb.append(extraInfo + ":\n");
-            for (int i = 0; i < extraInfo.length(); i++)
-                sb.append("-");
-            sb.append("\n");
-            Set<CellResult> cellResultsForExtraInfo = cellResults.get(extraInfo);
-            for (CellResult cellResult : cellResultsForExtraInfo)
-                sb.append(cellResult).append("\n");
-            sb.append("\n");
-        }
+        if (cellResults == null || cellResults.size() == 0) {
+            sb.append(context.getString(R.string.error_no_mobile_tests));
+        } else
+            for (String extraInfo : cellResults.keySet()) {
+                sb.append(extraInfo + ":\n");
+                for (int i = 0; i < extraInfo.length(); i++)
+                    sb.append("-");
+                sb.append("\n");
+                Set<CellResult> cellResultsForExtraInfo = cellResults.get(extraInfo);
+                for (CellResult cellResult : cellResultsForExtraInfo)
+                    sb.append(cellResult).append("\n");
+                sb.append("\n");
+            }
         return sb.toString();
 
     }
