@@ -28,9 +28,9 @@
     <string name="export_choice_text">Résumé en texte</string>
     
 	<string name="pref_interval_never">Jamais</string>
-    <string name="pref_interval_10_secondes">10 secondes</string>
-	<string name="pref_interval_20_secondes">20 secondes</string>
-	<string name="pref_interval_30_secondes">30 secondes</string>
+    <string name="pref_interval_10_seconds">10 secondes</string>
+	<string name="pref_interval_20_seconds">20 secondes</string>
+	<string name="pref_interval_30_seconds">30 secondes</string>
 	<string name="pref_interval_1_minute">1 minute</string>
 	<string name="pref_interval_2_minutes">2 minutes</string>
 	<string name="pref_interval_5_minutes">5 minutes</string>

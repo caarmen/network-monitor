@@ -28,17 +28,17 @@
     <string name="export_choice_text">Resumen en texto</string>
     
 	<string name="pref_interval_never">Nunca</string>
-    <string name="pref_interval_10_segundos">10 segundos</string>
-	<string name="pref_interval_20_segundos">20 segundos</string>
-	<string name="pref_interval_30_segundos">30 segundos</string>
-	<string name="pref_interval_1_minuto">1 minuto</string>
-	<string name="pref_interval_2_minutos">2 minutos</string>
-	<string name="pref_interval_5_minutos">5 minutos</string>
-	<string name="pref_interval_10_minutos">10 minutos</string>
-	<string name="pref_interval_15_minutos">15 minutos</string>
-	<string name="pref_interval_25_minutos">25 minutos</string>
-	<string name="pref_interval_30_minutos">30 minutos</string>
-	<string name="pref_interval_55_minutos">55 minutos</string>
+    <string name="pref_interval_10_seconds">10 segundos</string>
+	<string name="pref_interval_20_seconds">20 segundos</string>
+	<string name="pref_interval_30_seconds">30 segundos</string>
+	<string name="pref_interval_1_minute">1 minuto</string>
+	<string name="pref_interval_2_minutes">2 minutos</string>
+	<string name="pref_interval_5_minutes">5 minutos</string>
+	<string name="pref_interval_10_minutes">10 minutos</string>
+	<string name="pref_interval_15_minutes">15 minutos</string>
+	<string name="pref_interval_25_minutes">25 minutos</string>
+	<string name="pref_interval_30_minutes">30 minutos</string>
+	<string name="pref_interval_55_minutes">55 minutos</string>
 	<string name="pref_interval_1_hour">1 hora</string>
 								
     
