@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <string name="app_name">Monitor de red</string>
+    <string name="preferences_updateInterval_title">Frecuencia de la prueba</string>
+    <string name="preferences_updateInterval_summary">%s</string>
+    <string name="preferences_serviceEnabled_summary">Activar o desactivar el servicio</string>
+    <string name="preferences_serviceEnabled_title">Activar el servicio</string>
+    <string name="preferences_wake_interval_title">Evitar el modo de suspensión</string>
+    <string name="preferences_wake_interval_summary">Despertar el móvil periódicamente para mantener la conexión de datos activa (consume batería): %s</string>
+    <string name="preferences_showLogFile_title">Ver el archivo log</string>
+    <string name="preferences_about_title">Acerca de</string>
+    <string name="log_title">Archivo log</string>
+    <string name="action_share">Compartir el archivo log</string>
+    <string name="action_refresh">Actualizar</string>
+    <string name="action_reset">Reiniciar el archivo log</string>
+    <string name="subject_send_log">Archivo log del Monitor de red</string>
+    <string name="error_sdcard_unmounted">Imposible crear el archivo log. Verifica que la tarjeta SD esté disponible.</string>
+    <string name="error_reading_log">Imposible leer el archivo log.</string>
+    <string name="success_logs_reset">El archivo log ha sido reinicializado</string>
+    <string name="confirm_logs_reset">¿Estás seguro de querer borrar los datos guardados?</string>
+    
+    <string name="export_choice_title">Escoge un formato</string>
+    <string name="export_choice_csv">CSV</string>
+    <string name="export_choice_html">HTML</string>
+    <string name="export_choice_excel">Excel</string>
+    <string name="export_choice_db">Base de datos</string>
+    <string name="export_choice_text">Resumen en texto</string>
+    
+	<string name="pref_interval_never">Nunca</string>
+    <string name="pref_interval_10_segundos">10 segundos</string>
+	<string name="pref_interval_20_segundos">20 segundos</string>
+	<string name="pref_interval_30_segundos">30 segundos</string>
+	<string name="pref_interval_1_minuto">1 minuto</string>
+	<string name="pref_interval_2_minutos">2 minutos</string>
+	<string name="pref_interval_5_minutos">5 minutos</string>
+	<string name="pref_interval_10_minutos">10 minutos</string>
+	<string name="pref_interval_15_minutos">15 minutos</string>
+	<string name="pref_interval_25_minutos">25 minutos</string>
+	<string name="pref_interval_30_minutos">30 minutos</string>
+	<string name="pref_interval_55_minutos">55 minutos</string>
+	<string name="pref_interval_1_hour">1 hora</string>
+								
+    
+   
+    <string name="error_no_mobile_tests">Ninguna preuba ha sido realizada con una conexión de datos moviles.</string>
+    <string name="export_message_text">El siguiente resumen enumera las estaciones base y los resultados de sus pruebas de conexión. Para cada estación, puedes ver los códigos de identificación, el % de las pruebas de conexión que pasaron, y el número total de pruebas de conexión. 
+\n\nLas peores estaciones base aparecen por encima de la lista.
+\n\nFíjate que las pruebas con conexión WiFi o cuando la conexión no estaba en el estado "CONNECTED", no figuran en el resumen.
+\n\n</string>
+    <string name="export_message_text_file_attached">El fichero adjunto incluye los datos completos del conjunto de las pruebas.\n\n</string>
+    <string name="about_title">Acerca de</string>
+    <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
+    <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
+    <string name="about_projectUrl">https://github.com/BoD/network-monitor</string>
+    <string name="service_notification_ticker">Monitor de red recoge datos.</string>
+    <string name="service_notification_text">Recoge datos.</string>
+    <string name="service_notification_action_stop">Apagar</string>
+    <string name="service_notification_action_logs">Archivo log</string>
+
+</resources>
