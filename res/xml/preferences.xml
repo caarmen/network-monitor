@@ -3,8 +3,8 @@
 
     <org.jraf.android.backport.switchwidget.SwitchPreference
         android:defaultValue="false"
-        android:key="PREF_SERVICE_ENABLED"
         android:icon="@drawable/ic_pref_enable_service"
+        android:key="PREF_SERVICE_ENABLED"
         android:summary="@string/preferences_serviceEnabled_summary"
         android:title="@string/preferences_serviceEnabled_title" />
 
@@ -12,32 +12,35 @@
         android:defaultValue="10000"
         android:entries="@array/preferences_updateInterval_labels"
         android:entryValues="@array/preferences_updateInterval_values"
+        android:icon="@drawable/ic_pref_update_interval"
         android:key="PREF_UPDATE_INTERVAL"
-        android:title="@string/preferences_updateInterval_title" android:icon="@drawable/ic_pref_update_interval" android:summary="@string/preferences_updateInterval_summary"/>
+        android:summary="@string/preferences_updateInterval_summary"
+        android:title="@string/preferences_updateInterval_title" />
 
     <Preference
+        android:icon="@drawable/ic_pref_show_log"
         android:key="PREF_SHOW_LOG_FILE"
-        android:title="@string/preferences_showLogFile_title" android:icon="@drawable/ic_pref_show_log">
-        <intent
-            android:action="org.jraf.android.networkmonitor.app.log.LogActivity"/>
+        android:title="@string/preferences_showLogFile_title" >
+        <intent android:action="org.jraf.android.networkmonitor.app.log.LogActivity" />
     </Preference>
     <Preference
+        android:icon="@drawable/ic_pref_reset"
         android:key="PREF_RESET_LOG_FILE"
-        android:title="@string/action_reset" android:icon="@drawable/ic_pref_reset"/>
- 
-    <ListPreference
+        android:title="@string/action_reset" />
+    <ListPreference
         android:defaultValue="0"
         android:entries="@array/preferences_wake_interval_labels"
         android:entryValues="@array/preferences_wake_interval_values"
+        android:icon="@drawable/ic_pref_wake_interval"
         android:key="PREF_WAKE_INTERVAL"
-        android:title="@string/preferences_wake_interval_title"
-        android:summary="@string/preferences_wake_interval_summary" android:icon="@drawable/ic_pref_wake_interval"/>
-    
+        android:summary="@string/preferences_wake_interval_summary"
+        android:title="@string/preferences_wake_interval_title" />
+
     <Preference
+        android:icon="@drawable/ic_pref_about"
         android:key="PREF_ABOUT"
-        android:title="@string/preferences_about_title" android:icon="@drawable/ic_pref_about">
-        <intent
-            android:action="org.jraf.android.networkmonitor.app.about.AboutActivity"/>
+        android:title="@string/preferences_about_title" >
+        <intent android:action="org.jraf.android.networkmonitor.app.about.AboutActivity" />
     </Preference>
 
 </PreferenceScreen>
