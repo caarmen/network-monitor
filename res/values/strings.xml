@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">Network Monitor</string>
-    <string name="preferences_updateInterval_title">Update frequency</string>
+    <string name="preferences_updateInterval_title">Test frequency</string>
     <string name="preferences_updateInterval_summary">%s</string>
     <string name="preferences_serviceEnabled_summary">Enable or disable the service</string>
     <string name="preferences_serviceEnabled_title">Enable service</string>
@@ -19,53 +19,36 @@
     <string name="error_reading_log">Could not read log file.</string>
     <string name="success_logs_reset">Logs have been reset</string>
     <string name="confirm_logs_reset">Do you really want to delete all the logs?</string>
+    
     <string name="export_choice_title">Choose the format to export</string>
     <string name="export_choice_csv">CSV</string>
     <string name="export_choice_html">HTML</string>
     <string name="export_choice_excel">Excel</string>
     <string name="export_choice_db">Raw database</string>
     <string name="export_choice_text">Text summary only</string>
+    
+	<string name="pref_interval_never">Never</string>
+    <string name="pref_interval_10_seconds">10 seconds</string>
+	<string name="pref_interval_20_seconds">20 seconds</string>
+	<string name="pref_interval_30_seconds">30 seconds</string>
+	<string name="pref_interval_1_minute">1 minute</string>
+	<string name="pref_interval_2_minutes">2 minutes</string>
+	<string name="pref_interval_5_minutes">5 minutes</string>
+	<string name="pref_interval_10_minutes">10 minutes</string>
+	<string name="pref_interval_15_minutes">15 minutes</string>
+	<string name="pref_interval_25_minutes">25 minutes</string>
+	<string name="pref_interval_30_minutes">30 minutes</string>
+	<string name="pref_interval_55_minutes">55 minutes</string>
+	<string name="pref_interval_1_hour">1 hour</string>
+								
+    
+   
     <string name="error_no_mobile_tests">No connection tests have been done on a mobile connection.</string>
     <string name="export_message_text">The following summary lists the mobile cells and their connection test results.  For each cell you can see the cell ids, the % of connection tests which succeeded, and the number of attempted connection tests. 
 \n\nThe worst cells are at the top of the list.
-\n\nNote that tests on WiFi or tests when the data connection was not "CONNECTED" are not included in the below summary.
+\n\nNote that tests on WiFi or tests when the data connection was not \"CONNECTED\" are not included in the below summary.
 \n\n</string>
     <string name="export_message_text_file_attached">Attached is a file with the full data of all tests.\n\n</string>
-    
-    <string name="css">
-<![CDATA[<style type="text/css">
-table {
- border-collapse: collapse;
- border: 1px #fd8900 solid;
-}
-th {
- background-color: #fff300;
- color: #fd8900;
- border: 1px #fd8900 solid;
- text-transform: capitalize;
-}
-td {
- white-space: pre;
- border-right: 1px #fd8900 solid;
- padding-left: 5px;
- padding-right: 5px;
-}
-tr.even td {
- background-color:#ffffe1;
-}
-tr.odd td {
- background-color:#fff;
-}
-td.pass { 
- color:#0A0; 
- font-weight:bold;
-}
-td.fail { 
- color:#F00; 
- font-weight:bold;
-}
-</style>]]>
-    </string>
     <string name="about_title">About</string>
     <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
     <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
