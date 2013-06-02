@@ -43,10 +43,10 @@
 								
     
    
-    <string name="error_no_mobile_tests">Ninguna preuba ha sido realizada con una conexión de datos moviles.</string>
+    <string name="error_no_mobile_tests">Ninguna prueba ha sido realizada con una conexión de datos móviles.</string>
     <string name="export_message_text">El siguiente resumen enumera las estaciones base y los resultados de sus pruebas de conexión. Para cada estación, puedes ver los códigos de identificación, el % de las pruebas de conexión que pasaron, y el número total de pruebas de conexión. 
 \n\nLas peores estaciones base aparecen por encima de la lista.
-\n\nFíjate que las pruebas con conexión WiFi o cuando la conexión no estaba en el estado "CONNECTED", no figuran en el resumen.
+\n\nFíjate que las pruebas con conexión WiFi, o cuando la conexión no estaba en el estado \"CONNECTED\", no figuran en el resumen.
 \n\n</string>
     <string name="export_message_text_file_attached">El fichero adjunto incluye los datos completos del conjunto de las pruebas.\n\n</string>
     <string name="about_title">Acerca de</string>
