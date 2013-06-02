@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <string name="app_name">Monitor de red</string>
+    <string name="app_name">Network Monitor</string>
     <string name="preferences_updateInterval_title">Frecuencia de la prueba</string>
     <string name="preferences_updateInterval_summary">%s</string>
     <string name="preferences_serviceEnabled_summary">Activar o desactivar el servicio</string>
@@ -14,7 +14,7 @@
     <string name="action_share">Compartir el archivo log</string>
     <string name="action_refresh">Actualizar</string>
     <string name="action_reset">Reiniciar el archivo log</string>
-    <string name="subject_send_log">Archivo log del Monitor de red</string>
+    <string name="subject_send_log">Archivo log de Network Monitor</string>
     <string name="error_sdcard_unmounted">Imposible crear el archivo log. Verifica que la tarjeta SD esté disponible.</string>
     <string name="error_reading_log">Imposible leer el archivo log.</string>
     <string name="success_logs_reset">El archivo log ha sido reinicializado</string>
@@ -53,7 +53,7 @@
     <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
     <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
     <string name="about_projectUrl">https://github.com/BoD/network-monitor</string>
-    <string name="service_notification_ticker">Monitor de red recoge datos.</string>
+    <string name="service_notification_ticker">Network Monitor recoge datos.</string>
     <string name="service_notification_text">Recoge datos.</string>
     <string name="service_notification_action_stop">Apagar</string>
     <string name="service_notification_action_logs">Archivo log</string>

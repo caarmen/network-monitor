@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <string name="app_name">Moniteur réseau</string>
+    <string name="app_name">Network Monitor</string>
     <string name="preferences_updateInterval_title">Fréquence du test</string>
     <string name="preferences_updateInterval_summary">%s</string>
     <string name="preferences_serviceEnabled_summary">Activer ou désactiver le service</string>
@@ -14,7 +14,7 @@
     <string name="action_share">Partager le fichier journal</string>
     <string name="action_refresh">Actualiser</string>
     <string name="action_reset">Réinitialiser le fichier journal</string>
-    <string name="subject_send_log">Fichier journal du Moniteur réseau</string>
+    <string name="subject_send_log">Fichier journal du Network Monitor</string>
     <string name="error_sdcard_unmounted">Impossible de créer le fichier journal.  Vérifiez que la carte SD soit disponible.</string>
     <string name="error_reading_log">Impossible de lire le fichier journal.</string>
     <string name="success_logs_reset">Le fichier journal a été réinitialisé</string>
@@ -53,7 +53,7 @@
     <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
     <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
     <string name="about_projectUrl">https://github.com/BoD/network-monitor</string>
-    <string name="service_notification_ticker">Moniteur de réseau recueille des données.</string>
+    <string name="service_notification_ticker">Network Monitor recueille des données.</string>
     <string name="service_notification_text">Tests de connexion en cours.</string>
     <string name="service_notification_action_stop">Arrêt</string>
     <string name="service_notification_action_logs">Fichier journal</string>
