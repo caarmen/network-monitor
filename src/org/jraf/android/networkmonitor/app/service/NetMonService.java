@@ -48,6 +48,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -88,7 +90,6 @@ public class NetMonService extends Service {
     private static final int TIMEOUT = 15000;
     private static final String HTTP_GET = "GET / HTTP/1.1\r\n\r\n";
     private static final String UNKNOWN = "";
-    private static final Object SYNC = new Object();
     private static final int NOTIFICATION_ID = 1;
 
     private PowerManager mPowerManager;
@@ -100,6 +101,8 @@ public class NetMonService extends Service {
     private long mLastWakeUp = 0;
     private int mLastSignalStrength;
     private volatile boolean mDestroyed;
+    private HandlerThread mHandlerThread;
+    private Handler mHandler;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -121,19 +124,19 @@ public class NetMonService extends Service {
         startForeground(NOTIFICATION_ID, notification);
 
 
-        new Thread() {
-            @Override
-            public void run() {
-                mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                mLocationClient = new LocationClient(NetMonService.this, mConnectionCallbacks, mConnectionFailedListener);
-                mLocationClient.connect();
-                mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_SERVICE_STATE);
-                monitorLoop();
-            }
-        }.start();
+        mHandlerThread = new HandlerThread(TAG);
+        mHandlerThread.start();
+        mHandler = new Handler(mHandlerThread.getLooper());
+
+        mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mLocationClient = new LocationClient(NetMonService.this, mConnectionCallbacks, mConnectionFailedListener);
+        mLocationClient.connect();
+        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_SERVICE_STATE);
+        mHandler.post(mMonitorLoop);
+
     }
 
     @Override
@@ -153,9 +156,8 @@ public class NetMonService extends Service {
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            synchronized (SYNC) {
-                SYNC.notifyAll();
-            }
+            mHandler.removeCallbacks(mMonitorLoop);
+            mHandler.post(mMonitorLoop);
         }
     };
 
@@ -193,8 +195,9 @@ public class NetMonService extends Service {
         return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.PREF_SERVICE_ENABLED, Constants.PREF_SERVICE_ENABLED_DEFAULT);
     }
 
-    private void monitorLoop() {
-        while (true) {
+    private Runnable mMonitorLoop = new Runnable() {
+        @Override
+        public void run() {
             Log.d(TAG, "monitorLoop iteration: destroyed = " + mDestroyed);
             if (mDestroyed) {
                 Log.d(TAG, "mDestroyed is true, exiting");
@@ -222,20 +225,6 @@ public class NetMonService extends Service {
             Log.v(TAG, "Inserting data into DB");
             getContentResolver().insert(NetMonColumns.CONTENT_URI, values);
 
-            // Sleep
-            long updateInterval = getUpdateInterval();
-            Log.d(TAG, "Waiting for synchronized lock to sleep");
-            synchronized (SYNC) {
-                try {
-                    Log.d(TAG, "monitorLoop Sleeping " + updateInterval / 1000 + " seconds...");
-                    SYNC.wait(updateInterval);
-                    Log.d(TAG, "monitorLoop slept");
-                } catch (InterruptedException e) {
-                    // Should never happen
-                    Log.w(TAG, "monitorLoop wait() was interrupted", e);
-                }
-            }
-            Log.d(TAG, "Exited synchronized block");
 
             // Loop if service is still enabled, otherwise stop
             if (!isServiceEnabled()) {
@@ -243,8 +232,13 @@ public class NetMonService extends Service {
                 stopSelf();
                 return;
             }
+            // Sleep
+            long updateInterval = getUpdateInterval();
+            Log.d(TAG, "monitorLoop Sleeping " + updateInterval / 1000 + " seconds...");
+            mHandler.postDelayed(mMonitorLoop, updateInterval);
         }
-    }
+
+    };
 
     private long getLongPreference(String key, String defaultValue) {
         String valueStr = PreferenceManager.getDefaultSharedPreferences(this).getString(key, defaultValue);
