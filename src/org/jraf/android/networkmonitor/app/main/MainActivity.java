@@ -118,9 +118,6 @@ public class MainActivity extends PreferenceActivity {
             } else if (Constants.PREF_UPDATE_INTERVAL.equals(key)) {
                 updateListPreferenceSummary(Constants.PREF_UPDATE_INTERVAL, R.string.preferences_updateInterval_summary);
                 broadcastPrefChanged = true;
-
-            } else if (Constants.PREF_WAKE_INTERVAL.equals(key)) {
-                updateListPreferenceSummary(Constants.PREF_WAKE_INTERVAL, R.string.preferences_wake_interval_summary);
             }
 
             if (broadcastPrefChanged) LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(new Intent(NetMonService.ACTION_PREF_CHANGED));

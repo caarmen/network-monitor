@@ -6,8 +6,6 @@
     <string name="preferences_updateInterval_summary">%s</string>
     <string name="preferences_serviceEnabled_summary">Activar o desactivar el servicio</string>
     <string name="preferences_serviceEnabled_title">Activar el servicio</string>
-    <string name="preferences_wake_interval_title">Evitar el modo de suspensión</string>
-    <string name="preferences_wake_interval_summary">Despertar el móvil periódicamente para mantener la conexión de datos activa (consume batería): %s</string>
     <string name="preferences_showLogFile_title">Ver el archivo log</string>
     <string name="preferences_about_title">Acerca de</string>
     <string name="log_title">Archivo log</string>
@@ -27,7 +25,6 @@
     <string name="export_choice_db">Base de datos</string>
     <string name="export_choice_text">Resumen en texto</string>
     
-	<string name="pref_interval_never">Nunca</string>
     <string name="pref_interval_10_seconds">10 segundos</string>
 	<string name="pref_interval_20_seconds">20 segundos</string>
 	<string name="pref_interval_30_seconds">30 segundos</string>

@@ -6,8 +6,6 @@
     <string name="preferences_updateInterval_summary">%s</string>
     <string name="preferences_serviceEnabled_summary">Activer ou désactiver le service</string>
     <string name="preferences_serviceEnabled_title">Activer le service</string>
-    <string name="preferences_wake_interval_title">Empêcher le mode veille</string>
-    <string name="preferences_wake_interval_summary">Réveiller le téléphone périodiquement pour garder la connexion data active (épuise la batterie): %s</string>
     <string name="preferences_showLogFile_title">Voir le fichier journal</string>
     <string name="preferences_about_title">À propos</string>
     <string name="log_title">Fichier journal</string>
@@ -27,7 +25,6 @@
     <string name="export_choice_db">Base de données</string>
     <string name="export_choice_text">Résumé en texte</string>
     
-	<string name="pref_interval_never">Jamais</string>
     <string name="pref_interval_10_seconds">10 secondes</string>
 	<string name="pref_interval_20_seconds">20 secondes</string>
 	<string name="pref_interval_30_seconds">30 secondes</string>

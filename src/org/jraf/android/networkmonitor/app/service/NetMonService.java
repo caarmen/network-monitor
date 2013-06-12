@@ -84,7 +84,7 @@ public class NetMonService extends Service {
     private static final String PREFIX = NetMonService.class.getName() + ".";
 
     public static final String ACTION_PREF_CHANGED = PREFIX + "ACTION_PREF_CHANGED";
-    public static final String ACTION_DISABLE = PREFIX + "ACTION_DISABLE";
+    private static final String ACTION_DISABLE = PREFIX + "ACTION_DISABLE";
 
     // private static final String HOST = "www.google.com";
     private static final String HOST = "173.194.34.16";
@@ -171,11 +171,6 @@ public class NetMonService extends Service {
             reScheduleMonitorLoop();
         }
     };
-
-    public void unregisterBroadcastReceiver() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
-    }
-
 
     /*
      * Notification.
@@ -498,7 +493,7 @@ public class NetMonService extends Service {
         mDestroyed = true;
         if (mLocationClient != null) mLocationClient.disconnect();
         if (mTelephonyManager != null) mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
-        unregisterBroadcastReceiver();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
         dismissNotification();
         if (mWakeLock != null && mWakeLock.isHeld()) mWakeLock.release();
         super.onDestroy();
