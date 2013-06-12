@@ -35,28 +35,28 @@ import org.jraf.android.networkmonitor.util.TelephonyUtil;
 /**
  * The logic in this class comes from the Android source code. It is copied here because some of this logic is available only on API level 17+.
  */
-public class NetMonSignalStrength {
+class NetMonSignalStrength {
     private static final String TAG = Constants.TAG + NetMonSignalStrength.class.getSimpleName();
 
     private Context mContext;
-    public static final int SIGNAL_STRENGTH_NONE_OR_UNKNOWN = 0;
-    public static final int SIGNAL_STRENGTH_POOR = 1;
-    public static final int SIGNAL_STRENGTH_MODERATE = 2;
-    public static final int SIGNAL_STRENGTH_GOOD = 3;
-    public static final int SIGNAL_STRENGTH_GREAT = 4;
+    static final int SIGNAL_STRENGTH_NONE_OR_UNKNOWN = 0;
+    private static final int SIGNAL_STRENGTH_POOR = 1;
+    private static final int SIGNAL_STRENGTH_MODERATE = 2;
+    private static final int SIGNAL_STRENGTH_GOOD = 3;
+    private static final int SIGNAL_STRENGTH_GREAT = 4;
 
     private static final int GSM_SIGNAL_STRENGTH_GREAT = 12;
     private static final int GSM_SIGNAL_STRENGTH_GOOD = 8;
     private static final int GSM_SIGNAL_STRENGTH_MODERATE = 8;// WTF? good = moderate?
 
-    public NetMonSignalStrength(Context context) {
+    NetMonSignalStrength(Context context) {
         mContext = context;
     }
 
     /**
      * @return a value between 0 {@link #SIGNAL_STRENGTH_NONE_OR_UNKNOWN} and 4 {@link #SIGNAL_STRENGTH_GREAT}.
      */
-    public int getLevel(SignalStrength signalStrength) {
+    int getLevel(SignalStrength signalStrength) {
         Log.v(TAG, "getLevel " + signalStrength);
         int phoneType = TelephonyUtil.getDeviceType(mContext);
         if (phoneType == TelephonyManager.PHONE_TYPE_GSM) {

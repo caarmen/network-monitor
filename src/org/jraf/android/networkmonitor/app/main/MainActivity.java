@@ -60,7 +60,6 @@ public class MainActivity extends PreferenceActivity {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         addPreferencesFromResource(R.xml.preferences);
         findPreference(Constants.PREF_RESET_LOG_FILE).setOnPreferenceClickListener(mOnPreferenceClickListener);
-        updateListPreferenceSummary(Constants.PREF_WAKE_INTERVAL, R.string.preferences_wake_interval_summary);
         updateListPreferenceSummary(Constants.PREF_UPDATE_INTERVAL, R.string.preferences_updateInterval_summary);
         startService(new Intent(MainActivity.this, NetMonService.class));
     }
@@ -169,7 +168,7 @@ public class MainActivity extends PreferenceActivity {
     }
 
     // When the user taps on the "reset logs" item, bring up a confirmation dialog, then purge the DB.
-    OnPreferenceClickListener mOnPreferenceClickListener = new OnPreferenceClickListener() {
+    private OnPreferenceClickListener mOnPreferenceClickListener = new OnPreferenceClickListener() {
 
         @Override
         public boolean onPreferenceClick(Preference pref) {

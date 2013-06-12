@@ -44,15 +44,15 @@ public class SummaryExport {
     /**
      * Contains data for cell tests common to all cell types.
      */
-    static class CellResult implements Comparable<CellResult> {
-        final int passRate;
+    private static class CellResult implements Comparable<CellResult> {
+        private final int passRate;
         final int testCount;
 
         /**
          * @param passRate the percent of tests which pass (0..100)
          * @param testCount the number of tests on this cell.
          */
-        public CellResult(int passRate, int testCount) {
+        private CellResult(int passRate, int testCount) {
             this.passRate = passRate;
             this.testCount = testCount;
         }
@@ -76,12 +76,12 @@ public class SummaryExport {
     /**
      * Test data and GSM cell identifiers for a cell.
      */
-    static class GsmCellResult extends CellResult {
-        final int lac;
-        final int longCellId;
-        final int shortCellId;
+    private static class GsmCellResult extends CellResult {
+        private final int lac;
+        private final int longCellId;
+        private final int shortCellId;
 
-        public GsmCellResult(int lac, int longCellId, int shortCellId, int passRate, int testCount) {
+        private GsmCellResult(int lac, int longCellId, int shortCellId, int passRate, int testCount) {
             super(passRate, testCount);
             this.lac = lac;
             this.longCellId = longCellId;
@@ -109,12 +109,12 @@ public class SummaryExport {
     /**
      * Test data and CDMA cell identifiers for a cell.
      */
-    static class CdmaCellResult extends CellResult {
-        final int baseStationId;
-        final int networkId;
-        final int systemId;
+    private static class CdmaCellResult extends CellResult {
+        private final int baseStationId;
+        private final int networkId;
+        private final int systemId;
 
-        public CdmaCellResult(int baseStationId, int networkId, int systemId, int passRate, int testCount) {
+        private CdmaCellResult(int baseStationId, int networkId, int systemId, int passRate, int testCount) {
             super(passRate, testCount);
             this.baseStationId = baseStationId;
             this.networkId = networkId;

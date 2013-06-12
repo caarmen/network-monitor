@@ -35,10 +35,8 @@
 	<string name="pref_interval_2_minutes">2 minutos</string>
 	<string name="pref_interval_5_minutes">5 minutos</string>
 	<string name="pref_interval_10_minutes">10 minutos</string>
-	<string name="pref_interval_15_minutes">15 minutos</string>
-	<string name="pref_interval_25_minutes">25 minutos</string>
+	<string name="pref_interval_15_minutes">15 minutos</string>	
 	<string name="pref_interval_30_minutes">30 minutos</string>
-	<string name="pref_interval_55_minutes">55 minutos</string>
 	<string name="pref_interval_1_hour">1 hora</string>
 								
     
