@@ -31,6 +31,10 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -48,8 +52,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -101,8 +103,9 @@ public class NetMonService extends Service {
     private long mLastWakeUp = 0;
     private int mLastSignalStrength;
     private volatile boolean mDestroyed;
-    private HandlerThread mHandlerThread;
-    private Handler mHandler;
+    private ScheduledExecutorService mExecutorService;
+    private Future<?> mMonitorLoopFuture;
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -124,9 +127,7 @@ public class NetMonService extends Service {
         startForeground(NOTIFICATION_ID, notification);
 
 
-        mHandlerThread = new HandlerThread(TAG);
-        mHandlerThread.start();
-        mHandler = new Handler(mHandlerThread.getLooper());
+        mExecutorService = Executors.newSingleThreadScheduledExecutor();
 
         mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -135,7 +136,7 @@ public class NetMonService extends Service {
         mLocationClient = new LocationClient(NetMonService.this, mConnectionCallbacks, mConnectionFailedListener);
         mLocationClient.connect();
         mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_SERVICE_STATE);
-        mHandler.post(mMonitorLoop);
+        reScheduleMonitorLoop();
 
     }
 
@@ -144,6 +145,12 @@ public class NetMonService extends Service {
         return Service.START_STICKY;
     }
 
+    private void reScheduleMonitorLoop() {
+        long updateInterval = getUpdateInterval();
+        Log.d(TAG, "monitorLoop Sleeping " + updateInterval / 1000 + " seconds...");
+        if (mMonitorLoopFuture != null) mMonitorLoopFuture.cancel(true);
+        mMonitorLoopFuture = mExecutorService.scheduleAtFixedRate(mMonitorLoop, 0, updateInterval, TimeUnit.MILLISECONDS);
+    }
 
     /*
      * Broadcast.
@@ -154,10 +161,11 @@ public class NetMonService extends Service {
     }
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+
         @Override
         public void onReceive(Context context, Intent intent) {
-            mHandler.removeCallbacks(mMonitorLoop);
-            mHandler.post(mMonitorLoop);
+
+            reScheduleMonitorLoop();
         }
     };
 
@@ -232,10 +240,6 @@ public class NetMonService extends Service {
                 stopSelf();
                 return;
             }
-            // Sleep
-            long updateInterval = getUpdateInterval();
-            Log.d(TAG, "monitorLoop Sleeping " + updateInterval / 1000 + " seconds...");
-            mHandler.postDelayed(mMonitorLoop, updateInterval);
         }
 
     };
