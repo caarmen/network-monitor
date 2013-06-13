@@ -32,5 +32,20 @@
         <item>@string/export_choice_excel</item>
         <item>@string/export_choice_db</item>
         <item>@string/export_choice_text</item>
-    </string-array> 
+    </string-array>
+    <string-array name="preferences_wake_interval_labels">
+        <item>@string/pref_interval_never</item>
+        <item>@string/pref_interval_5_minutes</item>
+        <item>@string/pref_interval_10_minutes</item>
+        <item>@string/pref_interval_25_minutes</item>
+        <item>@string/pref_interval_55_minutes</item>
+    </string-array>
+    <string-array name="preferences_wake_interval_values">
+        <item>0</item>
+        <item>300000</item>
+        <item>600000</item>
+        <item>1500000</item>
+        <item>3300000</item>
+    </string-array>
+    
 </resources>

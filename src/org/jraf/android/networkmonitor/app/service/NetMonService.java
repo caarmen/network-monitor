@@ -100,6 +100,7 @@ public class NetMonService extends Service {
     private LocationManager mLocationManager;
     private LocationClient mLocationClient;
     private NetMonPhoneStateListener mPhoneStateListener;
+    private long mLastWakeUp = 0;
     private int mLastSignalStrength;
     private volatile boolean mDestroyed;
     private ScheduledExecutorService mExecutorService;
@@ -256,6 +257,10 @@ public class NetMonService extends Service {
         return getLongPreference(Constants.PREF_UPDATE_INTERVAL, Constants.PREF_UPDATE_INTERVAL_DEFAULT);
     }
 
+    private long getWakeInterval() {
+        return getLongPreference(Constants.PREF_WAKE_INTERVAL, Constants.PREF_WAKE_INTERVAL_DEFAULT);
+    }
+
     /**
      * Try to open a connection to an HTTP server, and execute a simple GET request. If we can read a response to the GET request, we consider that the network
      * is up.
@@ -264,7 +269,19 @@ public class NetMonService extends Service {
      */
     private boolean isNetworkUp() {
         Socket socket = null;
+        WakeLock wakeLock = null;
         try {
+            // Prevent the system from closing the connection after 30 minutes of screen off.
+            long now = System.currentTimeMillis();
+            long wakeInterval = getWakeInterval();
+            long timeSinceLastWake = now - mLastWakeUp;
+            Log.d(TAG, "wakeInterval = " + wakeInterval + ", lastWakeUp = " + mLastWakeUp + ", timeSinceLastWake = " + timeSinceLastWake);
+            if (wakeInterval > 0 && timeSinceLastWake > wakeInterval) {
+                Log.d(TAG, "acquiring lock");
+                wakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, TAG);
+                wakeLock.acquire();
+                mLastWakeUp = now;
+            }
             socket = new Socket();
             socket.setSoTimeout(TIMEOUT);
             Log.d(TAG, "isNetworkUp Resolving " + HOST);
@@ -300,6 +317,7 @@ public class NetMonService extends Service {
                     Log.w(TAG, "isNetworkUp Could not close socket", e);
                 }
             }
+            if (wakeLock != null && wakeLock.isHeld()) wakeLock.release();
         }
     }
 
