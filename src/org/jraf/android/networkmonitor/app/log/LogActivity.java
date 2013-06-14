@@ -39,6 +39,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -56,6 +57,7 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 public class LogActivity extends Activity {
     private static final String TAG = Constants.TAG + LogActivity.class.getSimpleName();
+    protected WebView mWebView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,17 +209,17 @@ public class LogActivity extends Activity {
                     return;
                 }
                 // Load the exported HTML file into the WebView.
-                final WebView webView = (WebView) findViewById(R.id.web_view);
-                webView.getSettings().setUseWideViewPort(true);
-                webView.getSettings().setBuiltInZoomControls(true);
-                webView.loadUrl("file://" + result.getAbsolutePath());
-                webView.setWebViewClient(new WebViewClient() {
+                mWebView = (WebView) findViewById(R.id.web_view);
+                mWebView.getSettings().setUseWideViewPort(true);
+                mWebView.getSettings().setBuiltInZoomControls(true);
+                mWebView.loadUrl("file://" + result.getAbsolutePath());
+                mWebView.setWebViewClient(new WebViewClient() {
 
                     @Override
                     public void onPageFinished(WebView view, String url) {
                         super.onPageFinished(view, url);
                         progressBar.setVisibility(View.GONE);
-                        webView.pageDown(true);
+                        mWebView.pageDown(true);
                     }
                 });
             }
@@ -262,5 +264,16 @@ public class LogActivity extends Activity {
                         asyncTask.execute();
                     }
                 }).setNegativeButton(android.R.string.no, null).show();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.v(TAG, "onDestroy");
+        if (mWebView != null) {
+            ((ViewGroup) mWebView.getParent()).removeAllViews();
+            mWebView.destroy();
+            mWebView = null;
+        }
+        super.onDestroy();
     }
 }
