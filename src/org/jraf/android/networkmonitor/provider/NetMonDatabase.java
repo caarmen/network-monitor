@@ -88,7 +88,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion);
-        if (newVersion < 2) {
+        if (oldVersion < 2) {
             Log.v(TAG, "Execute: " + SQL_UPDATE_TABLE_NETWORKMONITOR_V2);
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V2);
         }
