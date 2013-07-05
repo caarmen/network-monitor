@@ -340,6 +340,7 @@ public class NetMonService extends Service {
         values.put(NetMonColumns.DETAILED_STATE, activeNetworkInfo.getDetailedState().toString());
         values.put(NetMonColumns.REASON, activeNetworkInfo.getReason());
         values.put(NetMonColumns.EXTRA_INFO, activeNetworkInfo.getExtraInfo());
+        values.put(NetMonColumns.OPERATOR, mTelephonyManager.getNetworkOperatorName() + "(" + mTelephonyManager.getNetworkOperator() + ")");
         return values;
     }
 

@@ -27,12 +27,14 @@ package org.jraf.android.networkmonitor.app.log;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -64,6 +66,7 @@ public class LogActivity extends Activity {
         Log.v(TAG, "onCreate " + savedInstanceState);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.log);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) setDisplayHomeAsUpEnabled(true);
         loadHTMLFile();
     }
 
@@ -88,6 +91,11 @@ public class LogActivity extends Activity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void setDisplayHomeAsUpEnabled(boolean enabled) {
+        getActionBar().setDisplayHomeAsUpEnabled(enabled);
     }
 
     /**
