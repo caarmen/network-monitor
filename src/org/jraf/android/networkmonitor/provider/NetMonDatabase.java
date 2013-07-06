@@ -55,7 +55,8 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.DATA_STATE + " TEXT, "
             + NetMonColumns.REASON + " TEXT, "
             + NetMonColumns.EXTRA_INFO + " TEXT, "
-            + NetMonColumns.OPERATOR + " TEXT, "
+            + NetMonColumns.SIM_OPERATOR + " TEXT, "
+            + NetMonColumns.NETWORK_OPERATOR + " TEXT, "
             + NetMonColumns.IS_NETWORK_METERED + " INTEGER, "
             + NetMonColumns.DEVICE_LATITUDE + " REAL, "
             + NetMonColumns.DEVICE_LONGITUDE + " REAL, "
@@ -72,8 +73,11 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + " );";
     // @formatter:on
 
-    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V2 = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN " + NetMonColumns.OPERATOR
-            + " TEXT";
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V2_SIM_OPERATOR = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.SIM_OPERATOR + " TEXT";
+
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V2_NETWORK_OPERATOR = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.NETWORK_OPERATOR + " TEXT";
 
     NetMonDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -89,8 +93,8 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion);
         if (oldVersion < 2) {
-            Log.v(TAG, "Execute: " + SQL_UPDATE_TABLE_NETWORKMONITOR_V2);
-            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V2);
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V2_SIM_OPERATOR);
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V2_NETWORK_OPERATOR);
         }
     }
 }
