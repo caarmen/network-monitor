@@ -57,7 +57,6 @@ public class HTMLExport extends FileExport {
 
         mPrintWriter.println("  <tr>");
         for (String columnName : columnNames) {
-            columnName = columnName.replaceAll("_", " ");
             mPrintWriter.println("    <th>" + columnName + "</th>");
         }
         mPrintWriter.println("  </tr></thead><tbody>");

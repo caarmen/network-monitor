@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
@@ -81,6 +82,17 @@ public abstract class FileExport {
                 String[] columnNames = c.getColumnNames();
                 String[] usedColumnNames = new String[c.getColumnCount() - 1];
                 System.arraycopy(columnNames, 1, usedColumnNames, 0, c.getColumnCount() - 1);
+                Log.v(TAG, "Find user-friendly labels for columns " + Arrays.toString(usedColumnNames));
+                for(int i=0; i < usedColumnNames.length; i++){
+                    int columnLabelId = mContext.getResources().getIdentifier(usedColumnNames[i], "string", mContext.getPackageName());
+                    if(columnLabelId > 0) {
+                        String columnLabel = mContext.getString(columnLabelId);
+                        Log.v(TAG, usedColumnNames[i] + "->" + columnLabel);
+                        usedColumnNames[i] = columnLabel;
+                    }
+                }
+                Log.v(TAG, "Column names: " + Arrays.toString(usedColumnNames));
+    
 
                 // Start writing to the file.
                 writeHeader(usedColumnNames);

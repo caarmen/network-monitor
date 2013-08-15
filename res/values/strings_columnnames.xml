@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <string name="timestamp">Timestamp</string>
+    <string name="network_type">Network Type</string>
+    <string name="mobile_data_network_type">Mobile Data Network Type</string>
+    <string name="google_connection_test">Google Connection Test</string>
+    <string name="sim_state">SIM State</string>
+    <string name="detailed_state">Detailed State</string>
+    <string name="is_connected">Is Connected</string>
+    <string name="is_roaming">Is Roaming</string>
+    <string name="is_available">Is Available</string>
+    <string name="is_failover">Is Failover</string>
+    <string name="data_activity">Data Activity</string>
+    <string name="data_state">Data State</string>
+    <string name="reason">Reason</string>
+    <string name="extra_info">Extra Info</string>
+    <string name="sim_operator">SIM Operator</string>
+    <string name="network_operator">Network Operator</string>
+    <string name="is_network_metered">Is Network Metered</string>
+    <string name="device_latitude">Device Latitude</string>
+    <string name="device_longitude">Device Longitude</string>
+    <string name="cell_signal_strength">Cell Signal Strength</string>
+    <string name="cdma_cell_base_station_id">CDMA Cell Base Station Id</string>
+    <string name="cdma_cell_latitude">CDMA Cell Latitude</string>
+    <string name="cdma_cell_longitude">CDMA Cell Longitude</string>
+    <string name="cdma_cell_network_id">CDMA Cell Network Id</string>
+    <string name="cdma_cell_system_id">CDMA Cell System Id</string>
+    <string name="gsm_full_cell_id">GSM Full Cell Id</string>
+    <string name="gsm_short_cell_id">GSM Short Cell Id</string>
+    <string name="gsm_cell_lac">GSM Cell LAC</string>
+    <string name="gsm_cell_psc">GSM Cell PSC</string>
+
+</resources>
