@@ -29,6 +29,7 @@ import java.io.IOException;
 
 import jxl.JXLException;
 import jxl.Workbook;
+import jxl.format.Alignment;
 import jxl.format.CellFormat;
 import jxl.format.Colour;
 import jxl.write.Label;
@@ -125,6 +126,8 @@ public class ExcelExport extends FileExport {
             mBoldFormat = new WritableCellFormat(cellFormat);
             boldFont.setBoldStyle(WritableFont.BOLD);
             mBoldFormat.setFont(boldFont);
+            mBoldFormat.setWrap(true);
+            mBoldFormat.setAlignment(Alignment.CENTRE);
 
             // Create the red format
             mRedFormat = new WritableCellFormat(cellFormat);
