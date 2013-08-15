@@ -56,10 +56,11 @@ public class ExcelExport extends FileExport {
 
     private WritableWorkbook mWorkbook;
     private WritableSheet mSheet;
+    private WritableCellFormat mDefaultFormat;
     private WritableCellFormat mBoldFormat;
     private WritableCellFormat mRedFormat;
     private WritableCellFormat mGreenFormat;
-    private int mColumnWidth;
+    private int mRowCount;
     private int mColumnCount;
 
     public ExcelExport(Context context) throws FileNotFoundException {
@@ -78,21 +79,12 @@ public class ExcelExport extends FileExport {
         createCellFormats();
         for (int i = 0; i < columnNames.length; i++) {
             mSheet.insertColumn(i);
-            int columnWidth = getLongestWordLength(columnNames[i]);
-            if (columnWidth > mColumnWidth) mColumnWidth = columnWidth;
             insertCell(columnNames[i], 0, i, mBoldFormat);
         }
         mColumnCount = columnNames.length;
+        mRowCount = 0;
     }
 
-    private int getLongestWordLength(String s) {
-        String[] words = s.split(" ");
-        int result = 0;
-        for (String word : words) {
-            if (word.length() > result) result = word.length();
-        }
-        return result;
-    }
 
     @Override
     void writeRow(int rowNumber, String[] cellValues) throws IOException {
@@ -103,23 +95,15 @@ public class ExcelExport extends FileExport {
             else if (Constants.CONNECTION_TEST_FAIL.equals(cellValues[i])) cellFormat = mRedFormat;
             insertCell(cellValues[i], rowNumber, i, cellFormat);
         }
+        mRowCount++;
     }
 
     @Override
     void writeFooter() throws IOException {
-        Log.v(TAG, "writeFooter: column width = " + mColumnWidth + " characters, " + mColumnCount + " columns");
+        Log.v(TAG, "writeFooter");
         try {
-            // Auto size the first column so the timestamp appears completely.
-            CellView columnView = mSheet.getColumnView(0);
-            columnView.setAutosize(true);
-            mSheet.setColumnView(0, columnView);
-            // Set the column width of all the other columns such that no word in the column headings will be truncated.
-            for (int i = 1; i < mColumnCount; i++) {
-                columnView = mSheet.getColumnView(i);
-                // The column size is "the width of the column in characters multiplied by 256".  We add one character to the longest column heading word we have, to add additional horizontal padding.
-                columnView.setSize((mColumnWidth + 1) * 256);
-                mSheet.setColumnView(i, columnView);
-            }
+            for (int i = 0; i < mColumnCount; i++)
+                resizeColumn(i);
             // Set the heading row height to 4 lines tall.  Using autoSize doesn't seem to work (the resulting file has only one row of characters in the header row).
             // Not sure how to dynamically calculate the optimal height of the header row, so we just assume the largest column heading will be four lines tall.
             CellView headerRowView = mSheet.getRowView(0);
@@ -132,8 +116,47 @@ public class ExcelExport extends FileExport {
         }
     }
 
+    /**
+     * Calculates the optimal width of the column and sets the column width to that value. The width will be large enough to fit the contents of all the cells
+     * after the header, and large enough to fit the largest word in the header.
+     */
+    private void resizeColumn(int col) {
+        String columnName = mSheet.getCell(col, 0).getContents();
+        Log.v(TAG, "resizeColumn " + col + ": " + columnName);
+
+        // Make sure the column width is large enough to fit this column name (plus a space for extra padding).
+        int columnWidth = getLongestWordLength(columnName);
+        // Make sure the column width is large enough to fit the widest data cell.
+        // (Normally I would use setAutosize() but once you autosize a column in jxl, you can't
+        // disable the autosize, so I have to calculate this myself...)
+        for (int i = 1; i <= mRowCount; i++) {
+            String cellValue = mSheet.getCell(col, i).getContents();
+            int cellWidth = cellValue.length();
+            if (cellWidth > columnWidth) columnWidth = cellWidth;
+        }
+        Log.v(TAG, "columnWidth: " + columnWidth);
+
+        // The width of the column is the number of characters multiplied by 256.
+        // Add some characters to have some horizontal padding.
+        CellView columnView = mSheet.getColumnView(col);
+        columnView.setSize((columnWidth + 4) * 256);
+        mSheet.setColumnView(col, columnView);
+    }
+
+    /**
+     * @return the number of characters of the longest word in the given string.
+     */
+    private int getLongestWordLength(String s) {
+        String[] words = s.split(" ");
+        int result = 0;
+        for (String word : words)
+            if (word.length() > result) result = word.length();
+        return result;
+    }
+
     private void insertCell(String text, int row, int column, CellFormat format) {
-        Label label = format == null ? new Label(column, row, text) : new Label(column, row, text, format);
+        if (format == null) format = mDefaultFormat;
+        Label label = new Label(column, row, text, format);
         try {
             mSheet.addCell(label);
         } catch (JXLException e) {
@@ -153,22 +176,26 @@ public class ExcelExport extends FileExport {
         CellFormat cellFormat = cell.getCellFormat();
 
         try {
+            // Center all cells.
+            mDefaultFormat = new WritableCellFormat(cellFormat);
+            mDefaultFormat.setAlignment(Alignment.CENTRE);
+
             // Create the bold format
             final WritableFont boldFont = new WritableFont(cellFormat.getFont());
-            mBoldFormat = new WritableCellFormat(cellFormat);
+            mBoldFormat = new WritableCellFormat(mDefaultFormat);
             boldFont.setBoldStyle(WritableFont.BOLD);
             mBoldFormat.setFont(boldFont);
             mBoldFormat.setWrap(true);
             mBoldFormat.setAlignment(Alignment.CENTRE);
 
             // Create the red format
-            mRedFormat = new WritableCellFormat(cellFormat);
+            mRedFormat = new WritableCellFormat(mDefaultFormat);
             final WritableFont redFont = new WritableFont(cellFormat.getFont());
             redFont.setColour(Colour.RED);
             mRedFormat.setFont(redFont);
 
             // Create the green format
-            mGreenFormat = new WritableCellFormat(cellFormat);
+            mGreenFormat = new WritableCellFormat(mDefaultFormat);
             final WritableFont greenFont = new WritableFont(cellFormat.getFont());
             greenFont.setColour(Colour.GREEN);
             mGreenFormat.setFont(greenFont);
