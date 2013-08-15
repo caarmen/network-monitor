@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import jxl.CellView;
 import jxl.JXLException;
 import jxl.Workbook;
 import jxl.format.Alignment;
@@ -58,6 +59,8 @@ public class ExcelExport extends FileExport {
     private WritableCellFormat mBoldFormat;
     private WritableCellFormat mRedFormat;
     private WritableCellFormat mGreenFormat;
+    private int mColumnWidth;
+    private int mColumnCount;
 
     public ExcelExport(Context context) throws FileNotFoundException {
         super(context, new File(context.getExternalFilesDir(null), EXCEL_FILE));
@@ -75,8 +78,20 @@ public class ExcelExport extends FileExport {
         createCellFormats();
         for (int i = 0; i < columnNames.length; i++) {
             mSheet.insertColumn(i);
+            int columnWidth = getLongestWordLength(columnNames[i]);
+            if (columnWidth > mColumnWidth) mColumnWidth = columnWidth;
             insertCell(columnNames[i], 0, i, mBoldFormat);
         }
+        mColumnCount = columnNames.length;
+    }
+
+    private int getLongestWordLength(String s) {
+        String[] words = s.split(" ");
+        int result = 0;
+        for (String word : words) {
+            if (word.length() > result) result = word.length();
+        }
+        return result;
     }
 
     @Override
@@ -92,7 +107,24 @@ public class ExcelExport extends FileExport {
 
     @Override
     void writeFooter() throws IOException {
+        Log.v(TAG, "writeFooter: column width = " + mColumnWidth + " characters, " + mColumnCount + " columns");
         try {
+            // Auto size the first column so the timestamp appears completely.
+            CellView columnView = mSheet.getColumnView(0);
+            columnView.setAutosize(true);
+            mSheet.setColumnView(0, columnView);
+            // Set the column width of all the other columns such that no word in the column headings will be truncated.
+            for (int i = 1; i < mColumnCount; i++) {
+                columnView = mSheet.getColumnView(i);
+                // The column size is "the width of the column in characters multiplied by 256".  We add one character to the longest column heading word we have, to add additional horizontal padding.
+                columnView.setSize((mColumnWidth + 1) * 256);
+                mSheet.setColumnView(i, columnView);
+            }
+            // Set the heading row height to 4 lines tall.  Using autoSize doesn't seem to work (the resulting file has only one row of characters in the header row).
+            // Not sure how to dynamically calculate the optimal height of the header row, so we just assume the largest column heading will be four lines tall.
+            CellView headerRowView = mSheet.getRowView(0);
+            headerRowView.setSize(headerRowView.getSize() * 4);
+            mSheet.setRowView(0, headerRowView);
             mWorkbook.write();
             mWorkbook.close();
         } catch (JXLException e) {
