@@ -25,24 +25,20 @@ package org.jraf.android.networkmonitor.app.export;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-
-import jxl.CellView;
-import jxl.JXLException;
-import jxl.Workbook;
-import jxl.format.Alignment;
-import jxl.format.CellFormat;
-import jxl.format.Colour;
-import jxl.write.Label;
-import jxl.write.WritableCellFormat;
-import jxl.write.WritableFont;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-import jxl.write.WriteException;
 
 import android.content.Context;
 import android.util.Log;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 
@@ -54,12 +50,12 @@ public class ExcelExport extends FileExport {
 
     private static final String EXCEL_FILE = "networkmonitor.xls";
 
-    private WritableWorkbook mWorkbook;
-    private WritableSheet mSheet;
-    private WritableCellFormat mDefaultFormat;
-    private WritableCellFormat mBoldFormat;
-    private WritableCellFormat mRedFormat;
-    private WritableCellFormat mGreenFormat;
+    private Workbook mWorkbook;
+    private Sheet mSheet;
+    private CellStyle mDefaultFormat;
+    private CellStyle mBoldFormat;
+    private CellStyle mRedFormat;
+    private CellStyle mGreenFormat;
     private int mRowCount;
     private int mColumnCount;
 
@@ -71,14 +67,12 @@ public class ExcelExport extends FileExport {
     void writeHeader(String[] columnNames) throws IOException {
         // Create the workbook, sheet, custom cell formats, and freeze
         // row/column.
-        mWorkbook = Workbook.createWorkbook(mFile);
-        mSheet = mWorkbook.createSheet(mContext.getString(R.string.app_name), 0);
-        mSheet.insertRow(0);
-        mSheet.getSettings().setHorizontalFreeze(2);
-        mSheet.getSettings().setVerticalFreeze(1);
+        mWorkbook = new HSSFWorkbook();
+        mSheet = mWorkbook.createSheet(mContext.getString(R.string.app_name));
+        mSheet.createRow(0);
+        mSheet.createFreezePane(2, 1);
         createCellFormats();
         for (int i = 0; i < columnNames.length; i++) {
-            mSheet.insertColumn(i);
             insertCell(columnNames[i], 0, i, mBoldFormat);
         }
         mColumnCount = columnNames.length;
@@ -88,9 +82,9 @@ public class ExcelExport extends FileExport {
 
     @Override
     void writeRow(int rowNumber, String[] cellValues) throws IOException {
-        mSheet.insertRow(rowNumber);
+        mSheet.createRow(rowNumber);
         for (int i = 0; i < cellValues.length; i++) {
-            CellFormat cellFormat = null;
+            CellStyle cellFormat = null;
             if (Constants.CONNECTION_TEST_PASS.equals(cellValues[i])) cellFormat = mGreenFormat;
             else if (Constants.CONNECTION_TEST_FAIL.equals(cellValues[i])) cellFormat = mRedFormat;
             insertCell(cellValues[i], rowNumber, i, cellFormat);
@@ -101,19 +95,15 @@ public class ExcelExport extends FileExport {
     @Override
     void writeFooter() throws IOException {
         Log.v(TAG, "writeFooter");
-        try {
-            for (int i = 0; i < mColumnCount; i++)
-                resizeColumn(i);
-            // Set the heading row height to 4 lines tall.  Using autoSize doesn't seem to work (the resulting file has only one row of characters in the header row).
-            // Not sure how to dynamically calculate the optimal height of the header row, so we just assume the largest column heading will be four lines tall.
-            CellView headerRowView = mSheet.getRowView(0);
-            headerRowView.setSize(headerRowView.getSize() * 4);
-            mSheet.setRowView(0, headerRowView);
-            mWorkbook.write();
-            mWorkbook.close();
-        } catch (JXLException e) {
-            Log.e(TAG, "writeHeader Could not close file", e);
-        }
+        for (int i = 0; i < mColumnCount; i++)
+            resizeColumn(i);
+        // Set the heading row height to 4 lines tall.  Using autoSize doesn't seem to work (the resulting file has only one row of characters in the header row).
+        // Not sure how to dynamically calculate the optimal height of the header row, so we just assume the largest column heading will be four lines tall.
+        Row headerRow = mSheet.getRow(0);
+        headerRow.setHeight((short) (headerRow.getHeight() * 4));
+        File file = new File(mContext.getExternalFilesDir(null), EXCEL_FILE);
+        FileOutputStream os = new FileOutputStream(file);
+        mWorkbook.write(os);
     }
 
     /**
@@ -121,7 +111,7 @@ public class ExcelExport extends FileExport {
      * after the header, and large enough to fit the largest word in the header.
      */
     private void resizeColumn(int col) {
-        String columnName = mSheet.getCell(col, 0).getContents();
+        String columnName = mSheet.getRow(0).getCell(col).getStringCellValue();
         Log.v(TAG, "resizeColumn " + col + ": " + columnName);
 
         // Make sure the column width is large enough to fit this column name (plus a space for extra padding).
@@ -130,7 +120,7 @@ public class ExcelExport extends FileExport {
         // (Normally I would use setAutosize() but once you autosize a column in jxl, you can't
         // disable the autosize, so I have to calculate this myself...)
         for (int i = 1; i <= mRowCount; i++) {
-            String cellValue = mSheet.getCell(col, i).getContents();
+            String cellValue = mSheet.getRow(i).getCell(col).getStringCellValue();
             int cellWidth = cellValue.length();
             if (cellWidth > columnWidth) columnWidth = cellWidth;
         }
@@ -146,9 +136,7 @@ public class ExcelExport extends FileExport {
         // Some of our letters may be wider than the digits 0-9. So we may need to overestimate
         // the width we need by a bit. Adding a padding of 4 characters seems to be ok
         // for this app.  
-        CellView columnView = mSheet.getColumnView(col);
-        columnView.setSize((columnWidth + 4) * 256);
-        mSheet.setColumnView(col, columnView);
+        mSheet.setColumnWidth(col, (columnWidth + 4) * 256);
     }
 
     /**
@@ -162,14 +150,12 @@ public class ExcelExport extends FileExport {
         return result;
     }
 
-    private void insertCell(String text, int row, int column, CellFormat format) {
+    private void insertCell(String text, int row, int column, CellStyle format) {
         if (format == null) format = mDefaultFormat;
-        Label label = new Label(column, row, text, format);
-        try {
-            mSheet.addCell(label);
-        } catch (JXLException e) {
-            Log.e(TAG, "writeHeader Could not insert cell " + text + " at row=" + row + ", col=" + column, e);
-        }
+        Row r = mSheet.getRow(row);
+        Cell cell = r.createCell(column, Cell.CELL_TYPE_STRING);
+        cell.setCellValue(text);
+        cell.setCellStyle(format);
     }
 
     /**
@@ -180,35 +166,30 @@ public class ExcelExport extends FileExport {
 
         // Insert a dummy empty cell, so we can obtain its cell. This allows to
         // start with a default cell format.
-        Label cell = new Label(0, 0, " ");
-        CellFormat cellFormat = cell.getCellFormat();
 
-        try {
-            // Center all cells.
-            mDefaultFormat = new WritableCellFormat(cellFormat);
-            mDefaultFormat.setAlignment(Alignment.CENTRE);
+        mDefaultFormat = mWorkbook.createCellStyle();
+        mDefaultFormat.setAlignment(CellStyle.ALIGN_CENTER);
 
-            // Create the bold format
-            final WritableFont boldFont = new WritableFont(cellFormat.getFont());
-            mBoldFormat = new WritableCellFormat(mDefaultFormat);
-            boldFont.setBoldStyle(WritableFont.BOLD);
-            mBoldFormat.setFont(boldFont);
-            mBoldFormat.setWrap(true);
-            mBoldFormat.setAlignment(Alignment.CENTRE);
+        // Create the bold format
+        Font boldFont = mWorkbook.createFont();
+        mBoldFormat = mWorkbook.createCellStyle();
+        boldFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        mBoldFormat.setFont(boldFont);
+        mBoldFormat.setWrapText(true);
+        mBoldFormat.setAlignment(CellStyle.ALIGN_CENTER);
 
-            // Create the red format
-            mRedFormat = new WritableCellFormat(mDefaultFormat);
-            final WritableFont redFont = new WritableFont(cellFormat.getFont());
-            redFont.setColour(Colour.RED);
-            mRedFormat.setFont(redFont);
+        // Create the red format
+        mRedFormat = mWorkbook.createCellStyle();
+        Font redFont = mWorkbook.createFont();
+        redFont.setColor(HSSFColor.RED.index);
+        mRedFormat.setFont(redFont);
+        mRedFormat.setAlignment(CellStyle.ALIGN_CENTER);
 
-            // Create the green format
-            mGreenFormat = new WritableCellFormat(mDefaultFormat);
-            final WritableFont greenFont = new WritableFont(cellFormat.getFont());
-            greenFont.setColour(Colour.GREEN);
-            mGreenFormat.setFont(greenFont);
-        } catch (WriteException e) {
-            Log.e(TAG, "createCellFormats Could not create cell formats", e);
-        }
+        // Create the green format
+        mGreenFormat = mWorkbook.createCellStyle();
+        Font greenFont = mWorkbook.createFont();
+        greenFont.setColor(HSSFColor.GREEN.index);
+        mGreenFormat.setFont(greenFont);
+        mGreenFormat.setAlignment(CellStyle.ALIGN_CENTER);
     }
 }
