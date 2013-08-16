@@ -25,3 +25,10 @@
 -keep class * extends java.util.ListResourceBundle {
     protected Object[][] getContents();
 }
+
+-dontwarn java.awt.**
+-dontwarn javax.swing.**
+-dontwarn javax.imageio.**
+-dontwarn org.apache.commons.codec.**
+-dontwarn org.apache.commons.logging.LogFactory
+-dontwarn java.rmi.UnexpectedException
