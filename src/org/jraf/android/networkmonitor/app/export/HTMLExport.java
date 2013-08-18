@@ -39,11 +39,12 @@ public class HTMLExport extends FileExport {
     private static final String HTML_FILE = "networkmonitor.html";
     private PrintWriter mPrintWriter;
 
+
     /**
      * @param external if true, the file will be exported to the sd card. Otherwise it will written to the app's internal storage.
      */
-    public HTMLExport(Context context, boolean external) throws FileNotFoundException {
-        super(context, new File(external ? context.getExternalFilesDir(null) : context.getFilesDir(), HTML_FILE));
+    public HTMLExport(Context context, boolean external, ExportProgressListener listener) throws FileNotFoundException {
+        super(context, new File(external ? context.getExternalFilesDir(null) : context.getFilesDir(), HTML_FILE), listener);
         mPrintWriter = new PrintWriter(mFile);
     }
 

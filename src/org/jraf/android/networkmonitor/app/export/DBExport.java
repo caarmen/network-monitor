@@ -43,8 +43,8 @@ import org.jraf.android.networkmonitor.provider.NetMonDatabase;
 public class DBExport extends FileExport {
     private static final String TAG = Constants.TAG + DBExport.class.getSimpleName();
 
-    public DBExport(Context context) throws FileNotFoundException {
-        super(context, new File(context.getExternalFilesDir(null), NetMonDatabase.DATABASE_NAME));
+    public DBExport(Context context, ExportProgressListener listener) throws FileNotFoundException {
+        super(context, new File(context.getExternalFilesDir(null), NetMonDatabase.DATABASE_NAME), listener);
     }
 
     @Override

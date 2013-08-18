@@ -38,8 +38,8 @@ public class CSVExport extends FileExport {
     private static final String CSV_FILE = "networkmonitor.csv";
     private PrintWriter mPrintWriter;
 
-    public CSVExport(Context context) throws FileNotFoundException {
-        super(context, new File(context.getExternalFilesDir(null), CSV_FILE));
+    public CSVExport(Context context, ExportProgressListener listener) throws FileNotFoundException {
+        super(context, new File(context.getExternalFilesDir(null), CSV_FILE), listener);
     }
 
     @Override

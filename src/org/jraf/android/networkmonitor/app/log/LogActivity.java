@@ -56,6 +56,7 @@ import org.jraf.android.networkmonitor.app.export.CSVExport;
 import org.jraf.android.networkmonitor.app.export.DBExport;
 import org.jraf.android.networkmonitor.app.export.ExcelExport;
 import org.jraf.android.networkmonitor.app.export.FileExport;
+import org.jraf.android.networkmonitor.app.export.FileExport.ExportProgressListener;
 import org.jraf.android.networkmonitor.app.export.HTMLExport;
 import org.jraf.android.networkmonitor.app.export.SummaryExport;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
@@ -118,13 +119,13 @@ public class LogActivity extends FragmentActivity {
                         FileExport fileExport = null;
                         try {
                             if (getString(R.string.export_choice_csv).equals(exportChoices[which])) {
-                                fileExport = new CSVExport(LogActivity.this);
+                                fileExport = new CSVExport(LogActivity.this, mExportProgressListener);
                             } else if (getString(R.string.export_choice_html).equals(exportChoices[which])) {
-                                fileExport = new HTMLExport(LogActivity.this, true);
+                                fileExport = new HTMLExport(LogActivity.this, true, mExportProgressListener);
                             } else if (getString(R.string.export_choice_excel).equals(exportChoices[which])) {
-                                fileExport = new ExcelExport(LogActivity.this);
+                                fileExport = new ExcelExport(LogActivity.this, mExportProgressListener);
                             } else if (getString(R.string.export_choice_db).equals(exportChoices[which])) {
-                                fileExport = new DBExport(LogActivity.this);
+                                fileExport = new DBExport(LogActivity.this, mExportProgressListener);
                             } else {
                                 // Text summary only
                             }
@@ -207,7 +208,7 @@ public class LogActivity extends FragmentActivity {
                 Log.v(TAG, "loadHTMLFile:doInBackground");
                 try {
                     // Export the DB to the HTML file.
-                    HTMLExport htmlExport = new HTMLExport(LogActivity.this, false);
+                    HTMLExport htmlExport = new HTMLExport(LogActivity.this, false, null);
                     File file = htmlExport.export();
                     return file;
                 } catch (FileNotFoundException e) {
@@ -294,7 +295,7 @@ public class LogActivity extends FragmentActivity {
     }
 
     /**
-     * An indeterminate ProgressDialog with a message.
+     * A ProgressDialog with a message.
      */
     public static class ProgressDialogFragment extends DialogFragment {
 
@@ -303,8 +304,42 @@ public class LogActivity extends FragmentActivity {
             ProgressDialog dialog = new ProgressDialog(getActivity());
             dialog.setMessage(getActivity().getString(R.string.progress_dialog_message));
             dialog.setIndeterminate(true);
+            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             return dialog;
         }
+
+        public void setProgress(int position, int count) {
+            Log.v(TAG, "setProgress " + position + "/" + count);
+            ProgressDialog dialog = (ProgressDialog) getDialog();
+            if (position < 0 || position == count - 1) {
+                dialog.setMax(100);
+                dialog.setProgress(0);
+                dialog.setIndeterminate(true);
+            } else {
+                dialog.setIndeterminate(false);
+                dialog.setMax(count);
+                dialog.setProgress(position + 1); // 1-based for the user
+            }
+        }
     }
+
+    private final ExportProgressListener mExportProgressListener = new ExportProgressListener() {
+
+        @Override
+        public void onRowExported(final int position, final int count) {
+            Log.v(TAG, "onRowExported: " + position + "/" + count);
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+
+                    ProgressDialogFragment fragment = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_TAG);
+                    if (fragment != null) {
+                        fragment.setProgress(position, count);
+                    }
+                }
+            });
+        }
+    };
 
 }

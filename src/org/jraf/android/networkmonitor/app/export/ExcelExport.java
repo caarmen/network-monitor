@@ -26,6 +26,7 @@ package org.jraf.android.networkmonitor.app.export;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 
 import jxl.CellView;
 import jxl.JXLException;
@@ -64,12 +65,13 @@ public class ExcelExport extends FileExport {
     private int mRowCount;
     private int mColumnCount;
 
-    public ExcelExport(Context context) throws FileNotFoundException {
-        super(context, new File(context.getExternalFilesDir(null), EXCEL_FILE));
+    public ExcelExport(Context context, ExportProgressListener listener) throws FileNotFoundException {
+        super(context, new File(context.getExternalFilesDir(null), EXCEL_FILE), listener);
     }
 
     @Override
     void writeHeader(String[] columnNames) throws IOException {
+        Log.v(TAG, "writeHeader: " + Arrays.toString(columnNames));
         // Create the workbook, sheet, custom cell formats, and freeze
         // row/column.
         WorkbookSettings workbookSettings = new WorkbookSettings();

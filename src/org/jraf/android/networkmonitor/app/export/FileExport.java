@@ -45,14 +45,20 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
 public abstract class FileExport {
     private static final String TAG = Constants.TAG + FileExport.class.getSimpleName();
 
+    public interface ExportProgressListener {
+        void onRowExported(int position, int count);
+    }
+
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss", Locale.US);
 
     protected final Context mContext;
     protected final File mFile;
+    private final ExportProgressListener mListener;
 
-    FileExport(Context context, File file) throws FileNotFoundException {
+    FileExport(Context context, File file, ExportProgressListener listener) throws FileNotFoundException {
         mContext = context;
         mFile = file;
+        mListener = listener;
     }
 
     /**
@@ -100,6 +106,7 @@ public abstract class FileExport {
 
                 // Write the table rows to the file.
                 if (c.moveToFirst()) {
+                    int rowCount = c.getCount();
                     while (c.moveToNext()) {
                         String[] cellValues = new String[c.getColumnCount() - 1];
                         for (int i = 1; i < c.getColumnCount(); i++) {
@@ -115,6 +122,7 @@ public abstract class FileExport {
                             cellValues[i - 1] = cellValue;
                         }
                         writeRow(c.getPosition(), cellValues);
+                        if (mListener != null) mListener.onRowExported(c.getPosition(), rowCount);
                     }
                 }
 
