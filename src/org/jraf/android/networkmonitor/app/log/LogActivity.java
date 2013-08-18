@@ -145,6 +145,7 @@ public class LogActivity extends FragmentActivity {
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
         DialogFragment dialogFragment = new ProgressDialogFragment();
+        dialogFragment.setCancelable(false);
         dialogFragment.show(getSupportFragmentManager(), PROGRESS_DIALOG_TAG);
 
         AsyncTask<Void, Void, File> asyncTask = new AsyncTask<Void, Void, File>() {
@@ -293,7 +294,7 @@ public class LogActivity extends FragmentActivity {
     }
 
     /**
-     * An indeterminate, non-cancelable, ProgressDialog with a message.
+     * An indeterminate ProgressDialog with a message.
      */
     public static class ProgressDialogFragment extends DialogFragment {
 
@@ -302,7 +303,6 @@ public class LogActivity extends FragmentActivity {
             ProgressDialog dialog = new ProgressDialog(getActivity());
             dialog.setMessage(getActivity().getString(R.string.progress_dialog_message));
             dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
             return dialog;
         }
     }
