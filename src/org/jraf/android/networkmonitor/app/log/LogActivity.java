@@ -310,23 +310,25 @@ public class LogActivity extends FragmentActivity {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             ProgressDialog dialog = new ProgressDialog(getActivity());
-            dialog.setMessage(getActivity().getString(R.string.progress_dialog_message));
+            dialog.setMessage(getActivity().getString(R.string.export_progress_preparing_export));
             dialog.setIndeterminate(true);
             dialog.setProgressStyle(getArguments().getInt(EXTRA_PROGRESS_DIALOG_STYLE));
             return dialog;
         }
 
-        public void setProgress(int position, int count) {
-            Log.v(TAG, "setProgress " + position + "/" + count);
+        public void setProgress(int progress, int max) {
+            Log.v(TAG, "setProgress " + progress + "/" + max);
             ProgressDialog dialog = (ProgressDialog) getDialog();
-            if (position < 0 || position == count - 1) {
+            if (progress >= max) {
                 dialog.setMax(100);
                 dialog.setProgress(0);
                 dialog.setIndeterminate(true);
+                dialog.setMessage(getActivity().getString(R.string.export_progress_finalizing_export));
             } else {
                 dialog.setIndeterminate(false);
-                dialog.setMax(count);
-                dialog.setProgress(position + 1); // 1-based for the user
+                dialog.setMax(max);
+                dialog.setProgress(progress);
+                dialog.setMessage(getActivity().getString(R.string.export_progress_processing_data));
             }
         }
     }

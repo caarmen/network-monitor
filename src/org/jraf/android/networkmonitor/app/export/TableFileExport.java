@@ -114,7 +114,8 @@ public abstract class TableFileExport extends FileExport {
                             cellValues[i - 1] = cellValue;
                         }
                         writeRow(c.getPosition(), cellValues);
-                        if (mListener != null) mListener.onExportProgress(c.getPosition(), rowCount);
+                        // Notify the listener of our progress (progress is 1-based)
+                        if (mListener != null) mListener.onExportProgress(c.getPosition() + 1, rowCount);
                     }
                 }
 
