@@ -143,8 +143,6 @@ public class LogActivity extends FragmentActivity {
      */
     private void shareFile(final FileExport fileExport) {
         Log.v(TAG, "shareFile " + fileExport);
-        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        progressBar.setVisibility(View.VISIBLE);
         DialogFragment dialogFragment = new ProgressDialogFragment();
         // Use a horizontal progress bar style if we can show progress of the export.
         Bundle fragmentArgs = new Bundle(1);
