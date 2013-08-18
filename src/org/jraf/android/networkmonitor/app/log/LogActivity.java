@@ -28,8 +28,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -37,6 +38,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,8 +60,9 @@ import org.jraf.android.networkmonitor.app.export.HTMLExport;
 import org.jraf.android.networkmonitor.app.export.SummaryExport;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
-public class LogActivity extends Activity {
+public class LogActivity extends FragmentActivity {
     private static final String TAG = Constants.TAG + LogActivity.class.getSimpleName();
+    private static final String PROGRESS_DIALOG_TAG = ProgressDialogFragment.class.getSimpleName();
     protected WebView mWebView;
 
     @Override
@@ -140,6 +144,8 @@ public class LogActivity extends Activity {
         Log.v(TAG, "shareFile " + fileExport);
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
+        DialogFragment dialogFragment = new ProgressDialogFragment();
+        dialogFragment.show(getSupportFragmentManager(), PROGRESS_DIALOG_TAG);
 
         AsyncTask<Void, Void, File> asyncTask = new AsyncTask<Void, Void, File>() {
 
@@ -176,7 +182,8 @@ public class LogActivity extends Activity {
             @Override
             protected void onPostExecute(File result) {
                 super.onPostExecute(result);
-                progressBar.setVisibility(View.GONE);
+                DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_TAG);
+                if (fragment != null) fragment.dismiss();
                 // Show a toast if we failed to export a file.
                 if (fileExport != null && result == null) Toast.makeText(LogActivity.this, R.string.error_sdcard_unmounted, Toast.LENGTH_LONG).show();
             }
@@ -284,4 +291,20 @@ public class LogActivity extends Activity {
         }
         super.onDestroy();
     }
+
+    /**
+     * An indeterminate, non-cancelable, ProgressDialog with a message.
+     */
+    public static class ProgressDialogFragment extends DialogFragment {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            ProgressDialog dialog = new ProgressDialog(getActivity());
+            dialog.setMessage(getActivity().getString(R.string.progress_dialog_message));
+            dialog.setIndeterminate(true);
+            dialog.setCancelable(false);
+            return dialog;
+        }
+    }
+
 }

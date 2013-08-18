@@ -26,6 +26,7 @@
     <string name="export_choice_excel">Excel</string>
     <string name="export_choice_db">Base de datos</string>
     <string name="export_choice_text">Resumen en texto</string>
+    <string name="progress_dialog_message">Por favor espera&#8230;</string>
     
 	<string name="pref_interval_never">Nunca</string>
     <string name="pref_interval_10_seconds">10 segundos</string>
