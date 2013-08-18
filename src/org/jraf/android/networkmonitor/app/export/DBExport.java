@@ -48,24 +48,20 @@ public class DBExport extends FileExport {
     }
 
     @Override
-    void writeHeader(String[] columnNames) throws IOException {}
-
-    @Override
-    void writeRow(int rowNumber, String[] cellValues) throws IOException {}
-
-    @Override
-    void writeFooter() throws IOException {}
-
-    @Override
     public File export() {
         File db = mContext.getDatabasePath(NetMonDatabase.DATABASE_NAME);
         try {
             InputStream is = new FileInputStream(db);
             OutputStream os = new FileOutputStream(mFile);
+            int fileSize = (int) db.length();
             byte[] buffer = new byte[1024];
             int len;
+            int bytesWritten = 0;
             while ((len = is.read(buffer)) > 0) {
                 os.write(buffer, 0, len);
+                bytesWritten += len;
+                // Notify the listener about the number of kb written.
+                if (mListener != null) mListener.onExportProgress(bytesWritten / 1000, fileSize / 1000);
             }
             is.close();
             os.close();

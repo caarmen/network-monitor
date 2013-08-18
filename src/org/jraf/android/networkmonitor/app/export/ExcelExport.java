@@ -51,7 +51,7 @@ import org.jraf.android.networkmonitor.R;
 /**
  * Export the Network Monitor data to an Excel file.
  */
-public class ExcelExport extends FileExport {
+public class ExcelExport extends TableFileExport {
     private static final String TAG = Constants.TAG + ExcelExport.class.getSimpleName();
 
     private static final String EXCEL_FILE = "networkmonitor.xls";
@@ -65,7 +65,7 @@ public class ExcelExport extends FileExport {
     private int mRowCount;
     private int mColumnCount;
 
-    public ExcelExport(Context context, ExportProgressListener listener) throws FileNotFoundException {
+    public ExcelExport(Context context, FileExport.ExportProgressListener listener) throws FileNotFoundException {
         super(context, new File(context.getExternalFilesDir(null), EXCEL_FILE), listener);
     }
 

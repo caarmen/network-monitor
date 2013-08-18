@@ -35,7 +35,7 @@ import org.jraf.android.networkmonitor.R;
 /**
  * Export the Network Monitor data to an HTML file. The HTML file includes CSS specified in the strings XML file.
  */
-public class HTMLExport extends FileExport {
+public class HTMLExport extends TableFileExport {
     private static final String HTML_FILE = "networkmonitor.html";
     private PrintWriter mPrintWriter;
 
@@ -43,7 +43,7 @@ public class HTMLExport extends FileExport {
     /**
      * @param external if true, the file will be exported to the sd card. Otherwise it will written to the app's internal storage.
      */
-    public HTMLExport(Context context, boolean external, ExportProgressListener listener) throws FileNotFoundException {
+    public HTMLExport(Context context, boolean external, FileExport.ExportProgressListener listener) throws FileNotFoundException {
         super(context, new File(external ? context.getExternalFilesDir(null) : context.getFilesDir(), HTML_FILE), listener);
         mPrintWriter = new PrintWriter(mFile);
     }

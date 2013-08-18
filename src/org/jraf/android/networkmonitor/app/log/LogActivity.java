@@ -56,7 +56,6 @@ import org.jraf.android.networkmonitor.app.export.CSVExport;
 import org.jraf.android.networkmonitor.app.export.DBExport;
 import org.jraf.android.networkmonitor.app.export.ExcelExport;
 import org.jraf.android.networkmonitor.app.export.FileExport;
-import org.jraf.android.networkmonitor.app.export.FileExport.ExportProgressListener;
 import org.jraf.android.networkmonitor.app.export.HTMLExport;
 import org.jraf.android.networkmonitor.app.export.SummaryExport;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
@@ -64,6 +63,7 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
 public class LogActivity extends FragmentActivity {
     private static final String TAG = Constants.TAG + LogActivity.class.getSimpleName();
     private static final String PROGRESS_DIALOG_TAG = ProgressDialogFragment.class.getSimpleName();
+    private static final String EXTRA_PROGRESS_DIALOG_STYLE = "progress_dialog_style";
     protected WebView mWebView;
 
     @Override
@@ -146,6 +146,10 @@ public class LogActivity extends FragmentActivity {
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
         DialogFragment dialogFragment = new ProgressDialogFragment();
+        // Use a horizontal progress bar style if we can show progress of the export.
+        Bundle fragmentArgs = new Bundle(1);
+        fragmentArgs.putInt(EXTRA_PROGRESS_DIALOG_STYLE, fileExport != null ? ProgressDialog.STYLE_HORIZONTAL : ProgressDialog.STYLE_SPINNER);
+        dialogFragment.setArguments(fragmentArgs);
         dialogFragment.setCancelable(false);
         dialogFragment.show(getSupportFragmentManager(), PROGRESS_DIALOG_TAG);
 
@@ -308,7 +312,7 @@ public class LogActivity extends FragmentActivity {
             ProgressDialog dialog = new ProgressDialog(getActivity());
             dialog.setMessage(getActivity().getString(R.string.progress_dialog_message));
             dialog.setIndeterminate(true);
-            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            dialog.setProgressStyle(getArguments().getInt(EXTRA_PROGRESS_DIALOG_STYLE));
             return dialog;
         }
 
@@ -327,11 +331,11 @@ public class LogActivity extends FragmentActivity {
         }
     }
 
-    private final ExportProgressListener mExportProgressListener = new ExportProgressListener() {
+    private final FileExport.ExportProgressListener mExportProgressListener = new FileExport.ExportProgressListener() {
 
         @Override
-        public void onRowExported(final int position, final int count) {
-            Log.v(TAG, "onRowExported: " + position + "/" + count);
+        public void onExportProgress(final int progress, final int max) {
+            Log.v(TAG, "onRowExported: " + progress + "/" + max);
             runOnUiThread(new Runnable() {
 
                 @Override
@@ -339,11 +343,10 @@ public class LogActivity extends FragmentActivity {
 
                     ProgressDialogFragment fragment = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_TAG);
                     if (fragment != null) {
-                        fragment.setProgress(position, count);
+                        fragment.setProgress(progress, max);
                     }
                 }
             });
         }
     };
-
 }

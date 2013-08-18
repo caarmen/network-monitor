@@ -34,11 +34,11 @@ import android.text.TextUtils;
 /**
  * Export the Network Monitor data to a CSV file.
  */
-public class CSVExport extends FileExport {
+public class CSVExport extends TableFileExport {
     private static final String CSV_FILE = "networkmonitor.csv";
     private PrintWriter mPrintWriter;
 
-    public CSVExport(Context context, ExportProgressListener listener) throws FileNotFoundException {
+    public CSVExport(Context context, FileExport.ExportProgressListener listener) throws FileNotFoundException {
         super(context, new File(context.getExternalFilesDir(null), CSV_FILE), listener);
     }
 
