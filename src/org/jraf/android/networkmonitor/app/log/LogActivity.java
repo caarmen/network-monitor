@@ -156,8 +156,12 @@ public class LogActivity extends FragmentActivity {
                 File file = null;
                 if (fileExport != null) {
                     if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) return null;
-                    // Export the file in the background.
-                    file = fileExport.export();
+                    try {
+                        // Export the file in the background.
+                        file = fileExport.export();
+                    } catch (Throwable t) {
+                        Log.e(TAG, "Error exporting file " + fileExport + ": " + t.getMessage(), t);
+                    }
                     if (file == null) return null;
                 }
 
