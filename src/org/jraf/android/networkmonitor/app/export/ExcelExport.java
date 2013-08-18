@@ -30,6 +30,7 @@ import java.io.IOException;
 import jxl.CellView;
 import jxl.JXLException;
 import jxl.Workbook;
+import jxl.WorkbookSettings;
 import jxl.format.Alignment;
 import jxl.format.CellFormat;
 import jxl.format.Colour;
@@ -71,7 +72,9 @@ public class ExcelExport extends FileExport {
     void writeHeader(String[] columnNames) throws IOException {
         // Create the workbook, sheet, custom cell formats, and freeze
         // row/column.
-        mWorkbook = Workbook.createWorkbook(mFile);
+        WorkbookSettings workbookSettings = new WorkbookSettings();
+        workbookSettings.setUseTemporaryFileDuringWrite(true);
+        mWorkbook = Workbook.createWorkbook(mFile, workbookSettings);
         mSheet = mWorkbook.createSheet(mContext.getString(R.string.app_name), 0);
         mSheet.insertRow(0);
         mSheet.getSettings().setHorizontalFreeze(2);
