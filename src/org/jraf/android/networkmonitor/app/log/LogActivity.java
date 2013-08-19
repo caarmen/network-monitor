@@ -191,7 +191,7 @@ public class LogActivity extends FragmentActivity {
             protected void onPostExecute(File result) {
                 super.onPostExecute(result);
                 DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_TAG);
-                if (fragment != null) fragment.dismiss();
+                if (fragment != null) fragment.dismissAllowingStateLoss();
                 // Show a toast if we failed to export a file.
                 if (fileExport != null && result == null) Toast.makeText(LogActivity.this, R.string.error_sdcard_unmounted, Toast.LENGTH_LONG).show();
             }
@@ -329,6 +329,7 @@ public class LogActivity extends FragmentActivity {
                 dialog.setMessage(getActivity().getString(R.string.export_progress_processing_data));
             }
         }
+
     }
 
     private final FileExport.ExportProgressListener mExportProgressListener = new FileExport.ExportProgressListener() {
