@@ -79,7 +79,7 @@ public class ExcelExport extends TableFileExport {
         mWorkbook = Workbook.createWorkbook(mFile, workbookSettings);
         mSheet = mWorkbook.createSheet(mContext.getString(R.string.app_name), 0);
         mSheet.insertRow(0);
-        mSheet.getSettings().setHorizontalFreeze(2);
+        mSheet.getSettings().setHorizontalFreeze(3);
         mSheet.getSettings().setVerticalFreeze(1);
         createCellFormats();
         for (int i = 0; i < columnNames.length; i++) {

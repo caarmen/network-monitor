@@ -217,7 +217,7 @@ public class NetMonService extends Service {
                 ContentValues values = new ContentValues();
                 values.put(NetMonColumns.TIMESTAMP, System.currentTimeMillis());
                 values.put(NetMonColumns.SOCKET_CONNECTION_TEST, getSocketTestResult() ? Constants.CONNECTION_TEST_PASS : Constants.CONNECTION_TEST_FAIL);
-                values.put(NetMonColumns.HTTP_CONNECTION_TEST, getSocketTestResult() ? Constants.CONNECTION_TEST_PASS : Constants.CONNECTION_TEST_FAIL);
+                values.put(NetMonColumns.HTTP_CONNECTION_TEST, getHttpTestResult() ? Constants.CONNECTION_TEST_PASS : Constants.CONNECTION_TEST_FAIL);
                 values.putAll(getActiveNetworkInfo());
                 values.put(NetMonColumns.CELL_SIGNAL_STRENGTH, mLastSignalStrength);
                 values.put(NetMonColumns.MOBILE_DATA_NETWORK_TYPE, getDataNetworkType());
@@ -339,6 +339,7 @@ public class NetMonService extends Service {
         try {
             URL url = new URL("http", HOST, PORT, "/");
             URLConnection connection = url.openConnection();
+            connection.setReadTimeout(TIMEOUT);
             connection.addRequestProperty("Cache-Control", "no-cache");
             connection.setUseCaches(false);
             inputStream = connection.getInputStream();
