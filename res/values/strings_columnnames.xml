@@ -4,7 +4,8 @@
     <string name="timestamp">Timestamp</string>
     <string name="network_type">Network Type</string>
     <string name="mobile_data_network_type">Mobile Data Network Type</string>
-    <string name="google_connection_test">Google Connection Test</string>
+    <string name="google_connection_test">Socket Connection Test</string>
+    <string name="http_connection_test">HTTP connection test</string>
     <string name="sim_state">SIM State</string>
     <string name="detailed_state">Detailed State</string>
     <string name="is_connected">Is Connected</string>

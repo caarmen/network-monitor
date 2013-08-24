@@ -24,6 +24,8 @@
  */
 package org.jraf.android.networkmonitor.provider;
 
+import java.util.Arrays;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -152,7 +154,9 @@ public class NetMonProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         final String groupBy = uri.getQueryParameter(QUERY_GROUP_BY);
-        Log.d(TAG, "query uri=" + uri + " selection=" + selection + " sortOrder=" + sortOrder + " groupBy=" + groupBy);
+        Log.d(TAG,
+                "query uri=" + uri + ", projection = " + Arrays.toString(projection) + ", selection=" + selection + ", selectionArgs = "
+                        + Arrays.toString(selectionArgs) + ", sortOrder=" + sortOrder + ", groupBy=" + groupBy);
 
         final int matchedId = URI_MATCHER.match(uri);
         final Cursor res;

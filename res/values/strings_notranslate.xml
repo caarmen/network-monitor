@@ -38,10 +38,10 @@ td.fail {
 
     <string-array name="db_columns">
         <item>timestamp</item>
-        <item>network_type</item>
-        <item>mobile_data_network_type</item>
         <item>google_connection_test</item>
         <item>http_connection_test</item>
+        <item>network_type</item>
+        <item>mobile_data_network_type</item>
         <item>sim_state</item>
         <item>detailed_state</item>
         <item>is_connected</item>

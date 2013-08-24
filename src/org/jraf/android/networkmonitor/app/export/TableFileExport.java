@@ -74,13 +74,10 @@ public abstract class TableFileExport extends FileExport {
     @Override
     public File export() {
         Log.v(TAG, "export");
-        Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, null, null, null, NetMonColumns.TIMESTAMP);
+        String[] usedColumnNames = mContext.getResources().getStringArray(R.array.db_columns);
+        Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, usedColumnNames, null, null, NetMonColumns.TIMESTAMP);
         if (c != null) {
             try {
-                // We ignore the first column (_id).
-                String[] columnNames = c.getColumnNames();
-                String[] usedColumnNames = new String[c.getColumnCount() - 1];
-                System.arraycopy(columnNames, 1, usedColumnNames, 0, c.getColumnCount() - 1);
                 Log.v(TAG, "Find user-friendly labels for columns " + Arrays.toString(usedColumnNames));
                 for (int i = 0; i < usedColumnNames.length; i++) {
                     int columnLabelId = mContext.getResources().getIdentifier(usedColumnNames[i], "string", R.class.getPackage().getName());
@@ -100,8 +97,8 @@ public abstract class TableFileExport extends FileExport {
                 if (c.moveToFirst()) {
                     int rowCount = c.getCount();
                     while (c.moveToNext()) {
-                        String[] cellValues = new String[c.getColumnCount() - 1];
-                        for (int i = 1; i < c.getColumnCount(); i++) {
+                        String[] cellValues = new String[c.getColumnCount()];
+                        for (int i = 0; i < c.getColumnCount(); i++) {
                             String cellValue;
                             if (NetMonColumns.TIMESTAMP.equals(c.getColumnName(i))) {
                                 long timestamp = c.getLong(i);
@@ -111,7 +108,7 @@ public abstract class TableFileExport extends FileExport {
                                 cellValue = c.getString(i);
                             }
                             if (cellValue == null) cellValue = "";
-                            cellValues[i - 1] = cellValue;
+                            cellValues[i] = cellValue;
                         }
                         writeRow(c.getPosition(), cellValues);
                         // Notify the listener of our progress (progress is 1-based)
