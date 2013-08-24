@@ -41,7 +41,10 @@ public class NetMonColumns implements BaseColumns {
     public static final String TIMESTAMP = "timestamp";
     public static final String NETWORK_TYPE = "network_type";
     public static final String MOBILE_DATA_NETWORK_TYPE = "mobile_data_network_type";
-    public static final String GOOGLE_CONNECTION_TEST = "google_connection_test";
+    // google_connection_test now corresponds to a basic socket connection test.
+    // The column name has been kept for backwards compatibility.
+    public static final String SOCKET_CONNECTION_TEST = "google_connection_test";
+    public static final String HTTP_CONNECTION_TEST = "http_connection_test";
     public static final String SIM_STATE = "sim_state";
     public static final String DETAILED_STATE = "detailed_state";
     public static final String IS_CONNECTED = "is_connected";

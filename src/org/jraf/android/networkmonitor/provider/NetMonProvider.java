@@ -219,7 +219,7 @@ public class NetMonProvider extends ContentProvider {
      */
     private String buildGoogleConnectionTestSubQuery(String[] cellIdColumns, String mainTableAlias, String subQueryTableAlias, String subqueryAlias) {
         String tableAlias = NetMonColumns.TABLE_NAME + "_" + subQueryTableAlias;
-        String query = "( SELECT COUNT(" + NetMonColumns.GOOGLE_CONNECTION_TEST + ") " + " FROM " + NetMonColumns.TABLE_NAME + " " + tableAlias + " WHERE ";
+        String query = "( SELECT COUNT(" + NetMonColumns.SOCKET_CONNECTION_TEST + ") " + " FROM " + NetMonColumns.TABLE_NAME + " " + tableAlias + " WHERE ";
         // Join the subquery to the main query.
         StringBuilder join = new StringBuilder();
         for (String cellIdColumn : cellIdColumns) {
@@ -228,7 +228,7 @@ public class NetMonProvider extends ContentProvider {
         query += join.toString();
         // Filter on the pass/fail value.
         // Include only tests where the data connection was CONNECTED.
-        query += tableAlias + "." + NetMonColumns.GOOGLE_CONNECTION_TEST + "=? " + " AND " + tableAlias + "." + NetMonColumns.DATA_STATE + "=?";
+        query += tableAlias + "." + NetMonColumns.SOCKET_CONNECTION_TEST + "=? " + " AND " + tableAlias + "." + NetMonColumns.DATA_STATE + "=?";
         query += ") as " + subqueryAlias;
         return query;
     }

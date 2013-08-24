@@ -30,6 +30,8 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -214,7 +216,8 @@ public class NetMonService extends Service {
                 // Put all the data we want to log, into a ContentValues.
                 ContentValues values = new ContentValues();
                 values.put(NetMonColumns.TIMESTAMP, System.currentTimeMillis());
-                values.put(NetMonColumns.GOOGLE_CONNECTION_TEST, isNetworkUp() ? Constants.CONNECTION_TEST_PASS : Constants.CONNECTION_TEST_FAIL);
+                values.put(NetMonColumns.SOCKET_CONNECTION_TEST, getSocketTestResult() ? Constants.CONNECTION_TEST_PASS : Constants.CONNECTION_TEST_FAIL);
+                values.put(NetMonColumns.HTTP_CONNECTION_TEST, getSocketTestResult() ? Constants.CONNECTION_TEST_PASS : Constants.CONNECTION_TEST_FAIL);
                 values.putAll(getActiveNetworkInfo());
                 values.put(NetMonColumns.CELL_SIGNAL_STRENGTH, mLastSignalStrength);
                 values.put(NetMonColumns.MOBILE_DATA_NETWORK_TYPE, getDataNetworkType());
@@ -263,11 +266,13 @@ public class NetMonService extends Service {
 
     /**
      * Try to open a connection to an HTTP server, and execute a simple GET request. If we can read a response to the GET request, we consider that the network
-     * is up.
+     * is up. This test uses a basic socket connection.
+     * 
+     * @return
      * 
      * @return {@code true} if we were able to read a response to a GET request, {@code false} if any error occurred trying to execute the GET.
      */
-    private boolean isNetworkUp() {
+    private boolean getSocketTestResult() {
         Socket socket = null;
         WakeLock wakeLock = null;
         try {
@@ -284,40 +289,71 @@ public class NetMonService extends Service {
             }
             socket = new Socket();
             socket.setSoTimeout(TIMEOUT);
-            Log.d(TAG, "isNetworkUp Resolving " + HOST);
+            Log.d(TAG, "getSocketTestResult Resolving " + HOST);
             InetSocketAddress remoteAddr = new InetSocketAddress(HOST, PORT);
             InetAddress address = remoteAddr.getAddress();
             if (address == null) {
-                Log.d(TAG, "isNetworkUp Could not resolve");
+                Log.d(TAG, "getSocketTestResult Could not resolve");
                 return false;
             }
-            Log.d(TAG, "isNetworkUp Resolved " + address.getHostAddress());
-            Log.d(TAG, "isNetworkUp Connecting...");
+            Log.d(TAG, "getSocketTestResult Resolved " + address.getHostAddress());
+            Log.d(TAG, "getSocketTestResult Connecting...");
             socket.connect(remoteAddr, TIMEOUT);
-            Log.d(TAG, "isNetworkUp Connected");
+            Log.d(TAG, "getSocketTestResult Connected");
 
-            Log.d(TAG, "isNetworkUp Sending GET...");
+            Log.d(TAG, "getSocketTestResult Sending GET...");
             OutputStream outputStream = socket.getOutputStream();
             outputStream.write(HTTP_GET.getBytes("utf-8"));
             outputStream.flush();
-            Log.d(TAG, "isNetworkUp Sent GET");
+            Log.d(TAG, "getSocketTestResult Sent GET");
             InputStream inputStream = socket.getInputStream();
-            Log.d(TAG, "isNetworkUp Reading...");
+            Log.d(TAG, "getSocketTestResult Reading...");
             int read = inputStream.read();
-            Log.d(TAG, "isNetworkUp Read read=" + read);
+            Log.d(TAG, "getSocketTestResult Read read=" + read);
             return read != -1;
         } catch (Throwable t) {
-            Log.d(TAG, "isNetworkUp Caught an exception", t);
+            Log.d(TAG, "getSocketTestResult Caught an exception", t);
             return false;
         } finally {
             if (socket != null) {
                 try {
                     socket.close();
                 } catch (IOException e) {
-                    Log.w(TAG, "isNetworkUp Could not close socket", e);
+                    Log.w(TAG, "getSocketTestResult Could not close socket", e);
                 }
             }
             if (wakeLock != null && wakeLock.isHeld()) wakeLock.release();
+        }
+    }
+
+    /**
+     * Try to open a connection to an HTTP server, and execute a simple GET request. If we can read a response to the GET request, we consider that the network
+     * is up. This test uses an HttpURLConnection.
+     * 
+     * @return
+     * 
+     * @return {@code true} if we were able to read a response to a GET request, {@code false} if any error occurred trying to execute the GET.
+     */
+    private boolean getHttpTestResult() {
+        InputStream inputStream = null;
+        try {
+            URL url = new URL("http", HOST, PORT, "/");
+            URLConnection connection = url.openConnection();
+            connection.addRequestProperty("Cache-Control", "no-cache");
+            connection.setUseCaches(false);
+            inputStream = connection.getInputStream();
+            return inputStream.read() > 0;
+        } catch (Throwable t) {
+            Log.d(TAG, "getHttpTestResult Caught an exception", t);
+            return false;
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    Log.w(TAG, "getHttpTestResult Could not close stream", e);
+                }
+            }
         }
     }
 

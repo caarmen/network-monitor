@@ -35,14 +35,15 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
     public static final String DATABASE_NAME = "networkmonitor.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // @formatter:off
     private static final String SQL_CREATE_TABLE_NETWORKMONITOR = "CREATE TABLE IF NOT EXISTS "
             + NetMonColumns.TABLE_NAME + " ( "
             + NetMonColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + NetMonColumns.TIMESTAMP + " INTEGER, "
-            + NetMonColumns.GOOGLE_CONNECTION_TEST + " TEXT, "
+            + NetMonColumns.SOCKET_CONNECTION_TEST + " TEXT, "
+            + NetMonColumns.HTTP_CONNECTION_TEST + " TEXT, "
             + NetMonColumns.NETWORK_TYPE + " TEXT, "
             + NetMonColumns.MOBILE_DATA_NETWORK_TYPE + " TEXT, "
             + NetMonColumns.SIM_STATE + " TEXT, "
@@ -79,6 +80,9 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V2_NETWORK_OPERATOR = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
             + NetMonColumns.NETWORK_OPERATOR + " TEXT";
 
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V3_HTTP_CONNECTION_TEST = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.HTTP_CONNECTION_TEST + " TEXT";
+
     NetMonDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -95,6 +99,10 @@ public class NetMonDatabase extends SQLiteOpenHelper {
         if (oldVersion < 2) {
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V2_SIM_OPERATOR);
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V2_NETWORK_OPERATOR);
+        }
+
+        if (oldVersion < 3) {
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V3_HTTP_CONNECTION_TEST);
         }
     }
 }
