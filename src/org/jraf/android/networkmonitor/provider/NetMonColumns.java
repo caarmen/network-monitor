@@ -75,6 +75,7 @@ public class NetMonColumns implements BaseColumns {
     // Columns for the summary URIs.
     public static final String PASS_COUNT = "pass_count";
     public static final String FAIL_COUNT = "fail_count";
+    public static final String SLOW_COUNT = "slow_count";
 
     public static final String DEFAULT_ORDER = _ID;
 }

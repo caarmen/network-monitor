@@ -94,9 +94,14 @@ public class NetMonService extends Service {
     private static final String HOST = "173.194.34.16";
     private static final int PORT = 80;
     private static final int TIMEOUT = 15000;
+    private static final int DURATION_SLOW = 5000;
     private static final String HTTP_GET = "GET / HTTP/1.1\r\n\r\n";
     private static final String UNKNOWN = "";
     private static final int NOTIFICATION_ID = 1;
+
+    private enum NetworkTestResult {
+        PASS, FAIL, SLOW
+    };
 
     private PowerManager mPowerManager;
     private TelephonyManager mTelephonyManager;
@@ -220,8 +225,8 @@ public class NetMonService extends Service {
                 // Put all the data we want to log, into a ContentValues.
                 ContentValues values = new ContentValues();
                 values.put(NetMonColumns.TIMESTAMP, System.currentTimeMillis());
-                values.put(NetMonColumns.SOCKET_CONNECTION_TEST, getSocketTestResult() ? Constants.CONNECTION_TEST_PASS : Constants.CONNECTION_TEST_FAIL);
-                values.put(NetMonColumns.HTTP_CONNECTION_TEST, getHttpTestResult() ? Constants.CONNECTION_TEST_PASS : Constants.CONNECTION_TEST_FAIL);
+                values.put(NetMonColumns.SOCKET_CONNECTION_TEST, getSocketTestResult().name());
+                values.put(NetMonColumns.HTTP_CONNECTION_TEST, getHttpTestResult().name());
                 values.putAll(getActiveNetworkInfo());
                 values.put(NetMonColumns.CELL_SIGNAL_STRENGTH, mLastSignalStrength);
                 values.put(NetMonColumns.MOBILE_DATA_NETWORK_TYPE, getDataNetworkType());
@@ -275,9 +280,10 @@ public class NetMonService extends Service {
      * 
      * @return
      * 
-     * @return {@code true} if we were able to read a response to a GET request, {@code false} if any error occurred trying to execute the GET.
+     * @return {@link NetworkTestResult#PASS} if we were able to read a response to a GET request quickly, {@link NetworkTestResult#FAIL} if any error occurred
+     *         trying to execute the GET, or {@link NetworkTestResult#SLOW} if we were able to read a response, but it took too long.
      */
-    private boolean getSocketTestResult() {
+    private NetworkTestResult getSocketTestResult() {
         Socket socket = null;
         WakeLock wakeLock = null;
         try {
@@ -292,6 +298,7 @@ public class NetMonService extends Service {
                 wakeLock.acquire();
                 mLastWakeUp = now;
             }
+            long before = System.currentTimeMillis();
             socket = new Socket();
             socket.setSoTimeout(TIMEOUT);
             Log.d(TAG, "getSocketTestResult Resolving " + HOST);
@@ -299,7 +306,7 @@ public class NetMonService extends Service {
             InetAddress address = remoteAddr.getAddress();
             if (address == null) {
                 Log.d(TAG, "getSocketTestResult Could not resolve");
-                return false;
+                return NetworkTestResult.FAIL;
             }
             Log.d(TAG, "getSocketTestResult Resolved " + address.getHostAddress());
             Log.d(TAG, "getSocketTestResult Connecting...");
@@ -315,10 +322,16 @@ public class NetMonService extends Service {
             Log.d(TAG, "getSocketTestResult Reading...");
             int read = inputStream.read();
             Log.d(TAG, "getSocketTestResult Read read=" + read);
-            return read != -1;
+            long after = System.currentTimeMillis();
+            if (read != -1) {
+                if (after - before > DURATION_SLOW) return NetworkTestResult.SLOW;
+                else
+                    return NetworkTestResult.PASS;
+            }
+            return NetworkTestResult.FAIL;
         } catch (Throwable t) {
             Log.d(TAG, "getSocketTestResult Caught an exception", t);
-            return false;
+            return NetworkTestResult.FAIL;
         } finally {
             if (socket != null) {
                 try {
@@ -337,21 +350,30 @@ public class NetMonService extends Service {
      * 
      * @return
      * 
-     * @return {@code true} if we were able to read a response to a GET request, {@code false} if any error occurred trying to execute the GET.
+     * @return {@link NetworkTestResult#PASS} if we were able to read a response to a GET request quickly, {@link NetworkTestResult#FAIL} if any error occurred
+     *         trying to execute the GET, or {@link NetworkTestResult#SLOW} if we were able to read a response, but it took too long.
      */
-    private boolean getHttpTestResult() {
+    private NetworkTestResult getHttpTestResult() {
         InputStream inputStream = null;
         try {
+            long before = System.currentTimeMillis();
             URL url = new URL("http", HOST, PORT, "/");
             URLConnection connection = url.openConnection();
             connection.setReadTimeout(TIMEOUT);
             connection.addRequestProperty("Cache-Control", "no-cache");
             connection.setUseCaches(false);
             inputStream = connection.getInputStream();
-            return inputStream.read() > 0;
+            long after = System.currentTimeMillis();
+            if (inputStream.read() > 0) {
+                if (after - before > DURATION_SLOW) return NetworkTestResult.SLOW;
+                else
+                    return NetworkTestResult.PASS;
+            } else {
+                return NetworkTestResult.FAIL;
+            }
         } catch (Throwable t) {
             Log.d(TAG, "getHttpTestResult Caught an exception", t);
-            return false;
+            return NetworkTestResult.FAIL;
         } finally {
             if (inputStream != null) {
                 try {

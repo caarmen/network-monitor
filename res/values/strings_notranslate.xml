@@ -33,6 +33,10 @@ td.fail {
  color:#F00; 
  font-weight:bold;
 }
+td.slow {
+ color:#FA0;
+ font-weight:bold;
+}
 </style>]]>
     </string>
 

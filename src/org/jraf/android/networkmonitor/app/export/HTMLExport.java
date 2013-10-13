@@ -75,6 +75,7 @@ public class HTMLExport extends TableFileExport {
             // Highlight PASS in green and FAIL in red.
             if (Constants.CONNECTION_TEST_FAIL.equals(cellValue)) tdClass = "fail";
             else if (Constants.CONNECTION_TEST_PASS.equals(cellValue)) tdClass = "pass";
+            else if (Constants.CONNECTION_TEST_SLOW.equals(cellValue)) tdClass = "slow";
             mPrintWriter.println("    <td class=\"" + tdClass + "\">" + cellValue + "</td>");
         }
         mPrintWriter.println("  </tr>");

@@ -62,6 +62,7 @@ public class ExcelExport extends TableFileExport {
     private WritableCellFormat mBoldFormat;
     private WritableCellFormat mRedFormat;
     private WritableCellFormat mGreenFormat;
+    private WritableCellFormat mAmberFormat;
     private int mRowCount;
     private int mColumnCount;
 
@@ -98,6 +99,7 @@ public class ExcelExport extends TableFileExport {
             CellFormat cellFormat = null;
             if (Constants.CONNECTION_TEST_PASS.equals(cellValues[i])) cellFormat = mGreenFormat;
             else if (Constants.CONNECTION_TEST_FAIL.equals(cellValues[i])) cellFormat = mRedFormat;
+            else if (Constants.CONNECTION_TEST_SLOW.equals(cellValues[i])) cellFormat = mAmberFormat;
             insertCell(cellValues[i], rowNumber, i, cellFormat);
         }
         mRowCount++;
@@ -212,6 +214,12 @@ public class ExcelExport extends TableFileExport {
             final WritableFont greenFont = new WritableFont(cellFormat.getFont());
             greenFont.setColour(Colour.GREEN);
             mGreenFormat.setFont(greenFont);
+
+            // Create the amber format
+            mAmberFormat = new WritableCellFormat(mDefaultFormat);
+            final WritableFont amberFont = new WritableFont(cellFormat.getFont());
+            amberFont.setColour(Colour.LIGHT_ORANGE);
+            mAmberFormat.setFont(amberFont);
         } catch (WriteException e) {
             Log.e(TAG, "createCellFormats Could not create cell formats", e);
         }

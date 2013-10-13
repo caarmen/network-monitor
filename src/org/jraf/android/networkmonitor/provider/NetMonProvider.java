@@ -24,13 +24,16 @@
  */
 package org.jraf.android.networkmonitor.provider;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteCursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQuery;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
@@ -198,19 +201,22 @@ public class NetMonProvider extends ContentProvider {
         String mainTableAlias = "n";
         String passSubquery = buildGoogleConnectionTestSubQuery(cellIdColumns, mainTableAlias, "pass", NetMonColumns.PASS_COUNT);
         String failSubquery = buildGoogleConnectionTestSubQuery(cellIdColumns, mainTableAlias, "fail", NetMonColumns.FAIL_COUNT);
-        String[] dbProjection = new String[cellIdColumns.length + 3];
+        String slowSubquery = buildGoogleConnectionTestSubQuery(cellIdColumns, mainTableAlias, "slow", NetMonColumns.SLOW_COUNT);
+        String[] dbProjection = new String[cellIdColumns.length + 4];
         System.arraycopy(cellIdColumns, 0, dbProjection, 0, cellIdColumns.length);
-        dbProjection[dbProjection.length - 3] = NetMonColumns.EXTRA_INFO;
-        dbProjection[dbProjection.length - 2] = passSubquery;
-        dbProjection[dbProjection.length - 1] = failSubquery;
+        dbProjection[dbProjection.length - 4] = NetMonColumns.EXTRA_INFO;
+        dbProjection[dbProjection.length - 3] = passSubquery;
+        dbProjection[dbProjection.length - 2] = failSubquery;
+        dbProjection[dbProjection.length - 1] = slowSubquery;
         String dbTable = NetMonColumns.TABLE_NAME + " as " + mainTableAlias;
         String dbSelection = mainTableAlias + "." + NetMonColumns.DATA_STATE + " = ?";
         String[] dbSelectionArgs = new String[] { Constants.CONNECTION_TEST_PASS, Constants.DATA_STATE_CONNECTED, Constants.CONNECTION_TEST_FAIL,
-                Constants.DATA_STATE_CONNECTED, Constants.DATA_STATE_CONNECTED };
+                Constants.DATA_STATE_CONNECTED, Constants.CONNECTION_TEST_SLOW, Constants.DATA_STATE_CONNECTED, Constants.DATA_STATE_CONNECTED };
         String dbGroupBy = TextUtils.join(",", cellIdColumns);
         String dbOrderBy = null;
 
         Cursor cursor = mNetworkMonitorDatabase.getReadableDatabase().query(dbTable, dbProjection, dbSelection, dbSelectionArgs, dbGroupBy, null, dbOrderBy);
+        logCursor(cursor, dbSelectionArgs);
         return cursor;
     }
 
@@ -277,5 +283,22 @@ public class NetMonProvider extends ContentProvider {
 
     public static Uri groupBy(Uri uri, String groupBy) {
         return uri.buildUpon().appendQueryParameter(QUERY_GROUP_BY, groupBy).build();
+    }
+
+    /**
+     * Log the query of the given cursor.
+     * 
+     * @param cursor
+     * @param selectionArgs
+     */
+    private void logCursor(Cursor cursor, String[] selectionArgs) {
+        try {
+            Field queryField = SQLiteCursor.class.getDeclaredField("mQuery");
+            queryField.setAccessible(true);
+            SQLiteQuery sqliteQuery = (SQLiteQuery) queryField.get(cursor);
+            Log.v(TAG, sqliteQuery.toString() + ": " + Arrays.toString(selectionArgs));
+        } catch (Exception e) {
+            Log.v(TAG, e.getMessage(), e);
+        }
     }
 }

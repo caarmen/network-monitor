@@ -163,7 +163,8 @@ public class SummaryExport {
                             if (TextUtils.isEmpty(extraInfo)) extraInfo = "*";
                             int passCount = c.getInt(c.getColumnIndex(NetMonColumns.PASS_COUNT));
                             int failCount = c.getInt(c.getColumnIndex(NetMonColumns.FAIL_COUNT));
-                            int testCount = passCount + failCount;
+                            int slowCount = c.getInt(c.getColumnIndex(NetMonColumns.SLOW_COUNT));
+                            int testCount = passCount + failCount + slowCount;
                             int passRate = testCount > 0 ? 100 * passCount / testCount : 0;
                             CellResult cellResult = null;
                             if (phoneType == TelephonyManager.PHONE_TYPE_GSM) cellResult = readGsmCellResult(c, passRate, testCount);
