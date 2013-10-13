@@ -32,8 +32,10 @@ public class NetMonColumns implements BaseColumns {
     public static final Uri CONTENT_URI = Uri.parse(NetMonProvider.CONTENT_URI_BASE + "/" + TABLE_NAME);
     static final String GSM_SUMMARY = "/gsm_summary";
     static final String CDMA_SUMMARY = "/cdma_summary";
+    static final String SUMMARY = "/summary";
     public static final Uri CONTENT_URI_GSM_SUMMARY = Uri.parse(NetMonProvider.CONTENT_URI_BASE + "/" + TABLE_NAME + GSM_SUMMARY);
     public static final Uri CONTENT_URI_CDMA_SUMMARY = Uri.parse(NetMonProvider.CONTENT_URI_BASE + "/" + TABLE_NAME + CDMA_SUMMARY);
+    public static final Uri CONTENT_URI_SUMMARY = Uri.parse(NetMonProvider.CONTENT_URI_BASE + "/" + TABLE_NAME + SUMMARY);
 
 
     public static final String _ID = BaseColumns._ID;

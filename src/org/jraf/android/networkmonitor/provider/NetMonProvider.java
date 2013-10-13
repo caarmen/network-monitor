@@ -57,6 +57,7 @@ public class NetMonProvider extends ContentProvider {
     private static final int URI_TYPE_NETWORKMONITOR_ID = 1;
     private static final int URI_TYPE_GSM_SUMMARY = 2;
     private static final int URI_TYPE_CDMA_SUMMARY = 3;
+    private static final int URI_TYPE_SUMMARY = 4;
 
     private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -65,6 +66,7 @@ public class NetMonProvider extends ContentProvider {
         URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME + "/#", URI_TYPE_NETWORKMONITOR_ID);
         URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME + NetMonColumns.GSM_SUMMARY, URI_TYPE_GSM_SUMMARY);
         URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME + NetMonColumns.CDMA_SUMMARY, URI_TYPE_CDMA_SUMMARY);
+        URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME + NetMonColumns.SUMMARY, URI_TYPE_SUMMARY);
     }
 
     private NetMonDatabase mNetworkMonitorDatabase;
@@ -180,6 +182,10 @@ public class NetMonProvider extends ContentProvider {
                         NetMonColumns.CDMA_CELL_SYSTEM_ID };
                 res = buildGoogleConnectionTestCursor(cdmaCellIdColumns);
                 break;
+            case URI_TYPE_SUMMARY:
+                String[] cellIdColumns = new String[0];
+                res = buildGoogleConnectionTestCursor(cellIdColumns);
+                break;
             default:
                 return null;
         }
@@ -255,6 +261,7 @@ public class NetMonProvider extends ContentProvider {
                 break;
             case URI_TYPE_GSM_SUMMARY:
             case URI_TYPE_CDMA_SUMMARY:
+            case URI_TYPE_SUMMARY:
                 // Nothing to do here.  We will construct our query params in query().
                 break;
             default:

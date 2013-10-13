@@ -35,12 +35,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 import org.jraf.android.networkmonitor.util.TelephonyUtil;
 
 public class SummaryExport {
+    private static final String TAG = SummaryExport.class.getSimpleName();
+
     /**
      * Contains data for cell tests common to all cell types.
      */
@@ -149,8 +152,10 @@ public class SummaryExport {
         int phoneType = TelephonyUtil.getDeviceType(context);
         if (phoneType == TelephonyManager.PHONE_TYPE_GSM) uri = NetMonColumns.CONTENT_URI_GSM_SUMMARY;
         else if (phoneType == TelephonyManager.PHONE_TYPE_CDMA) uri = NetMonColumns.CONTENT_URI_CDMA_SUMMARY;
-        else
-            throw new IllegalArgumentException("Error: unknown phone type " + phoneType);
+        else {
+            Log.w(TAG, "Strange, this device is neither a GSM nor CDMA device: TelephonyManager.getDeviceType() returns " + phoneType + ".");
+            uri = NetMonColumns.CONTENT_URI_SUMMARY;
+        }
 
         Cursor c = context.getContentResolver().query(uri, null, null, null, null);
         SortedMap<String, SortedSet<CellResult>> cellResults = new TreeMap<String, SortedSet<CellResult>>();
@@ -169,6 +174,8 @@ public class SummaryExport {
                             CellResult cellResult = null;
                             if (phoneType == TelephonyManager.PHONE_TYPE_GSM) cellResult = readGsmCellResult(c, passRate, testCount);
                             else if (phoneType == TelephonyManager.PHONE_TYPE_CDMA) cellResult = readCdmaCellResult(c, passRate, testCount);
+                            else
+                                cellResult = readCellResult(passRate, testCount);
                             if (cellResult != null) {
                                 SortedSet<CellResult> cellResultsForExtraInfo = cellResults.get(extraInfo);
                                 if (cellResultsForExtraInfo == null) {
@@ -220,6 +227,11 @@ public class SummaryExport {
         int networkId = c.getInt(c.getColumnIndex(NetMonColumns.CDMA_CELL_NETWORK_ID));
         int systemId = c.getInt(c.getColumnIndex(NetMonColumns.CDMA_CELL_SYSTEM_ID));
         CdmaCellResult result = new CdmaCellResult(baseStationId, networkId, systemId, passRate, testCount);
+        return result;
+    }
+
+    private static CellResult readCellResult(int passRate, int testCount) {
+        CellResult result = new CellResult(passRate, testCount);
         return result;
     }
 }
