@@ -16,6 +16,7 @@
     <string name="data_state">Data State</string>
     <string name="reason">Reason</string>
     <string name="extra_info">Extra Info</string>
+    <string name="wifi_ssid">WiFi SSID</string>
     <string name="sim_operator">SIM Operator</string>
     <string name="network_operator">Network Operator</string>
     <string name="is_network_metered">Is Network Metered</string>

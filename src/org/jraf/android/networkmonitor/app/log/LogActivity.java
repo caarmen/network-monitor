@@ -64,7 +64,7 @@ public class LogActivity extends FragmentActivity {
     private static final String TAG = Constants.TAG + LogActivity.class.getSimpleName();
     private static final String PROGRESS_DIALOG_TAG = ProgressDialogFragment.class.getSimpleName();
     private static final String EXTRA_PROGRESS_DIALOG_STYLE = "progress_dialog_style";
-    protected WebView mWebView;
+    private WebView mWebView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -314,7 +314,7 @@ public class LogActivity extends FragmentActivity {
             return dialog;
         }
 
-        public void setProgress(int progress, int max) {
+        private void setProgress(int progress, int max) {
             Log.v(TAG, "setProgress " + progress + "/" + max);
             ProgressDialog dialog = (ProgressDialog) getDialog();
             if (progress >= max) {

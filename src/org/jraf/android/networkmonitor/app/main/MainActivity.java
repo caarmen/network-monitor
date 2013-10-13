@@ -129,6 +129,7 @@ public class MainActivity extends PreferenceActivity {
     };
 
     private void updateListPreferenceSummary(CharSequence key, int summaryResId) {
+        @SuppressWarnings("deprecation")
         ListPreference pref = (ListPreference) getPreferenceManager().findPreference(key);
         CharSequence entry = pref.getEntry();
         String summary = getString(summaryResId, entry);

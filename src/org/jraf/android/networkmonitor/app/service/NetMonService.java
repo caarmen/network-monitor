@@ -52,6 +52,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -102,6 +104,7 @@ public class NetMonService extends Service {
     private LocationManager mLocationManager;
     private LocationClient mLocationClient;
     private NetMonPhoneStateListener mPhoneStateListener;
+    private WifiManager mWifiManager;
     private long mLastWakeUp = 0;
     private int mLastSignalStrength;
     private volatile boolean mDestroyed;
@@ -136,6 +139,7 @@ public class NetMonService extends Service {
         mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         mLocationClient = new LocationClient(NetMonService.this, mConnectionCallbacks, mConnectionFailedListener);
         mLocationClient.connect();
         mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_SERVICE_STATE);
@@ -221,6 +225,7 @@ public class NetMonService extends Service {
                 values.putAll(getActiveNetworkInfo());
                 values.put(NetMonColumns.CELL_SIGNAL_STRENGTH, mLastSignalStrength);
                 values.put(NetMonColumns.MOBILE_DATA_NETWORK_TYPE, getDataNetworkType());
+                values.put(NetMonColumns.WIFI_SSID, getWifiSSID());
                 values.putAll(getCellLocation());
                 values.put(NetMonColumns.DATA_ACTIVITY, getDataActivity());
                 values.put(NetMonColumns.DATA_STATE, getDataState());
@@ -474,6 +479,15 @@ public class NetMonService extends Service {
             default:
                 return UNKNOWN;
         }
+    }
+
+    /**
+     * @return the SSID of the currently connected WiFi network, if any.
+     */
+    private String getWifiSSID() {
+        WifiInfo connectionInfo = mWifiManager.getConnectionInfo();
+        if (connectionInfo != null) return connectionInfo.getSSID();
+        return UNKNOWN;
     }
 
     /**

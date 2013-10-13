@@ -42,7 +42,7 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
 /**
  * Export the Network Monitor data from the DB to a file in a table format.
  */
-public abstract class TableFileExport extends FileExport {
+abstract class TableFileExport extends FileExport {
     private static final String TAG = Constants.TAG + TableFileExport.class.getSimpleName();
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss", Locale.US);

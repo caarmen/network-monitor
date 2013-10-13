@@ -52,6 +52,7 @@ td.fail {
         <item>data_state</item>
         <item>reason</item>
         <item>extra_info</item>
+        <item>wifi_ssid</item>
         <item>sim_operator</item>
         <item>network_operator</item>
         <item>is_network_metered</item>
