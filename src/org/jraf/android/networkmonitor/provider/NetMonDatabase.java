@@ -35,7 +35,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
     public static final String DATABASE_NAME = "networkmonitor.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     // @formatter:off
     private static final String SQL_CREATE_TABLE_NETWORKMONITOR = "CREATE TABLE IF NOT EXISTS "
@@ -57,6 +57,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.REASON + " TEXT, "
             + NetMonColumns.EXTRA_INFO + " TEXT, "
             + NetMonColumns.WIFI_SSID + " TEXT, "
+            + NetMonColumns.WIFI_SIGNAL_STRENGTH + " INTEGER, "
             + NetMonColumns.SIM_OPERATOR + " TEXT, "
             + NetMonColumns.NETWORK_OPERATOR + " TEXT, "
             + NetMonColumns.IS_NETWORK_METERED + " INTEGER, "
@@ -87,6 +88,9 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V4_WIFI_SSID = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
             + NetMonColumns.WIFI_SSID + " TEXT";
 
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V5_WIFI_SIGNAL_STRENGTH = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.WIFI_SIGNAL_STRENGTH + " TEXT";
+
     NetMonDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -108,5 +112,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
         if (oldVersion < 3) db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V3_HTTP_CONNECTION_TEST);
 
         if (oldVersion < 4) db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V4_WIFI_SSID);
+
+        if (oldVersion < 5) db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V5_WIFI_SIGNAL_STRENGTH);
     }
 }

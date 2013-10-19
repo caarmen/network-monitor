@@ -230,7 +230,7 @@ public class NetMonService extends Service {
                 values.putAll(getActiveNetworkInfo());
                 values.put(NetMonColumns.CELL_SIGNAL_STRENGTH, mLastSignalStrength);
                 values.put(NetMonColumns.MOBILE_DATA_NETWORK_TYPE, getDataNetworkType());
-                values.put(NetMonColumns.WIFI_SSID, getWifiSSID());
+                values.putAll(getWifiInfo());
                 values.putAll(getCellLocation());
                 values.put(NetMonColumns.DATA_ACTIVITY, getDataActivity());
                 values.put(NetMonColumns.DATA_STATE, getDataState());
@@ -504,12 +504,17 @@ public class NetMonService extends Service {
     }
 
     /**
-     * @return the SSID of the currently connected WiFi network, if any.
+     * @return the SSID and signal strength of the currently connected WiFi network, if any.
      */
-    private String getWifiSSID() {
+    private ContentValues getWifiInfo() {
         WifiInfo connectionInfo = mWifiManager.getConnectionInfo();
-        if (connectionInfo != null) return connectionInfo.getSSID();
-        return UNKNOWN;
+        ContentValues result = new ContentValues(2);
+        if (connectionInfo == null) return result;
+        result.put(NetMonColumns.WIFI_SSID, connectionInfo.getSSID());
+        int signalLevel = WifiManager.calculateSignalLevel(connectionInfo.getRssi(), 5);
+        result.put(NetMonColumns.WIFI_SIGNAL_STRENGTH, signalLevel);
+
+        return result;
     }
 
     /**
