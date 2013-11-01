@@ -24,6 +24,8 @@
  */
 package org.jraf.android.networkmonitor.app.service;
 
+import java.lang.reflect.Method;
+
 import android.content.Context;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
@@ -68,6 +70,29 @@ class NetMonSignalStrength {
             return SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
         }
     }
+
+    /**
+     * @return the signal strength as dBm.
+     */
+    int getDbm(SignalStrength signalStrength) {
+        Log.v(TAG, "getDbm " + signalStrength);
+        int dBm;
+
+        if (signalStrength.isGsm()) {
+            if (getLteLevel(signalStrength) == SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
+                dBm = getGsmDbm(signalStrength);
+            } else {
+                dBm = getLteDbm(signalStrength);
+            }
+        } else {
+            int cdmaDbm = signalStrength.getCdmaDbm();
+            int evdoDbm = signalStrength.getEvdoDbm();
+
+            return evdoDbm == -120 ? cdmaDbm : cdmaDbm == -120 ? evdoDbm : cdmaDbm < evdoDbm ? cdmaDbm : evdoDbm;
+        }
+        return dBm;
+    }
+
 
     private int getCDMASignalStrength(SignalStrength signalStrength) {
         Log.v(TAG, "getCDMASignalStrength " + signalStrength);
@@ -164,4 +189,58 @@ class NetMonSignalStrength {
         else
             return SIGNAL_STRENGTH_POOR;
     }
+
+    /**
+     * Get the GSM signal strength as dBm
+     */
+    private int getGsmDbm(SignalStrength signalStrength) {
+        Log.v(TAG, "getGsmDbm" + signalStrength);
+        int dBm;
+
+        int level = signalStrength.getGsmSignalStrength();
+        int asu = level == 99 ? Integer.MAX_VALUE : level;
+        if (asu != Integer.MAX_VALUE) {
+            dBm = -113 + 2 * asu;
+        } else {
+            dBm = Integer.MAX_VALUE;
+        }
+        return dBm;
+    }
+
+    /**
+     * Get LTE as level 0..4
+     */
+    private int getLteLevel(SignalStrength signalStrength) {
+        Log.v(TAG, "getLteLevel " + signalStrength);
+        // For now there's no other way besides reflection :( The getLteLevel() method
+        // in the SignalStrength class access private fields.
+        try {
+            Method methodGetLteLevel = SignalStrength.class.getMethod("getLteLevel");
+            int result = (Integer) methodGetLteLevel.invoke(signalStrength);
+            return result;
+        } catch (Throwable t) {
+            Log.v(TAG, "getLteLevel failed: " + t.getMessage(), t);
+            return SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+        }
+    }
+
+    /**
+     * Get LTE as dBm
+     */
+    private int getLteDbm(SignalStrength signalStrength) {
+        Log.v(TAG, "getLteDbm " + signalStrength);
+        // For now there's no other way besides reflection :( The getLteDbm() method
+        // in the SignalStrength class returns a private field which is not
+        // accessible in any public, non-hidden methods.
+        try {
+            Method methodGetLteDbm = SignalStrength.class.getMethod("getLteDbm");
+            int result = (Integer) methodGetLteDbm.invoke(signalStrength);
+            return result;
+        } catch (Throwable t) {
+            Log.v(TAG, "getLteDbm failed: " + t.getMessage(), t);
+            return SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+        }
+    }
+
+
 }

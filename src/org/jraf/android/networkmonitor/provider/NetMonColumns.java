@@ -59,12 +59,14 @@ public class NetMonColumns implements BaseColumns {
     public static final String EXTRA_INFO = "extra_info";
     public static final String WIFI_SSID = "wifi_ssid";
     public static final String WIFI_SIGNAL_STRENGTH = "wifi_signal_strength";
+    public static final String WIFI_RSSI = "wifi_rssi";
     public static final String SIM_OPERATOR = "sim_operator";
     public static final String NETWORK_OPERATOR = "network_operator";
     public static final String IS_NETWORK_METERED = "is_network_metered";
     public static final String DEVICE_LATITUDE = "device_latitude";
     public static final String DEVICE_LONGITUDE = "device_longitude";
     public static final String CELL_SIGNAL_STRENGTH = "cell_signal_strength";
+    public static final String CELL_SIGNAL_STRENGTH_DBM = "cell_signal_strength_dbm";
     public static final String CDMA_CELL_BASE_STATION_ID = "cdma_cell_base_station_id";
     public static final String CDMA_CELL_LATITUDE = "cdma_cell_latitude";
     public static final String CDMA_CELL_LONGITUDE = "cdma_cell_longitude";

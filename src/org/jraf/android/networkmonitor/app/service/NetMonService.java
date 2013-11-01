@@ -112,6 +112,7 @@ public class NetMonService extends Service {
     private WifiManager mWifiManager;
     private long mLastWakeUp = 0;
     private int mLastSignalStrength;
+    private int mLastSignalStrengthDbm;
     private volatile boolean mDestroyed;
     private ScheduledExecutorService mExecutorService;
     private Future<?> mMonitorLoopFuture;
@@ -229,6 +230,8 @@ public class NetMonService extends Service {
                 values.put(NetMonColumns.HTTP_CONNECTION_TEST, getHttpTestResult().name());
                 values.putAll(getActiveNetworkInfo());
                 values.put(NetMonColumns.CELL_SIGNAL_STRENGTH, mLastSignalStrength);
+                if (mLastSignalStrengthDbm != NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN)
+                    values.put(NetMonColumns.CELL_SIGNAL_STRENGTH_DBM, mLastSignalStrengthDbm);
                 values.put(NetMonColumns.MOBILE_DATA_NETWORK_TYPE, getDataNetworkType());
                 values.putAll(getWifiInfo());
                 values.putAll(getCellLocation());
@@ -513,6 +516,7 @@ public class NetMonService extends Service {
         result.put(NetMonColumns.WIFI_SSID, connectionInfo.getSSID());
         int signalLevel = WifiManager.calculateSignalLevel(connectionInfo.getRssi(), 5);
         result.put(NetMonColumns.WIFI_SIGNAL_STRENGTH, signalLevel);
+        result.put(NetMonColumns.WIFI_RSSI, connectionInfo.getRssi());
 
         return result;
     }
@@ -626,12 +630,16 @@ public class NetMonService extends Service {
         @Override
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
             mLastSignalStrength = mNetMonSignalStrength.getLevel(signalStrength);
+            mLastSignalStrengthDbm = mNetMonSignalStrength.getDbm(signalStrength);
         }
 
         @Override
         public void onServiceStateChanged(ServiceState serviceState) {
             Log.v(TAG, "onServiceStateChanged " + serviceState);
-            if (serviceState.getState() != ServiceState.STATE_IN_SERVICE) mLastSignalStrength = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+            if (serviceState.getState() != ServiceState.STATE_IN_SERVICE) {
+                mLastSignalStrength = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+                mLastSignalStrengthDbm = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+            }
         }
     }
 }

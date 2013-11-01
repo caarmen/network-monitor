@@ -58,12 +58,14 @@ td.slow {
         <item>extra_info</item>
         <item>wifi_ssid</item>
         <item>wifi_signal_strength</item>
+        <item>wifi_rssi</item>
         <item>sim_operator</item>
         <item>network_operator</item>
         <item>is_network_metered</item>
         <item>device_latitude</item>
         <item>device_longitude</item>
         <item>cell_signal_strength</item>
+        <item>cell_signal_strength_dbm</item>
         <item>cdma_cell_base_station_id</item>
         <item>cdma_cell_latitude</item>
         <item>cdma_cell_longitude</item>

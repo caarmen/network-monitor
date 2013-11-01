@@ -35,7 +35,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
     public static final String DATABASE_NAME = "networkmonitor.db";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     // @formatter:off
     private static final String SQL_CREATE_TABLE_NETWORKMONITOR = "CREATE TABLE IF NOT EXISTS "
@@ -58,12 +58,14 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.EXTRA_INFO + " TEXT, "
             + NetMonColumns.WIFI_SSID + " TEXT, "
             + NetMonColumns.WIFI_SIGNAL_STRENGTH + " INTEGER, "
+            + NetMonColumns.WIFI_RSSI + " INTEGER, "
             + NetMonColumns.SIM_OPERATOR + " TEXT, "
             + NetMonColumns.NETWORK_OPERATOR + " TEXT, "
             + NetMonColumns.IS_NETWORK_METERED + " INTEGER, "
             + NetMonColumns.DEVICE_LATITUDE + " REAL, "
             + NetMonColumns.DEVICE_LONGITUDE + " REAL, "
             + NetMonColumns.CELL_SIGNAL_STRENGTH + " INTEGER, "
+            + NetMonColumns.CELL_SIGNAL_STRENGTH_DBM + " INTEGER, "
             + NetMonColumns.CDMA_CELL_BASE_STATION_ID + " INTEGER, "
             + NetMonColumns.CDMA_CELL_LATITUDE + " INTEGER, "
             + NetMonColumns.CDMA_CELL_LONGITUDE + " INTEGER, "
@@ -89,7 +91,13 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.WIFI_SSID + " TEXT";
 
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V5_WIFI_SIGNAL_STRENGTH = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
-            + NetMonColumns.WIFI_SIGNAL_STRENGTH + " TEXT";
+            + NetMonColumns.WIFI_SIGNAL_STRENGTH + " INTEGER";
+
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V6_WIFI_RSSI = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.WIFI_RSSI + " INTEGER";
+
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V6_CELL_SIGNAL_STRENGTH_DBM = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.CELL_SIGNAL_STRENGTH_DBM + " INTEGER";
 
     NetMonDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -114,5 +122,10 @@ public class NetMonDatabase extends SQLiteOpenHelper {
         if (oldVersion < 4) db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V4_WIFI_SSID);
 
         if (oldVersion < 5) db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V5_WIFI_SIGNAL_STRENGTH);
+
+        if (oldVersion < 6) {
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V6_WIFI_RSSI);
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V6_CELL_SIGNAL_STRENGTH_DBM);
+        }
     }
 }
