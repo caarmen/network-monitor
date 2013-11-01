@@ -48,9 +48,8 @@
     
    
     <string name="error_no_mobile_tests">No connection tests have been done on a mobile connection.</string>
-    <string name="export_message_text">The following summary lists the mobile cells and their connection test results.  For each cell you can see the cell ids, the % of connection tests which succeeded, and the number of attempted connection tests. 
-\n\nThe worst cells are at the top of the list.
-\n\nNote that tests on WiFi or tests when the data connection was not \"CONNECTED\" are not included in the below summary.
+    <string name="export_message_text">The following summary lists the mobile cells and wifi access points, and their connection test results.  For each cell or access point, you can see the % of connection tests which succeeded, and the number of attempted connection tests. 
+\n\nThe worst cells or access points are at the top of the list.
 \n\n</string>
     <string name="export_message_text_file_attached">Attached is a file with the full data of all tests.\n\n</string>
     <string name="about_title">About</string>

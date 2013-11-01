@@ -17,6 +17,7 @@
     <string name="reason">Reason</string>
     <string name="extra_info">Extra Info</string>
     <string name="wifi_ssid">WiFi SSID</string>
+    <string name="wifi_bssid">WiFi BSSID</string>
     <string name="wifi_signal_strength">WiFi Signal Strength (0&#8211;4)</string>
     <string name="wifi_rssi">WiFi Signal Strength (RSSI)</string>
     <string name="sim_operator">SIM Operator</string>

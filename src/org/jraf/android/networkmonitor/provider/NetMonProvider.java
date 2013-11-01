@@ -172,17 +172,23 @@ public class NetMonProvider extends ContentProvider {
                         sortOrder == null ? queryParams.orderBy : sortOrder);
                 break;
             case URI_TYPE_GSM_SUMMARY:
+                // TODO investigate if we can use a projection map here 
+                // instead of ignoring the given projection, selection, and selection args.
+                // Or perhaps we can create a view.
                 String[] gsmCellIdColumns = new String[] { NetMonColumns.GSM_CELL_LAC, NetMonColumns.GSM_SHORT_CELL_ID, NetMonColumns.GSM_FULL_CELL_ID };
-                res = buildGoogleConnectionTestCursor(gsmCellIdColumns, NetMonColumns.DATA_STATE + "=?", new String[] { Constants.DATA_STATE_CONNECTED });
+                res = buildGoogleConnectionTestCursor(gsmCellIdColumns, new String[] { NetMonColumns.EXTRA_INFO }, NetMonColumns.DATA_STATE + "=?",
+                        new String[] { Constants.DATA_STATE_CONNECTED });
                 break;
             case URI_TYPE_CDMA_SUMMARY:
                 String[] cdmaCellIdColumns = new String[] { NetMonColumns.CDMA_CELL_BASE_STATION_ID, NetMonColumns.CDMA_CELL_NETWORK_ID,
                         NetMonColumns.CDMA_CELL_SYSTEM_ID };
-                res = buildGoogleConnectionTestCursor(cdmaCellIdColumns, NetMonColumns.DATA_STATE + "=?", new String[] { Constants.DATA_STATE_CONNECTED });
+                res = buildGoogleConnectionTestCursor(cdmaCellIdColumns, new String[] { NetMonColumns.EXTRA_INFO }, NetMonColumns.DATA_STATE + "=?",
+                        new String[] { Constants.DATA_STATE_CONNECTED });
                 break;
             case URI_TYPE_WIFI_SUMMARY:
                 String[] wifiIdColumns = new String[] { NetMonColumns.WIFI_SSID };
-                res = buildGoogleConnectionTestCursor(wifiIdColumns, NetMonColumns.WIFI_SIGNAL_STRENGTH + " NOT NULL", new String[0]);
+                res = buildGoogleConnectionTestCursor(wifiIdColumns, new String[] { NetMonColumns.WIFI_BSSID }, NetMonColumns.NETWORK_TYPE + "=?",
+                        new String[] { Constants.CONNECTION_TYPE_WIFI });
                 break;
             default:
                 return null;
@@ -201,28 +207,29 @@ public class NetMonProvider extends ContentProvider {
      * @param cellIdColumns the columns in the networkmonitor table which uniquely identify a cell.
      * @return a Cursor which returns the number of passes and fails for each cell.
      */
-    private Cursor buildGoogleConnectionTestCursor(String[] cellIdColumns, String selection, String[] selectionArgs) {
+    private Cursor buildGoogleConnectionTestCursor(String[] cellIdColumns, String[] projection, String selection, String[] selectionArgs) {
         String mainTableAlias = "n";
         String passSubquery = buildGoogleConnectionTestSubQuery(cellIdColumns, mainTableAlias, "pass", NetMonColumns.PASS_COUNT);
         String failSubquery = buildGoogleConnectionTestSubQuery(cellIdColumns, mainTableAlias, "fail", NetMonColumns.FAIL_COUNT);
         String slowSubquery = buildGoogleConnectionTestSubQuery(cellIdColumns, mainTableAlias, "slow", NetMonColumns.SLOW_COUNT);
-        String[] dbProjection = new String[cellIdColumns.length + 4];
+        String[] dbProjection = new String[cellIdColumns.length + projection.length + 3];
         System.arraycopy(cellIdColumns, 0, dbProjection, 0, cellIdColumns.length);
-        dbProjection[dbProjection.length - 4] = NetMonColumns.EXTRA_INFO;
-        dbProjection[dbProjection.length - 3] = passSubquery;
-        dbProjection[dbProjection.length - 2] = failSubquery;
-        dbProjection[dbProjection.length - 1] = slowSubquery;
+        System.arraycopy(projection, 0, dbProjection, cellIdColumns.length, projection.length);
+        int i = cellIdColumns.length + projection.length;
+        dbProjection[i++] = passSubquery;
+        dbProjection[i++] = failSubquery;
+        dbProjection[i++] = slowSubquery;
         String dbTable = NetMonColumns.TABLE_NAME + " as " + mainTableAlias;
         String dbSelection = selection;
         // At least one of the cell id columns should be present
         dbSelection += " AND (";
-        for (int i = 0; i < cellIdColumns.length; i++) {
+        for (i = 0; i < cellIdColumns.length; i++) {
             dbSelection += cellIdColumns[i] + " NOT NULL ";
             if (i < cellIdColumns.length - 1) dbSelection += " OR ";
         }
         dbSelection += " )";
         String[] dbSelectionArgs = new String[3 + selectionArgs.length];
-        int i = 0;
+        i = 0;
         dbSelectionArgs[i++] = Constants.CONNECTION_TEST_PASS;
         dbSelectionArgs[i++] = Constants.CONNECTION_TEST_FAIL;
         dbSelectionArgs[i++] = Constants.CONNECTION_TEST_SLOW;

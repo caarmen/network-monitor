@@ -507,13 +507,14 @@ public class NetMonService extends Service {
     }
 
     /**
-     * @return the SSID and signal strength of the currently connected WiFi network, if any.
+     * @return the SSID, BSSID and signal strength of the currently connected WiFi network, if any.
      */
     private ContentValues getWifiInfo() {
         WifiInfo connectionInfo = mWifiManager.getConnectionInfo();
         ContentValues result = new ContentValues(2);
         if (connectionInfo == null || connectionInfo.getNetworkId() < 0) return result;
         result.put(NetMonColumns.WIFI_SSID, connectionInfo.getSSID());
+        result.put(NetMonColumns.WIFI_BSSID, connectionInfo.getBSSID());
         int signalLevel = WifiManager.calculateSignalLevel(connectionInfo.getRssi(), 5);
         result.put(NetMonColumns.WIFI_SIGNAL_STRENGTH, signalLevel);
         result.put(NetMonColumns.WIFI_RSSI, connectionInfo.getRssi());

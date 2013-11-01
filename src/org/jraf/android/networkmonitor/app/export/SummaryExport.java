@@ -156,16 +156,16 @@ public class SummaryExport {
      * Test data for a WiFi access point.
      */
     private static class WiFiResult extends TestResult {
-        private final String ssid;
+        private final String bssid;
 
-        private WiFiResult(String ssid, int passRate, int testCount) {
+        private WiFiResult(String bssid, String ssid, int passRate, int testCount) {
             super(ssid, passRate, testCount);
-            this.ssid = ssid;
+            this.bssid = bssid;
         }
 
         @Override
         public String toString() {
-            return "SSID=" + ssid + ": " + super.toString();
+            return "BSSID=" + bssid + ": " + super.toString();
         }
 
         @Override
@@ -174,7 +174,7 @@ public class SummaryExport {
             if (result != 0) return result;
             if (other instanceof WiFiResult) {
                 WiFiResult otherWiFiResult = (WiFiResult) other;
-                return ssid.compareTo(otherWiFiResult.ssid);
+                return bssid.compareTo(otherWiFiResult.bssid);
             }
             return -1;
         }
@@ -195,6 +195,9 @@ public class SummaryExport {
         return generateReport(context, testResults);
     }
 
+    /**
+     * @return a map of test results: the key is the operator or WiFi ssid, the value is a Set of test results for that operator or WiFi access point.
+     */
     private static SortedMap<String, SortedSet<TestResult>> getTestResults(Context context, Uri uri, Class<?> clazz) {
         Cursor c = context.getContentResolver().query(uri, null, null, null, null);
         SortedMap<String, SortedSet<TestResult>> cellResults = new TreeMap<String, SortedSet<TestResult>>();
@@ -268,8 +271,9 @@ public class SummaryExport {
     }
 
     private static WiFiResult readWiFiResult(Cursor c, int passRate, int testCount) {
+        String bssid = c.getString(c.getColumnIndex(NetMonColumns.WIFI_BSSID));
         String ssid = c.getString(c.getColumnIndex(NetMonColumns.WIFI_SSID));
-        WiFiResult result = new WiFiResult(ssid, passRate, testCount);
+        WiFiResult result = new WiFiResult(bssid, ssid, passRate, testCount);
         return result;
     }
 

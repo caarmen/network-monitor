@@ -38,4 +38,5 @@ public class Constants {
     public static final String CONNECTION_TEST_FAIL = "FAIL";
     public static final String CONNECTION_TEST_SLOW = "SLOW";
     public static final String DATA_STATE_CONNECTED = "CONNECTED";
+    public static final String CONNECTION_TYPE_WIFI = "WIFI";
 }

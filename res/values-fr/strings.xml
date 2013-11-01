@@ -48,9 +48,8 @@
     
    
     <string name="error_no_mobile_tests">Aucun test n\'a été effectué avec une connexion data mobile.</string>
-    <string name="export_message_text">Le résumé suivant énumère les antennes relais et les résultats de leurs tests. Pour chaque antenne relais, vous pouvez voir ses identifiants, le % de tests de connexion qui ont réussi, et le nombre total de tests effectués. 
-\n\nLes moins bonnes antennes se trouvent en haut de la liste. 
-\n\nNotez que les tests en WiFi, où lorsque l\'état de la connexion n\'était pas \"CONNECTED\" sont exclus de ce résumé.
+    <string name="export_message_text">Le résumé suivant énumère les antennes relais et points d\'accès WiFi, et les résultats de leurs tests. Pour chaque antenne relais ou point d\'accès WiFi, vous pouvez voir le % de tests de connexion qui ont réussi, et le nombre total de tests effectués. 
+\n\nLes moins bons antennes relais et points d\'accès WiFi se trouvent en haut de la liste. 
 \n\n</string>
     <string name="export_message_text_file_attached">Ci-joint vous trouverez un fichier avec les données complètes de l\'ensemble des tests.\n\n</string>
     <string name="about_title">À propos</string>

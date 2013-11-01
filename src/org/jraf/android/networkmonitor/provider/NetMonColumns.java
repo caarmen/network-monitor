@@ -57,6 +57,7 @@ public class NetMonColumns implements BaseColumns {
     public static final String REASON = "reason";
     public static final String EXTRA_INFO = "extra_info";
     public static final String WIFI_SSID = "wifi_ssid";
+    public static final String WIFI_BSSID = "wifi_bssid";
     public static final String WIFI_SIGNAL_STRENGTH = "wifi_signal_strength";
     public static final String WIFI_RSSI = "wifi_rssi";
     public static final String SIM_OPERATOR = "sim_operator";

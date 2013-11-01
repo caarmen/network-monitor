@@ -57,6 +57,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.REASON + " TEXT, "
             + NetMonColumns.EXTRA_INFO + " TEXT, "
             + NetMonColumns.WIFI_SSID + " TEXT, "
+            + NetMonColumns.WIFI_BSSID + " TEXT, "
             + NetMonColumns.WIFI_SIGNAL_STRENGTH + " INTEGER, "
             + NetMonColumns.WIFI_RSSI + " INTEGER, "
             + NetMonColumns.SIM_OPERATOR + " TEXT, "
@@ -96,6 +97,9 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V6_WIFI_RSSI = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
             + NetMonColumns.WIFI_RSSI + " INTEGER";
 
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V6_WIFI_BSSID = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.WIFI_BSSID + " TEXT";
+
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V6_CELL_SIGNAL_STRENGTH_DBM = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
             + NetMonColumns.CELL_SIGNAL_STRENGTH_DBM + " INTEGER";
 
@@ -125,6 +129,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
 
         if (oldVersion < 6) {
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V6_WIFI_RSSI);
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V6_WIFI_BSSID);
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V6_CELL_SIGNAL_STRENGTH_DBM);
         }
     }
