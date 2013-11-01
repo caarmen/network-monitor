@@ -57,7 +57,7 @@ public class NetMonProvider extends ContentProvider {
     private static final int URI_TYPE_NETWORKMONITOR_ID = 1;
     private static final int URI_TYPE_GSM_SUMMARY = 2;
     private static final int URI_TYPE_CDMA_SUMMARY = 3;
-    private static final int URI_TYPE_SUMMARY = 4;
+    private static final int URI_TYPE_WIFI_SUMMARY = 4;
 
     private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -66,7 +66,7 @@ public class NetMonProvider extends ContentProvider {
         URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME + "/#", URI_TYPE_NETWORKMONITOR_ID);
         URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME + NetMonColumns.GSM_SUMMARY, URI_TYPE_GSM_SUMMARY);
         URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME + NetMonColumns.CDMA_SUMMARY, URI_TYPE_CDMA_SUMMARY);
-        URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME + NetMonColumns.SUMMARY, URI_TYPE_SUMMARY);
+        URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME + NetMonColumns.WIFI_SUMMARY, URI_TYPE_WIFI_SUMMARY);
     }
 
     private NetMonDatabase mNetworkMonitorDatabase;
@@ -82,14 +82,12 @@ public class NetMonProvider extends ContentProvider {
         final int match = URI_MATCHER.match(uri);
         switch (match) {
             case URI_TYPE_NETWORKMONITOR:
+            case URI_TYPE_GSM_SUMMARY:
+            case URI_TYPE_CDMA_SUMMARY:
+            case URI_TYPE_WIFI_SUMMARY:
                 return TYPE_CURSOR_DIR + NetMonColumns.TABLE_NAME;
             case URI_TYPE_NETWORKMONITOR_ID:
                 return TYPE_CURSOR_ITEM + NetMonColumns.TABLE_NAME;
-            case URI_TYPE_GSM_SUMMARY:
-                return TYPE_CURSOR_DIR + NetMonColumns.TABLE_NAME;
-            case URI_TYPE_CDMA_SUMMARY:
-                return TYPE_CURSOR_DIR + NetMonColumns.TABLE_NAME;
-
         }
         return null;
     }
@@ -175,16 +173,16 @@ public class NetMonProvider extends ContentProvider {
                 break;
             case URI_TYPE_GSM_SUMMARY:
                 String[] gsmCellIdColumns = new String[] { NetMonColumns.GSM_CELL_LAC, NetMonColumns.GSM_SHORT_CELL_ID, NetMonColumns.GSM_FULL_CELL_ID };
-                res = buildGoogleConnectionTestCursor(gsmCellIdColumns);
+                res = buildGoogleConnectionTestCursor(gsmCellIdColumns, NetMonColumns.DATA_STATE + "=?", new String[] { Constants.DATA_STATE_CONNECTED });
                 break;
             case URI_TYPE_CDMA_SUMMARY:
                 String[] cdmaCellIdColumns = new String[] { NetMonColumns.CDMA_CELL_BASE_STATION_ID, NetMonColumns.CDMA_CELL_NETWORK_ID,
                         NetMonColumns.CDMA_CELL_SYSTEM_ID };
-                res = buildGoogleConnectionTestCursor(cdmaCellIdColumns);
+                res = buildGoogleConnectionTestCursor(cdmaCellIdColumns, NetMonColumns.DATA_STATE + "=?", new String[] { Constants.DATA_STATE_CONNECTED });
                 break;
-            case URI_TYPE_SUMMARY:
-                String[] cellIdColumns = new String[0];
-                res = buildGoogleConnectionTestCursor(cellIdColumns);
+            case URI_TYPE_WIFI_SUMMARY:
+                String[] wifiIdColumns = new String[] { NetMonColumns.WIFI_SSID };
+                res = buildGoogleConnectionTestCursor(wifiIdColumns, NetMonColumns.WIFI_SIGNAL_STRENGTH + " NOT NULL", new String[0]);
                 break;
             default:
                 return null;
@@ -203,7 +201,7 @@ public class NetMonProvider extends ContentProvider {
      * @param cellIdColumns the columns in the networkmonitor table which uniquely identify a cell.
      * @return a Cursor which returns the number of passes and fails for each cell.
      */
-    private Cursor buildGoogleConnectionTestCursor(String[] cellIdColumns) {
+    private Cursor buildGoogleConnectionTestCursor(String[] cellIdColumns, String selection, String[] selectionArgs) {
         String mainTableAlias = "n";
         String passSubquery = buildGoogleConnectionTestSubQuery(cellIdColumns, mainTableAlias, "pass", NetMonColumns.PASS_COUNT);
         String failSubquery = buildGoogleConnectionTestSubQuery(cellIdColumns, mainTableAlias, "fail", NetMonColumns.FAIL_COUNT);
@@ -215,9 +213,21 @@ public class NetMonProvider extends ContentProvider {
         dbProjection[dbProjection.length - 2] = failSubquery;
         dbProjection[dbProjection.length - 1] = slowSubquery;
         String dbTable = NetMonColumns.TABLE_NAME + " as " + mainTableAlias;
-        String dbSelection = mainTableAlias + "." + NetMonColumns.DATA_STATE + " = ?";
-        String[] dbSelectionArgs = new String[] { Constants.CONNECTION_TEST_PASS, Constants.DATA_STATE_CONNECTED, Constants.CONNECTION_TEST_FAIL,
-                Constants.DATA_STATE_CONNECTED, Constants.CONNECTION_TEST_SLOW, Constants.DATA_STATE_CONNECTED, Constants.DATA_STATE_CONNECTED };
+        String dbSelection = selection;
+        // At least one of the cell id columns should be present
+        dbSelection += " AND (";
+        for (int i = 0; i < cellIdColumns.length; i++) {
+            dbSelection += cellIdColumns[i] + " NOT NULL ";
+            if (i < cellIdColumns.length - 1) dbSelection += " OR ";
+        }
+        dbSelection += " )";
+        String[] dbSelectionArgs = new String[3 + selectionArgs.length];
+        int i = 0;
+        dbSelectionArgs[i++] = Constants.CONNECTION_TEST_PASS;
+        dbSelectionArgs[i++] = Constants.CONNECTION_TEST_FAIL;
+        dbSelectionArgs[i++] = Constants.CONNECTION_TEST_SLOW;
+        for (String selectionArg : selectionArgs)
+            dbSelectionArgs[i++] = selectionArg;
         String dbGroupBy = TextUtils.join(",", cellIdColumns);
         String dbOrderBy = null;
 
@@ -244,7 +254,9 @@ public class NetMonProvider extends ContentProvider {
         query += join.toString();
         // Filter on the pass/fail value.
         // Include only tests where the data connection was CONNECTED.
-        query += tableAlias + "." + NetMonColumns.SOCKET_CONNECTION_TEST + "=? " + " AND " + tableAlias + "." + NetMonColumns.DATA_STATE + "=?";
+        query += tableAlias + "." + NetMonColumns.SOCKET_CONNECTION_TEST + "=? " + " AND " + tableAlias + "." + NetMonColumns.DATA_STATE + "=" + mainTableAlias
+                + "." + NetMonColumns.DATA_STATE;
+
         query += ") as " + subqueryAlias;
         return query;
     }
@@ -261,7 +273,7 @@ public class NetMonProvider extends ContentProvider {
                 break;
             case URI_TYPE_GSM_SUMMARY:
             case URI_TYPE_CDMA_SUMMARY:
-            case URI_TYPE_SUMMARY:
+            case URI_TYPE_WIFI_SUMMARY:
                 // Nothing to do here.  We will construct our query params in query().
                 break;
             default:
