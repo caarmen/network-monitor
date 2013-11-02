@@ -132,7 +132,7 @@ public class LogActionsActivity extends FragmentActivity {
                         Log.v(TAG, "Clicked ok to reset log");
                         // If the user agrees to delete the logs, run
                         // the delete in the background.
-                        showProgressDialog(ProgressDialog.STYLE_SPINNER);
+                        showProgressDialog(ProgressDialog.STYLE_SPINNER, getString(R.string.progress_dialog_message));
                         AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
 
                             @Override
@@ -178,7 +178,9 @@ public class LogActionsActivity extends FragmentActivity {
     private void shareFile(final FileExport fileExport) {
         Log.v(TAG, "shareFile " + fileExport);
         // Use a horizontal progress bar style if we can show progress of the export.
-        showProgressDialog(fileExport != null ? ProgressDialog.STYLE_HORIZONTAL : ProgressDialog.STYLE_SPINNER);
+        String dialogMessage = getString(R.string.export_progress_preparing_export);
+        int dialogStyle = fileExport != null ? ProgressDialog.STYLE_HORIZONTAL : ProgressDialog.STYLE_SPINNER;
+        showProgressDialog(dialogStyle, dialogMessage);
 
         AsyncTask<Void, Void, File> asyncTask = new AsyncTask<Void, Void, File>() {
 
@@ -230,13 +232,14 @@ public class LogActionsActivity extends FragmentActivity {
         asyncTask.execute();
     }
 
-    private void showProgressDialog(int style) {
+    private void showProgressDialog(int style, String message) {
         Log.v(TAG, "showProgressDialog: style=" + style);
 
         DialogFragment dialogFragment = new ProgressDialogFragment();
         // Use a horizontal progress bar style if we can show progress of the export.
         Bundle fragmentArgs = new Bundle(1);
         fragmentArgs.putInt(ProgressDialogFragment.EXTRA_PROGRESS_DIALOG_STYLE, style);
+        fragmentArgs.putString(ProgressDialogFragment.EXTRA_PROGRESS_DIALOG_MESSAGE, message);
         dialogFragment.setArguments(fragmentArgs);
         dialogFragment.setCancelable(false);
         dialogFragment.show(getSupportFragmentManager(), PROGRESS_DIALOG_TAG);

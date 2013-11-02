@@ -41,11 +41,12 @@ public class ProgressDialogFragment extends DialogFragment { // NO_UCD (use priv
     private static final String TAG = ProgressDialogFragment.class.getSimpleName();
 
     public static final String EXTRA_PROGRESS_DIALOG_STYLE = "progress_dialog_style";
+    public static final String EXTRA_PROGRESS_DIALOG_MESSAGE = "progress_dialog_message";
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         ProgressDialog dialog = new ProgressDialog(getActivity());
-        dialog.setMessage(getActivity().getString(R.string.export_progress_preparing_export));
+        dialog.setMessage(getArguments().getString(EXTRA_PROGRESS_DIALOG_MESSAGE));
         dialog.setIndeterminate(true);
         dialog.setProgressStyle(getArguments().getInt(EXTRA_PROGRESS_DIALOG_STYLE));
         return dialog;
