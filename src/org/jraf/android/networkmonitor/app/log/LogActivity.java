@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,19 +46,16 @@ import android.widget.Toast;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.export.HTMLExport;
-import org.jraf.android.networkmonitor.app.log.NetMonLog.NetMonLogListener;
 
 public class LogActivity extends FragmentActivity {
     private static final String TAG = Constants.TAG + LogActivity.class.getSimpleName();
     private WebView mWebView;
-    private NetMonLog mNetMonLog;
+    private static final int REQUEST_CODE_PURGE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate " + savedInstanceState);
         super.onCreate(savedInstanceState);
-        mNetMonLog = new NetMonLog(this);
-        mNetMonLog.setListener(mNetMonLogListener);
         setContentView(R.layout.log);
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) setDisplayHomeAsUpEnabled(true);
         loadHTMLFile();
@@ -74,13 +72,15 @@ public class LogActivity extends FragmentActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-                mNetMonLog.share();
+                Intent intentShare = new Intent(LogActionsActivity.ACTION_SHARE);
+                startActivity(intentShare);
                 return true;
             case R.id.action_refresh:
                 loadHTMLFile();
                 return true;
             case R.id.action_reset:
-                mNetMonLog.purge();
+                Intent intentReset = new Intent(LogActionsActivity.ACTION_RESET);
+                startActivityForResult(intentReset, REQUEST_CODE_PURGE);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -118,7 +118,10 @@ public class LogActivity extends FragmentActivity {
             @Override
             protected void onPostExecute(File result) {
                 Log.v(TAG, "loadHTMLFile:onPostExecute, result=" + result);
-                super.onPostExecute(result);
+                if (isFinishing()) {
+                    Log.v(TAG, "finishing, ignoring loadHTMLFile result");
+                    return;
+                }
                 if (result == null) {
                     Toast.makeText(LogActivity.this, R.string.error_reading_log, Toast.LENGTH_LONG).show();
                     return;
@@ -154,12 +157,12 @@ public class LogActivity extends FragmentActivity {
         super.onDestroy();
     }
 
-    private NetMonLogListener mNetMonLogListener = new NetMonLogListener() {
 
-        @Override
-        public void logReset() {
-            loadHTMLFile();
-        }
-    };
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.v(TAG, "onActivityResult: requestCode = " + requestCode + ", resultCode = " + resultCode + ", data  " + data);
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_PURGE && resultCode == RESULT_OK) loadHTMLFile();
+    }
 
 }

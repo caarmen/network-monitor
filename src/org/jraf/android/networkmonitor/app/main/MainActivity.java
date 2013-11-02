@@ -24,28 +24,21 @@
  */
 package org.jraf.android.networkmonitor.app.main;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.jraf.android.backport.switchwidget.SwitchPreference;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.service.NetMonService;
-import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -59,7 +52,6 @@ public class MainActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         addPreferencesFromResource(R.xml.preferences);
-        findPreference(Constants.PREF_RESET_LOG_FILE).setOnPreferenceClickListener(mOnPreferenceClickListener);
         updateListPreferenceSummary(Constants.PREF_WAKE_INTERVAL, R.string.preferences_wake_interval_summary);
         updateListPreferenceSummary(Constants.PREF_UPDATE_INTERVAL, R.string.preferences_updateInterval_summary);
         startService(new Intent(MainActivity.this, NetMonService.class));
@@ -135,49 +127,5 @@ public class MainActivity extends PreferenceActivity {
         String summary = getString(summaryResId, entry);
         pref.setSummary(summary);
     }
-
-
-    // TODO cleanup copy/paste between here and LogActivity.resetLogs
-    /**
-     * Purge the DB.
-     */
-    private void resetLogs() {
-        Log.v(TAG, "resetLogs");
-        new AlertDialog.Builder(this).setTitle(R.string.action_reset).setMessage(R.string.confirm_logs_reset)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
-
-                            @Override
-                            protected Void doInBackground(Void... params) {
-                                Log.v(TAG, "resetLogs:doInBackground");
-                                getContentResolver().delete(NetMonColumns.CONTENT_URI, null, null);
-                                return null;
-                            }
-
-                            @Override
-                            protected void onPostExecute(Void result) {
-                                Log.v(TAG, "resetLogs:onPostExecute");
-                                super.onPostExecute(result);
-                                Toast.makeText(MainActivity.this, R.string.success_logs_reset, Toast.LENGTH_LONG).show();
-                            }
-                        };
-                        asyncTask.execute();
-                    }
-                }).setNegativeButton(android.R.string.no, null).show();
-    }
-
-    // When the user taps on the "reset logs" item, bring up a confirmation dialog, then purge the DB.
-    private OnPreferenceClickListener mOnPreferenceClickListener = new OnPreferenceClickListener() {
-
-        @Override
-        public boolean onPreferenceClick(Preference pref) {
-            Log.v(TAG, "onPreferenceClick: " + pref.getKey());
-            if (Constants.PREF_RESET_LOG_FILE.equals(pref.getKey())) resetLogs();
-            return true;
-        }
-    };
 
 }

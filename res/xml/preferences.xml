@@ -24,9 +24,17 @@
         <intent android:action="org.jraf.android.networkmonitor.app.log.LogActivity" />
     </Preference>
     <Preference
+        android:icon="@drawable/ic_pref_share"
+        android:key="PREF_SHARE"
+        android:title="@string/action_share" >
+        <intent android:action="org.jraf.android.networkmonitor.app.log_share" />
+    </Preference>
+    <Preference
         android:icon="@drawable/ic_pref_reset"
         android:key="PREF_RESET_LOG_FILE"
-        android:title="@string/action_reset" />
+        android:title="@string/action_reset" >
+        <intent android:action="org.jraf.android.networkmonitor.app.log_reset" />
+    </Preference>
     <ListPreference
         android:defaultValue="0"
         android:entries="@array/preferences_wake_interval_labels"

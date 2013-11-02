@@ -67,7 +67,18 @@
             android:label="@string/about_title" >
             <intent-filter>
                 <action android:name="org.jraf.android.networkmonitor.app.about.AboutActivity" />
-
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.jraf.android.networkmonitor.app.log.LogActionsActivity"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="org.jraf.android.networkmonitor.app.log_share" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.jraf.android.networkmonitor.app.log_reset" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

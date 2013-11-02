@@ -56,24 +56,25 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
 /**
  * Provides actions on the network monitor log: sharing and resetting the log file.
  */
-public class NetMonLog {
-    private static final String TAG = Constants.TAG + NetMonLog.class.getSimpleName();
+public class LogActionsActivity extends FragmentActivity {
+    public static final String ACTION_SHARE = LogActionsActivity.class.getPackage().getName() + "_share";
+    public static final String ACTION_RESET = LogActionsActivity.class.getPackage().getName() + "_reset";
+
+    private static final String TAG = Constants.TAG + LogActionsActivity.class.getSimpleName();
     private static final String PROGRESS_DIALOG_TAG = ProgressDialogFragment.class.getSimpleName();
-    private NetMonLogListener mListener = null;
 
-    public interface NetMonLogListener {
-        void logReset();
-    }
-
-    private final FragmentActivity mActivity;
-
-
-    public NetMonLog(FragmentActivity activity) {
-        mActivity = activity;
-    }
-
-    public void setListener(NetMonLogListener listener) {
-        mListener = listener;
+    @Override
+    protected void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        String action = getIntent().getAction();
+        if (ACTION_SHARE.equals(action)) {
+            share();
+        } else if (ACTION_RESET.equals(action)) {
+            purge();
+        } else {
+            Log.w(TAG, "Activity created without a known action.  Action=" + action);
+            finish();
+        }
     }
 
     /**
@@ -83,22 +84,22 @@ public class NetMonLog {
     public void share() {
         Log.v(TAG, "share");
         // Build a chooser dialog for the file format.
-        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity).setTitle(R.string.export_choice_title).setItems(R.array.export_choices,
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(R.string.export_choice_title).setItems(R.array.export_choices,
                 new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String[] exportChoices = mActivity.getResources().getStringArray(R.array.export_choices);
+                        String[] exportChoices = getResources().getStringArray(R.array.export_choices);
                         FileExport fileExport = null;
                         try {
-                            if (mActivity.getString(R.string.export_choice_csv).equals(exportChoices[which])) {
-                                fileExport = new CSVExport(mActivity, mExportProgressListener);
-                            } else if (mActivity.getString(R.string.export_choice_html).equals(exportChoices[which])) {
-                                fileExport = new HTMLExport(mActivity, true, mExportProgressListener);
-                            } else if (mActivity.getString(R.string.export_choice_excel).equals(exportChoices[which])) {
-                                fileExport = new ExcelExport(mActivity, mExportProgressListener);
-                            } else if (mActivity.getString(R.string.export_choice_db).equals(exportChoices[which])) {
-                                fileExport = new DBExport(mActivity, mExportProgressListener);
+                            if (getString(R.string.export_choice_csv).equals(exportChoices[which])) {
+                                fileExport = new CSVExport(LogActionsActivity.this, mExportProgressListener);
+                            } else if (getString(R.string.export_choice_html).equals(exportChoices[which])) {
+                                fileExport = new HTMLExport(LogActionsActivity.this, true, mExportProgressListener);
+                            } else if (getString(R.string.export_choice_excel).equals(exportChoices[which])) {
+                                fileExport = new ExcelExport(LogActionsActivity.this, mExportProgressListener);
+                            } else if (getString(R.string.export_choice_db).equals(exportChoices[which])) {
+                                fileExport = new DBExport(LogActionsActivity.this, mExportProgressListener);
                             } else {
                                 // Text summary only
                             }
@@ -108,30 +109,39 @@ public class NetMonLog {
                         }
                     }
                 });
-        builder.create().show();
+        builder.show().setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                Log.v(TAG, "share dialog canceled");
+                finish();
+            }
+        });
+        ;
     }
 
     /**
      * Purge the DB.
      */
     public void purge() {
-        Log.v(TAG, "resetLogs");
+        Log.v(TAG, "purge");
 
         // Bring up a confirmation dialog.
-        new AlertDialog.Builder(mActivity).setTitle(R.string.action_reset).setMessage(R.string.confirm_logs_reset)
+        new AlertDialog.Builder(this).setTitle(R.string.action_reset).setMessage(R.string.confirm_logs_reset)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        Log.v(TAG, "Clicked ok to reset log");
                         // If the user agrees to delete the logs, run
                         // the delete in the background.
-                        final ProgressBar progressBar = (ProgressBar) mActivity.findViewById(R.id.progress_bar);
+                        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
                         progressBar.setVisibility(View.VISIBLE);
                         AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
 
                             @Override
                             protected Void doInBackground(Void... params) {
                                 Log.v(TAG, "resetLogs:doInBackground");
-                                mActivity.getContentResolver().delete(NetMonColumns.CONTENT_URI, null, null);
+                                getContentResolver().delete(NetMonColumns.CONTENT_URI, null, null);
                                 return null;
                             }
 
@@ -139,14 +149,30 @@ public class NetMonLog {
                             protected void onPostExecute(Void result) {
                                 // Once the DB is deleted, reload the WebView.
                                 Log.v(TAG, "resetLogs:onPostExecute");
-                                super.onPostExecute(result);
-                                Toast.makeText(mActivity, R.string.success_logs_reset, Toast.LENGTH_LONG).show();
-                                if (mListener != null) mListener.logReset();
+                                Toast.makeText(LogActionsActivity.this, R.string.success_logs_reset, Toast.LENGTH_LONG).show();
+                                setResult(RESULT_OK);
+                                finish();
                             }
                         };
                         asyncTask.execute();
                     }
-                }).setNegativeButton(android.R.string.no, null).show();
+                }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.v(TAG, "Clicked cancel: not resetting logs");
+                        setResult(RESULT_CANCELED);
+                        finish();
+                    }
+                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        Log.v(TAG, "Reset log dialog canceled");
+                        finish();
+                    }
+                }).show();
+        ;
     }
 
     /**
@@ -161,7 +187,7 @@ public class NetMonLog {
                 : ProgressDialog.STYLE_SPINNER);
         dialogFragment.setArguments(fragmentArgs);
         dialogFragment.setCancelable(false);
-        dialogFragment.show(mActivity.getSupportFragmentManager(), PROGRESS_DIALOG_TAG);
+        dialogFragment.show(getSupportFragmentManager(), PROGRESS_DIALOG_TAG);
 
         AsyncTask<Void, Void, File> asyncTask = new AsyncTask<Void, Void, File>() {
 
@@ -179,33 +205,34 @@ public class NetMonLog {
                     if (file == null) return null;
                 }
 
-                String reportSummary = SummaryExport.getSummary(mActivity);
+                String reportSummary = SummaryExport.getSummary(LogActionsActivity.this);
                 // Bring up the chooser to share the file.
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_SUBJECT, mActivity.getString(R.string.subject_send_log));
-                String messageBody = mActivity.getString(R.string.export_message_text);
+                sendIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject_send_log));
+                String messageBody = getString(R.string.export_message_text);
                 if (file != null) {
                     sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getAbsolutePath()));
                     sendIntent.setType("message/rfc822");
-                    messageBody += mActivity.getString(R.string.export_message_text_file_attached);
+                    messageBody += getString(R.string.export_message_text_file_attached);
                 } else {
                     sendIntent.setType("text/plain");
                 }
                 messageBody += reportSummary;
                 sendIntent.putExtra(Intent.EXTRA_TEXT, messageBody);
 
-                mActivity.startActivity(Intent.createChooser(sendIntent, mActivity.getResources().getText(R.string.action_share)));
+                startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.action_share)));
                 return file;
             }
 
             @Override
             protected void onPostExecute(File result) {
                 super.onPostExecute(result);
-                DialogFragment fragment = (DialogFragment) mActivity.getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_TAG);
+                DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_TAG);
                 if (fragment != null) fragment.dismissAllowingStateLoss();
                 // Show a toast if we failed to export a file.
-                if (fileExport != null && result == null) Toast.makeText(mActivity, R.string.error_sdcard_unmounted, Toast.LENGTH_LONG).show();
+                if (fileExport != null && result == null) Toast.makeText(LogActionsActivity.this, R.string.error_sdcard_unmounted, Toast.LENGTH_LONG).show();
+                finish();
             }
 
         };
@@ -219,12 +246,12 @@ public class NetMonLog {
         @Override
         public void onExportProgress(final int progress, final int max) {
             Log.v(TAG, "onRowExported: " + progress + "/" + max);
-            mActivity.runOnUiThread(new Runnable() {
+            runOnUiThread(new Runnable() {
 
                 @Override
                 public void run() {
 
-                    ProgressDialogFragment fragment = (ProgressDialogFragment) mActivity.getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_TAG);
+                    ProgressDialogFragment fragment = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_TAG);
                     if (fragment != null) {
                         fragment.setProgress(progress, max);
                     }
@@ -232,4 +259,5 @@ public class NetMonLog {
             });
         }
     };
+
 }
