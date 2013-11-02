@@ -8,7 +8,7 @@
     <string name="preferences_serviceEnabled_title">Enable service</string>
     <string name="preferences_wake_interval_title">Prevent sleep</string>
     <string name="preferences_wake_interval_summary">Wake up the phone periodically to make sure the data connection stays on (drains battery): %s</string>
-    <string name="preferences_showLogFile_title">Show log file</string>
+    <string name="preferences_showLogFile_title">View log file</string>
     <string name="preferences_about_title">About</string>
     <string name="log_title">Log file</string>
     <string name="action_share">Share log file</string>
