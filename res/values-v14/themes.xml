@@ -9,4 +9,12 @@
         <!-- API 14 theme customizations can go here. -->
     </style>
 
+    <style name="NetMonNoDisplayTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowNoDisplay">true</item>
+    </style>
 </resources>

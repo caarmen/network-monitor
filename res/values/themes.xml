@@ -20,4 +20,6 @@
         <item name="switchStyle">@style/Widget.Holo.Light.CompoundButton.Switch</item>
     </style>
 
+    <style name="NetMonNoDisplayTheme" parent="android:Theme.NoDisplay"/>
+
 </resources>

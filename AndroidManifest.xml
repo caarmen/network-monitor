@@ -74,7 +74,7 @@
             android:name="org.jraf.android.networkmonitor.app.log.LogActionsActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize"
-            android:theme="@android:style/Theme.NoDisplay" 
+            android:theme="@style/NetMonNoDisplayTheme" 
             >
             <intent-filter>
                 <action android:name="org.jraf.android.networkmonitor.app.log_share" />
