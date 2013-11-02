@@ -30,10 +30,10 @@
         <intent android:action="org.jraf.android.networkmonitor.app.log_share" />
     </Preference>
     <Preference
-        android:icon="@drawable/ic_pref_reset"
-        android:key="PREF_RESET_LOG_FILE"
-        android:title="@string/action_reset" >
-        <intent android:action="org.jraf.android.networkmonitor.app.log_reset" />
+        android:icon="@drawable/ic_pref_clear"
+        android:key="PREF_CLEAR_LOG_FILE"
+        android:title="@string/action_clear" >
+        <intent android:action="org.jraf.android.networkmonitor.app.log_clear" />
     </Preference>
     <ListPreference
         android:defaultValue="0"

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.jraf.android.networkmonitor"
-    android:versionCode="1011"
-    android:versionName="1.0.11" >
+    android:versionCode="1012"
+    android:versionName="1.0.12" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -81,7 +81,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
-                <action android:name="org.jraf.android.networkmonitor.app.log_reset" />
+                <action android:name="org.jraf.android.networkmonitor.app.log_clear" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

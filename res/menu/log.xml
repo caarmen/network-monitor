@@ -11,8 +11,8 @@
         android:icon="@drawable/ic_action_refresh"
         android:title="@string/action_refresh"/>
     <item
-        android:id="@+id/action_reset"
+        android:id="@+id/action_clear"
         android:showAsAction="ifRoom"
-        android:icon="@drawable/ic_action_reset"
-        android:title="@string/action_reset"/>
+        android:icon="@drawable/ic_action_clear"
+        android:title="@string/action_clear"/>
 </menu>

@@ -13,12 +13,12 @@
     <string name="log_title">Archivo log</string>
     <string name="action_share">Compartir el archivo log</string>
     <string name="action_refresh">Actualizar</string>
-    <string name="action_reset">Reiniciar el archivo log</string>
+    <string name="action_clear">Reiniciar el archivo log</string>
     <string name="subject_send_log">Archivo log de Network Monitor</string>
     <string name="error_sdcard_unmounted">Imposible crear el archivo log. Verifica que la tarjeta SD esté disponible.</string>
     <string name="error_reading_log">Imposible leer el archivo log.</string>
-    <string name="success_logs_reset">El archivo log ha sido reinicializado</string>
-    <string name="confirm_logs_reset">¿Estás seguro de querer borrar los datos guardados?</string>
+    <string name="success_logs_clear">El archivo log ha sido reinicializado</string>
+    <string name="confirm_logs_clear">¿Estás seguro de querer borrar los datos guardados?</string>
     
     <string name="export_choice_title">Escoge un formato</string>
     <string name="export_choice_csv">CSV</string>

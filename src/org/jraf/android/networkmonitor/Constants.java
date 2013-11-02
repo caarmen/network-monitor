@@ -32,7 +32,6 @@ public class Constants {
     public static final String PREF_WAKE_INTERVAL = "PREF_WAKE_INTERVAL";
     public static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
     public static final String PREF_SERVICE_ENABLED = "PREF_SERVICE_ENABLED";
-    public static final String PREF_RESET_LOG_FILE = "PREF_RESET_LOG_FILE";
     public static final boolean PREF_SERVICE_ENABLED_DEFAULT = false;
     public static final String CONNECTION_TEST_PASS = "PASS";
     public static final String CONNECTION_TEST_FAIL = "FAIL";

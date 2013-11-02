@@ -50,7 +50,7 @@ import org.jraf.android.networkmonitor.app.export.HTMLExport;
 public class LogActivity extends FragmentActivity {
     private static final String TAG = Constants.TAG + LogActivity.class.getSimpleName();
     private WebView mWebView;
-    private static final int REQUEST_CODE_PURGE = 1;
+    private static final int REQUEST_CODE_CLEAR = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +78,9 @@ public class LogActivity extends FragmentActivity {
             case R.id.action_refresh:
                 loadHTMLFile();
                 return true;
-            case R.id.action_reset:
-                Intent intentReset = new Intent(LogActionsActivity.ACTION_RESET);
-                startActivityForResult(intentReset, REQUEST_CODE_PURGE);
+            case R.id.action_clear:
+                Intent intentClear = new Intent(LogActionsActivity.ACTION_CLEAR);
+                startActivityForResult(intentClear, REQUEST_CODE_CLEAR);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -162,7 +162,7 @@ public class LogActivity extends FragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.v(TAG, "onActivityResult: requestCode = " + requestCode + ", resultCode = " + resultCode + ", data  " + data);
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_PURGE && resultCode == RESULT_OK) loadHTMLFile();
+        if (requestCode == REQUEST_CODE_CLEAR && resultCode == RESULT_OK) loadHTMLFile();
     }
 
 }

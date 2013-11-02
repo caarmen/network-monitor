@@ -52,11 +52,11 @@ import org.jraf.android.networkmonitor.app.export.SummaryExport;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 /**
- * Provides actions on the network monitor log: sharing and resetting the log file.
+ * Provides actions on the network monitor log: sharing and clearing the log file.
  */
 public class LogActionsActivity extends FragmentActivity {
     public static final String ACTION_SHARE = LogActionsActivity.class.getPackage().getName() + "_share";
-    public static final String ACTION_RESET = LogActionsActivity.class.getPackage().getName() + "_reset";
+    public static final String ACTION_CLEAR = LogActionsActivity.class.getPackage().getName() + "_clear";
 
     private static final String TAG = Constants.TAG + LogActionsActivity.class.getSimpleName();
     private static final String PROGRESS_DIALOG_TAG = ProgressDialogFragment.class.getSimpleName();
@@ -67,8 +67,8 @@ public class LogActionsActivity extends FragmentActivity {
         String action = getIntent().getAction();
         if (ACTION_SHARE.equals(action)) {
             share();
-        } else if (ACTION_RESET.equals(action)) {
-            purge();
+        } else if (ACTION_CLEAR.equals(action)) {
+            clear();
         } else {
             Log.w(TAG, "Activity created without a known action.  Action=" + action);
             finish();
@@ -119,17 +119,17 @@ public class LogActionsActivity extends FragmentActivity {
     }
 
     /**
-     * Purge the DB.
+     * Clear the DB.
      */
-    public void purge() {
-        Log.v(TAG, "purge");
+    public void clear() {
+        Log.v(TAG, "clear");
 
         // Bring up a confirmation dialog.
-        new AlertDialog.Builder(this).setTitle(R.string.action_reset).setMessage(R.string.confirm_logs_reset)
+        new AlertDialog.Builder(this).setTitle(R.string.action_clear).setMessage(R.string.confirm_logs_clear)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        Log.v(TAG, "Clicked ok to reset log");
+                        Log.v(TAG, "Clicked ok to clear log");
                         // If the user agrees to delete the logs, run
                         // the delete in the background.
                         showProgressDialog(ProgressDialog.STYLE_SPINNER, getString(R.string.progress_dialog_message));
@@ -137,7 +137,7 @@ public class LogActionsActivity extends FragmentActivity {
 
                             @Override
                             protected Void doInBackground(Void... params) {
-                                Log.v(TAG, "resetLogs:doInBackground");
+                                Log.v(TAG, "clear:doInBackground");
                                 getContentResolver().delete(NetMonColumns.CONTENT_URI, null, null);
                                 return null;
                             }
@@ -145,8 +145,8 @@ public class LogActionsActivity extends FragmentActivity {
                             @Override
                             protected void onPostExecute(Void result) {
                                 // Once the DB is deleted, reload the WebView.
-                                Log.v(TAG, "resetLogs:onPostExecute");
-                                Toast.makeText(LogActionsActivity.this, R.string.success_logs_reset, Toast.LENGTH_LONG).show();
+                                Log.v(TAG, "clear:onPostExecute");
+                                Toast.makeText(LogActionsActivity.this, R.string.success_logs_clear, Toast.LENGTH_LONG).show();
                                 setResult(RESULT_OK);
                                 finish();
                             }
@@ -157,7 +157,7 @@ public class LogActionsActivity extends FragmentActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.v(TAG, "Clicked cancel: not resetting logs");
+                        Log.v(TAG, "Clicked cancel: not clearing logs");
                         setResult(RESULT_CANCELED);
                         finish();
                     }
@@ -165,7 +165,7 @@ public class LogActionsActivity extends FragmentActivity {
 
                     @Override
                     public void onCancel(DialogInterface dialog) {
-                        Log.v(TAG, "Reset log dialog canceled");
+                        Log.v(TAG, "Clear log dialog canceled");
                         finish();
                     }
                 }).show();

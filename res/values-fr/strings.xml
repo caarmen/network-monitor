@@ -13,12 +13,12 @@
     <string name="log_title">Fichier journal</string>
     <string name="action_share">Partager le fichier journal</string>
     <string name="action_refresh">Actualiser</string>
-    <string name="action_reset">Réinitialiser le fichier journal</string>
+    <string name="action_clear">Réinitialiser le fichier journal</string>
     <string name="subject_send_log">Fichier journal du Network Monitor</string>
     <string name="error_sdcard_unmounted">Impossible de créer le fichier journal.  Vérifiez que la carte SD soit disponible.</string>
     <string name="error_reading_log">Impossible de lire le fichier journal.</string>
-    <string name="success_logs_reset">Le fichier journal a été réinitialisé</string>
-    <string name="confirm_logs_reset">Êtes-vous sur de vouloir supprimer les données enregistrées ?</string>
+    <string name="success_logs_clear">Le fichier journal a été réinitialisé</string>
+    <string name="confirm_logs_clear">Êtes-vous sur de vouloir supprimer les données enregistrées ?</string>
     
     <string name="export_choice_title">Choisissez le format</string>
     <string name="export_choice_csv">CSV</string>
