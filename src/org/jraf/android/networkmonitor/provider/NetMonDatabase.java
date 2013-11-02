@@ -36,7 +36,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
     public static final String DATABASE_NAME = "networkmonitor.db";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 6;
 
     // @formatter:off
     private static final String SQL_CREATE_TABLE_NETWORKMONITOR = "CREATE TABLE IF NOT EXISTS "
@@ -106,7 +106,6 @@ public class NetMonDatabase extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_VIEW_CONNECTION_TEST_STATS = "CREATE VIEW " + ConnectionTestStatsColumns.VIEW_NAME + " AS "
             + buildConnectionTestQuery();
-    private static final String SQL_DROP_VIEW_CONNECTION_TEST_STATS = "DROP VIEW " + ConnectionTestStatsColumns.VIEW_NAME;
 
     NetMonDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -137,11 +136,6 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V6_WIFI_RSSI);
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V6_WIFI_BSSID);
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V6_CELL_SIGNAL_STRENGTH_DBM);
-        }
-
-        if (oldVersion < 7) db.execSQL(SQL_CREATE_VIEW_CONNECTION_TEST_STATS);
-        if (oldVersion < 8) {
-            db.execSQL(SQL_DROP_VIEW_CONNECTION_TEST_STATS);
             db.execSQL(SQL_CREATE_VIEW_CONNECTION_TEST_STATS);
         }
     }
