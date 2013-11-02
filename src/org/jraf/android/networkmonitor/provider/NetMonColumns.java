@@ -28,16 +28,10 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 public class NetMonColumns implements BaseColumns {
-    public static final String TABLE_NAME = "networkmonitor";
+    static final String TABLE_NAME = "networkmonitor";
     public static final Uri CONTENT_URI = Uri.parse(NetMonProvider.CONTENT_URI_BASE + "/" + TABLE_NAME);
-    static final String GSM_SUMMARY = "/gsm_summary";
-    static final String CDMA_SUMMARY = "/cdma_summary";
-    static final String WIFI_SUMMARY = "/wifi_summary";
-    public static final Uri CONTENT_URI_GSM_SUMMARY = Uri.parse(NetMonProvider.CONTENT_URI_BASE + "/" + TABLE_NAME + GSM_SUMMARY);
-    public static final Uri CONTENT_URI_CDMA_SUMMARY = Uri.parse(NetMonProvider.CONTENT_URI_BASE + "/" + TABLE_NAME + CDMA_SUMMARY);
-    public static final Uri CONTENT_URI_WIFI_SUMMARY = Uri.parse(NetMonProvider.CONTENT_URI_BASE + "/" + TABLE_NAME + WIFI_SUMMARY);
 
-    public static final String _ID = BaseColumns._ID;
+    static final String _ID = BaseColumns._ID;
 
     public static final String TIMESTAMP = "timestamp";
     public static final String NETWORK_TYPE = "network_type";
@@ -77,5 +71,5 @@ public class NetMonColumns implements BaseColumns {
     public static final String GSM_CELL_LAC = "gsm_cell_lac";
     public static final String GSM_CELL_PSC = "gsm_cell_psc";
 
-    public static final String DEFAULT_ORDER = _ID;
+    static final String DEFAULT_ORDER = _ID;
 }

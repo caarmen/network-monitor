@@ -303,7 +303,7 @@ public class LogActivity extends FragmentActivity {
     /**
      * A ProgressDialog with a message.
      */
-    public static class ProgressDialogFragment extends DialogFragment {
+    public static class ProgressDialogFragment extends DialogFragment { // NO_UCD (use private)
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {

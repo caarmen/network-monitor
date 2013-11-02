@@ -40,17 +40,17 @@ import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
 
-public class NetMonProvider extends ContentProvider {
+public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + NetMonProvider.class.getSimpleName();
 
     private static final String TYPE_CURSOR_ITEM = "vnd.android.cursor.item/";
     private static final String TYPE_CURSOR_DIR = "vnd.android.cursor.dir/";
 
-    public static final String AUTHORITY = "org.jraf.android.networkmonitor.provider";
-    public static final String CONTENT_URI_BASE = "content://" + AUTHORITY;
+    private static final String AUTHORITY = "org.jraf.android.networkmonitor.provider";
+    static final String CONTENT_URI_BASE = "content://" + AUTHORITY;
 
-    public static final String QUERY_NOTIFY = "QUERY_NOTIFY";
-    public static final String QUERY_GROUP_BY = "QUERY_GROUP_BY";
+    private static final String QUERY_NOTIFY = "QUERY_NOTIFY";
+    private static final String QUERY_GROUP_BY = "QUERY_GROUP_BY";
 
     private static final int URI_TYPE_NETWORKMONITOR = 0;
     private static final int URI_TYPE_NETWORKMONITOR_ID = 1;
@@ -214,14 +214,6 @@ public class NetMonProvider extends ContentProvider {
             res.whereClause = selection;
         }
         return res;
-    }
-
-    public static Uri notify(Uri uri, boolean notify) {
-        return uri.buildUpon().appendQueryParameter(QUERY_NOTIFY, String.valueOf(notify)).build();
-    }
-
-    public static Uri groupBy(Uri uri, String groupBy) {
-        return uri.buildUpon().appendQueryParameter(QUERY_GROUP_BY, groupBy).build();
     }
 
     /**
