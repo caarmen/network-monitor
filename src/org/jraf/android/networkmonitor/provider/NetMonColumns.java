@@ -77,10 +77,5 @@ public class NetMonColumns implements BaseColumns {
     public static final String GSM_CELL_LAC = "gsm_cell_lac";
     public static final String GSM_CELL_PSC = "gsm_cell_psc";
 
-    // Columns for the summary URIs.
-    public static final String PASS_COUNT = "pass_count";
-    public static final String FAIL_COUNT = "fail_count";
-    public static final String SLOW_COUNT = "slow_count";
-
     public static final String DEFAULT_ORDER = _ID;
 }

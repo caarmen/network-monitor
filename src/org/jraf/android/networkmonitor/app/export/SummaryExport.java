@@ -23,21 +23,22 @@
  */
 package org.jraf.android.networkmonitor.app.export;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
-import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.jraf.android.networkmonitor.Constants;
+import org.jraf.android.networkmonitor.Constants.ConnectionType;
 import org.jraf.android.networkmonitor.R;
-import org.jraf.android.networkmonitor.provider.NetMonColumns;
+import org.jraf.android.networkmonitor.provider.ConnectionTestStatsColumns;
 
 public class SummaryExport {
     private static final String TAG = SummaryExport.class.getSimpleName();
@@ -46,37 +47,71 @@ public class SummaryExport {
      * Contains data for network tests common to all network types.
      */
     private static class TestResult implements Comparable<TestResult> {
-        private final int passRate;
-        final int testCount;
+        private int mPassCount, mFailCount, mSlowCount;
+        private int mTestCount;
+        int passRate;
         final String label;
+        final String id1, id2, id3;
 
         /**
          * @param passRate the percent of tests which pass (0..100)
          * @param testCount the number of tests on this cell.
          */
-        private TestResult(String label, int passRate, int testCount) {
+        private TestResult(String label, String id1, String id2, String id3) {
             if (TextUtils.isEmpty(label)) this.label = "*";
             else
                 this.label = label;
-            this.passRate = passRate;
-            this.testCount = testCount;
+            this.id1 = id1;
+            this.id2 = id2;
+            this.id3 = id3;
+        }
 
+        private void calculatePassRate() {
+            mTestCount = mPassCount + mFailCount + mSlowCount;
+            passRate = mTestCount > 0 ? 100 * mPassCount / mTestCount : 0;
+        }
+
+        void setPassCount(int passCount) {
+            mPassCount = passCount;
+            calculatePassRate();
+        }
+
+        void setFailCount(int failCount) {
+            mFailCount = failCount;
+            calculatePassRate();
+        }
+
+        void setSlowCount(int slowCount) {
+            mSlowCount = slowCount;
+            calculatePassRate();
         }
 
         @Override
         public String toString() {
-            return passRate + "% (" + testCount + " tests)";
+            return passRate + "% (" + mTestCount + " tests)";
+        }
+
+        private int compare(String s1, String s2) {
+            if (s1 == null && s2 == null) return 0;
+            if (s1 != null && s2 != null) return s1.compareTo(s2);
+            if (s1 == null) return -1;
+            return 1;
         }
 
         @Override
         public int compareTo(TestResult other) {
             if (other.getClass().equals(other.getClass())) {
-                TestResult otherCell = other;
-                int rateDiff = passRate - otherCell.passRate;
+                final int id1compare = compare(id1, other.id1);
+                if (id1compare != 0) return id1compare;
+                final int id2compare = compare(id2, other.id2);
+                if (id2compare != 0) return id2compare;
+                final int id3compare = compare(id3, other.id3);
+                if (id3compare != 0) return id3compare;
+                int rateDiff = passRate - other.passRate;
                 if (rateDiff > 0) return 1;
                 else if (rateDiff < 0) return -1;
                 else
-                    return testCount - otherCell.testCount;
+                    return mTestCount - other.mTestCount;
             } else {
                 return getClass().getSimpleName().compareTo(other.getClass().getSimpleName());
             }
@@ -87,32 +122,14 @@ public class SummaryExport {
      * Test data and GSM cell identifiers for a cell.
      */
     private static class GsmCellResult extends TestResult {
-        private final int lac;
-        private final int longCellId;
-        private final int shortCellId;
 
-        private GsmCellResult(String label, int lac, int longCellId, int shortCellId, int passRate, int testCount) {
-            super(label, passRate, testCount);
-            this.lac = lac;
-            this.longCellId = longCellId;
-            this.shortCellId = shortCellId;
+        private GsmCellResult(String label, String lac, String longCellId, String shortCellId) {
+            super(label, lac, longCellId, shortCellId);
         }
 
         @Override
         public String toString() {
-            return "LAC=" + lac + ",CID=" + shortCellId + "(" + longCellId + "): " + super.toString();
-        }
-
-        @Override
-        public int compareTo(TestResult other) {
-            int result = super.compareTo(other);
-            if (result != 0) return result;
-            if (other instanceof GsmCellResult) {
-                GsmCellResult otherGsmCell = (GsmCellResult) other;
-                if (lac != otherGsmCell.lac) return lac - otherGsmCell.lac;
-                return longCellId - otherGsmCell.longCellId;
-            }
-            return -1;
+            return "LAC=" + id1 + ",CID=" + id2 + "(" + id3 + "): " + super.toString();
         }
     }
 
@@ -121,62 +138,29 @@ public class SummaryExport {
      * Test data and CDMA cell identifiers for a cell.
      */
     private static class CdmaCellResult extends TestResult {
-        private final int baseStationId;
-        private final int networkId;
-        private final int systemId;
 
-        private CdmaCellResult(String label, int baseStationId, int networkId, int systemId, int passRate, int testCount) {
-            super(label, passRate, testCount);
-            this.baseStationId = baseStationId;
-            this.networkId = networkId;
-            this.systemId = systemId;
+        private CdmaCellResult(String label, String baseStationId, String networkId, String systemId) {
+            super(label, baseStationId, networkId, systemId);
         }
 
         @Override
         public String toString() {
-            return "BSID=" + baseStationId + ",SID=" + systemId + ",NID=" + networkId + ": " + super.toString();
+            return "BSID=" + id1 + ",SID=" + id2 + ",NID=" + id3 + ": " + super.toString();
         }
-
-        @Override
-        public int compareTo(TestResult other) {
-            int result = super.compareTo(other);
-            if (result != 0) return result;
-            if (other instanceof CdmaCellResult) {
-                CdmaCellResult otherCdmaCell = (CdmaCellResult) other;
-                if (baseStationId != otherCdmaCell.baseStationId) return baseStationId - otherCdmaCell.baseStationId;
-                if (networkId != otherCdmaCell.networkId) return networkId - otherCdmaCell.networkId;
-                return systemId - otherCdmaCell.systemId;
-            }
-            return -1;
-        }
-
     }
 
     /**
      * Test data for a WiFi access point.
      */
     private static class WiFiResult extends TestResult {
-        private final String bssid;
 
-        private WiFiResult(String bssid, String ssid, int passRate, int testCount) {
-            super(ssid, passRate, testCount);
-            this.bssid = bssid;
+        private WiFiResult(String ssid, String bssid) {
+            super(ssid, bssid, null, null);
         }
 
         @Override
         public String toString() {
-            return "BSSID=" + bssid + ": " + super.toString();
-        }
-
-        @Override
-        public int compareTo(TestResult other) {
-            int result = super.compareTo(other);
-            if (result != 0) return result;
-            if (other instanceof WiFiResult) {
-                WiFiResult otherWiFiResult = (WiFiResult) other;
-                return bssid.compareTo(otherWiFiResult.bssid);
-            }
-            return -1;
+            return "BSSID=" + id1 + ": " + super.toString();
         }
     }
 
@@ -185,54 +169,56 @@ public class SummaryExport {
      */
     public static final String getSummary(Context context) {
         Log.v(TAG, "getSummary");
-        SortedMap<String, SortedSet<TestResult>> testResults = new TreeMap<String, SortedSet<TestResult>>();
-        SortedMap<String, SortedSet<TestResult>> gsmCellResults = getTestResults(context, NetMonColumns.CONTENT_URI_GSM_SUMMARY, GsmCellResult.class);
-        SortedMap<String, SortedSet<TestResult>> cdmaCellResults = getTestResults(context, NetMonColumns.CONTENT_URI_CDMA_SUMMARY, CdmaCellResult.class);
-        SortedMap<String, SortedSet<TestResult>> wifiResults = getTestResults(context, NetMonColumns.CONTENT_URI_WIFI_SUMMARY, WiFiResult.class);
-        testResults.putAll(gsmCellResults);
-        testResults.putAll(cdmaCellResults);
-        testResults.putAll(wifiResults);
-        return generateReport(context, testResults);
-    }
 
-    /**
-     * @return a map of test results: the key is the operator or WiFi ssid, the value is a Set of test results for that operator or WiFi access point.
-     */
-    private static SortedMap<String, SortedSet<TestResult>> getTestResults(Context context, Uri uri, Class<?> clazz) {
-        Cursor c = context.getContentResolver().query(uri, null, null, null, null);
-        SortedMap<String, SortedSet<TestResult>> cellResults = new TreeMap<String, SortedSet<TestResult>>();
+        String[] projection = new String[] { ConnectionTestStatsColumns.TYPE, ConnectionTestStatsColumns.ID1, ConnectionTestStatsColumns.ID2,
+                ConnectionTestStatsColumns.ID3, ConnectionTestStatsColumns.LABEL, ConnectionTestStatsColumns.TEST_COUNT, ConnectionTestStatsColumns.TEST_RESULT };
+        String orderBy = ConnectionTestStatsColumns.ID1 + "," + ConnectionTestStatsColumns.ID2 + "," + ConnectionTestStatsColumns.ID3;
+        Cursor c = context.getContentResolver().query(ConnectionTestStatsColumns.CONTENT_URI, projection, null, null, orderBy);
+        SortedMap<String, TreeSet<TestResult>> testResults = new TreeMap<String, TreeSet<TestResult>>();
         if (c != null) {
             try {
                 if (c.moveToFirst()) {
+                    TestResult lastTestResult = null;
                     do {
-                        for (int i = 0; i < c.getColumnCount(); i++) {
 
-                            int passCount = c.getInt(c.getColumnIndex(NetMonColumns.PASS_COUNT));
-                            int failCount = c.getInt(c.getColumnIndex(NetMonColumns.FAIL_COUNT));
-                            int slowCount = c.getInt(c.getColumnIndex(NetMonColumns.SLOW_COUNT));
-                            int testCount = passCount + failCount + slowCount;
-                            int passRate = testCount > 0 ? 100 * passCount / testCount : 0;
+                        ConnectionType connectionType = ConnectionType.valueOf(c.getString(c.getColumnIndex(ConnectionTestStatsColumns.TYPE)));
+                        int resultCount = c.getInt(c.getColumnIndex(ConnectionTestStatsColumns.TEST_COUNT));
+                        String resultType = c.getString(c.getColumnIndex(ConnectionTestStatsColumns.TEST_RESULT));
 
-                            TestResult cellResult = readCellResult(clazz, c, passRate, testCount);
-                            if (cellResult != null) {
-                                SortedSet<TestResult> cellResultsForExtraInfo = cellResults.get(cellResult.label);
-                                if (cellResultsForExtraInfo == null) {
-                                    cellResultsForExtraInfo = new TreeSet<TestResult>();
-                                    cellResults.put(cellResult.label, cellResultsForExtraInfo);
-                                }
-                                cellResultsForExtraInfo.add(cellResult);
-                            }
+                        String label = c.getString(c.getColumnIndex(ConnectionTestStatsColumns.LABEL));
+                        String id1 = c.getString(c.getColumnIndex(ConnectionTestStatsColumns.ID1));
+                        String id2 = c.getString(c.getColumnIndex(ConnectionTestStatsColumns.ID2));
+                        String id3 = c.getString(c.getColumnIndex(ConnectionTestStatsColumns.ID3));
+                        if (lastTestResult == null) lastTestResult = createTestResult(connectionType, label, id1, id2, id3);
+                        boolean newCell = !TextUtils.equals(id1, lastTestResult.id1) || !TextUtils.equals(id2, lastTestResult.id2)
+                                || !TextUtils.equals(id3, lastTestResult.id3);
+                        if (newCell) {
+                            add(testResults, lastTestResult.label, lastTestResult);
+                            lastTestResult = createTestResult(connectionType, label, id1, id2, id3);
                         }
+                        if (resultType.equals(Constants.CONNECTION_TEST_PASS)) lastTestResult.setPassCount(resultCount);
+                        else if (resultType.equals(Constants.CONNECTION_TEST_FAIL)) lastTestResult.setFailCount(resultCount);
+                        else if (resultType.equals(Constants.CONNECTION_TEST_SLOW)) lastTestResult.setSlowCount(resultCount);
+                        if (c.isLast()) add(testResults, lastTestResult.label, lastTestResult);
                     } while (c.moveToNext());
                 }
             } finally {
                 c.close();
             }
         }
-        return cellResults;
+        return generateReport(context, testResults);
     }
 
-    private static String generateReport(Context context, SortedMap<String, SortedSet<TestResult>> cellResults) {
+    private static final <T> void add(Map<String, TreeSet<T>> map, String key, T value) {
+        TreeSet<T> set = map.get(key);
+        if (set == null) {
+            set = new TreeSet<T>();
+            map.put(key, set);
+        }
+        set.add(value);
+    }
+
+    private static String generateReport(Context context, SortedMap<String, TreeSet<TestResult>> cellResults) {
         StringBuilder sb = new StringBuilder();
         sb.append(Build.MODEL + "/" + Build.VERSION.RELEASE + "\n");
         if (cellResults == null || cellResults.size() == 0) {
@@ -252,36 +238,15 @@ public class SummaryExport {
 
     }
 
-    private static GsmCellResult readGsmCellResult(Cursor c, int passRate, int testCount) {
-        int lac = c.getInt(c.getColumnIndex(NetMonColumns.GSM_CELL_LAC));
-        int longCellId = c.getInt(c.getColumnIndex(NetMonColumns.GSM_FULL_CELL_ID));
-        int shortCellId = c.getInt(c.getColumnIndex(NetMonColumns.GSM_SHORT_CELL_ID));
-        String label = c.getString(c.getColumnIndex(NetMonColumns.EXTRA_INFO));
-        GsmCellResult result = new GsmCellResult(label, lac, longCellId, shortCellId, passRate, testCount);
-        return result;
-    }
-
-    private static CdmaCellResult readCdmaCellResult(Cursor c, int passRate, int testCount) {
-        int baseStationId = c.getInt(c.getColumnIndex(NetMonColumns.CDMA_CELL_BASE_STATION_ID));
-        int networkId = c.getInt(c.getColumnIndex(NetMonColumns.CDMA_CELL_NETWORK_ID));
-        int systemId = c.getInt(c.getColumnIndex(NetMonColumns.CDMA_CELL_SYSTEM_ID));
-        String label = c.getString(c.getColumnIndex(NetMonColumns.EXTRA_INFO));
-        CdmaCellResult result = new CdmaCellResult(label, baseStationId, networkId, systemId, passRate, testCount);
-        return result;
-    }
-
-    private static WiFiResult readWiFiResult(Cursor c, int passRate, int testCount) {
-        String bssid = c.getString(c.getColumnIndex(NetMonColumns.WIFI_BSSID));
-        String ssid = c.getString(c.getColumnIndex(NetMonColumns.WIFI_SSID));
-        WiFiResult result = new WiFiResult(bssid, ssid, passRate, testCount);
-        return result;
-    }
-
-    private static TestResult readCellResult(Class<?> clazz, Cursor c, int passRate, int testCount) {
-        if (clazz.equals(GsmCellResult.class)) return readGsmCellResult(c, passRate, testCount);
-        else if (clazz.equals(CdmaCellResult.class)) return readCdmaCellResult(c, passRate, testCount);
-        else if (clazz.equals(WiFiResult.class)) return readWiFiResult(c, passRate, testCount);
-        else
-            return null;
+    private static TestResult createTestResult(ConnectionType connectionType, String label, String id1, String id2, String id3) {
+        switch (connectionType) {
+            case GSM:
+                return new GsmCellResult(label, id1, id2, id3);
+            case CDMA:
+                return new CdmaCellResult(label, id1, id2, id3);
+            case WIFI:
+                return new WiFiResult(label, id1);
+        }
+        return null;
     }
 }

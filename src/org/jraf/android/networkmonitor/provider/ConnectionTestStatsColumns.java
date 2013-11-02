@@ -30,6 +30,7 @@ import android.provider.BaseColumns;
 public class ConnectionTestStatsColumns implements BaseColumns {
     public static final String VIEW_NAME = "connection_test_stats";
     public static final Uri CONTENT_URI = Uri.parse(NetMonProvider.CONTENT_URI_BASE + "/" + VIEW_NAME);
+    public static final String TYPE = "type";
     public static final String ID1 = "id1";
     public static final String ID2 = "id2";
     public static final String ID3 = "id3";

@@ -30,12 +30,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
+import org.jraf.android.networkmonitor.Constants.ConnectionType;
 
 public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
     public static final String DATABASE_NAME = "networkmonitor.db";
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     // @formatter:off
     private static final String SQL_CREATE_TABLE_NETWORKMONITOR = "CREATE TABLE IF NOT EXISTS "
@@ -105,6 +106,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_VIEW_CONNECTION_TEST_STATS = "CREATE VIEW " + ConnectionTestStatsColumns.VIEW_NAME + " AS "
             + buildConnectionTestQuery();
+    private static final String SQL_DROP_VIEW_CONNECTION_TEST_STATS = "DROP VIEW " + ConnectionTestStatsColumns.VIEW_NAME;
 
     NetMonDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -138,28 +140,32 @@ public class NetMonDatabase extends SQLiteOpenHelper {
         }
 
         if (oldVersion < 7) db.execSQL(SQL_CREATE_VIEW_CONNECTION_TEST_STATS);
+        if (oldVersion < 8) {
+            db.execSQL(SQL_DROP_VIEW_CONNECTION_TEST_STATS);
+            db.execSQL(SQL_CREATE_VIEW_CONNECTION_TEST_STATS);
+        }
     }
 
     /**
      * @return a query to retrieve the stats of the connection test results.
      */
     private static final String buildConnectionTestQuery() {
-        String gsmQuery = buildConnectionTestSubQuery("GSM", NetMonColumns.GSM_CELL_LAC, NetMonColumns.GSM_SHORT_CELL_ID, NetMonColumns.GSM_FULL_CELL_ID,
-                NetMonColumns.EXTRA_INFO, NetMonColumns.DATA_STATE + "='" + Constants.DATA_STATE_CONNECTED + "'");
-        String cdmaQuery = buildConnectionTestSubQuery("CDMA", NetMonColumns.CDMA_CELL_BASE_STATION_ID, NetMonColumns.CDMA_CELL_NETWORK_ID,
+        String gsmQuery = buildConnectionTestSubQuery(ConnectionType.GSM, NetMonColumns.GSM_CELL_LAC, NetMonColumns.GSM_SHORT_CELL_ID,
+                NetMonColumns.GSM_FULL_CELL_ID, NetMonColumns.EXTRA_INFO, NetMonColumns.DATA_STATE + "='" + Constants.DATA_STATE_CONNECTED + "'");
+        String cdmaQuery = buildConnectionTestSubQuery(ConnectionType.CDMA, NetMonColumns.CDMA_CELL_BASE_STATION_ID, NetMonColumns.CDMA_CELL_NETWORK_ID,
                 NetMonColumns.CDMA_CELL_SYSTEM_ID, NetMonColumns.EXTRA_INFO, NetMonColumns.DATA_STATE + "='" + Constants.DATA_STATE_CONNECTED + "'");
-        String wifiQuery = buildConnectionTestSubQuery("WiFi", NetMonColumns.WIFI_BSSID, "NULL", "NULL", NetMonColumns.WIFI_SSID, NetMonColumns.NETWORK_TYPE
-                + "='" + Constants.CONNECTION_TYPE_WIFI + "'");
+        String wifiQuery = buildConnectionTestSubQuery(ConnectionType.WIFI, NetMonColumns.WIFI_BSSID, "NULL", "NULL", NetMonColumns.WIFI_SSID,
+                NetMonColumns.NETWORK_TYPE + "='" + ConnectionType.WIFI + "'");
         return gsmQuery + " UNION " + cdmaQuery + " UNION " + wifiQuery;
     }
 
     /**
      * @return a query to retrieve the stats of the connection test results, for a particular connection type (gsm, cdma, or wifi).
      */
-    private static final String buildConnectionTestSubQuery(String type, String id1Column, String id2Column, String id3Column, String labelColumn,
+    private static final String buildConnectionTestSubQuery(ConnectionType type, String id1Column, String id2Column, String id3Column, String labelColumn,
             String selection) {
         // @formatter:off
-        return "SELECT '" + type + "' as type, "
+        return "SELECT '" + type + "' as " + ConnectionTestStatsColumns.TYPE + ","
             + id1Column + " as " + ConnectionTestStatsColumns.ID1 + ", "
             + id2Column + " as " + ConnectionTestStatsColumns.ID2 + ", "
             + id3Column + " as " + ConnectionTestStatsColumns.ID3 + ", "
