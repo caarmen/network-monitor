@@ -54,9 +54,9 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
 /**
  * Provides actions on the network monitor log: sharing and clearing the log file.
  */
-public class LogActionsActivity extends FragmentActivity {
-    public static final String ACTION_SHARE = LogActionsActivity.class.getPackage().getName() + "_share";
-    public static final String ACTION_CLEAR = LogActionsActivity.class.getPackage().getName() + "_clear";
+public class LogActionsActivity extends FragmentActivity { // NO_UCD (use default)
+    static final String ACTION_SHARE = LogActionsActivity.class.getPackage().getName() + "_share";
+    static final String ACTION_CLEAR = LogActionsActivity.class.getPackage().getName() + "_clear";
 
     private static final String TAG = Constants.TAG + LogActionsActivity.class.getSimpleName();
     private static final String PROGRESS_DIALOG_TAG = ProgressDialogFragment.class.getSimpleName();
@@ -79,7 +79,7 @@ public class LogActionsActivity extends FragmentActivity {
      * Ask the user to choose an export format, generate the file in that format, then bring up the share chooser intent so the user can choose how to share
      * the file.
      */
-    public void share() {
+    private void share() {
         Log.v(TAG, "share");
         // Build a chooser dialog for the file format.
         AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(R.string.export_choice_title).setItems(R.array.export_choices,
@@ -121,7 +121,7 @@ public class LogActionsActivity extends FragmentActivity {
     /**
      * Clear the DB.
      */
-    public void clear() {
+    private void clear() {
         Log.v(TAG, "clear");
 
         // Bring up a confirmation dialog.

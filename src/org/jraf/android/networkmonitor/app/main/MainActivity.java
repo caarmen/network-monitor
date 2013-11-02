@@ -44,8 +44,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class MainActivity extends PreferenceActivity {
-    private static final String TAG = Constants.TAG + MainActivity.class.getSimpleName();
-
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
