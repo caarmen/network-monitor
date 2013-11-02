@@ -38,8 +38,6 @@ import android.os.Environment;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.jraf.android.networkmonitor.Constants;
@@ -134,8 +132,7 @@ public class LogActionsActivity extends FragmentActivity {
                         Log.v(TAG, "Clicked ok to reset log");
                         // If the user agrees to delete the logs, run
                         // the delete in the background.
-                        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-                        progressBar.setVisibility(View.VISIBLE);
+                        showProgressDialog(ProgressDialog.STYLE_SPINNER);
                         AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
 
                             @Override
@@ -180,14 +177,8 @@ public class LogActionsActivity extends FragmentActivity {
      */
     private void shareFile(final FileExport fileExport) {
         Log.v(TAG, "shareFile " + fileExport);
-        DialogFragment dialogFragment = new ProgressDialogFragment();
         // Use a horizontal progress bar style if we can show progress of the export.
-        Bundle fragmentArgs = new Bundle(1);
-        fragmentArgs.putInt(ProgressDialogFragment.EXTRA_PROGRESS_DIALOG_STYLE, fileExport != null ? ProgressDialog.STYLE_HORIZONTAL
-                : ProgressDialog.STYLE_SPINNER);
-        dialogFragment.setArguments(fragmentArgs);
-        dialogFragment.setCancelable(false);
-        dialogFragment.show(getSupportFragmentManager(), PROGRESS_DIALOG_TAG);
+        showProgressDialog(fileExport != null ? ProgressDialog.STYLE_HORIZONTAL : ProgressDialog.STYLE_SPINNER);
 
         AsyncTask<Void, Void, File> asyncTask = new AsyncTask<Void, Void, File>() {
 
@@ -237,6 +228,18 @@ public class LogActionsActivity extends FragmentActivity {
 
         };
         asyncTask.execute();
+    }
+
+    private void showProgressDialog(int style) {
+        Log.v(TAG, "showProgressDialog: style=" + style);
+
+        DialogFragment dialogFragment = new ProgressDialogFragment();
+        // Use a horizontal progress bar style if we can show progress of the export.
+        Bundle fragmentArgs = new Bundle(1);
+        fragmentArgs.putInt(ProgressDialogFragment.EXTRA_PROGRESS_DIALOG_STYLE, style);
+        dialogFragment.setArguments(fragmentArgs);
+        dialogFragment.setCancelable(false);
+        dialogFragment.show(getSupportFragmentManager(), PROGRESS_DIALOG_TAG);
     }
 
 
