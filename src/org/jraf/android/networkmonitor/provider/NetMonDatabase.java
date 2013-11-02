@@ -35,7 +35,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
     public static final String DATABASE_NAME = "networkmonitor.db";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     // @formatter:off
     private static final String SQL_CREATE_TABLE_NETWORKMONITOR = "CREATE TABLE IF NOT EXISTS "
@@ -103,6 +103,9 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V6_CELL_SIGNAL_STRENGTH_DBM = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
             + NetMonColumns.CELL_SIGNAL_STRENGTH_DBM + " INTEGER";
 
+    private static final String SQL_CREATE_VIEW_CONNECTION_TEST_STATS = "CREATE VIEW " + ConnectionTestStatsColumns.VIEW_NAME + " AS "
+            + buildConnectionTestQuery();
+
     NetMonDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -111,6 +114,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         Log.d(TAG, "onCreate");
         db.execSQL(SQL_CREATE_TABLE_NETWORKMONITOR);
+        db.execSQL(SQL_CREATE_VIEW_CONNECTION_TEST_STATS);
     }
 
     @Override
@@ -132,5 +136,49 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V6_WIFI_BSSID);
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V6_CELL_SIGNAL_STRENGTH_DBM);
         }
+
+        if (oldVersion < 7) db.execSQL(SQL_CREATE_VIEW_CONNECTION_TEST_STATS);
+    }
+
+    /**
+     * @return a query to retrieve the stats of the connection test results.
+     */
+    private static final String buildConnectionTestQuery() {
+        String gsmQuery = buildConnectionTestSubQuery("GSM", NetMonColumns.GSM_CELL_LAC, NetMonColumns.GSM_SHORT_CELL_ID, NetMonColumns.GSM_FULL_CELL_ID,
+                NetMonColumns.EXTRA_INFO, NetMonColumns.DATA_STATE + "='" + Constants.DATA_STATE_CONNECTED + "'");
+        String cdmaQuery = buildConnectionTestSubQuery("CDMA", NetMonColumns.CDMA_CELL_BASE_STATION_ID, NetMonColumns.CDMA_CELL_NETWORK_ID,
+                NetMonColumns.CDMA_CELL_SYSTEM_ID, NetMonColumns.EXTRA_INFO, NetMonColumns.DATA_STATE + "='" + Constants.DATA_STATE_CONNECTED + "'");
+        String wifiQuery = buildConnectionTestSubQuery("WiFi", NetMonColumns.WIFI_BSSID, "NULL", "NULL", NetMonColumns.WIFI_SSID, NetMonColumns.NETWORK_TYPE
+                + "='" + Constants.CONNECTION_TYPE_WIFI + "'");
+        return gsmQuery + " UNION " + cdmaQuery + " UNION " + wifiQuery;
+    }
+
+    /**
+     * @return a query to retrieve the stats of the connection test results, for a particular connection type (gsm, cdma, or wifi).
+     */
+    private static final String buildConnectionTestSubQuery(String type, String id1Column, String id2Column, String id3Column, String labelColumn,
+            String selection) {
+        // @formatter:off
+        return "SELECT '" + type + "' as type, "
+            + id1Column + " as " + ConnectionTestStatsColumns.ID1 + ", "
+            + id2Column + " as " + ConnectionTestStatsColumns.ID2 + ", "
+            + id3Column + " as " + ConnectionTestStatsColumns.ID3 + ", "
+            + labelColumn + " as " + ConnectionTestStatsColumns.LABEL + ", "
+            + NetMonColumns.SOCKET_CONNECTION_TEST + " as " + ConnectionTestStatsColumns.TEST_RESULT + ", "
+            + "COUNT(" + NetMonColumns.SOCKET_CONNECTION_TEST +") as " + ConnectionTestStatsColumns.TEST_COUNT 
+            + " FROM " + NetMonColumns.TABLE_NAME
+            + " WHERE (" + selection + ") AND "
+            + "("
+            + ConnectionTestStatsColumns.ID1 + " NOT NULL OR "
+            + ConnectionTestStatsColumns.ID2 + " NOT NULL OR "
+            + ConnectionTestStatsColumns.ID3 + " NOT NULL "
+            + ")"
+            + " GROUP BY "
+            + ConnectionTestStatsColumns.ID1 + ","
+            + ConnectionTestStatsColumns.ID2 + ","
+            + ConnectionTestStatsColumns.ID3 + ","
+            + ConnectionTestStatsColumns.LABEL + ","
+            + ConnectionTestStatsColumns.TEST_RESULT;
+        // @formatter:on
     }
 }
