@@ -18,14 +18,14 @@
     <string name="extra_info">Extra Info</string>
     <string name="wifi_ssid">WiFi SSID</string>
     <string name="wifi_bssid">WiFi BSSID</string>
-    <string name="wifi_signal_strength">WiFi Signal Strength (0&#8211;4)</string>
+    <string name="wifi_signal_strength">WiFi Signal Strength (0-4)</string>
     <string name="wifi_rssi">WiFi Signal Strength (RSSI)</string>
     <string name="sim_operator">SIM Operator</string>
     <string name="network_operator">Network Operator</string>
     <string name="is_network_metered">Is Network Metered</string>
     <string name="device_latitude">Device Latitude</string>
     <string name="device_longitude">Device Longitude</string>
-    <string name="cell_signal_strength">Cell Signal Strength (0&#8211;4)</string>
+    <string name="cell_signal_strength">Cell Signal Strength (0-4)</string>
     <string name="cell_signal_strength_dbm">Cell Signal Strength (dBm)</string>
     <string name="cdma_cell_base_station_id">CDMA Cell Base Station Id</string>
     <string name="cdma_cell_latitude">CDMA Cell Latitude</string>
