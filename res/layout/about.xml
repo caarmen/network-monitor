@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/about_bg"
@@ -9,34 +9,62 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin" >
 
-    <TextView
-        android:id="@+id/txtVersion"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:orientation="vertical" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:autoLink="all"
-        android:text="@string/about_copyright_1"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        <TextView
+            android:id="@+id/txtVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:autoLink="all"
-        android:text="@string/about_copyright_2"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:autoLink="all"
+            android:text="@string/about_copyright_1"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:autoLink="all"
-        android:text="@string/about_projectUrl"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:autoLink="all"
+            android:text="@string/about_copyright_2"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:autoLink="all"
+            android:drawableLeft="@drawable/ic_about_source_code"
+            android:drawablePadding="8dp"
+            android:text="@string/about_projectUrl"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:autoLink="all"
+            android:drawableLeft="@drawable/ic_about_bug"
+            android:drawablePadding="8dp"
+            android:text="@string/about_issues"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:autoLink="all"
+            android:drawableLeft="@drawable/ic_about_rate"
+            android:drawablePadding="8dp"
+            android:text="@string/about_rate"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </LinearLayout>
+
+</ScrollView>
