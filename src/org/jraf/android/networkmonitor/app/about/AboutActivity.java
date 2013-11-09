@@ -23,10 +23,14 @@
  */
 package org.jraf.android.networkmonitor.app.about;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import org.jraf.android.networkmonitor.R;
@@ -47,5 +51,21 @@ public class AboutActivity extends Activity {
         }
 
         ((TextView) findViewById(R.id.txtVersion)).setText(getString(R.string.app_name) + " v" + versionName);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) setDisplayHomeAsUpEnabled(true);
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void setDisplayHomeAsUpEnabled(boolean enabled) {
+        getActionBar().setDisplayHomeAsUpEnabled(enabled);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

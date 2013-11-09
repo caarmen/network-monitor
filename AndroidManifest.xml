@@ -64,24 +64,31 @@
         <activity
             android:name="org.jraf.android.networkmonitor.app.about.AboutActivity"
             android:exported="false"
-            android:label="@string/about_title" >
+            android:label="@string/about_title"
+            android:parentActivityName="org.jraf.android.networkmonitor.app.main.MainActivity" >
             <intent-filter>
                 <action android:name="org.jraf.android.networkmonitor.app.about.AboutActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.jraf.android.networkmonitor.app.main.MainActivity" />
         </activity>
         <activity
             android:name="org.jraf.android.networkmonitor.app.log.LogActionsActivity"
-            android:exported="false"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/NetMonNoDisplayTheme" 
-            >
+            android:exported="false"
+            android:theme="@style/NetMonNoDisplayTheme" >
             <intent-filter>
                 <action android:name="org.jraf.android.networkmonitor.app.log_share" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="org.jraf.android.networkmonitor.app.log_clear" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
