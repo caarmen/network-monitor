@@ -36,7 +36,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
     public static final String DATABASE_NAME = "networkmonitor.db";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     // @formatter:off
     private static final String SQL_CREATE_TABLE_NETWORKMONITOR = "CREATE TABLE IF NOT EXISTS "
@@ -68,6 +68,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.DEVICE_LONGITUDE + " REAL, "
             + NetMonColumns.CELL_SIGNAL_STRENGTH + " INTEGER, "
             + NetMonColumns.CELL_SIGNAL_STRENGTH_DBM + " INTEGER, "
+            + NetMonColumns.CELL_ASU_LEVEL + " INTEGER, "
             + NetMonColumns.CDMA_CELL_BASE_STATION_ID + " INTEGER, "
             + NetMonColumns.CDMA_CELL_LATITUDE + " INTEGER, "
             + NetMonColumns.CDMA_CELL_LONGITUDE + " INTEGER, "
@@ -104,6 +105,9 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V6_CELL_SIGNAL_STRENGTH_DBM = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
             + NetMonColumns.CELL_SIGNAL_STRENGTH_DBM + " INTEGER";
 
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V7_CELL_ASU_LEVEL = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.CELL_ASU_LEVEL + " INTEGER";
+
     private static final String SQL_CREATE_VIEW_CONNECTION_TEST_STATS = "CREATE VIEW " + ConnectionTestStatsColumns.VIEW_NAME + " AS "
             + buildConnectionTestQuery();
 
@@ -137,6 +141,10 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V6_WIFI_BSSID);
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V6_CELL_SIGNAL_STRENGTH_DBM);
             db.execSQL(SQL_CREATE_VIEW_CONNECTION_TEST_STATS);
+        }
+
+        if (oldVersion < 7) {
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V7_CELL_ASU_LEVEL);
         }
     }
 

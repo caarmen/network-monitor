@@ -67,6 +67,7 @@ td.slow {
         <item>device_longitude</item>
         <item>cell_signal_strength</item>
         <item>cell_signal_strength_dbm</item>
+        <item>cell_asu_level</item>
         <item>cdma_cell_base_station_id</item>
         <item>cdma_cell_latitude</item>
         <item>cdma_cell_longitude</item>

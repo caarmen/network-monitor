@@ -113,6 +113,7 @@ public class NetMonService extends Service {
     private long mLastWakeUp = 0;
     private int mLastSignalStrength;
     private int mLastSignalStrengthDbm;
+    private int mLastAsuLevel;
     private volatile boolean mDestroyed;
     private ScheduledExecutorService mExecutorService;
     private Future<?> mMonitorLoopFuture;
@@ -232,6 +233,7 @@ public class NetMonService extends Service {
                 values.put(NetMonColumns.CELL_SIGNAL_STRENGTH, mLastSignalStrength);
                 if (mLastSignalStrengthDbm != NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN)
                     values.put(NetMonColumns.CELL_SIGNAL_STRENGTH_DBM, mLastSignalStrengthDbm);
+                values.put(NetMonColumns.CELL_ASU_LEVEL, mLastAsuLevel);
                 values.put(NetMonColumns.MOBILE_DATA_NETWORK_TYPE, getDataNetworkType());
                 values.putAll(getWifiInfo());
                 values.putAll(getCellLocation());
@@ -632,6 +634,7 @@ public class NetMonService extends Service {
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
             mLastSignalStrength = mNetMonSignalStrength.getLevel(signalStrength);
             mLastSignalStrengthDbm = mNetMonSignalStrength.getDbm(signalStrength);
+            mLastAsuLevel = mNetMonSignalStrength.getAsuLevel(signalStrength);
         }
 
         @Override
@@ -640,6 +643,7 @@ public class NetMonService extends Service {
             if (serviceState.getState() != ServiceState.STATE_IN_SERVICE) {
                 mLastSignalStrength = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
                 mLastSignalStrengthDbm = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+                mLastAsuLevel = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
             }
         }
     }

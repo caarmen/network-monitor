@@ -42,6 +42,9 @@ class NetMonSignalStrength {
 
 
     static final int SIGNAL_STRENGTH_NONE_OR_UNKNOWN = 0;
+    //Use int max, as -1 is a valid value in signal strength
+    private static final int INVALID = 0x7FFFFFFF;
+
     private static final int SIGNAL_STRENGTH_POOR = 1;
     private static final int SIGNAL_STRENGTH_MODERATE = 2;
     private static final int SIGNAL_STRENGTH_GOOD = 3;
@@ -251,6 +254,123 @@ class NetMonSignalStrength {
             Log.v(TAG, "getLteDbm failed: " + t.getMessage(), t);
             return SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
         }
+    }
+
+    /**
+     * Get the signal level as an asu value between 0..31, 99 is unknown
+     */
+    public int getAsuLevel(SignalStrength signalStrength) {
+        int asuLevel;
+        if (signalStrength.isGsm()) {
+            if (getLteLevel(signalStrength) == SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
+                asuLevel = signalStrength.getGsmSignalStrength();
+            } else {
+                asuLevel = getLteAsuLevel(signalStrength);
+            }
+        } else {
+            int cdmaAsuLevel = getCdmaAsuLevel(signalStrength);
+            int evdoAsuLevel = getEvdoAsuLevel(signalStrength);
+            if (evdoAsuLevel == 0) {
+                /* We don't know evdo use, cdma */
+                asuLevel = cdmaAsuLevel;
+            } else if (cdmaAsuLevel == 0) {
+                /* We don't know cdma use, evdo */
+                asuLevel = evdoAsuLevel;
+            } else {
+                /* We know both, use the lowest level */
+                asuLevel = cdmaAsuLevel < evdoAsuLevel ? cdmaAsuLevel : evdoAsuLevel;
+            }
+        }
+        Log.v(TAG, "getAsuLevel=" + asuLevel);
+        return asuLevel;
+    }
+
+    /**
+     * Get the LTE signal level as an asu value between 0..97, 99 is unknown
+     * Asu is calculated based on 3GPP RSRP. Refer to 3GPP 27.007 (Ver 10.3.0) Sec 8.69
+     */
+    private int getLteAsuLevel(SignalStrength signalStrength) {
+        int lteAsuLevel = 99;
+        int lteDbm = getLteDbm(signalStrength);
+        /*
+         * 3GPP 27.007 (Ver 10.3.0) Sec 8.69
+         * 0   -140 dBm or less
+         * 1   -139 dBm
+         * 2...96  -138... -44 dBm
+         * 97  -43 dBm or greater
+         * 255 not known or not detectable
+         */
+        /*
+         * validateInput will always give a valid range between -140 t0 -44 as
+         * per ril.h. so RSRP >= -43 & <-140 will fall under asu level 255
+         * and not 97 or 0
+         */
+        if (lteDbm == INVALID) lteAsuLevel = 255;
+        else
+            lteAsuLevel = lteDbm + 140;
+        Log.v(TAG, "Lte Asu level: " + lteAsuLevel);
+        return lteAsuLevel;
+    }
+
+    /**
+     * Get the cdma signal level as an asu value between 0..31, 99 is unknown
+     */
+    private int getCdmaAsuLevel(SignalStrength signalStrength) {
+        final int cdmaDbm = signalStrength.getCdmaDbm();
+        final int cdmaEcio = signalStrength.getCdmaEcio();
+        int cdmaAsuLevel;
+        int ecioAsuLevel;
+
+        if (cdmaDbm >= -75) cdmaAsuLevel = 16;
+        else if (cdmaDbm >= -82) cdmaAsuLevel = 8;
+        else if (cdmaDbm >= -90) cdmaAsuLevel = 4;
+        else if (cdmaDbm >= -95) cdmaAsuLevel = 2;
+        else if (cdmaDbm >= -100) cdmaAsuLevel = 1;
+        else
+            cdmaAsuLevel = 99;
+
+        // Ec/Io are in dB*10
+        if (cdmaEcio >= -90) ecioAsuLevel = 16;
+        else if (cdmaEcio >= -100) ecioAsuLevel = 8;
+        else if (cdmaEcio >= -115) ecioAsuLevel = 4;
+        else if (cdmaEcio >= -130) ecioAsuLevel = 2;
+        else if (cdmaEcio >= -150) ecioAsuLevel = 1;
+        else
+            ecioAsuLevel = 99;
+
+        int level = cdmaAsuLevel < ecioAsuLevel ? cdmaAsuLevel : ecioAsuLevel;
+        Log.v(TAG, "getCdmaAsuLevel=" + level);
+        return level;
+    }
+
+    /**
+     * Get the evdo signal level as an asu value between 0..31, 99 is unknown
+     */
+    private int getEvdoAsuLevel(SignalStrength signalStrength) {
+        int evdoDbm = signalStrength.getEvdoDbm();
+        int evdoSnr = signalStrength.getEvdoSnr();
+        int levelEvdoDbm;
+        int levelEvdoSnr;
+
+        if (evdoDbm >= -65) levelEvdoDbm = 16;
+        else if (evdoDbm >= -75) levelEvdoDbm = 8;
+        else if (evdoDbm >= -85) levelEvdoDbm = 4;
+        else if (evdoDbm >= -95) levelEvdoDbm = 2;
+        else if (evdoDbm >= -105) levelEvdoDbm = 1;
+        else
+            levelEvdoDbm = 99;
+
+        if (evdoSnr >= 7) levelEvdoSnr = 16;
+        else if (evdoSnr >= 6) levelEvdoSnr = 8;
+        else if (evdoSnr >= 5) levelEvdoSnr = 4;
+        else if (evdoSnr >= 3) levelEvdoSnr = 2;
+        else if (evdoSnr >= 1) levelEvdoSnr = 1;
+        else
+            levelEvdoSnr = 99;
+
+        int level = levelEvdoDbm < levelEvdoSnr ? levelEvdoDbm : levelEvdoSnr;
+        Log.v(TAG, "getEvdoAsuLevel=" + level);
+        return level;
     }
 
 
