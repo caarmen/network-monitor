@@ -32,7 +32,6 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
-import org.jraf.android.networkmonitor.util.TelephonyUtil;
 
 /**
  * The logic in this class comes from the Android source code. It is copied here because some of this logic is available only on API level 17+.
@@ -67,14 +66,10 @@ class NetMonSignalStrength {
      */
     int getLevel(SignalStrength signalStrength) {
         Log.v(TAG, "getLevel " + signalStrength);
-        int phoneType = TelephonyUtil.getDeviceType(mContext);
-        if (phoneType == TelephonyManager.PHONE_TYPE_GSM) {
+        if (signalStrength.isGsm()) {
             return getGSMSignalStrength(signalStrength);
-        } else if (phoneType == TelephonyManager.PHONE_TYPE_CDMA) {
-            return getCDMASignalStrength(signalStrength);
         } else {
-            Log.w(TAG, "Unknown phone type: " + phoneType);
-            return SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+            return getCDMASignalStrength(signalStrength);
         }
     }
 
