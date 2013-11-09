@@ -24,6 +24,8 @@
 package org.jraf.android.networkmonitor.util;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.content.Context;
 import android.telephony.TelephonyManager;
@@ -34,6 +36,8 @@ import android.util.Log;
 
 public class TelephonyUtil {
     private static final String TAG = TelephonyUtil.class.getSimpleName();
+
+    private static final Map<String, String> sConstantsCache = new HashMap<String, String>();
 
     /**
      * Workaround to return {@link TelephonyManager#PHONE_TYPE_GSM} or {@link TelephonyManager#PHONE_TYPE_CDMA} for tablets which have a radio for data.
@@ -59,13 +63,25 @@ public class TelephonyUtil {
      * @return the name of the constant having the given fieldPrefix, not having the given excludePrefix, and having the given value.
      */
     public static String getConstantName(String fieldPrefix, String excludePrefix, int value) {
+        Log.v(TAG, "getConstantName: fieldPrefix=" + fieldPrefix + ", excludePrefix=" + excludePrefix + ", value=" + value);
+        final String key = fieldPrefix + ":" + value;
+        String result = sConstantsCache.get(key);
+        if (result != null) {
+            Log.v(TAG, "Found " + key + "=" + result + " in the cache");
+            return result;
+        }
         Field[] fields = TelephonyManager.class.getFields();
         for (Field field : fields) {
             try {
                 String fieldName = field.getName();
                 if (fieldName.startsWith(fieldPrefix)) {
                     if (!TextUtils.isEmpty(excludePrefix) && fieldName.startsWith(excludePrefix)) continue;
-                    if (field.getInt(null) == value) return field.getName().substring(fieldPrefix.length() + 1);
+                    if (field.getInt(null) == value) {
+                        result = field.getName().substring(fieldPrefix.length() + 1);
+                        Log.v(TAG, "Adding " + key + "=" + result + " to the cache");
+                        sConstantsCache.put(key, result);
+                        return result;
+                    }
                 }
             } catch (IllegalArgumentException e) {
                 Log.e(TAG, "getConstantName Could not get constant name for prefix = " + fieldPrefix + " and value = " + value, e);
