@@ -40,7 +40,7 @@ import org.jraf.android.networkmonitor.util.TelephonyUtil;
 class NetMonSignalStrength {
     private static final String TAG = Constants.TAG + NetMonSignalStrength.class.getSimpleName();
 
-    private Context mContext;
+
     static final int SIGNAL_STRENGTH_NONE_OR_UNKNOWN = 0;
     private static final int SIGNAL_STRENGTH_POOR = 1;
     private static final int SIGNAL_STRENGTH_MODERATE = 2;
@@ -51,8 +51,12 @@ class NetMonSignalStrength {
     private static final int GSM_SIGNAL_STRENGTH_GOOD = 8;
     private static final int GSM_SIGNAL_STRENGTH_MODERATE = 8;// WTF? good = moderate?
 
+    private Context mContext;
+    private final TelephonyManager mTelephonyManager;
+
     NetMonSignalStrength(Context context) {
         mContext = context;
+        mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
     }
 
     /**
@@ -214,6 +218,13 @@ class NetMonSignalStrength {
         Log.v(TAG, "getLteLevel " + signalStrength);
         // For now there's no other way besides reflection :( The getLteLevel() method
         // in the SignalStrength class access private fields.
+        // On some Samsung devices, getLteLevel() can actually return 4 (the highest signal strength) even if we're not on Lte.  
+        // It seems that Samsung has reimplemented getLteLevel(). So we add an extra check to make sure we only use Lte level if we're on LTE.
+
+        if (mTelephonyManager.getNetworkType() != TelephonyManager.NETWORK_TYPE_LTE) {
+            Log.v(TAG, "getLteLevel: returning " + SIGNAL_STRENGTH_NONE_OR_UNKNOWN + " because we're not on Lte");
+            return SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+        }
         try {
             Method methodGetLteLevel = SignalStrength.class.getMethod("getLteLevel");
             int result = (Integer) methodGetLteLevel.invoke(signalStrength);
