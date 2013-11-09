@@ -23,12 +23,18 @@
  */
 package org.jraf.android.networkmonitor.util;
 
+import java.lang.reflect.Field;
+
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.telephony.cdma.CdmaCellLocation;
 import android.telephony.gsm.GsmCellLocation;
+import android.text.TextUtils;
+import android.util.Log;
 
 public class TelephonyUtil {
+    private static final String TAG = TelephonyUtil.class.getSimpleName();
+
     /**
      * Workaround to return {@link TelephonyManager#PHONE_TYPE_GSM} or {@link TelephonyManager#PHONE_TYPE_CDMA} for tablets which have a radio for data.
      */
@@ -41,5 +47,32 @@ public class TelephonyUtil {
         else if (phoneType == TelephonyManager.PHONE_TYPE_CDMA || telephonyManager.getCellLocation() instanceof CdmaCellLocation) return TelephonyManager.PHONE_TYPE_CDMA;
         else
             return phoneType;
+    }
+
+    /**
+     * Returns a TelephonyManager int constant as a string. For example, for {@link TelephonyManager#DATA_CONNECTED}, this returns the string "CONNECTED".
+     * 
+     * @param fieldPrefix the prefix of the TelephonyManager field name. For example, for {@link TelephonyManager#DATA_CONNECTED}, this should be "DATA"
+     * @param excludePrefix in most cases this can be null. However, in the case of {@link TelephonyManager#DATA_CONNECTED}, we need to set exclude prefix to
+     *            "DATA_ACTIVITY" to make sure we don't return OUT, as DATA_ACTIVITY_OUT has the same value as DATA_CONNECTED.
+     * @param value the value of the constant.
+     * @return the name of the constant having the given fieldPrefix, not having the given excludePrefix, and having the given value.
+     */
+    public static String getConstantName(String fieldPrefix, String excludePrefix, int value) {
+        Field[] fields = TelephonyManager.class.getFields();
+        for (Field field : fields) {
+            try {
+                String fieldName = field.getName();
+                if (fieldName.startsWith(fieldPrefix)) {
+                    if (!TextUtils.isEmpty(excludePrefix) && fieldName.startsWith(excludePrefix)) continue;
+                    if (field.getInt(null) == value) return field.getName().substring(fieldPrefix.length() + 1);
+                }
+            } catch (IllegalArgumentException e) {
+                Log.e(TAG, "getConstantName Could not get constant name for prefix = " + fieldPrefix + " and value = " + value, e);
+            } catch (IllegalAccessException e) {
+                Log.e(TAG, "getConstantName Could not get constant name for prefix = " + fieldPrefix + " and value = " + value, e);
+            }
+        }
+        return "";
     }
 }
