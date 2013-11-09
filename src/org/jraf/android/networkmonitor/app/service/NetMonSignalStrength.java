@@ -200,11 +200,11 @@ class NetMonSignalStrength {
         int dBm;
 
         int level = signalStrength.getGsmSignalStrength();
-        int asu = level == 99 ? Integer.MAX_VALUE : level;
-        if (asu != Integer.MAX_VALUE) {
+        int asu = level == 99 ? SIGNAL_STRENGTH_NONE_OR_UNKNOWN : level;
+        if (asu != SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
             dBm = -113 + 2 * asu;
         } else {
-            dBm = Integer.MAX_VALUE;
+            dBm = SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
         }
         return dBm;
     }
