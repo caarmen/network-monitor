@@ -53,11 +53,9 @@ class NetMonSignalStrength {
     private static final int GSM_SIGNAL_STRENGTH_GOOD = 8;
     private static final int GSM_SIGNAL_STRENGTH_MODERATE = 8;// WTF? good = moderate?
 
-    private Context mContext;
     private final TelephonyManager mTelephonyManager;
 
     NetMonSignalStrength(Context context) {
-        mContext = context;
         mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
     }
 
