@@ -52,14 +52,34 @@ class ConnectionTester {
     // private static final String HOST = "www.google.com";
     private static final String HOST = "173.194.34.16";
     private static final int PORT = 80;
-    private static final int TIMEOUT = 15000;
     private static final int DURATION_SLOW = 5000;
+
+    // The maximum connection and read timeout for a connection test, in ms.  We may actually set a lower timeout if the user has set the app to test very frequently (ex: every 10 seconds). 
+    private static final int MAX_TIMEOUT_PER_TEST = 15000;
+
     private static final String HTTP_GET = "GET / HTTP/1.1\r\n\r\n";
+
+    // The timeout for each connection test, in ms.
+    private int mTimeout;
+
+    ConnectionTester() {
+        Log.v(TAG, "Constructor");
+    }
+
+    /**
+     * @param maxTimeout the maximum total time it should take to perform all connection tests.
+     */
+    void setTimeout(int timeout) {
+        Log.v(TAG, "setTimeout " + timeout);
+        // Divide the total timeout by the total number of connection tests, to get the maximum timeout for each test.
+        mTimeout = Math.min(timeout / 2, MAX_TIMEOUT_PER_TEST);
+        Log.v(TAG, "setTimeout: set timeout to " + mTimeout);
+    }
 
     /**
      * @return Run the different connection tests and return their results. The keys are db column names and values the results of the tests as strings.
      */
-    public ContentValues performConnectionTests() {
+    ContentValues performConnectionTests() {
         ContentValues values = new ContentValues(2);
         values.put(NetMonColumns.SOCKET_CONNECTION_TEST, getSocketTestResult().name());
         values.put(NetMonColumns.HTTP_CONNECTION_TEST, getHttpTestResult().name());
@@ -75,13 +95,14 @@ class ConnectionTester {
      * @return {@link NetworkTestResult#PASS} if we were able to read a response to a GET request quickly, {@link NetworkTestResult#FAIL} if any error occurred
      *         trying to execute the GET, or {@link NetworkTestResult#SLOW} if we were able to read a response, but it took too long.
      */
-    private static NetworkTestResult getSocketTestResult() {
+    private NetworkTestResult getSocketTestResult() {
+        Log.v(TAG, "getSocketTestResult BEGIN");
         Socket socket = null;
         try {
             // Prevent the system from closing the connection after 30 minutes of screen off.
             long before = System.currentTimeMillis();
             socket = new Socket();
-            socket.setSoTimeout(TIMEOUT);
+            socket.setSoTimeout(mTimeout);
             Log.d(TAG, "getSocketTestResult Resolving " + HOST);
             InetSocketAddress remoteAddr = new InetSocketAddress(HOST, PORT);
             InetAddress address = remoteAddr.getAddress();
@@ -91,7 +112,7 @@ class ConnectionTester {
             }
             Log.d(TAG, "getSocketTestResult Resolved " + address.getHostAddress());
             Log.d(TAG, "getSocketTestResult Connecting...");
-            socket.connect(remoteAddr, TIMEOUT);
+            socket.connect(remoteAddr, mTimeout);
             Log.d(TAG, "getSocketTestResult Connected");
 
             Log.d(TAG, "getSocketTestResult Sending GET...");
@@ -121,6 +142,7 @@ class ConnectionTester {
                     Log.w(TAG, "getSocketTestResult Could not close socket", e);
                 }
             }
+            Log.v(TAG, "getSocketTestResult END");
         }
     }
 
@@ -133,13 +155,15 @@ class ConnectionTester {
      * @return {@link NetworkTestResult#PASS} if we were able to read a response to a GET request quickly, {@link NetworkTestResult#FAIL} if any error occurred
      *         trying to execute the GET, or {@link NetworkTestResult#SLOW} if we were able to read a response, but it took too long.
      */
-    private static NetworkTestResult getHttpTestResult() {
+    private NetworkTestResult getHttpTestResult() {
+        Log.v(TAG, "getHttpTestResult BEGIN");
         InputStream inputStream = null;
         try {
             long before = System.currentTimeMillis();
             URL url = new URL("http", HOST, PORT, "/");
             URLConnection connection = url.openConnection();
-            connection.setReadTimeout(TIMEOUT);
+            connection.setConnectTimeout(mTimeout);
+            connection.setReadTimeout(mTimeout);
             connection.addRequestProperty("Cache-Control", "no-cache");
             connection.setUseCaches(false);
             inputStream = connection.getInputStream();
@@ -162,6 +186,7 @@ class ConnectionTester {
                     Log.w(TAG, "getHttpTestResult Could not close stream", e);
                 }
             }
+            Log.v(TAG, "getHttpTestResult END");
         }
     }
 }

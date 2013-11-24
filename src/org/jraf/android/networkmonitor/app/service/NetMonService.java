@@ -131,9 +131,12 @@ public class NetMonService extends Service {
     }
 
     private void reScheduleMonitorLoop() {
-        long updateInterval = getUpdateInterval();
+        int updateInterval = getUpdateInterval();
         Log.d(TAG, "monitorLoop Sleeping " + updateInterval / 1000 + " seconds...");
         if (mMonitorLoopFuture != null) mMonitorLoopFuture.cancel(true);
+        // Issue #20: We should respect the testing interval.  We shouldn't wait for more than this interval for
+        // the connection tests to timeout.  
+        mConnectionTester.setTimeout(updateInterval);
         mMonitorLoopFuture = mExecutorService.scheduleAtFixedRate(mMonitorLoop, 0, updateInterval, TimeUnit.MILLISECONDS);
     }
 
@@ -235,18 +238,18 @@ public class NetMonService extends Service {
         return values;
     }
 
-    private long getLongPreference(String key, String defaultValue) {
+    private int getIntPreference(String key, String defaultValue) {
         String valueStr = PreferenceManager.getDefaultSharedPreferences(this).getString(key, defaultValue);
-        long valueLong = Long.valueOf(valueStr);
-        return valueLong;
+        int valueInt = Integer.valueOf(valueStr);
+        return valueInt;
     }
 
-    private long getUpdateInterval() {
-        return getLongPreference(Constants.PREF_UPDATE_INTERVAL, Constants.PREF_UPDATE_INTERVAL_DEFAULT);
+    private int getUpdateInterval() {
+        return getIntPreference(Constants.PREF_UPDATE_INTERVAL, Constants.PREF_UPDATE_INTERVAL_DEFAULT);
     }
 
-    private long getWakeInterval() {
-        return getLongPreference(Constants.PREF_WAKE_INTERVAL, Constants.PREF_WAKE_INTERVAL_DEFAULT);
+    private int getWakeInterval() {
+        return getIntPreference(Constants.PREF_WAKE_INTERVAL, Constants.PREF_WAKE_INTERVAL_DEFAULT);
     }
 
     /**
