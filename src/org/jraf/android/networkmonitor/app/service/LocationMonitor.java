@@ -88,10 +88,10 @@ class LocationMonitor extends PhoneStateListener {
         if (mostRecentLocation != null) {
             values.put(NetMonColumns.DEVICE_LATITUDE, mostRecentLocation.getLatitude());
             values.put(NetMonColumns.DEVICE_LONGITUDE, mostRecentLocation.getLongitude());
+            values.put(NetMonColumns.DEVICE_POSITION_ACCURACY, mostRecentLocation.getAccuracy());
         }
         return values;
     }
-
 
     void onDestroy() {
         if (mLocationClient != null) mLocationClient.disconnect();

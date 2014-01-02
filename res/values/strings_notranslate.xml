@@ -11,7 +11,6 @@ th {
  background-color: #fff300;
  color: #fd8900;
  border: 1px #fd8900 solid;
- text-transform: capitalize;
 }
 td {
  white-space: pre;
@@ -65,6 +64,7 @@ td.slow {
         <item>is_network_metered</item>
         <item>device_latitude</item>
         <item>device_longitude</item>
+        <item>device_position_accuracy</item>
         <item>cell_signal_strength</item>
         <item>cell_signal_strength_dbm</item>
         <item>cell_asu_level</item>

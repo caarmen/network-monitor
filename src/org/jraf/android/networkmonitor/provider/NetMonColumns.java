@@ -59,6 +59,7 @@ public class NetMonColumns implements BaseColumns {
     public static final String IS_NETWORK_METERED = "is_network_metered";
     public static final String DEVICE_LATITUDE = "device_latitude";
     public static final String DEVICE_LONGITUDE = "device_longitude";
+    public static final String DEVICE_POSITION_ACCURACY = "device_position_accuracy";
     public static final String CELL_SIGNAL_STRENGTH = "cell_signal_strength";
     public static final String CELL_SIGNAL_STRENGTH_DBM = "cell_signal_strength_dbm";
     public static final String CELL_ASU_LEVEL = "cell_asu_level";
