@@ -62,7 +62,11 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.WIFI_SIGNAL_STRENGTH + " INTEGER, "
             + NetMonColumns.WIFI_RSSI + " INTEGER, "
             + NetMonColumns.SIM_OPERATOR + " TEXT, "
+            + NetMonColumns.SIM_MCC + " TEXT, "
+            + NetMonColumns.SIM_MNC + " TEXT, "
             + NetMonColumns.NETWORK_OPERATOR + " TEXT, "
+            + NetMonColumns.NETWORK_MCC + " TEXT, "
+            + NetMonColumns.NETWORK_MNC + " TEXT, "
             + NetMonColumns.IS_NETWORK_METERED + " INTEGER, "
             + NetMonColumns.DEVICE_LATITUDE + " REAL, "
             + NetMonColumns.DEVICE_LONGITUDE + " REAL, "
@@ -112,6 +116,18 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V8_DEVICE_POSITION_ACCURACY = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
             + NetMonColumns.DEVICE_POSITION_ACCURACY + " REAL";
 
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V8_SIM_MCC = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN " + NetMonColumns.SIM_MCC
+            + " TEXT";
+
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V8_SIM_MNC = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN " + NetMonColumns.SIM_MNC
+            + " TEXT";
+
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V8_NETWORK_MCC = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.NETWORK_MCC + " TEXT";
+
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V8_NETWORK_MNC = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.NETWORK_MNC + " TEXT";
+
     private static final String SQL_CREATE_VIEW_CONNECTION_TEST_STATS = "CREATE VIEW " + ConnectionTestStatsColumns.VIEW_NAME + " AS "
             + buildConnectionTestQuery();
 
@@ -149,7 +165,13 @@ public class NetMonDatabase extends SQLiteOpenHelper {
 
         if (oldVersion < 7) db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V7_CELL_ASU_LEVEL);
 
-        if (oldVersion < 8) db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V8_DEVICE_POSITION_ACCURACY);
+        if (oldVersion < 8) {
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V8_DEVICE_POSITION_ACCURACY);
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V8_SIM_MCC);
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V8_SIM_MNC);
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V8_NETWORK_MCC);
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V8_NETWORK_MNC);
+        }
     }
 
     /**

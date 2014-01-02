@@ -21,7 +21,11 @@
     <string name="wifi_signal_strength">WiFi Signal Strength (0-4)</string>
     <string name="wifi_rssi">WiFi Signal Strength (RSSI)</string>
     <string name="sim_operator">SIM Operator</string>
+    <string name="sim_mcc">SIM MCC</string>
+    <string name="sim_mnc">SIM MNC</string>
     <string name="network_operator">Network Operator</string>
+    <string name="network_mcc">Network MCC</string>
+    <string name="network_mnc">Network MNC</string>
     <string name="is_network_metered">Is Network Metered</string>
     <string name="device_latitude">Device Latitude</string>
     <string name="device_longitude">Device Longitude</string>

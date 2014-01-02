@@ -60,7 +60,11 @@ td.slow {
         <item>wifi_signal_strength</item>
         <item>wifi_rssi</item>
         <item>sim_operator</item>
+        <item>sim_mcc</item>
+        <item>sim_mnc</item>
         <item>network_operator</item>
+        <item>network_mcc</item>
+        <item>network_mnc</item>
         <item>is_network_metered</item>
         <item>device_latitude</item>
         <item>device_longitude</item>
