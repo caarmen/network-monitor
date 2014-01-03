@@ -230,48 +230,56 @@ public class NetMonDatabase extends SQLiteOpenHelper {
      * "BYTEL", "208" and "20".
      */
     private void updateMccMnc(SQLiteDatabase db) {
-        // Get all SIM and network operators
-        Cursor cursor = db.query(false, NetMonColumns.TABLE_NAME,
-                new String[] { NetMonColumns._ID, NetMonColumns.SIM_OPERATOR, NetMonColumns.NETWORK_OPERATOR }, NetMonColumns.SIM_OPERATOR + " NOT NULL OR "
-                        + NetMonColumns.NETWORK_OPERATOR + " NOT NULL", null, null, null, null, null);
-        if (cursor != null) {
-            // Keep track of all the rows we need to update.
-            Map<Long, ContentValues> updates = new HashMap<Long, ContentValues>();
-            try {
-                int idIndex = cursor.getColumnIndex(NetMonColumns._ID);
-                int simOperatorIndex = cursor.getColumnIndex(NetMonColumns.SIM_OPERATOR);
-                int networkOperatorIndex = cursor.getColumnIndex(NetMonColumns.NETWORK_OPERATOR);
-                // Pattern to extract the operator name, and the mccMnc string.
-                Pattern pattern = Pattern.compile("^(.*) *\\(([0-9]+)\\)$");
-                while (cursor.moveToNext()) {
-                    long id = cursor.getLong(idIndex);
-                    ContentValues cv = new ContentValues(4);
-                    String simOperator = cursor.getString(simOperatorIndex);
-                    String networkOperator = cursor.getString(networkOperatorIndex);
-                    cv.putAll(getMccMncUpdate(pattern, simOperator, NetMonColumns.SIM_OPERATOR, NetMonColumns.SIM_MCC, NetMonColumns.SIM_MNC));
-                    cv.putAll(getMccMncUpdate(pattern, networkOperator, NetMonColumns.NETWORK_OPERATOR, NetMonColumns.NETWORK_MCC, NetMonColumns.NETWORK_MNC));
-                    if (cv.size() > 0) updates.put(id, cv);
-                }
-            } finally {
-                cursor.close();
-            }
-            if (updates.size() > 0) {
-                db.beginTransaction();
+        try {
+            // Get all SIM and network operators
+            Cursor cursor = db.query(false, NetMonColumns.TABLE_NAME, new String[] { NetMonColumns._ID, NetMonColumns.SIM_OPERATOR,
+                    NetMonColumns.NETWORK_OPERATOR }, NetMonColumns.SIM_OPERATOR + " NOT NULL OR " + NetMonColumns.NETWORK_OPERATOR + " NOT NULL", null, null,
+                    null, null, null);
+            if (cursor != null) {
+                // Keep track of all the rows we need to update.
+                Map<Long, ContentValues> mccMncUpdates = new HashMap<Long, ContentValues>();
                 try {
-                    for (long id : updates.keySet()) {
-                        db.update(NetMonColumns.TABLE_NAME, updates.get(id), NetMonColumns._ID + "=?", new String[] { String.valueOf(id) });
+                    int idIndex = cursor.getColumnIndex(NetMonColumns._ID);
+                    int simOperatorIndex = cursor.getColumnIndex(NetMonColumns.SIM_OPERATOR);
+                    int networkOperatorIndex = cursor.getColumnIndex(NetMonColumns.NETWORK_OPERATOR);
+                    // Pattern to extract the operator name, and the mccMnc string.
+                    // In the example of "BYTEL (20820)", $1 will match BYTEL, and $2 will match 20820.
+                    Pattern pattern = Pattern.compile("^(.*) *\\(([0-9]+)\\)$");
+                    while (cursor.moveToNext()) {
+                        long id = cursor.getLong(idIndex);
+                        ContentValues cv = new ContentValues(4);
+                        String simOperator = cursor.getString(simOperatorIndex);
+                        String networkOperator = cursor.getString(networkOperatorIndex);
+                        cv.putAll(getMccMncUpdate(pattern, simOperator, NetMonColumns.SIM_OPERATOR, NetMonColumns.SIM_MCC, NetMonColumns.SIM_MNC));
+                        cv.putAll(getMccMncUpdate(pattern, networkOperator, NetMonColumns.NETWORK_OPERATOR, NetMonColumns.NETWORK_MCC,
+                                NetMonColumns.NETWORK_MNC));
+                        if (cv.size() > 0) mccMncUpdates.put(id, cv);
                     }
                 } finally {
-                    db.endTransaction();
+                    cursor.close();
+                }
+                if (mccMncUpdates.size() > 0) {
+                    try {
+                        Log.v(TAG, "Will update MCC/MNC columns for " + mccMncUpdates.size() + " records");
+                        for (long id : mccMncUpdates.keySet())
+                            db.update(NetMonColumns.TABLE_NAME, mccMncUpdates.get(id), NetMonColumns._ID + "=?", new String[] { String.valueOf(id) });
+                        Log.v(TAG, "MCC/MNC update complete");
+                    } finally {}
+                } else {
+                    Log.v(TAG, "No MCC/MNC records to update");
                 }
             }
+        } catch (Throwable t) {
+            // Yes, this is a cheap way to handle errors.
+            // Migrating the mcc/mnc columns is not really that important.  If a user has some funky data that we can't anticipate, just don't migrate these fields.  We don't want to prevent the user from using the app because of this.
+            Log.w(TAG, "Error trying to migrate mcc/mnc columns: " + t.getMessage(), t);
         }
     }
 
     /**
      * @param operator a string of the format "BYTEL (20820)"
-     * @return a ContentValues to update the sim or network operator fields: BYTEL will go into the X_OPERATOR field, 208 into the X_MCC field and 20 into the
-     *         X_MNC field.
+     * @return a ContentValues to update the sim or network operator values: BYTEL will go into the X_operator column, 208 into the X_mcc column and 20 into the
+     *         X_mnc column.
      */
     private ContentValues getMccMncUpdate(Pattern pattern, String operator, String operatorColumn, String mccColumn, String mncColumn) {
         Matcher matcher = pattern.matcher(operator);
