@@ -91,4 +91,15 @@ public class TelephonyUtil {
         }
         return "";
     }
+
+    /**
+     * @param mccMnc A string which should be 5 or 6 characters long, containing digits. This string is the concatenation of an MCC and MNC.
+     * @return two strings: the first is the MCC, the second is the MNC. Will return two empty strings if the mccMnc parameter is invalid.
+     */
+    public static String[] getMccMnc(String mccMnc) {
+        if (TextUtils.isEmpty(mccMnc) || mccMnc.length() < 5) return new String[] { "", "" };
+        String mcc = mccMnc.substring(0, 3);
+        String mnc = mccMnc.substring(3);
+        return new String[] { mcc, mnc };
+    }
 }

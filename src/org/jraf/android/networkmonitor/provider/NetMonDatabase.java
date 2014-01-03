@@ -24,13 +24,21 @@
  */
 package org.jraf.android.networkmonitor.provider;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.Constants.ConnectionType;
+import org.jraf.android.networkmonitor.util.TelephonyUtil;
 
 public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
@@ -171,6 +179,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V8_SIM_MNC);
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V8_NETWORK_MCC);
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V8_NETWORK_MNC);
+            updateMccMnc(db);
         }
     }
 
@@ -214,5 +223,67 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + ConnectionTestStatsColumns.LABEL + ","
             + ConnectionTestStatsColumns.TEST_RESULT;
         // @formatter:on
+    }
+
+    /**
+     * In versions < 8 of the DB, the sim and network operators were stored in this format: "BYTEL (20820)". In version 8, we separate this into three columns:
+     * "BYTEL", "208" and "20".
+     */
+    private void updateMccMnc(SQLiteDatabase db) {
+        // Get all SIM and network operators
+        Cursor cursor = db.query(false, NetMonColumns.TABLE_NAME,
+                new String[] { NetMonColumns._ID, NetMonColumns.SIM_OPERATOR, NetMonColumns.NETWORK_OPERATOR }, NetMonColumns.SIM_OPERATOR + " NOT NULL OR "
+                        + NetMonColumns.NETWORK_OPERATOR + " NOT NULL", null, null, null, null, null);
+        if (cursor != null) {
+            // Keep track of all the rows we need to update.
+            Map<Long, ContentValues> updates = new HashMap<Long, ContentValues>();
+            try {
+                int idIndex = cursor.getColumnIndex(NetMonColumns._ID);
+                int simOperatorIndex = cursor.getColumnIndex(NetMonColumns.SIM_OPERATOR);
+                int networkOperatorIndex = cursor.getColumnIndex(NetMonColumns.NETWORK_OPERATOR);
+                // Pattern to extract the operator name, and the mccMnc string.
+                Pattern pattern = Pattern.compile("^(.*) *\\(([0-9]+)\\)$");
+                while (cursor.moveToNext()) {
+                    long id = cursor.getLong(idIndex);
+                    ContentValues cv = new ContentValues(4);
+                    String simOperator = cursor.getString(simOperatorIndex);
+                    String networkOperator = cursor.getString(networkOperatorIndex);
+                    cv.putAll(getMccMncUpdate(pattern, simOperator, NetMonColumns.SIM_OPERATOR, NetMonColumns.SIM_MCC, NetMonColumns.SIM_MNC));
+                    cv.putAll(getMccMncUpdate(pattern, networkOperator, NetMonColumns.NETWORK_OPERATOR, NetMonColumns.NETWORK_MCC, NetMonColumns.NETWORK_MNC));
+                    if (cv.size() > 0) updates.put(id, cv);
+                }
+            } finally {
+                cursor.close();
+            }
+            if (updates.size() > 0) {
+                db.beginTransaction();
+                try {
+                    for (long id : updates.keySet()) {
+                        db.update(NetMonColumns.TABLE_NAME, updates.get(id), NetMonColumns._ID + "=?", new String[] { String.valueOf(id) });
+                    }
+                } finally {
+                    db.endTransaction();
+                }
+            }
+        }
+    }
+
+    /**
+     * @param operator a string of the format "BYTEL (20820)"
+     * @return a ContentValues to update the sim or network operator fields: BYTEL will go into the X_OPERATOR field, 208 into the X_MCC field and 20 into the
+     *         X_MNC field.
+     */
+    private ContentValues getMccMncUpdate(Pattern pattern, String operator, String operatorColumn, String mccColumn, String mncColumn) {
+        Matcher matcher = pattern.matcher(operator);
+        ContentValues cv = new ContentValues(2);
+        if (matcher.matches() && matcher.groupCount() == 2) {
+            String operatorMatch = matcher.group(1);
+            String mccMncMatch = matcher.group(2);
+            String[] mccMnc = TelephonyUtil.getMccMnc(mccMncMatch);
+            cv.put(mccColumn, mccMnc[0]);
+            cv.put(mncColumn, mccMnc[1]);
+            cv.put(operatorColumn, operatorMatch);
+        }
+        return cv;
     }
 }

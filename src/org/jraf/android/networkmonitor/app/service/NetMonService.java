@@ -278,27 +278,16 @@ public class NetMonService extends Service {
     private ContentValues getSIMInfo() {
         ContentValues values = new ContentValues(3);
         values.put(NetMonColumns.SIM_OPERATOR, mTelephonyManager.getSimOperatorName());
-        String[] simMccMnc = getMccMnc(mTelephonyManager.getSimOperator());
+        String[] simMccMnc = TelephonyUtil.getMccMnc(mTelephonyManager.getSimOperator());
         values.put(NetMonColumns.SIM_MCC, simMccMnc[0]);
         values.put(NetMonColumns.SIM_MNC, simMccMnc[1]);
         values.put(NetMonColumns.NETWORK_OPERATOR, mTelephonyManager.getNetworkOperatorName());
-        String[] networkMccMnc = getMccMnc(mTelephonyManager.getNetworkOperator());
+        String[] networkMccMnc = TelephonyUtil.getMccMnc(mTelephonyManager.getNetworkOperator());
         values.put(NetMonColumns.NETWORK_MCC, networkMccMnc[0]);
         values.put(NetMonColumns.NETWORK_MNC, networkMccMnc[1]);
         int simState = mTelephonyManager.getSimState();
         values.put(NetMonColumns.SIM_STATE, TelephonyUtil.getConstantName("SIM_STATE", null, simState));
         return values;
-    }
-
-    /**
-     * @param mccMnc A string which should be 5 or 6 characters long, containing digits. This string is the concatenation of an MCC and MNC.
-     * @return two strings: the first is the MCC, the second is the MNC. Will return two empty strings if the mccMnc parameter is invalid.
-     */
-    private String[] getMccMnc(String mccMnc) {
-        if (TextUtils.isEmpty(mccMnc) || mccMnc.length() < 5) return new String[] { "", "" };
-        String mcc = mccMnc.substring(0, 3);
-        String mnc = mccMnc.substring(3);
-        return new String[] { mcc, mnc };
     }
 
     private ContentValues getMobileDataInfo() {
