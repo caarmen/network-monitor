@@ -27,10 +27,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.content.Context;
 import android.telephony.TelephonyManager;
-import android.telephony.cdma.CdmaCellLocation;
-import android.telephony.gsm.GsmCellLocation;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -38,20 +35,6 @@ public class TelephonyUtil {
     private static final String TAG = TelephonyUtil.class.getSimpleName();
 
     private static final Map<String, String> sConstantsCache = new HashMap<String, String>();
-
-    /**
-     * Workaround to return {@link TelephonyManager#PHONE_TYPE_GSM} or {@link TelephonyManager#PHONE_TYPE_CDMA} for tablets which have a radio for data.
-     */
-    public static int getDeviceType(Context context) {
-
-        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        int phoneType = telephonyManager.getPhoneType();
-
-        if (phoneType == TelephonyManager.PHONE_TYPE_GSM || telephonyManager.getCellLocation() instanceof GsmCellLocation) return TelephonyManager.PHONE_TYPE_GSM;
-        else if (phoneType == TelephonyManager.PHONE_TYPE_CDMA || telephonyManager.getCellLocation() instanceof CdmaCellLocation) return TelephonyManager.PHONE_TYPE_CDMA;
-        else
-            return phoneType;
-    }
 
     /**
      * Returns a TelephonyManager int constant as a string. For example, for {@link TelephonyManager#DATA_CONNECTED}, this returns the string "CONNECTED".
