@@ -39,6 +39,10 @@ import org.jraf.android.networkmonitor.R;
  */
 public class KMLExport extends TableFileExport {
     private static final String KML_FILE = "networkmonitor.kml";
+    // KML colors are of the format aabbggrr: https://developers.google.com/kml/documentation/kmlreference#color
+    private static final String ICON_COLOR_RED = "ff0000ff";
+    private static final String ICON_COLOR_GREEN = "ff00ff00";
+    private static final String ICON_COLOR_YELLOW = "ff00ffff";
     private PrintWriter mPrintWriter;
     private String[] mColumnNames;
     private int mHttpConnectionTestColumnIndex;
@@ -99,7 +103,10 @@ public class KMLExport extends TableFileExport {
         mPrintWriter.println("          <scale>1.0</scale>");
         mPrintWriter.println("        </LabelStyle>");
         mPrintWriter.println("        <IconStyle>");
-        mPrintWriter.println("          <color>FFff0000</color>");
+        mPrintWriter.print("          <color>");
+        String iconColor = getIconColor(label);
+        mPrintWriter.print(iconColor);
+        mPrintWriter.println("</color>");
         mPrintWriter.println("          <scale>1.0</scale>");
         mPrintWriter.println("          <Icon>");
         mPrintWriter.print("            <href>");
@@ -111,6 +118,12 @@ public class KMLExport extends TableFileExport {
         mPrintWriter.println("      </Style>");
         mPrintWriter.println("    </Placemark>");
         mPrintWriter.flush();
+    }
+
+    private String getIconColor(String label) {
+        if (Constants.CONNECTION_TEST_FAIL.equals(label)) return ICON_COLOR_RED;
+        if (Constants.CONNECTION_TEST_PASS.equals(label)) return ICON_COLOR_GREEN;
+        return ICON_COLOR_YELLOW;
     }
 
     private String getLabel(String[] cellValues) {
