@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
@@ -91,11 +92,13 @@ public class KMLExport extends TableFileExport {
         mPrintWriter.println("      </Point>");
         mPrintWriter.println("      <ExtendedData>");
         for (int i = 0; i < mColumnNames.length; i++) {
-            mPrintWriter.println("        <Data name=\"" + mColumnNames[i] + "\">");
-            mPrintWriter.print("          <value>");
-            mPrintWriter.print(cellValues[i]);
-            mPrintWriter.println("</value>");
-            mPrintWriter.println("        </Data>");
+            if (!TextUtils.isEmpty(cellValues[i])) {
+                mPrintWriter.println("        <Data name=\"" + mColumnNames[i] + "\">");
+                mPrintWriter.print("          <value>");
+                mPrintWriter.print(cellValues[i]);
+                mPrintWriter.println("</value>");
+                mPrintWriter.println("        </Data>");
+            }
         }
         mPrintWriter.println("      </ExtendedData>");
         mPrintWriter.println("      <Style>");
