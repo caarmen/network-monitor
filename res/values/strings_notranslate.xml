@@ -78,6 +78,7 @@ td.slow {
         <item>cdma_cell_network_id</item>
         <item>cdma_cell_system_id</item>
         <item>gsm_full_cell_id</item>
+        <item>gsm_rnc</item>
         <item>gsm_short_cell_id</item>
         <item>gsm_cell_lac</item>
         <item>gsm_cell_psc</item>

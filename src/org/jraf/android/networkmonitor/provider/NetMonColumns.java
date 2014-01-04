@@ -73,6 +73,7 @@ public class NetMonColumns implements BaseColumns {
     public static final String CDMA_CELL_NETWORK_ID = "cdma_cell_network_id";
     public static final String CDMA_CELL_SYSTEM_ID = "cdma_cell_system_id";
     public static final String GSM_FULL_CELL_ID = "gsm_full_cell_id";
+    public static final String GSM_RNC = "gsm_rnc";
     public static final String GSM_SHORT_CELL_ID = "gsm_short_cell_id";
     public static final String GSM_CELL_LAC = "gsm_cell_lac";
     public static final String GSM_CELL_PSC = "gsm_cell_psc";

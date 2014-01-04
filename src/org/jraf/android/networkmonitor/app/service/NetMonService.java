@@ -327,7 +327,9 @@ public class NetMonService extends Service {
             // isn't always so. We'll report both the full cell id returned by
             // Android, and the truncated one (taking only the last 2 bytes).
             int shortCid = cid > 0 ? cid & 0xFFFF : cid;
+            int rnc = cid > 0 ? cid >> 16 & 0xFFFF : 0;
             values.put(NetMonColumns.GSM_FULL_CELL_ID, cid);
+            if (rnc > 0) values.put(NetMonColumns.GSM_RNC, rnc);
             values.put(NetMonColumns.GSM_SHORT_CELL_ID, shortCid);
             values.put(NetMonColumns.GSM_CELL_LAC, gsmCellLocation.getLac());
             if (Build.VERSION.SDK_INT >= 9) values.put(NetMonColumns.GSM_CELL_PSC, getPsc(gsmCellLocation));

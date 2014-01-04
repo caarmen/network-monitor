@@ -39,6 +39,7 @@
     <string name="cdma_cell_network_id">CDMA Cell Network Id</string>
     <string name="cdma_cell_system_id">CDMA Cell System Id</string>
     <string name="gsm_full_cell_id">GSM Full Cell Id</string>
+    <string name="gsm_rnc">GSM RNC</string>
     <string name="gsm_short_cell_id">GSM Short Cell Id</string>
     <string name="gsm_cell_lac">GSM Cell LAC</string>
     <string name="gsm_cell_psc">GSM Cell PSC</string>
