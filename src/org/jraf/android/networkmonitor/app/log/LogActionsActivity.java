@@ -48,6 +48,7 @@ import org.jraf.android.networkmonitor.app.export.DBExport;
 import org.jraf.android.networkmonitor.app.export.ExcelExport;
 import org.jraf.android.networkmonitor.app.export.FileExport;
 import org.jraf.android.networkmonitor.app.export.HTMLExport;
+import org.jraf.android.networkmonitor.app.export.KMLExport;
 import org.jraf.android.networkmonitor.app.export.SummaryExport;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
@@ -94,6 +95,8 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                                 fileExport = new CSVExport(LogActionsActivity.this, mExportProgressListener);
                             } else if (getString(R.string.export_choice_html).equals(exportChoices[which])) {
                                 fileExport = new HTMLExport(LogActionsActivity.this, true, mExportProgressListener);
+                            } else if (getString(R.string.export_choice_kml).equals(exportChoices[which])) {
+                                fileExport = new KMLExport(LogActionsActivity.this, true, mExportProgressListener);
                             } else if (getString(R.string.export_choice_excel).equals(exportChoices[which])) {
                                 fileExport = new ExcelExport(LogActionsActivity.this, mExportProgressListener);
                             } else if (getString(R.string.export_choice_db).equals(exportChoices[which])) {
