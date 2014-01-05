@@ -6758,16 +6758,16 @@ org.jraf.android.networkmonitor.app.export.HTMLExport -> org.jraf.android.networ
     38:38:java.io.File export() -> b
 org.jraf.android.networkmonitor.app.export.SummaryExport -> org.jraf.android.networkmonitor.app.b.g:
     java.lang.String TAG -> a
-    171:209:java.lang.String getSummary(android.content.Context) -> a
-    213:219:void add(java.util.Map,java.lang.String,java.lang.Object) -> a
-    222:237:java.lang.String generateReport(android.content.Context,java.util.SortedMap) -> a
-    242:250:org.jraf.android.networkmonitor.app.export.SummaryExport$TestResult createTestResult(org.jraf.android.networkmonitor.Constants$ConnectionType,java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
+    175:213:java.lang.String getSummary(android.content.Context) -> a
+    217:223:void add(java.util.Map,java.lang.String,java.lang.Object) -> a
+    226:241:java.lang.String generateReport(android.content.Context,java.util.SortedMap) -> a
+    246:254:org.jraf.android.networkmonitor.app.export.SummaryExport$TestResult createTestResult(org.jraf.android.networkmonitor.Constants$ConnectionType,java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
 org.jraf.android.networkmonitor.app.export.SummaryExport$1 -> org.jraf.android.networkmonitor.app.b.h:
     int[] $SwitchMap$org$jraf$android$networkmonitor$Constants$ConnectionType -> a
 org.jraf.android.networkmonitor.app.export.SummaryExport$CdmaCellResult -> org.jraf.android.networkmonitor.app.b.i:
-    148:148:java.lang.String toString() -> toString
+    152:152:java.lang.String toString() -> toString
 org.jraf.android.networkmonitor.app.export.SummaryExport$GsmCellResult -> org.jraf.android.networkmonitor.app.b.j:
-    132:132:java.lang.String toString() -> toString
+    136:136:java.lang.String toString() -> toString
 org.jraf.android.networkmonitor.app.export.SummaryExport$TestResult -> org.jraf.android.networkmonitor.app.b.k:
     int mPassCount -> f
     int mFailCount -> g
@@ -6786,7 +6786,7 @@ org.jraf.android.networkmonitor.app.export.SummaryExport$TestResult -> org.jraf.
     95:98:int compare(java.lang.String,java.lang.String) -> a
     49:49:int compareTo(java.lang.Object) -> compareTo
 org.jraf.android.networkmonitor.app.export.SummaryExport$WiFiResult -> org.jraf.android.networkmonitor.app.b.l:
-    163:163:java.lang.String toString() -> toString
+    167:167:java.lang.String toString() -> toString
 org.jraf.android.networkmonitor.app.export.TableFileExport -> org.jraf.android.networkmonitor.app.b.m:
     java.lang.String TAG -> d
     java.text.SimpleDateFormat DATE_FORMAT -> e

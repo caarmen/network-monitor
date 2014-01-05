@@ -101,17 +101,21 @@ public class SummaryExport {
         @Override
         public int compareTo(TestResult other) {
             if (other.getClass().equals(other.getClass())) {
+                // First, compare by score
+                int rateDiff = passRate - other.passRate;
+                if (rateDiff > 0) return 1;
+                else if (rateDiff < 0) return -1;
+
+                // If two TestResults have the same score, compare by their ids.
                 final int id1compare = compare(id1, other.id1);
                 if (id1compare != 0) return id1compare;
                 final int id2compare = compare(id2, other.id2);
                 if (id2compare != 0) return id2compare;
                 final int id3compare = compare(id3, other.id3);
                 if (id3compare != 0) return id3compare;
-                int rateDiff = passRate - other.passRate;
-                if (rateDiff > 0) return 1;
-                else if (rateDiff < 0) return -1;
-                else
-                    return mTestCount - other.mTestCount;
+
+                // Same score and same ids, compare by number of tests.
+                return mTestCount - other.mTestCount;
             } else {
                 return getClass().getSimpleName().compareTo(other.getClass().getSimpleName());
             }
