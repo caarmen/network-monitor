@@ -46,7 +46,7 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
  */
 public class KMLExport extends FileExport {
     private static final String TAG = KMLExport.class.getSimpleName();
-    private static final String KML_FILE = "networkmonitor.kml";
+    private static final String KML_FILE_PREFIX = "networkmonitor-";
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss", Locale.US);
 
     // The field which determines the name/label of the KML placemarks we will export.i
@@ -56,7 +56,7 @@ public class KMLExport extends FileExport {
      * @param placemarkNameColumn the column whose value will be exported to the KML placemark names.
      */
     public KMLExport(Context context, FileExport.ExportProgressListener listener, String placemarkNameColumn) throws FileNotFoundException {
-        super(context, new File(context.getExternalFilesDir(null), KML_FILE), listener);
+        super(context, new File(context.getExternalFilesDir(null), KML_FILE_PREFIX + placemarkNameColumn + ".kml"), listener);
         mPlacemarkNameColumn = placemarkNameColumn;
     }
 
