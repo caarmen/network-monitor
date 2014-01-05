@@ -59,7 +59,6 @@ class KMLWriter extends PrintWriter {
         TIMESTAMP_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
-
     public void writeHeader() {
         println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
         println("<kml xmlns=\"http://earth.google.com/kml/2.1\">");
@@ -159,8 +158,8 @@ class KMLWriter extends PrintWriter {
             styleUrl = STYLEMAP_YELLOW;
         } else {
             KMLStyle.IconColor iconColor = mKmlStyle.getColor(values);
-            if (iconColor == org.jraf.android.networkmonitor.app.export.kml.KMLStyle.IconColor.GREEN) styleUrl = STYLEMAP_GREEN;
-            else if (iconColor == org.jraf.android.networkmonitor.app.export.kml.KMLStyle.IconColor.RED) styleUrl = STYLEMAP_RED;
+            if (iconColor == KMLStyle.IconColor.GREEN) styleUrl = STYLEMAP_GREEN;
+            else if (iconColor == KMLStyle.IconColor.RED) styleUrl = STYLEMAP_RED;
             else
                 styleUrl = STYLEMAP_YELLOW;
         }

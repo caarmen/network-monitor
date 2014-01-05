@@ -34,57 +34,61 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
 /**
  * Returns the proper styling info (for now, just the icon color) for a KML placemark.
  */
-class KMLStyle {
-
-    // The name of the field which is used for the label/name of a placemark.
-    protected final String mPlacemarkNameField;
-
-    enum IconColor {
-        RED, YELLOW, GREEN
-    };
+class KMLStyleFactory {
 
     /**
-     * @return the icon color to use given the attributes for a given placemark
+     * @return an implementation of KMLStyle for the given placemark extended data field name.
      */
-    public IconColor getColor(Map<String, String> values) {
-        return getColor(values.get(mPlacemarkNameField));
-    }
-
-    /**
-     * @param placemarkNameField the name of the field which determines the name/label of the placemark. In most cases the value of this field will also
-     *            determine the color of the icon.
-     */
-    protected KMLStyle(String placemarkNameField) {
-        mPlacemarkNameField = placemarkNameField;
-    }
-
-    /**
-     * @return the icon color to use given the value for the relevant attribute of a given placemark.
-     */
-    protected IconColor getColor(String value) {
-        return IconColor.YELLOW;
-    }
-
-    static KMLStyle getKMLStyle(Context context, String columnName) {
+    static KMLStyle getKMLStyle(Context context, String fieldName) {
         KMLStyle result = null;
-        if (NetMonColumns.SOCKET_CONNECTION_TEST.equals(columnName) || NetMonColumns.HTTP_CONNECTION_TEST.equals(columnName)) result = new KMLStyleConnectionTest(
-                columnName);
-        else if (NetMonColumns.IS_CONNECTED.equals(columnName) || NetMonColumns.IS_ROAMING.equals(columnName) || NetMonColumns.IS_AVAILABLE.equals(columnName)
-                || NetMonColumns.IS_FAILOVER.equals(columnName) || NetMonColumns.IS_NETWORK_METERED.equals(columnName)) result = new KMLStyleBoolean(columnName);
-        else if (NetMonColumns.WIFI_SIGNAL_STRENGTH.equals(columnName) || NetMonColumns.WIFI_RSSI.equals(columnName)
-                || NetMonColumns.CELL_SIGNAL_STRENGTH.equals(columnName) || NetMonColumns.CELL_SIGNAL_STRENGTH_DBM.equals(columnName)
-                || NetMonColumns.CELL_ASU_LEVEL.equals(columnName)) result = new KMLStyleSignalStrength(columnName);
-        else if (NetMonColumns.DETAILED_STATE.equals(columnName)) result = new KMLStyleDetailedState(columnName);
-        else if (NetMonColumns.SIM_STATE.equals(columnName)) result = new KMLStyleSIMState(columnName);
-        else if (NetMonColumns.DATA_ACTIVITY.equals(columnName)) result = new KMLStyleDataActivity(columnName);
-        else if (NetMonColumns.DATA_STATE.equals(columnName)) result = new KMLStyleDataState(columnName);
+        if (NetMonColumns.SOCKET_CONNECTION_TEST.equals(fieldName) || NetMonColumns.HTTP_CONNECTION_TEST.equals(fieldName)) result = new KMLStyleConnectionTest(
+                fieldName);
+        else if (NetMonColumns.IS_CONNECTED.equals(fieldName) || NetMonColumns.IS_ROAMING.equals(fieldName) || NetMonColumns.IS_AVAILABLE.equals(fieldName)
+                || NetMonColumns.IS_FAILOVER.equals(fieldName) || NetMonColumns.IS_NETWORK_METERED.equals(fieldName)) result = new KMLStyleBoolean(fieldName);
+        else if (NetMonColumns.WIFI_SIGNAL_STRENGTH.equals(fieldName) || NetMonColumns.WIFI_RSSI.equals(fieldName)
+                || NetMonColumns.CELL_SIGNAL_STRENGTH.equals(fieldName) || NetMonColumns.CELL_SIGNAL_STRENGTH_DBM.equals(fieldName)
+                || NetMonColumns.CELL_ASU_LEVEL.equals(fieldName)) result = new KMLStyleSignalStrength(fieldName);
+        else if (NetMonColumns.DETAILED_STATE.equals(fieldName)) result = new KMLStyleDetailedState(fieldName);
+        else if (NetMonColumns.SIM_STATE.equals(fieldName)) result = new KMLStyleSIMState(fieldName);
+        else if (NetMonColumns.DATA_ACTIVITY.equals(fieldName)) result = new KMLStyleDataActivity(fieldName);
+        else if (NetMonColumns.DATA_STATE.equals(fieldName)) result = new KMLStyleDataState(fieldName);
         else
-            result = new KMLStyle(columnName);
+            result = new KMLStyleDefault(fieldName);
         return result;
     }
 
-    private static class KMLStyleConnectionTest extends KMLStyle {
-        KMLStyleConnectionTest(String columnName) {
+    private static class KMLStyleDefault implements KMLStyle {
+        // The name of the field which is used for the label/name of a placemark.
+        protected final String mPlacemarkNameField;
+
+        /**
+         * @param placemarkNameField the name of the field which determines the name/label of the placemark. In most cases the value of this field will also
+         *            determine the color of the icon.
+         */
+        private KMLStyleDefault(String placemarkNameField) {
+            mPlacemarkNameField = placemarkNameField;
+        }
+
+        /**
+         * @return the icon color to use given the attributes for a given placemark
+         */
+        @Override
+        public IconColor getColor(Map<String, String> values) {
+            return getColor(values.get(mPlacemarkNameField));
+        }
+
+
+        /**
+         * @return the icon color to use given the value for the relevant attribute of a given placemark.
+         */
+        protected IconColor getColor(String value) {
+            return IconColor.YELLOW;
+        }
+
+    }
+
+    private static class KMLStyleConnectionTest extends KMLStyleDefault {
+        private KMLStyleConnectionTest(String columnName) {
             super(columnName);
         }
 
@@ -96,8 +100,8 @@ class KMLStyle {
         }
     }
 
-    private static class KMLStyleBoolean extends KMLStyle {
-        KMLStyleBoolean(String columnName) {
+    private static class KMLStyleBoolean extends KMLStyleDefault {
+        private KMLStyleBoolean(String columnName) {
             super(columnName);
         }
 
@@ -109,9 +113,9 @@ class KMLStyle {
         }
     }
 
-    private static class KMLStyleSignalStrength extends KMLStyle {
+    private static class KMLStyleSignalStrength extends KMLStyleDefault {
 
-        KMLStyleSignalStrength(String columnName) {
+        private KMLStyleSignalStrength(String columnName) {
             super(columnName);
         }
 
@@ -135,8 +139,8 @@ class KMLStyle {
         }
     }
 
-    private static class KMLStyleDetailedState extends KMLStyle {
-        KMLStyleDetailedState(String columnName) {
+    private static class KMLStyleDetailedState extends KMLStyleDefault {
+        private KMLStyleDetailedState(String columnName) {
             super(columnName);
         }
 
@@ -149,8 +153,8 @@ class KMLStyle {
         }
     }
 
-    private static class KMLStyleSIMState extends KMLStyle {
-        KMLStyleSIMState(String columnName) {
+    private static class KMLStyleSIMState extends KMLStyleDefault {
+        private KMLStyleSIMState(String columnName) {
             super(columnName);
         }
 
@@ -162,8 +166,8 @@ class KMLStyle {
         }
     }
 
-    private static class KMLStyleDataActivity extends KMLStyle {
-        KMLStyleDataActivity(String columnName) {
+    private static class KMLStyleDataActivity extends KMLStyleDefault {
+        private KMLStyleDataActivity(String columnName) {
             super(columnName);
         }
 
@@ -175,8 +179,8 @@ class KMLStyle {
         }
     }
 
-    private static class KMLStyleDataState extends KMLStyle {
-        KMLStyleDataState(String columnName) {
+    private static class KMLStyleDataState extends KMLStyleDefault {
+        private KMLStyleDataState(String columnName) {
             super(columnName);
         }
 

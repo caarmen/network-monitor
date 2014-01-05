@@ -53,6 +53,7 @@ public class KMLExport extends FileExport {
     private final String mPlacemarkNameColumn;
 
     /**
+     * @param placemarkNameColumn the column whose value will be exported to the KML placemark names.
      */
     public KMLExport(Context context, FileExport.ExportProgressListener listener, String placemarkNameColumn) throws FileNotFoundException {
         super(context, new File(context.getExternalFilesDir(null), KML_FILE), listener);
@@ -81,17 +82,21 @@ public class KMLExport extends FileExport {
                 }
                 Log.v(TAG, "Column names: " + Arrays.toString(columnsToExport));
 
-                KMLStyle kmlStyle = KMLStyle.getKMLStyle(mContext, mPlacemarkNameColumn);
+                KMLStyle kmlStyle = KMLStyleFactory.getKMLStyle(mContext, mPlacemarkNameColumn);
                 KMLWriter kmlWriter = new KMLWriter(mFile, kmlStyle, mContext.getString(R.string.unknown), columnNamesMapping);
-                // Write the table rows to the file.
+
+                // Write the KML placemarks to the file.
                 if (c.moveToFirst()) {
                     int rowCount = c.getCount();
                     int latitudeIndex = c.getColumnIndex(NetMonColumns.DEVICE_LATITUDE);
                     int longitudeIndex = c.getColumnIndex(NetMonColumns.DEVICE_LONGITUDE);
                     int timestampIndex = c.getColumnIndex(NetMonColumns.TIMESTAMP);
                     int dataIndex = c.getColumnIndex(mPlacemarkNameColumn);
+
                     // Start writing to the file.
                     kmlWriter.writeHeader();
+
+                    // Write one KML placemark for each row in the DB.
                     while (c.moveToNext()) {
                         Map<String, String> cellValues = new LinkedHashMap<String, String>(c.getColumnCount());
                         long timestamp = c.getLong(timestampIndex);
@@ -106,6 +111,7 @@ public class KMLExport extends FileExport {
                             cellValues.put(c.getColumnName(i), cellValue);
                         }
                         kmlWriter.writePlacemark(c.getString(dataIndex), cellValues, c.getString(latitudeIndex), c.getString(longitudeIndex), timestamp);
+
                         // Notify the listener of our progress (progress is 1-based)
                         if (mListener != null) mListener.onExportProgress(c.getPosition() + 1, rowCount);
                     }
