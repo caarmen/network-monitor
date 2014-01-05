@@ -82,7 +82,8 @@ class KMLStyleFactory {
          * @return the icon color to use given the value for the relevant attribute of a given placemark.
          */
         protected IconColor getColor(String value) {
-            return IconColor.YELLOW;
+            if (TextUtils.isEmpty(value)) return IconColor.YELLOW;
+            return IconColor.GREEN;
         }
 
     }

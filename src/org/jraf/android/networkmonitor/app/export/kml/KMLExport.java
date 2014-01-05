@@ -83,7 +83,9 @@ public class KMLExport extends FileExport {
                 Log.v(TAG, "Column names: " + Arrays.toString(columnsToExport));
 
                 KMLStyle kmlStyle = KMLStyleFactory.getKMLStyle(mContext, mPlacemarkNameColumn);
-                KMLWriter kmlWriter = new KMLWriter(mFile, kmlStyle, mContext.getString(R.string.unknown), columnNamesMapping);
+                String now = DATE_FORMAT.format(new Date());
+                String title = mContext.getString(R.string.app_name) + ": " + columnNamesMapping.get(mPlacemarkNameColumn) + " (" + now + ")";
+                KMLWriter kmlWriter = new KMLWriter(mFile, title, kmlStyle, mContext.getString(R.string.unknown), columnNamesMapping);
 
                 // Write the KML placemarks to the file.
                 if (c.moveToFirst()) {

@@ -44,6 +44,7 @@ class KMLWriter extends PrintWriter {
     private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
     private final KMLStyle mKmlStyle;
     private final String mEmptyLabel;
+    private final String mTitle;
     private final Map<String, String> mFieldDisplayNames;
 
     /**
@@ -51,11 +52,12 @@ class KMLWriter extends PrintWriter {
      * @param emptyLabel when the placemark name has no value, use this label instead of a blank value
      * @fieldDisplayNames mapping between the names of the placemark fields and the user-friendly names to display for these fields
      */
-    public KMLWriter(File file, KMLStyle kmlStyle, String emptyLabel, Map<String, String> fieldDisplayNames) throws FileNotFoundException {
+    public KMLWriter(File file, String title, KMLStyle kmlStyle, String emptyLabel, Map<String, String> fieldDisplayNames) throws FileNotFoundException {
         super(file);
         mKmlStyle = kmlStyle;
         mEmptyLabel = emptyLabel;
         mFieldDisplayNames = fieldDisplayNames;
+        mTitle = title;
         TIMESTAMP_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
@@ -63,6 +65,9 @@ class KMLWriter extends PrintWriter {
         println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
         println("<kml xmlns=\"http://earth.google.com/kml/2.1\">");
         println("  <Document>");
+        print("    <name>");
+        print(mTitle);
+        println("</name>");
         writeStyles();
     }
 
@@ -154,15 +159,11 @@ class KMLWriter extends PrintWriter {
      */
     private void writePlacemarkStyleUrl(String placemarkName, Map<String, String> values) {
         final String styleUrl;
-        if (TextUtils.isEmpty(placemarkName)) {
+        KMLStyle.IconColor iconColor = mKmlStyle.getColor(values);
+        if (iconColor == KMLStyle.IconColor.GREEN) styleUrl = STYLEMAP_GREEN;
+        else if (iconColor == KMLStyle.IconColor.RED) styleUrl = STYLEMAP_RED;
+        else
             styleUrl = STYLEMAP_YELLOW;
-        } else {
-            KMLStyle.IconColor iconColor = mKmlStyle.getColor(values);
-            if (iconColor == KMLStyle.IconColor.GREEN) styleUrl = STYLEMAP_GREEN;
-            else if (iconColor == KMLStyle.IconColor.RED) styleUrl = STYLEMAP_RED;
-            else
-                styleUrl = STYLEMAP_YELLOW;
-        }
         print("      <styleUrl>");
         print(styleUrl);
         println("</styleUrl>");
