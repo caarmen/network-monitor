@@ -138,21 +138,30 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
             if (prefColumnName.equals(columnNames[i])) prefColumnIndex = i;
         }
         AlertDialog.Builder kmlColumnDialog = new AlertDialog.Builder(this);
-        kmlColumnDialog.setSingleChoiceItems(columnLabels, prefColumnIndex, new DialogInterface.OnClickListener() {
+        kmlColumnDialog.setSingleChoiceItems(columnLabels, prefColumnIndex, null);
+        kmlColumnDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                int selectedItem = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
                 // Save the column the user chose to export this time.
                 Editor editor = PreferenceManager.getDefaultSharedPreferences(LogActionsActivity.this).edit();
-                editor.putString(Constants.PREF_KML_EXPORT_COLUMN, columnNames[which]);
+                editor.putString(Constants.PREF_KML_EXPORT_COLUMN, columnNames[selectedItem]);
                 editor.commit();
                 // Do the actual export.
                 try {
-                    KMLExport kmlExport = new KMLExport(LogActionsActivity.this, mExportProgressListener, columnNames[which]);
+                    KMLExport kmlExport = new KMLExport(LogActionsActivity.this, mExportProgressListener, columnNames[selectedItem]);
                     shareFile(kmlExport);
                 } catch (FileNotFoundException e) {
                     Log.w(TAG, "Error sharing file: " + e.getMessage(), e);
                 }
+            }
+        });
+        kmlColumnDialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.v(TAG, "Canceled KML export");
+                finish();
             }
         });
         kmlColumnDialog.setTitle(R.string.export_kml_choice_title);
