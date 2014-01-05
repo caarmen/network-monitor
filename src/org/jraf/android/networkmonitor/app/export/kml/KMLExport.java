@@ -45,8 +45,8 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
  */
 public class KMLExport extends FileExport {
     private static final String TAG = KMLExport.class.getSimpleName();
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
     private static final String KML_FILE = "networkmonitor.kml";
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss", Locale.US);
 
     // The field which determines the name/label of the KML placemarks we will export.i
     private final String mPlacemarkNameColumn;
@@ -103,7 +103,7 @@ public class KMLExport extends FileExport {
                             if (cellValue == null) cellValue = "";
                             cellValues.put(c.getColumnName(i), cellValue);
                         }
-                        kmlWriter.writePlacemark(c.getString(dataIndex), cellValues, c.getString(latitudeIndex), c.getString(longitudeIndex), timestampString);
+                        kmlWriter.writePlacemark(c.getString(dataIndex), cellValues, c.getString(latitudeIndex), c.getString(longitudeIndex), timestamp);
                         // Notify the listener of our progress (progress is 1-based)
                         if (mListener != null) mListener.onExportProgress(c.getPosition() + 1, rowCount);
                     }

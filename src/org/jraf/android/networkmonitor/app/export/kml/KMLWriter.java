@@ -26,7 +26,11 @@ package org.jraf.android.networkmonitor.app.export.kml;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import android.text.TextUtils;
 
@@ -37,6 +41,7 @@ class KMLWriter extends PrintWriter {
     private static final String STYLEMAP_RED = "#stylemap_red";
     private static final String STYLEMAP_GREEN = "#stylemap_green";
     private static final String STYLEMAP_YELLOW = "#stylemap_yellow";
+    private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
     private final KMLStyle mKmlStyle;
     private final String mEmptyLabel;
 
@@ -44,6 +49,7 @@ class KMLWriter extends PrintWriter {
         super(file);
         mKmlStyle = kmlStyle;
         mEmptyLabel = emptyLabel;
+        TIMESTAMP_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
     public void writeHeader() {
@@ -58,13 +64,13 @@ class KMLWriter extends PrintWriter {
      * 
      * @values map of field name to value
      */
-    public void writePlacemark(String name, Map<String, String> values, String latitude, String longitude, String timestamp) {
+    public void writePlacemark(String name, Map<String, String> values, String latitude, String longitude, long timestamp) {
         println("    <Placemark>");
         writePlacemarkName(name);
         writePlacemarkCoordinates(longitude, latitude);
-        writePlacemarkExtendedData(values);
         writePlacemarkTimestamp(timestamp);
         writePlacemarkStyleUrl(name, values);
+        writePlacemarkExtendedData(values);
         println("    </Placemark>");
         flush();
     }
@@ -170,9 +176,11 @@ class KMLWriter extends PrintWriter {
     /**
      * Write the timestamp.
      */
-    private void writePlacemarkTimestamp(String timestamp) {
+    private void writePlacemarkTimestamp(long timestamp) {
+        Date date = new Date(timestamp);
+        String timestampString = TIMESTAMP_FORMAT.format(date);
         print("      <TimeStamp><when>");
-        print(timestamp);
+        print(timestampString);
         println("</when></TimeStamp>");
     }
 
