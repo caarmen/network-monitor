@@ -40,10 +40,9 @@ import org.jraf.android.networkmonitor.R;
  */
 public class KMLExport extends TableFileExport {
     private static final String KML_FILE = "networkmonitor.kml";
-    // KML colors are of the format aabbggrr: https://developers.google.com/kml/documentation/kmlreference#color
-    private static final String ICON_COLOR_RED = "ff0000ff";
-    private static final String ICON_COLOR_GREEN = "ff00ff00";
-    private static final String ICON_COLOR_YELLOW = "ff00ffff";
+    private static final String STYLEMAP_RED = "#stylemap_red";
+    private static final String STYLEMAP_GREEN = "#stylemap_green";
+    private static final String STYLEMAP_YELLOW = "#stylemap_yellow";
     private PrintWriter mPrintWriter;
     private String[] mColumnNames;
     private int mHttpConnectionTestColumnIndex;
@@ -71,9 +70,46 @@ public class KMLExport extends TableFileExport {
         mSocketConnectionTestColumnIndex = columnNamePositions.get(mContext.getString(R.string.google_connection_test));
         mLatitudeColumnIndex = columnNamePositions.get(mContext.getString(R.string.device_latitude));
         mLongitudeColumnIndex = columnNamePositions.get(mContext.getString(R.string.device_longitude));
+
         mPrintWriter.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
         mPrintWriter.println("<kml xmlns=\"http://earth.google.com/kml/2.1\">");
-        mPrintWriter.println("  <Folder>");
+        mPrintWriter.println("  <Document>");
+        writeStyles();
+    }
+
+    private void writeStyles() {
+        // KML colors are of the format aabbggrr: https://developers.google.com/kml/documentation/kmlreference#color
+        writeStyle("red", "ff0000ff");
+        writeStyle("green", "ff00ff00");
+        writeStyle("yellow", "ff00ffff");
+    }
+
+    private void writeStyle(String colorName, String colorCode) {
+        mPrintWriter.println("    <StyleMap id=\"stylemap_" + colorName + "\">");
+        String[] keys = new String[] { "normal", "highlight" };
+        for (String key : keys) {
+            mPrintWriter.println("      <Pair>");
+            mPrintWriter.println("        <key>" + key + "</key>");
+            mPrintWriter.println("        <styleUrl>#style_" + colorName + "</styleUrl>");
+            mPrintWriter.println("      </Pair>");
+        }
+        mPrintWriter.println("    </StyleMap>");
+        mPrintWriter.println("    <Style id=\"style_" + colorName + "\">");
+        mPrintWriter.println("      <IconStyle>");
+        mPrintWriter.print("        <color>");
+        mPrintWriter.print(colorCode);
+        mPrintWriter.println("</color>");
+        mPrintWriter.println("        <Icon>");
+        mPrintWriter.print("          <href>");
+        String iconUrl = "http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png";
+        mPrintWriter.print(iconUrl);
+        mPrintWriter.println("</href>");
+        mPrintWriter.println("        </Icon>");
+        mPrintWriter.println("      </IconStyle>");
+        mPrintWriter.println("      <LabelStyle>");
+        mPrintWriter.println("        <scale>1.0</scale>");
+        mPrintWriter.println("      </LabelStyle>");
+        mPrintWriter.println("    </Style>");
     }
 
     @Override
@@ -101,32 +137,18 @@ public class KMLExport extends TableFileExport {
             }
         }
         mPrintWriter.println("      </ExtendedData>");
-        mPrintWriter.println("      <Style>");
-        mPrintWriter.println("        <LabelStyle>");
-        mPrintWriter.println("          <scale>1.0</scale>");
-        mPrintWriter.println("        </LabelStyle>");
-        mPrintWriter.println("        <IconStyle>");
-        mPrintWriter.print("          <color>");
-        String iconColor = getIconColor(label);
-        mPrintWriter.print(iconColor);
-        mPrintWriter.println("</color>");
-        mPrintWriter.println("          <scale>1.0</scale>");
-        mPrintWriter.println("          <Icon>");
-        mPrintWriter.print("            <href>");
-        String iconUrl = "http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png";
-        mPrintWriter.print(iconUrl);
-        mPrintWriter.println("</href>");
-        mPrintWriter.println("          </Icon>");
-        mPrintWriter.println("        </IconStyle>");
-        mPrintWriter.println("      </Style>");
+        mPrintWriter.print("      <styleUrl>");
+        String styleUrl = getStyleUrl(label);
+        mPrintWriter.print(styleUrl);
+        mPrintWriter.println("</styleUrl>");
         mPrintWriter.println("    </Placemark>");
         mPrintWriter.flush();
     }
 
-    private String getIconColor(String label) {
-        if (Constants.CONNECTION_TEST_FAIL.equals(label)) return ICON_COLOR_RED;
-        if (Constants.CONNECTION_TEST_PASS.equals(label)) return ICON_COLOR_GREEN;
-        return ICON_COLOR_YELLOW;
+    private String getStyleUrl(String label) {
+        if (Constants.CONNECTION_TEST_FAIL.equals(label)) return STYLEMAP_RED;
+        if (Constants.CONNECTION_TEST_PASS.equals(label)) return STYLEMAP_GREEN;
+        return STYLEMAP_YELLOW;
     }
 
     private String getLabel(String[] cellValues) {
@@ -143,7 +165,7 @@ public class KMLExport extends TableFileExport {
 
     @Override
     void writeFooter() {
-        mPrintWriter.println("  </Folder>");
+        mPrintWriter.println("  </Document>");
         mPrintWriter.println("</kml>");
         mPrintWriter.flush();
         mPrintWriter.close();
