@@ -33,6 +33,7 @@ public class Constants {
     public static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
     public static final String PREF_SERVICE_ENABLED = "PREF_SERVICE_ENABLED";
     public static final boolean PREF_SERVICE_ENABLED_DEFAULT = false;
+    public static final String PREF_KML_EXPORT_COLUMN = "PREF_KML_EXPORT_COLUMN";
     public static final String CONNECTION_TEST_PASS = "PASS";
     public static final String CONNECTION_TEST_FAIL = "FAIL";
     public static final String CONNECTION_TEST_SLOW = "SLOW";

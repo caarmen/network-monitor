@@ -31,10 +31,12 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -96,7 +98,44 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                             } else if (getString(R.string.export_choice_html).equals(exportChoices[which])) {
                                 fileExport = new HTMLExport(LogActionsActivity.this, true, mExportProgressListener);
                             } else if (getString(R.string.export_choice_kml).equals(exportChoices[which])) {
-                                fileExport = new KMLExport(LogActionsActivity.this, mExportProgressListener, getString(R.string.google_connection_test));
+                                final String[] columnNames = getResources().getStringArray(R.array.db_columns);
+                                String prefColumnName = PreferenceManager.getDefaultSharedPreferences(LogActionsActivity.this).getString(
+                                        Constants.PREF_KML_EXPORT_COLUMN, "google_connection_test");
+                                int prefColumnIndex = 0;
+                                final String[] columnLabels = new String[columnNames.length];
+                                for (int i = 0; i < columnNames.length; i++) {
+                                    int columnLabelId = getResources().getIdentifier(columnNames[i], "string", R.class.getPackage().getName());
+                                    columnLabels[i] = getString(columnLabelId);
+                                    if (prefColumnName.equals(columnNames[i])) prefColumnIndex = i;
+                                }
+                                AlertDialog.Builder kmlColumnDialog = new AlertDialog.Builder(LogActionsActivity.this);
+                                kmlColumnDialog.setSingleChoiceItems(columnLabels, prefColumnIndex, new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        String columnLabel = columnLabels[which];
+                                        Editor editor = PreferenceManager.getDefaultSharedPreferences(LogActionsActivity.this).edit();
+                                        editor.putString(Constants.PREF_KML_EXPORT_COLUMN, columnNames[which]);
+                                        editor.commit();
+                                        try {
+                                            KMLExport kmlExport = new KMLExport(LogActionsActivity.this, mExportProgressListener, columnLabel);
+                                            shareFile(kmlExport);
+                                        } catch (FileNotFoundException e) {
+                                            Log.w(TAG, "Error sharing file: " + e.getMessage(), e);
+                                        }
+                                    }
+                                });
+                                kmlColumnDialog.setTitle("TODO choose field to export");
+                                kmlColumnDialog.show().setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+                                    @Override
+                                    public void onCancel(DialogInterface dialog) {
+                                        Log.v(TAG, "share dialog canceled");
+                                        finish();
+                                    }
+                                });
+                                return;
+
                             } else if (getString(R.string.export_choice_excel).equals(exportChoices[which])) {
                                 fileExport = new ExcelExport(LogActionsActivity.this, mExportProgressListener);
                             } else if (getString(R.string.export_choice_db).equals(exportChoices[which])) {
@@ -118,7 +157,6 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                 finish();
             }
         });
-        ;
     }
 
     /**
