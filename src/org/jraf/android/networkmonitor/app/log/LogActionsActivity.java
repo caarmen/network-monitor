@@ -50,8 +50,8 @@ import org.jraf.android.networkmonitor.app.export.DBExport;
 import org.jraf.android.networkmonitor.app.export.ExcelExport;
 import org.jraf.android.networkmonitor.app.export.FileExport;
 import org.jraf.android.networkmonitor.app.export.HTMLExport;
-import org.jraf.android.networkmonitor.app.export.KMLExport;
 import org.jraf.android.networkmonitor.app.export.SummaryExport;
+import org.jraf.android.networkmonitor.app.export.kml.KMLExport;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 /**
@@ -142,14 +142,13 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String columnLabel = columnLabels[which];
                 // Save the column the user chose to export this time.
                 Editor editor = PreferenceManager.getDefaultSharedPreferences(LogActionsActivity.this).edit();
                 editor.putString(Constants.PREF_KML_EXPORT_COLUMN, columnNames[which]);
                 editor.commit();
                 // Do the actual export.
                 try {
-                    KMLExport kmlExport = new KMLExport(LogActionsActivity.this, mExportProgressListener, columnLabel);
+                    KMLExport kmlExport = new KMLExport(LogActionsActivity.this, mExportProgressListener, columnNames[which]);
                     shareFile(kmlExport);
                 } catch (FileNotFoundException e) {
                     Log.w(TAG, "Error sharing file: " + e.getMessage(), e);

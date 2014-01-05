@@ -47,7 +47,7 @@ public abstract class FileExport {
     protected final File mFile;
     protected final ExportProgressListener mListener;
 
-    FileExport(Context context, File file, ExportProgressListener listener) throws FileNotFoundException {
+    protected FileExport(Context context, File file, ExportProgressListener listener) throws FileNotFoundException {
         Log.v(TAG, "FileExport: file " + file);
         mContext = context;
         mFile = file;

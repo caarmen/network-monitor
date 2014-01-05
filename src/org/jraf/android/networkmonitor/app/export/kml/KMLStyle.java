@@ -1,0 +1,190 @@
+/*
+ * This source is part of the
+ *      _____  ___   ____
+ *  __ / / _ \/ _ | / __/___  _______ _
+ * / // / , _/ __ |/ _/_/ _ \/ __/ _ `/
+ * \___/_/|_/_/ |_/_/ (_)___/_/  \_, /
+ *                              /___/
+ * repository.
+ *
+ * Copyright (C) 2014 Benoit 'BoD' Lubek (BoD@JRAF.org) //TODO <- replace with *your* name/email
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.jraf.android.networkmonitor.app.export.kml;
+
+import java.util.Map;
+
+import android.content.Context;
+import android.text.TextUtils;
+
+import org.jraf.android.networkmonitor.Constants;
+import org.jraf.android.networkmonitor.provider.NetMonColumns;
+
+/**
+ * Returns the proper styling info (for now, just the icon color) for a KML placemark.
+ */
+class KMLStyle {
+
+    // The name of the field which is used for the label/name of a placemark.
+    protected final String mPlacemarkNameField;
+
+    enum IconColor {
+        RED, YELLOW, GREEN
+    };
+
+    /**
+     * @return the icon color to use given the attributes for a given placemark
+     */
+    public IconColor getColor(Map<String, String> values) {
+        return getColor(values.get(mPlacemarkNameField));
+    }
+
+    /**
+     * @param placemarkNameField the name of the field which determines the name/label of the placemark. In most cases the value of this field will also
+     *            determine the color of the icon.
+     */
+    protected KMLStyle(String placemarkNameField) {
+        mPlacemarkNameField = placemarkNameField;
+    }
+
+    /**
+     * @return the icon color to use given the value for the relevant attribute of a given placemark.
+     */
+    protected IconColor getColor(String value) {
+        return IconColor.YELLOW;
+    }
+
+    static KMLStyle getKMLStyle(Context context, String columnName) {
+        KMLStyle result = null;
+        if (NetMonColumns.SOCKET_CONNECTION_TEST.equals(columnName) || NetMonColumns.HTTP_CONNECTION_TEST.equals(columnName)) result = new KMLStyleConnectionTest(
+                columnName);
+        else if (NetMonColumns.IS_CONNECTED.equals(columnName) || NetMonColumns.IS_ROAMING.equals(columnName) || NetMonColumns.IS_AVAILABLE.equals(columnName)
+                || NetMonColumns.IS_FAILOVER.equals(columnName) || NetMonColumns.IS_NETWORK_METERED.equals(columnName)) result = new KMLStyleBoolean(columnName);
+        else if (NetMonColumns.WIFI_SIGNAL_STRENGTH.equals(columnName) || NetMonColumns.WIFI_RSSI.equals(columnName)
+                || NetMonColumns.CELL_SIGNAL_STRENGTH.equals(columnName) || NetMonColumns.CELL_SIGNAL_STRENGTH_DBM.equals(columnName)
+                || NetMonColumns.CELL_ASU_LEVEL.equals(columnName)) result = new KMLStyleSignalStrength(columnName);
+        else if (NetMonColumns.DETAILED_STATE.equals(columnName)) result = new KMLStyleDetailedState(columnName);
+        else if (NetMonColumns.SIM_STATE.equals(columnName)) result = new KMLStyleSIMState(columnName);
+        else if (NetMonColumns.DATA_ACTIVITY.equals(columnName)) result = new KMLStyleDataActivity(columnName);
+        else if (NetMonColumns.DATA_STATE.equals(columnName)) result = new KMLStyleDataState(columnName);
+        else
+            result = new KMLStyle(columnName);
+        return result;
+    }
+
+    private static class KMLStyleConnectionTest extends KMLStyle {
+        KMLStyleConnectionTest(String columnName) {
+            super(columnName);
+        }
+
+        @Override
+        protected IconColor getColor(String value) {
+            if (Constants.CONNECTION_TEST_FAIL.equals(value)) return IconColor.RED;
+            if (Constants.CONNECTION_TEST_PASS.equals(value)) return IconColor.GREEN;
+            return IconColor.YELLOW;
+        }
+    }
+
+    private static class KMLStyleBoolean extends KMLStyle {
+        KMLStyleBoolean(String columnName) {
+            super(columnName);
+        }
+
+        @Override
+        protected IconColor getColor(String value) {
+            if ("0".equals(value)) return IconColor.RED;
+            if ("1".equals(value)) return IconColor.GREEN;
+            return IconColor.YELLOW;
+        }
+    }
+
+    private static class KMLStyleSignalStrength extends KMLStyle {
+
+        KMLStyleSignalStrength(String columnName) {
+            super(columnName);
+        }
+
+        @Override
+        public IconColor getColor(Map<String, String> values) {
+            // If we are reporting on the wifi signal strength or rssi, the icon color will be determined by the wifi signal strength
+            if (NetMonColumns.WIFI_RSSI.equals(mPlacemarkNameField) || NetMonColumns.WIFI_SIGNAL_STRENGTH.equals(mPlacemarkNameField)) return getColor(values
+                    .get(NetMonColumns.WIFI_SIGNAL_STRENGTH));
+            // If we are reporting on the cell signal strength (0-4), cell signal strength (dBm), or asu level, the icon color will be determined by the cell signal strength (0-4)
+            else
+                return getColor(values.get(NetMonColumns.CELL_SIGNAL_STRENGTH));
+        }
+
+        @Override
+        protected IconColor getColor(String value) {
+            if (TextUtils.isEmpty(value)) return IconColor.YELLOW;
+            Integer signalStrength = Integer.valueOf(value);
+            if (signalStrength >= 4) return IconColor.GREEN;
+            if (signalStrength <= 1) return IconColor.RED;
+            return IconColor.YELLOW;
+        }
+    }
+
+    private static class KMLStyleDetailedState extends KMLStyle {
+        KMLStyleDetailedState(String columnName) {
+            super(columnName);
+        }
+
+        @Override
+        protected IconColor getColor(String value) {
+            if ("CONNECTED".equals(value)) return IconColor.GREEN;
+            if ("CONNECTING".equals(value) || "AUTHENTICATING".equals(value) || "OBTAINING_IPADDR".equals(value) || "IDLE".equals(value))
+                return IconColor.YELLOW;
+            return IconColor.RED;
+        }
+    }
+
+    private static class KMLStyleSIMState extends KMLStyle {
+        KMLStyleSIMState(String columnName) {
+            super(columnName);
+        }
+
+        @Override
+        protected IconColor getColor(String value) {
+            if ("READY".equals(value)) return IconColor.GREEN;
+            if ("PIN_REQUIRED".equals(value)) return IconColor.YELLOW;
+            return IconColor.RED;
+        }
+    }
+
+    private static class KMLStyleDataActivity extends KMLStyle {
+        KMLStyleDataActivity(String columnName) {
+            super(columnName);
+        }
+
+        @Override
+        protected IconColor getColor(String value) {
+            if ("DORMANT".equals(value)) return IconColor.RED;
+            if ("NONE".equals(value)) return IconColor.YELLOW;
+            return IconColor.GREEN;
+        }
+    }
+
+    private static class KMLStyleDataState extends KMLStyle {
+        KMLStyleDataState(String columnName) {
+            super(columnName);
+        }
+
+        @Override
+        protected IconColor getColor(String value) {
+            if ("CONNECTED".equals(value)) return IconColor.GREEN;
+            if ("CONNECTING".equals(value)) return IconColor.YELLOW;
+            return IconColor.RED;
+        }
+    }
+}
