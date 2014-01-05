@@ -27,6 +27,7 @@
     <string name="export_choice_excel">Excel</string>
     <string name="export_choice_db">Base de données</string>
     <string name="export_choice_text">Résumé en texte</string>
+    <string name="export_kml_choice_title">Choisissez un champ</string>
     <string name="progress_dialog_message">Veuillez patienter&#8230;</string>
     <string name="export_progress_preparing_export">Préparation de l\'export&#8230;</string>
     <string name="export_progress_processing_data">Traitement des données&#8230;</string>

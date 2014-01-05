@@ -27,6 +27,7 @@
     <string name="export_choice_excel">Excel</string>
     <string name="export_choice_db">Raw database</string>
     <string name="export_choice_text">Text summary only</string>
+    <string name="export_kml_choice_title">Choose a field to export to KML</string>
     <string name="progress_dialog_message">Please wait&#8230;</string>
     <string name="export_progress_preparing_export">Preparing export&#8230;</string>
     <string name="export_progress_processing_data">Processing data&#8230;</string>

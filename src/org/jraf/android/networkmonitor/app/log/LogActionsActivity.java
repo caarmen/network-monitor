@@ -56,6 +56,7 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 /**
  * Provides actions on the network monitor log: sharing and clearing the log file.
+ * This activity has a transparent theme. The only thing the user will see will be alert dialogs that this activity creates.
  */
 public class LogActionsActivity extends FragmentActivity { // NO_UCD (use default)
     static final String ACTION_SHARE = LogActionsActivity.class.getPackage().getName() + "_share";
@@ -98,44 +99,9 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                             } else if (getString(R.string.export_choice_html).equals(exportChoices[which])) {
                                 fileExport = new HTMLExport(LogActionsActivity.this, true, mExportProgressListener);
                             } else if (getString(R.string.export_choice_kml).equals(exportChoices[which])) {
-                                final String[] columnNames = getResources().getStringArray(R.array.db_columns);
-                                String prefColumnName = PreferenceManager.getDefaultSharedPreferences(LogActionsActivity.this).getString(
-                                        Constants.PREF_KML_EXPORT_COLUMN, "google_connection_test");
-                                int prefColumnIndex = 0;
-                                final String[] columnLabels = new String[columnNames.length];
-                                for (int i = 0; i < columnNames.length; i++) {
-                                    int columnLabelId = getResources().getIdentifier(columnNames[i], "string", R.class.getPackage().getName());
-                                    columnLabels[i] = getString(columnLabelId);
-                                    if (prefColumnName.equals(columnNames[i])) prefColumnIndex = i;
-                                }
-                                AlertDialog.Builder kmlColumnDialog = new AlertDialog.Builder(LogActionsActivity.this);
-                                kmlColumnDialog.setSingleChoiceItems(columnLabels, prefColumnIndex, new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        String columnLabel = columnLabels[which];
-                                        Editor editor = PreferenceManager.getDefaultSharedPreferences(LogActionsActivity.this).edit();
-                                        editor.putString(Constants.PREF_KML_EXPORT_COLUMN, columnNames[which]);
-                                        editor.commit();
-                                        try {
-                                            KMLExport kmlExport = new KMLExport(LogActionsActivity.this, mExportProgressListener, columnLabel);
-                                            shareFile(kmlExport);
-                                        } catch (FileNotFoundException e) {
-                                            Log.w(TAG, "Error sharing file: " + e.getMessage(), e);
-                                        }
-                                    }
-                                });
-                                kmlColumnDialog.setTitle("TODO choose field to export");
-                                kmlColumnDialog.show().setOnCancelListener(new DialogInterface.OnCancelListener() {
-
-                                    @Override
-                                    public void onCancel(DialogInterface dialog) {
-                                        Log.v(TAG, "share dialog canceled");
-                                        finish();
-                                    }
-                                });
+                                // The KML export requires a second dialog before we can share, so we return here.
+                                shareKml();
                                 return;
-
                             } else if (getString(R.string.export_choice_excel).equals(exportChoices[which])) {
                                 fileExport = new ExcelExport(LogActionsActivity.this, mExportProgressListener);
                             } else if (getString(R.string.export_choice_db).equals(exportChoices[which])) {
@@ -149,14 +115,49 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                         }
                     }
                 });
-        builder.show().setOnCancelListener(new DialogInterface.OnCancelListener() {
+        builder.show().setOnCancelListener(mDialogCancelListener);
+    }
+
+    /**
+     * Prompt a user for the field they want to export to KML, then do the export.
+     */
+    private void shareKml() {
+        Log.v(TAG, "shareKml");
+        // The list of column names (aka google_connection_test) which can be exported to KML.
+        final String[] columnNames = getResources().getStringArray(R.array.db_columns);
+        // The last column name the user chose to export.
+        String prefColumnName = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.PREF_KML_EXPORT_COLUMN, "google_connection_test");
+        // The position in the list of column names of the last column the user chose to export.
+        int prefColumnIndex = 0;
+
+        // Build the list of choices for the user.  Look up the friendly label of each column name, and pre-select the one the user chose last time.
+        final String[] columnLabels = new String[columnNames.length];
+        for (int i = 0; i < columnNames.length; i++) {
+            int columnLabelId = getResources().getIdentifier(columnNames[i], "string", R.class.getPackage().getName());
+            columnLabels[i] = getString(columnLabelId);
+            if (prefColumnName.equals(columnNames[i])) prefColumnIndex = i;
+        }
+        AlertDialog.Builder kmlColumnDialog = new AlertDialog.Builder(this);
+        kmlColumnDialog.setSingleChoiceItems(columnLabels, prefColumnIndex, new DialogInterface.OnClickListener() {
 
             @Override
-            public void onCancel(DialogInterface dialog) {
-                Log.v(TAG, "share dialog canceled");
-                finish();
+            public void onClick(DialogInterface dialog, int which) {
+                String columnLabel = columnLabels[which];
+                // Save the column the user chose to export this time.
+                Editor editor = PreferenceManager.getDefaultSharedPreferences(LogActionsActivity.this).edit();
+                editor.putString(Constants.PREF_KML_EXPORT_COLUMN, columnNames[which]);
+                editor.commit();
+                // Do the actual export.
+                try {
+                    KMLExport kmlExport = new KMLExport(LogActionsActivity.this, mExportProgressListener, columnLabel);
+                    shareFile(kmlExport);
+                } catch (FileNotFoundException e) {
+                    Log.w(TAG, "Error sharing file: " + e.getMessage(), e);
+                }
             }
         });
+        kmlColumnDialog.setTitle(R.string.export_kml_choice_title);
+        kmlColumnDialog.show().setOnCancelListener(mDialogCancelListener);
     }
 
     /**
@@ -202,14 +203,7 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                         setResult(RESULT_CANCELED);
                         finish();
                     }
-                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        Log.v(TAG, "Clear log dialog canceled");
-                        finish();
-                    }
-                }).show();
+                }).setOnCancelListener(mDialogCancelListener).show();
         ;
     }
 
@@ -307,4 +301,12 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
         }
     };
 
+    private final DialogInterface.OnCancelListener mDialogCancelListener = new DialogInterface.OnCancelListener() {
+        // When a user cancels a dialog, we have to finish this activity.
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            Log.v(TAG, "dialog canceled");
+            finish();
+        }
+    };
 }
