@@ -23,6 +23,7 @@
     <string name="export_choice_title">Escoge un formato</string>
     <string name="export_choice_csv">CSV</string>
     <string name="export_choice_html">HTML</string>
+    <string name="export_choice_kml">KML</string>
     <string name="export_choice_excel">Excel</string>
     <string name="export_choice_db">Base de datos</string>
     <string name="export_choice_text">Resumen en texto</string>

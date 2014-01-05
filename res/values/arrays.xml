@@ -29,8 +29,8 @@
     <string-array name="export_choices">
         <item>@string/export_choice_csv</item>
         <item>@string/export_choice_html</item>
-        <item>@string/export_choice_kml</item>
         <item>@string/export_choice_excel</item>
+        <item>@string/export_choice_kml</item>
         <item>@string/export_choice_db</item>
         <item>@string/export_choice_text</item>
     </string-array>
