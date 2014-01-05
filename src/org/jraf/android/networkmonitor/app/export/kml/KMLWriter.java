@@ -44,13 +44,21 @@ class KMLWriter extends PrintWriter {
     private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
     private final KMLStyle mKmlStyle;
     private final String mEmptyLabel;
+    private final Map<String, String> mFieldDisplayNames;
 
-    public KMLWriter(File file, KMLStyle kmlStyle, String emptyLabel) throws FileNotFoundException {
+    /**
+     * @param file the kml file to create
+     * @param emptyLabel when the placemark name has no value, use this label instead of a blank value
+     * @fieldDisplayNames mapping between the names of the placemark fields and the user-friendly names to display for these fields
+     */
+    public KMLWriter(File file, KMLStyle kmlStyle, String emptyLabel, Map<String, String> fieldDisplayNames) throws FileNotFoundException {
         super(file);
         mKmlStyle = kmlStyle;
         mEmptyLabel = emptyLabel;
+        mFieldDisplayNames = fieldDisplayNames;
         TIMESTAMP_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
+
 
     public void writeHeader() {
         println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
@@ -190,9 +198,10 @@ class KMLWriter extends PrintWriter {
     private void writePlacemarkExtendedData(Map<String, String> values) {
         println("      <ExtendedData>");
         for (String columnName : values.keySet()) {
+            String displayName = mFieldDisplayNames.get(columnName);
             String value = values.get(columnName);
             if (!TextUtils.isEmpty(value)) {
-                println("        <Data name=\"" + columnName + "\">");
+                println("        <Data name=\"" + displayName + "\">");
                 print("          <value>");
                 print(value);
                 println("</value>");
@@ -201,5 +210,4 @@ class KMLWriter extends PrintWriter {
         }
         println("      </ExtendedData>");
     }
-
 }

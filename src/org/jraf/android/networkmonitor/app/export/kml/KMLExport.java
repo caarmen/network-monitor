@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -64,23 +65,24 @@ public class KMLExport extends FileExport {
     @Override
     public File export() {
         Log.v(TAG, "export");
-        String[] usedColumnNames = mContext.getResources().getStringArray(R.array.db_columns);
-        Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, usedColumnNames, null, null, NetMonColumns.TIMESTAMP);
+        final String[] columnsToExport = mContext.getResources().getStringArray(R.array.db_columns);
+        Map<String, String> columnNamesMapping = new HashMap<String, String>(columnsToExport.length);
+        Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, columnsToExport, null, null, NetMonColumns.TIMESTAMP);
         if (c != null) {
             try {
-                Log.v(TAG, "Find user-friendly labels for columns " + Arrays.toString(usedColumnNames));
-                for (int i = 0; i < usedColumnNames.length; i++) {
-                    int columnLabelId = mContext.getResources().getIdentifier(usedColumnNames[i], "string", R.class.getPackage().getName());
+                Log.v(TAG, "Find user-friendly labels for columns " + Arrays.toString(columnsToExport));
+                for (String element : columnsToExport) {
+                    int columnLabelId = mContext.getResources().getIdentifier(element, "string", R.class.getPackage().getName());
                     if (columnLabelId > 0) {
                         String columnLabel = mContext.getString(columnLabelId);
-                        Log.v(TAG, usedColumnNames[i] + "->" + columnLabel);
-                        usedColumnNames[i] = columnLabel;
+                        Log.v(TAG, element + "->" + columnLabel);
+                        columnNamesMapping.put(element, columnLabel);
                     }
                 }
-                Log.v(TAG, "Column names: " + Arrays.toString(usedColumnNames));
+                Log.v(TAG, "Column names: " + Arrays.toString(columnsToExport));
 
                 KMLStyle kmlStyle = KMLStyle.getKMLStyle(mContext, mPlacemarkNameColumn);
-                KMLWriter kmlWriter = new KMLWriter(mFile, kmlStyle, mContext.getString(R.string.unknown));
+                KMLWriter kmlWriter = new KMLWriter(mFile, kmlStyle, mContext.getString(R.string.unknown), columnNamesMapping);
                 // Write the table rows to the file.
                 if (c.moveToFirst()) {
                     int rowCount = c.getCount();
@@ -91,7 +93,7 @@ public class KMLExport extends FileExport {
                     // Start writing to the file.
                     kmlWriter.writeHeader();
                     while (c.moveToNext()) {
-                        Map<String, String> cellValues = new HashMap<String, String>(c.getColumnCount());
+                        Map<String, String> cellValues = new LinkedHashMap<String, String>(c.getColumnCount());
                         long timestamp = c.getLong(timestampIndex);
                         Date date = new Date(timestamp);
                         String timestampString = DATE_FORMAT.format(date);
@@ -121,5 +123,4 @@ public class KMLExport extends FileExport {
         }
         return null;
     }
-
 }
