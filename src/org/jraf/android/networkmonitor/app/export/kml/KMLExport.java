@@ -93,7 +93,6 @@ public class KMLExport extends FileExport {
                     int latitudeIndex = c.getColumnIndex(NetMonColumns.DEVICE_LATITUDE);
                     int longitudeIndex = c.getColumnIndex(NetMonColumns.DEVICE_LONGITUDE);
                     int timestampIndex = c.getColumnIndex(NetMonColumns.TIMESTAMP);
-                    int dataIndex = c.getColumnIndex(mPlacemarkNameColumn);
 
                     // Start writing to the file.
                     kmlWriter.writeHeader();
@@ -112,7 +111,8 @@ public class KMLExport extends FileExport {
                             if (cellValue == null) cellValue = "";
                             cellValues.put(c.getColumnName(i), cellValue);
                         }
-                        kmlWriter.writePlacemark(c.getString(dataIndex), cellValues, c.getString(latitudeIndex), c.getString(longitudeIndex), timestamp);
+                        kmlWriter.writePlacemark(cellValues.get(mPlacemarkNameColumn), cellValues, c.getString(latitudeIndex), c.getString(longitudeIndex),
+                                timestamp);
 
                         // Notify the listener of our progress (progress is 1-based)
                         if (mListener != null) mListener.onExportProgress(c.getPosition() + 1, rowCount);
