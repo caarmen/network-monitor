@@ -96,7 +96,7 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                             } else if (getString(R.string.export_choice_html).equals(exportChoices[which])) {
                                 fileExport = new HTMLExport(LogActionsActivity.this, true, mExportProgressListener);
                             } else if (getString(R.string.export_choice_kml).equals(exportChoices[which])) {
-                                fileExport = new KMLExport(LogActionsActivity.this, mExportProgressListener);
+                                fileExport = new KMLExport(LogActionsActivity.this, mExportProgressListener, getString(R.string.google_connection_test));
                             } else if (getString(R.string.export_choice_excel).equals(exportChoices[which])) {
                                 fileExport = new ExcelExport(LogActionsActivity.this, mExportProgressListener);
                             } else if (getString(R.string.export_choice_db).equals(exportChoices[which])) {

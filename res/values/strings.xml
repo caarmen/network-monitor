@@ -63,5 +63,7 @@
     <string name="service_notification_text">Collecting data.</string>
     <string name="service_notification_action_stop">Stop</string>
     <string name="service_notification_action_logs">Logs</string>
+    
+    <string name="unknown">N/A</string>
 
 </resources>

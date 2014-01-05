@@ -40,14 +40,25 @@ import org.jraf.android.networkmonitor.R;
  */
 public class KMLExport extends TableFileExport {
     private static final String KML_FILE = "networkmonitor.kml";
+
+
     private static final String STYLEMAP_RED = "#stylemap_red";
     private static final String STYLEMAP_GREEN = "#stylemap_green";
     private static final String STYLEMAP_YELLOW = "#stylemap_yellow";
 
-    private PrintWriter mPrintWriter;
+    private final PrintWriter mPrintWriter;
     private String[] mColumnNames;
-    private int mHttpConnectionTestColumnIndex;
-    private int mSocketConnectionTestColumnIndex;
+
+    private KMLStyle mKmlStyle;
+
+    // The column which determines the label and icon color of each KML data point.
+    private final String mDataColumnName;
+
+    // The positions of the columns which need special handling.
+    // * The value of the field the user chose to export is exported as a Placemark label.
+    // * the latitude and longitude are exported in a specific attribute
+    private final Map<String, Integer> mColumnNamePositions = new HashMap<String, Integer>();
+    private int mDataColumnIndex;
     private int mLatitudeColumnIndex;
     private int mLongitudeColumnIndex;
 
@@ -55,8 +66,9 @@ public class KMLExport extends TableFileExport {
 
     /**
      */
-    public KMLExport(Context context, FileExport.ExportProgressListener listener) throws FileNotFoundException {
+    public KMLExport(Context context, FileExport.ExportProgressListener listener, String dataColumnName) throws FileNotFoundException {
         super(context, new File(context.getExternalFilesDir(null), KML_FILE), listener);
+        mDataColumnName = dataColumnName;
         mPrintWriter = new PrintWriter(mFile);
     }
 
@@ -64,15 +76,13 @@ public class KMLExport extends TableFileExport {
     void writeHeader(String[] columnNames) {
         mColumnNames = columnNames;
         // Save the indices of the columns which require specific processing:
-        // * the connection test result columns determine the label and color of the icons.
-        // * the latitude and longitude are exported in a specific attribute
-        Map<String, Integer> columnNamePositions = new HashMap<String, Integer>();
         for (int i = 0; i < columnNames.length; i++)
-            columnNamePositions.put(columnNames[i], i);
-        mHttpConnectionTestColumnIndex = columnNamePositions.get(mContext.getString(R.string.http_connection_test));
-        mSocketConnectionTestColumnIndex = columnNamePositions.get(mContext.getString(R.string.google_connection_test));
-        mLatitudeColumnIndex = columnNamePositions.get(mContext.getString(R.string.device_latitude));
-        mLongitudeColumnIndex = columnNamePositions.get(mContext.getString(R.string.device_longitude));
+            mColumnNamePositions.put(columnNames[i], i);
+        mDataColumnIndex = mColumnNamePositions.get(mDataColumnName);
+        mLatitudeColumnIndex = mColumnNamePositions.get(mContext.getString(R.string.device_latitude));
+        mLongitudeColumnIndex = mColumnNamePositions.get(mContext.getString(R.string.device_longitude));
+
+        mKmlStyle = KMLStyle.getKMLStyle(mContext, mDataColumnName, mColumnNamePositions);
 
         mPrintWriter.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
         mPrintWriter.println("<kml xmlns=\"http://earth.google.com/kml/2.1\">");
@@ -135,9 +145,20 @@ public class KMLExport extends TableFileExport {
     void writeRow(int rowNumber, String[] cellValues) {
         mPrintWriter.println("    <Placemark>");
 
-        // The label/name of this placemark will be the connection test result.
+        // Write the label of this placemark. This is the value for the column the user chose to export.
         mPrintWriter.print("      <name>");
-        String label = getLabel(cellValues);
+        final String styleUrl;
+        String label = cellValues[mDataColumnIndex];
+        if (TextUtils.isEmpty(label)) {
+            label = mContext.getString(R.string.unknown);
+            styleUrl = STYLEMAP_YELLOW;
+        } else {
+            KMLStyle.IconColor iconColor = mKmlStyle.getColor(cellValues);
+            if (iconColor == org.jraf.android.networkmonitor.app.export.KMLExport.KMLStyle.IconColor.GREEN) styleUrl = STYLEMAP_GREEN;
+            else if (iconColor == org.jraf.android.networkmonitor.app.export.KMLExport.KMLStyle.IconColor.RED) styleUrl = STYLEMAP_RED;
+            else
+                styleUrl = STYLEMAP_YELLOW;
+        }
         mPrintWriter.print(label);
         mPrintWriter.println("</name>");
 
@@ -165,34 +186,11 @@ public class KMLExport extends TableFileExport {
 
         // Refer to the correct style, depending on the test result.
         mPrintWriter.print("      <styleUrl>");
-        String styleUrl = getStyleUrl(label);
         mPrintWriter.print(styleUrl);
         mPrintWriter.println("</styleUrl>");
         mPrintWriter.println("    </Placemark>");
         mPrintWriter.flush();
     }
-
-    private String getStyleUrl(String label) {
-        if (Constants.CONNECTION_TEST_FAIL.equals(label)) return STYLEMAP_RED;
-        if (Constants.CONNECTION_TEST_PASS.equals(label)) return STYLEMAP_GREEN;
-        return STYLEMAP_YELLOW;
-    }
-
-    /**
-     * @param cellValues all the recorded values for this connection test.
-     * @return the label to display for this record.
-     */
-    private String getLabel(String[] cellValues) {
-        String httpConnectionTest = cellValues[mHttpConnectionTestColumnIndex];
-        String socketConnectionTest = cellValues[mSocketConnectionTestColumnIndex];
-        // Both are PASS, both are SLOW, or both are FAIL. Return the string for both tests.
-        if (httpConnectionTest.equals(socketConnectionTest)) return httpConnectionTest;
-        // Return the worse of the two:
-        if (Constants.CONNECTION_TEST_FAIL.equals(httpConnectionTest) || Constants.CONNECTION_TEST_FAIL.equals(socketConnectionTest))
-            return Constants.CONNECTION_TEST_FAIL;
-        return Constants.CONNECTION_TEST_SLOW;
-    }
-
 
     @Override
     void writeFooter() {
@@ -200,5 +198,124 @@ public class KMLExport extends TableFileExport {
         mPrintWriter.println("</kml>");
         mPrintWriter.flush();
         mPrintWriter.close();
+    }
+
+    private static class KMLStyle {
+        private int mColumnIndex;
+
+        enum IconColor {
+            RED, YELLOW, GREEN
+        };
+
+        protected void setColumnIndex(int columnIndex) {
+            mColumnIndex = columnIndex;
+        }
+
+        IconColor getColor(String[] values) {
+            return getColor(values[mColumnIndex]);
+        }
+
+        IconColor getColor(String value) {
+            return IconColor.YELLOW;
+        }
+
+        static KMLStyle getKMLStyle(Context context, String columnName, Map<String, Integer> columnPositions) {
+            int columnIndex = columnPositions.get(columnName);
+            KMLStyle result = null;
+            if (context.getString(R.string.google_connection_test).equals(columnName) || context.getString(R.string.http_connection_test).equals(columnName)) result = new KMLStyleConnectionTest();
+            else if (context.getString(R.string.is_connected).equals(columnName) || context.getString(R.string.is_roaming).equals(columnName)
+                    || context.getString(R.string.is_available).equals(columnName) || context.getString(R.string.is_failover).equals(columnName)
+                    || context.getString(R.string.is_network_metered).equals(columnName)) result = new KMLStyleBoolean();
+            else if (context.getString(R.string.wifi_signal_strength).equals(columnName) || context.getString(R.string.wifi_rssi).equals(columnName)
+                    || context.getString(R.string.cell_signal_strength).equals(columnName)
+                    || context.getString(R.string.cell_signal_strength_dbm).equals(columnName) || context.getString(R.string.cell_asu_level).equals(columnName)) return new KMLStyleSignalStrength(
+                    context, columnName, columnPositions);
+            else if (context.getString(R.string.detailed_state).equals(columnName)) result = new KMLStyleDetailedState();
+            else if (context.getString(R.string.sim_state).equals(columnName)) result = new KMLStyleSIMState();
+            else if (context.getString(R.string.data_activity).equals(columnName)) result = new KMLStyleDataActivity();
+            else if (context.getString(R.string.data_state).equals(columnName)) result = new KMLStyleDataState();
+            else
+                result = new KMLStyle();
+            result.setColumnIndex(columnIndex);
+            return result;
+        }
+    }
+
+    private static class KMLStyleConnectionTest extends KMLStyle {
+        @Override
+        IconColor getColor(String value) {
+            if (Constants.CONNECTION_TEST_FAIL.equals(value)) return IconColor.RED;
+            if (Constants.CONNECTION_TEST_PASS.equals(value)) return IconColor.GREEN;
+            return IconColor.YELLOW;
+        }
+    }
+
+    private static class KMLStyleBoolean extends KMLStyle {
+        @Override
+        IconColor getColor(String value) {
+            if ("0".equals(value)) return IconColor.RED;
+            if ("1".equals(value)) return IconColor.GREEN;
+            return IconColor.YELLOW;
+        }
+    }
+
+    private static class KMLStyleSignalStrength extends KMLStyle {
+
+        KMLStyleSignalStrength(Context context, String columnName, Map<String, Integer> columnPositions) {
+            final int columnIndex;
+            // If we are reporting on the wifi signal strength or rssi, the icon color will be determined by the wifi signal strength
+            if (context.getString(R.string.wifi_rssi).equals(columnName) || context.getString(R.string.wifi_signal_strength).equals(columnName)) columnIndex = columnPositions
+                    .get(context.getString(R.string.wifi_signal_strength));
+            // If we are reporting on the cell signal strength (0-4), cell signal strength (dBm), or asu level, the icon color will be determined by the cell signal strength (0-4)
+            else
+                columnIndex = columnPositions.get(context.getString(R.string.cell_signal_strength));
+            setColumnIndex(columnIndex);
+        }
+
+        @Override
+        IconColor getColor(String value) {
+            if (TextUtils.isEmpty(value)) return IconColor.YELLOW;
+            Integer signalStrength = Integer.valueOf(value);
+            if (signalStrength >= 4) return IconColor.GREEN;
+            if (signalStrength <= 1) return IconColor.RED;
+            return IconColor.YELLOW;
+        }
+    }
+
+    private static class KMLStyleDetailedState extends KMLStyle {
+        @Override
+        IconColor getColor(String value) {
+            if ("CONNECTED".equals(value)) return IconColor.GREEN;
+            if ("CONNECTING".equals(value) || "AUTHENTICATING".equals(value) || "OBTAINING_IPADDR".equals(value) || "IDLE".equals(value))
+                return IconColor.YELLOW;
+            return IconColor.RED;
+        }
+    }
+
+    private static class KMLStyleSIMState extends KMLStyle {
+        @Override
+        IconColor getColor(String value) {
+            if ("READY".equals(value)) return IconColor.GREEN;
+            if ("PIN_REQUIRED".equals(value)) return IconColor.YELLOW;
+            return IconColor.RED;
+        }
+    }
+
+    private static class KMLStyleDataActivity extends KMLStyle {
+        @Override
+        IconColor getColor(String value) {
+            if ("DORMANT".equals(value)) return IconColor.RED;
+            if ("NONE".equals(value)) return IconColor.YELLOW;
+            return IconColor.GREEN;
+        }
+    }
+
+    private static class KMLStyleDataState extends KMLStyle {
+        @Override
+        IconColor getColor(String value) {
+            if ("CONNECTED".equals(value)) return IconColor.GREEN;
+            if ("CONNECTING".equals(value)) return IconColor.YELLOW;
+            return IconColor.RED;
+        }
     }
 }
