@@ -46,7 +46,7 @@ import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
  * 2) Tapping on the stop button of the notification stops the service
  * 3) Tapping on the logs button of the notification opens the log activity
  */
-public class NetMonNotification {
+class NetMonNotification {
     private static final String TAG = Constants.TAG + NetMonNotification.class.getSimpleName();
     private static final String PREFIX = NetMonService.class.getName() + ".";
     private static final String ACTION_DISABLE = PREFIX + "ACTION_DISABLE";

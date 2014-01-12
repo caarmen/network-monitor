@@ -42,7 +42,7 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
 /**
  * Retrieve the network interface names and IP addresses, of all network interfaces which are up and which are not a loopback interface.
  */
-public class NetworkInterfaceDataSource implements NetMonDataSource {
+class NetworkInterfaceDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + NetworkInterfaceDataSource.class.getSimpleName();
 
     @Override
