@@ -47,6 +47,9 @@ public class NetMonPreferences {
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    /**
+     * @return the interval between log entries, in millis
+     */
     public int getUpdateInterval() {
         return getIntPreference(Constants.PREF_UPDATE_INTERVAL, Constants.PREF_UPDATE_INTERVAL_DEFAULT);
     }
