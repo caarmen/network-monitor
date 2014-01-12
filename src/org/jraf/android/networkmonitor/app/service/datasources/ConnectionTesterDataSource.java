@@ -22,7 +22,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jraf.android.networkmonitor.app.service;
+package org.jraf.android.networkmonitor.app.service.datasources;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +34,10 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
@@ -42,8 +46,9 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
 /**
  * Performs network connection tests and provides the results of each test.
  */
-class ConnectionTester {
-    private static final String TAG = Constants.TAG + ConnectionTester.class.getSimpleName();
+class ConnectionTesterDataSource implements NetMonDataSource {
+    private static final String TAG = Constants.TAG + ConnectionTesterDataSource.class.getSimpleName();
+    private Context mContext;
 
     private enum NetworkTestResult {
         PASS, FAIL, SLOW
@@ -62,8 +67,20 @@ class ConnectionTester {
     // The timeout for each connection test, in ms.
     private int mTimeout;
 
-    ConnectionTester() {
+    public ConnectionTesterDataSource() {
         Log.v(TAG, "Constructor");
+    }
+
+    @Override
+    public void onCreate(Context context) {
+        Log.v(TAG, "onCreate");
+        mContext = context;
+        PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(mPrefListener);
+    }
+
+    @Override
+    public void onDestroy() {
+        PreferenceManager.getDefaultSharedPreferences(mContext).unregisterOnSharedPreferenceChangeListener(mPrefListener);
     }
 
     /**
@@ -79,7 +96,9 @@ class ConnectionTester {
     /**
      * @return Run the different connection tests and return their results. The keys are db column names and values the results of the tests as strings.
      */
-    ContentValues performConnectionTests() {
+    @Override
+    public ContentValues getContentValues() {
+        Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues(2);
         values.put(NetMonColumns.SOCKET_CONNECTION_TEST, getSocketTestResult().name());
         values.put(NetMonColumns.HTTP_CONNECTION_TEST, getHttpTestResult().name());
@@ -189,4 +208,19 @@ class ConnectionTester {
             Log.v(TAG, "getHttpTestResult END");
         }
     }
+
+    OnSharedPreferenceChangeListener mPrefListener = new OnSharedPreferenceChangeListener() {
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            // Issue #20: We should respect the testing interval.  We shouldn't wait for more than this interval for
+            // the connection tests to timeout.  
+            if (Constants.PREF_UPDATE_INTERVAL.equals(key)) {
+                String valueStr = PreferenceManager.getDefaultSharedPreferences(mContext).getString(key, Constants.PREF_UPDATE_INTERVAL_DEFAULT);
+                int updateInterval = Integer.valueOf(valueStr);
+                Log.v(TAG, "updateInterval changed to " + updateInterval);
+                setTimeout(updateInterval);
+            }
+        }
+    };
 }

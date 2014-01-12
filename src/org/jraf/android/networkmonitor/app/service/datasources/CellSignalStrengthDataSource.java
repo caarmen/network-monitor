@@ -22,13 +22,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jraf.android.networkmonitor.app.service;
+package org.jraf.android.networkmonitor.app.service.datasources;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
@@ -37,23 +38,38 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
 /**
  * Retrieves the cell signal strength.
  */
-class CellSignalStrengthMonitor extends PhoneStateListener {
-    private static final String TAG = Constants.TAG + CellSignalStrengthMonitor.class.getSimpleName();
+class CellSignalStrengthDataSource implements NetMonDataSource {
+    private static final String TAG = Constants.TAG + CellSignalStrengthDataSource.class.getSimpleName();
 
-    private final NetMonSignalStrength mNetMonSignalStrength;
+    private NetMonSignalStrength mNetMonSignalStrength;
     private int mLastSignalStrength;
     private int mLastSignalStrengthDbm;
     private int mLastAsuLevel;
+    private TelephonyManager mTelephonyManager;
 
-    CellSignalStrengthMonitor(Context context) {
+    public CellSignalStrengthDataSource() {}
+
+    @Override
+    public void onCreate(Context context) {
+        Log.v(TAG, "onCreate");
         mNetMonSignalStrength = new NetMonSignalStrength(context);
+        mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_SERVICE_STATE);
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.v(TAG, "onDestroy");
+        if (mTelephonyManager != null) mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
     }
 
     /**
      * @return a ContentValues having the following elements: {@link NetMonColumns#CELL_SIGNAL_STRENGTH}, {@link NetMonColumns#CELL_SIGNAL_STRENGTH_DBM}, and
      *         {@link NetMonColumns#CELL_ASU_LEVEL}. Any of these values may be absent if they could not be retrieved.
      */
-    ContentValues getSignalStrengths() {
+    @Override
+    public ContentValues getContentValues() {
+        Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues(3);
         values.put(NetMonColumns.CELL_SIGNAL_STRENGTH, mLastSignalStrength);
         if (mLastSignalStrengthDbm != NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN)
@@ -62,20 +78,22 @@ class CellSignalStrengthMonitor extends PhoneStateListener {
         return values;
     }
 
-    @Override
-    public void onSignalStrengthsChanged(SignalStrength signalStrength) {
-        mLastSignalStrength = mNetMonSignalStrength.getLevel(signalStrength);
-        mLastSignalStrengthDbm = mNetMonSignalStrength.getDbm(signalStrength);
-        mLastAsuLevel = mNetMonSignalStrength.getAsuLevel(signalStrength);
-    }
-
-    @Override
-    public void onServiceStateChanged(ServiceState serviceState) {
-        Log.v(TAG, "onServiceStateChanged " + serviceState);
-        if (serviceState.getState() != ServiceState.STATE_IN_SERVICE) {
-            mLastSignalStrength = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
-            mLastSignalStrengthDbm = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
-            mLastAsuLevel = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+    private PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
+        @Override
+        public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+            mLastSignalStrength = mNetMonSignalStrength.getLevel(signalStrength);
+            mLastSignalStrengthDbm = mNetMonSignalStrength.getDbm(signalStrength);
+            mLastAsuLevel = mNetMonSignalStrength.getAsuLevel(signalStrength);
         }
-    }
+
+        @Override
+        public void onServiceStateChanged(ServiceState serviceState) {
+            Log.v(TAG, "onServiceStateChanged " + serviceState);
+            if (serviceState.getState() != ServiceState.STATE_IN_SERVICE) {
+                mLastSignalStrength = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+                mLastSignalStrengthDbm = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+                mLastAsuLevel = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+            }
+        }
+    };
 }

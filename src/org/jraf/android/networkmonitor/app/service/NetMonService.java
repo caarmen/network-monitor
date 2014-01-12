@@ -29,7 +29,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -39,31 +38,20 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.telephony.CellLocation;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
-import android.telephony.cdma.CdmaCellLocation;
-import android.telephony.gsm.GsmCellLocation;
-import android.text.TextUtils;
 import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.log.LogActivity;
 import org.jraf.android.networkmonitor.app.main.MainActivity;
+import org.jraf.android.networkmonitor.app.service.datasources.NetMonDataSources;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
-import org.jraf.android.networkmonitor.util.TelephonyUtil;
 
 public class NetMonService extends Service {
     private static final String TAG = Constants.TAG + NetMonService.class.getSimpleName();
@@ -74,20 +62,13 @@ public class NetMonService extends Service {
 
     private static final int NOTIFICATION_ID = 1;
 
-
     private PowerManager mPowerManager;
-    private TelephonyManager mTelephonyManager;
-    private ConnectivityManager mConnectivityManager;
-    private WifiManager mWifiManager;
     private long mLastWakeUp = 0;
     private volatile boolean mDestroyed;
     private ScheduledExecutorService mExecutorService;
     private Future<?> mMonitorLoopFuture;
-    private ConnectionTester mConnectionTester;
-    private CellSignalStrengthMonitor mCellSignalStrengthMonitor;
-    private LocationMonitor mLocationMonitor;
+    private NetMonDataSources mDataSources;
     private WakeLock mWakeLock = null;
-
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -107,19 +88,12 @@ public class NetMonService extends Service {
         Notification notification = createNotification();
         startForeground(NOTIFICATION_ID, notification);
 
-
         mExecutorService = Executors.newSingleThreadScheduledExecutor();
 
         mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        mCellSignalStrengthMonitor = new CellSignalStrengthMonitor(this);
-        mLocationMonitor = new LocationMonitor(this);
-        mTelephonyManager.listen(mCellSignalStrengthMonitor, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_SERVICE_STATE);
+        mDataSources = new NetMonDataSources(this);
         // Prevent the system from closing the connection after 30 minutes of screen off.
         mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
-        mConnectionTester = new ConnectionTester();
         mWakeLock.acquire();
         reScheduleMonitorLoop();
 
@@ -134,9 +108,6 @@ public class NetMonService extends Service {
         int updateInterval = getUpdateInterval();
         Log.d(TAG, "monitorLoop Sleeping " + updateInterval / 1000 + " seconds...");
         if (mMonitorLoopFuture != null) mMonitorLoopFuture.cancel(true);
-        // Issue #20: We should respect the testing interval.  We shouldn't wait for more than this interval for
-        // the connection tests to timeout.  
-        mConnectionTester.setTimeout(updateInterval);
         mMonitorLoopFuture = mExecutorService.scheduleAtFixedRate(mMonitorLoop, 0, updateInterval, TimeUnit.MILLISECONDS);
     }
 
@@ -202,7 +173,10 @@ public class NetMonService extends Service {
 
                 // Insert this ContentValues into the DB.
                 Log.v(TAG, "Inserting data into DB");
-                ContentValues values = fetchAllValues();
+                // Put all the data we want to log, into a ContentValues.
+                ContentValues values = new ContentValues();
+                values.put(NetMonColumns.TIMESTAMP, System.currentTimeMillis());
+                values.putAll(mDataSources.getContentValues());
                 getContentResolver().insert(NetMonColumns.CONTENT_URI, values);
 
             } catch (Throwable t) {
@@ -220,24 +194,6 @@ public class NetMonService extends Service {
         }
     };
 
-    /**
-     * @return all the values we will insert into the DB for this connection test.
-     */
-    private ContentValues fetchAllValues() {
-        // Put all the data we want to log, into a ContentValues.
-        ContentValues values = new ContentValues();
-        values.put(NetMonColumns.TIMESTAMP, System.currentTimeMillis());
-        values.putAll(mConnectionTester.performConnectionTests());
-        values.putAll(mCellSignalStrengthMonitor.getSignalStrengths());
-        values.putAll(mLocationMonitor.getLatestDeviceLocation());
-        values.putAll(getCellLocation());
-        values.putAll(getActiveNetworkInfo());
-        values.putAll(getWifiInfo());
-        values.putAll(getMobileDataInfo());
-        values.putAll(getSIMInfo());
-        return values;
-    }
-
     private int getIntPreference(String key, String defaultValue) {
         String valueStr = PreferenceManager.getDefaultSharedPreferences(this).getString(key, defaultValue);
         int valueInt = Integer.valueOf(valueStr);
@@ -252,113 +208,10 @@ public class NetMonService extends Service {
         return getIntPreference(Constants.PREF_WAKE_INTERVAL, Constants.PREF_WAKE_INTERVAL_DEFAULT);
     }
 
-    /**
-     * @return information from the currently active {@link NetworkInfo}.
-     */
-    private ContentValues getActiveNetworkInfo() {
-        ContentValues values = new ContentValues();
-
-        NetworkInfo activeNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
-        if (activeNetworkInfo == null) return values;
-        String networkType = activeNetworkInfo.getTypeName();
-        String networkSubType = activeNetworkInfo.getSubtypeName();
-        if (!TextUtils.isEmpty(networkSubType)) networkType += "/" + networkSubType;
-        values.put(NetMonColumns.NETWORK_TYPE, networkType);
-        values.put(NetMonColumns.IS_ROAMING, activeNetworkInfo.isRoaming());
-        values.put(NetMonColumns.IS_AVAILABLE, activeNetworkInfo.isAvailable());
-        values.put(NetMonColumns.IS_CONNECTED, activeNetworkInfo.isConnected());
-        values.put(NetMonColumns.IS_FAILOVER, activeNetworkInfo.isFailover());
-        values.put(NetMonColumns.DETAILED_STATE, activeNetworkInfo.getDetailedState().toString());
-        values.put(NetMonColumns.REASON, activeNetworkInfo.getReason());
-        values.put(NetMonColumns.EXTRA_INFO, activeNetworkInfo.getExtraInfo());
-        if (Build.VERSION.SDK_INT >= 16) values.put(NetMonColumns.IS_NETWORK_METERED, isActiveNetworkMetered());
-        return values;
-    }
-
-    private ContentValues getSIMInfo() {
-        ContentValues values = new ContentValues(3);
-        values.put(NetMonColumns.SIM_OPERATOR, mTelephonyManager.getSimOperatorName());
-        String[] simMccMnc = TelephonyUtil.getMccMnc(mTelephonyManager.getSimOperator());
-        values.put(NetMonColumns.SIM_MCC, simMccMnc[0]);
-        values.put(NetMonColumns.SIM_MNC, simMccMnc[1]);
-        values.put(NetMonColumns.NETWORK_OPERATOR, mTelephonyManager.getNetworkOperatorName());
-        String[] networkMccMnc = TelephonyUtil.getMccMnc(mTelephonyManager.getNetworkOperator());
-        values.put(NetMonColumns.NETWORK_MCC, networkMccMnc[0]);
-        values.put(NetMonColumns.NETWORK_MNC, networkMccMnc[1]);
-        int simState = mTelephonyManager.getSimState();
-        values.put(NetMonColumns.SIM_STATE, TelephonyUtil.getConstantName("SIM_STATE", null, simState));
-        return values;
-    }
-
-    private ContentValues getMobileDataInfo() {
-        ContentValues values = new ContentValues(3);
-        values.put(NetMonColumns.MOBILE_DATA_NETWORK_TYPE, TelephonyUtil.getConstantName("NETWORK_TYPE", null, mTelephonyManager.getNetworkType()));
-        values.put(NetMonColumns.DATA_ACTIVITY, TelephonyUtil.getConstantName("DATA_ACTIVITY", null, mTelephonyManager.getDataActivity()));
-        values.put(NetMonColumns.DATA_STATE, TelephonyUtil.getConstantName("DATA", "DATA_ACTIVITY", mTelephonyManager.getDataState()));
-        return values;
-    }
-
-    /**
-     * @return the SSID, BSSID and signal strength of the currently connected WiFi network, if any.
-     */
-    private ContentValues getWifiInfo() {
-        WifiInfo connectionInfo = mWifiManager.getConnectionInfo();
-        ContentValues result = new ContentValues(2);
-        if (connectionInfo == null || connectionInfo.getNetworkId() < 0) return result;
-        result.put(NetMonColumns.WIFI_SSID, connectionInfo.getSSID());
-        result.put(NetMonColumns.WIFI_BSSID, connectionInfo.getBSSID());
-        int signalLevel = WifiManager.calculateSignalLevel(connectionInfo.getRssi(), 5);
-        result.put(NetMonColumns.WIFI_SIGNAL_STRENGTH, signalLevel);
-        result.put(NetMonColumns.WIFI_RSSI, connectionInfo.getRssi());
-
-        return result;
-    }
-
-    /**
-     * @return information from the current cell we are connected to.
-     */
-    private ContentValues getCellLocation() {
-        ContentValues values = new ContentValues();
-        CellLocation cellLocation = mTelephonyManager.getCellLocation();
-        if (cellLocation instanceof GsmCellLocation) {
-            GsmCellLocation gsmCellLocation = (GsmCellLocation) cellLocation;
-            int cid = gsmCellLocation.getCid();
-            // The javadoc says the cell id should be less than FFFF, but this
-            // isn't always so. We'll report both the full cell id returned by
-            // Android, and the truncated one (taking only the last 2 bytes).
-            int shortCid = cid > 0 ? cid & 0xFFFF : cid;
-            int rnc = cid > 0 ? cid >> 16 & 0xFFFF : 0;
-            values.put(NetMonColumns.GSM_FULL_CELL_ID, cid);
-            if (rnc > 0) values.put(NetMonColumns.GSM_RNC, rnc);
-            values.put(NetMonColumns.GSM_SHORT_CELL_ID, shortCid);
-            values.put(NetMonColumns.GSM_CELL_LAC, gsmCellLocation.getLac());
-            if (Build.VERSION.SDK_INT >= 9) values.put(NetMonColumns.GSM_CELL_PSC, getPsc(gsmCellLocation));
-        } else if (cellLocation instanceof CdmaCellLocation) {
-            CdmaCellLocation cdmaCellLocation = (CdmaCellLocation) cellLocation;
-            values.put(NetMonColumns.CDMA_CELL_BASE_STATION_ID, cdmaCellLocation.getBaseStationId());
-            values.put(NetMonColumns.CDMA_CELL_LATITUDE, cdmaCellLocation.getBaseStationLatitude());
-            values.put(NetMonColumns.CDMA_CELL_LONGITUDE, cdmaCellLocation.getBaseStationLongitude());
-            values.put(NetMonColumns.CDMA_CELL_NETWORK_ID, cdmaCellLocation.getNetworkId());
-            values.put(NetMonColumns.CDMA_CELL_SYSTEM_ID, cdmaCellLocation.getSystemId());
-        }
-        return values;
-    }
-
-    @TargetApi(9)
-    private int getPsc(GsmCellLocation gsmCellLocation) {
-        return gsmCellLocation.getPsc();
-    }
-
-    @TargetApi(16)
-    private boolean isActiveNetworkMetered() {
-        return mConnectivityManager.isActiveNetworkMetered();
-    }
-
     @Override
     public void onDestroy() {
         mDestroyed = true;
-        if (mLocationMonitor != null) mLocationMonitor.onDestroy();
-        if (mTelephonyManager != null) mTelephonyManager.listen(mCellSignalStrengthMonitor, PhoneStateListener.LISTEN_NONE);
+        if (mDataSources != null) mDataSources.onDestroy();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
         dismissNotification();
         if (mWakeLock != null && mWakeLock.isHeld()) mWakeLock.release();

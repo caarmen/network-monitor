@@ -22,7 +22,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jraf.android.networkmonitor.app.service;
+package org.jraf.android.networkmonitor.app.service.datasources;
 
 import java.util.List;
 
@@ -31,7 +31,6 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.telephony.PhoneStateListener;
 import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
@@ -45,23 +44,30 @@ import com.google.android.gms.location.LocationClient;
 /**
  * Retrieves the device's location, using either Google Play Services or one of the location providers.
  */
-class LocationMonitor extends PhoneStateListener {
-    private static final String TAG = Constants.TAG + LocationMonitor.class.getSimpleName();
-    private final LocationManager mLocationManager;
-    private final LocationClient mLocationClient;
+class DeviceLocationDataSource implements NetMonDataSource {
+    private static final String TAG = Constants.TAG + DeviceLocationDataSource.class.getSimpleName();
+    private LocationManager mLocationManager;
+    private LocationClient mLocationClient;
 
-    LocationMonitor(Context context) {
+    public DeviceLocationDataSource() {}
+
+    @Override
+    public void onCreate(Context context) {
+        Log.v(TAG, "onCreate");
         mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         mLocationClient = new LocationClient(context, mConnectionCallbacks, mConnectionFailedListener);
         mLocationClient.connect();
     }
+
 
     /**
      * @return the last location the device recorded in a ContentValues with keys {@link NetMonColumns#DEVICE_LATITUDE} and
      *         {@link NetMonColumns#DEVICE_LONGITUDE}. Tries to use Google Play Services if available. Otherwise falls back
      *         to the most recently retrieved location among all the providers.
      */
-    ContentValues getLatestDeviceLocation() {
+    @Override
+    public ContentValues getContentValues() {
+        Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues(2);
         Location mostRecentLocation = null;
         // Try getting the location from the LocationClient
@@ -93,7 +99,9 @@ class LocationMonitor extends PhoneStateListener {
         return values;
     }
 
-    void onDestroy() {
+    @Override
+    public void onDestroy() {
+        Log.v(TAG, "onDestroy");
         if (mLocationClient != null) mLocationClient.disconnect();
     }
 
