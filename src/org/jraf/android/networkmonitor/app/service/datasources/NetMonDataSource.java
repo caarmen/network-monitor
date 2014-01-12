@@ -26,12 +26,28 @@ package org.jraf.android.networkmonitor.app.service.datasources;
 import android.content.ContentValues;
 import android.content.Context;
 
+import org.jraf.android.networkmonitor.app.service.NetMonService;
+
 /**
+ * A {@link NetMonDataSource} implementation is called periodically to retrieve values for one or several related fields, which will be stored in the database.
+ * An implementing class must have a no-args constructor: either public, or with package-visibility if it is in this package.
  */
 interface NetMonDataSource {
+    /**
+     * Perform any initialization which will be needed to retrieve data. For example, register any listeners, retrieve any needed system services. This will be
+     * called when {@link NetMonService} starts.
+     */
     void onCreate(Context context);
 
+    /**
+     * Perform any cleanup. For example, unregister any listeners. This will be called when {@link NetMonService} stops.
+     */
     void onDestroy();
 
+    /**
+     * This will be called periodically, according to the interval the user selected in the preferences.
+     * 
+     * @return the attributes of the particular data source, at the current time.
+     */
     ContentValues getContentValues();
 }

@@ -39,6 +39,9 @@ import android.util.Log;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
+/**
+ * Retrieve the network interface names and IP addresses, of all network interfaces which are up and which are not a loopback interface.
+ */
 public class NetworkInterfaceDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + NetworkInterfaceDataSource.class.getSimpleName();
 
@@ -53,6 +56,13 @@ public class NetworkInterfaceDataSource implements NetMonDataSource {
         Log.v(TAG, "getContentValues");
         ContentValues result = new ContentValues(1);
         try {
+            // It's possible for the device to have multiple interfaces up at a given time.  
+            // This can happen on "normal" phones when switching between WiFi and 3G, 
+            // or on some devices which have multiple interfaces up all the time.
+
+            // We'll save the name and addresses of all interfaces.  If there happen to 
+            // be multiple ones, we'll return a delimited list.
+            // In most cases, we should have one interface name, one IP v4 address, and one IP v6 address.
             List<String> interfaceNames = new ArrayList<String>();
             List<String> ipv4Addresses = new ArrayList<String>();
             List<String> ipv6Addresses = new ArrayList<String>();

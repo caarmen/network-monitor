@@ -91,7 +91,8 @@ public class NetMonService extends Service {
         mExecutorService = Executors.newSingleThreadScheduledExecutor();
 
         mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        mDataSources = new NetMonDataSources(this);
+        mDataSources = new NetMonDataSources();
+        mDataSources.onCreate(this);
         // Prevent the system from closing the connection after 30 minutes of screen off.
         mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
         mWakeLock.acquire();

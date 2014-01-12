@@ -32,6 +32,9 @@ import android.util.Log;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
+/**
+ * @return the SSID, BSSID, signal strength, and RSSI of the currently connected WiFi network, if any.
+ */
 class WiFiDataSource implements NetMonDataSource {
 
     private static final String TAG = Constants.TAG + WiFiDataSource.class.getSimpleName();
@@ -46,9 +49,6 @@ class WiFiDataSource implements NetMonDataSource {
     @Override
     public void onDestroy() {}
 
-    /**
-     * @return the SSID, BSSID and signal strength of the currently connected WiFi network, if any.
-     */
     @Override
     public ContentValues getContentValues() {
         Log.v(TAG, "getContentValues");

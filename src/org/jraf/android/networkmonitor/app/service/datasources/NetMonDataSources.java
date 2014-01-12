@@ -31,7 +31,12 @@ import android.content.Context;
 import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
+import org.jraf.android.networkmonitor.app.service.NetMonService;
 
+/**
+ * Maintains the list of {@link NetMonDataSource}s. For now, the list of available data sources is hardcoded in this class. {@link NetMonService} has a
+ * reference to this class, which delegates the data retrieval to the individual data sources.
+ */
 public class NetMonDataSources {
 
     private static final String TAG = Constants.TAG + NetMonDataSources.class.getSimpleName();
@@ -50,8 +55,11 @@ public class NetMonDataSources {
     };
     // @formatter:on
 
-    public NetMonDataSources(Context context) {
-        Log.v(TAG, "NetMonDataSources");
+    /**
+     * Instantiate all the data sources and call {@link NetMonDataSource#onCreate(Context)} on them.
+     */
+    public void onCreate(Context context) {
+        Log.v(TAG, "onCreate");
         for (Class<?> clazz : DATA_SOURCE_CLASSES) {
             NetMonDataSource dataSource;
             try {
@@ -67,6 +75,9 @@ public class NetMonDataSources {
         }
     }
 
+    /**
+     * @return the fetched data from all data sources.
+     */
     public ContentValues getContentValues() {
         Log.v(TAG, "getContentValues");
         ContentValues result = new ContentValues();
@@ -75,6 +86,9 @@ public class NetMonDataSources {
         return result;
     }
 
+    /**
+     * Perform cleanup: call {@link NetMonDataSource#onDestroy()} on all data sources.
+     */
     public void onDestroy() {
         for (NetMonDataSource source : mSources)
             source.onDestroy();

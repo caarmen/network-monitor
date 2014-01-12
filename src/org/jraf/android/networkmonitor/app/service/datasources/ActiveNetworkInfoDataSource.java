@@ -35,6 +35,9 @@ import android.util.Log;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
+/**
+ * Retrieves information from the currently active {@link NetworkInfo}.
+ */
 class ActiveNetworkInfoDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + ActiveNetworkInfoDataSource.class.getSimpleName();
     private ConnectivityManager mConnectivityManager;
@@ -48,9 +51,6 @@ class ActiveNetworkInfoDataSource implements NetMonDataSource {
     @Override
     public void onDestroy() {}
 
-    /**
-     * @return information from the currently active {@link NetworkInfo}.
-     */
     @Override
     public ContentValues getContentValues() {
         Log.v(TAG, "getContentValues");

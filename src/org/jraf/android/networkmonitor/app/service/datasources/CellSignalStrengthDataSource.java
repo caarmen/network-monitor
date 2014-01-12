@@ -35,7 +35,7 @@ import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 /**
- * Retrieves the cell signal strength.
+ * Retrieves the cell signal strength in various units.
  */
 class CellSignalStrengthDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + CellSignalStrengthDataSource.class.getSimpleName();

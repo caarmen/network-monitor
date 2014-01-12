@@ -36,6 +36,9 @@ import android.util.Log;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
+/**
+ * Retrieves information from the current cell we are connected to.
+ */
 class CellLocationDataSource implements NetMonDataSource {
 
     private static final String TAG = Constants.TAG + CellLocationDataSource.class.getSimpleName();
@@ -50,9 +53,6 @@ class CellLocationDataSource implements NetMonDataSource {
     @Override
     public void onDestroy() {}
 
-    /**
-     * @return information from the current cell we are connected to.
-     */
     @Override
     public ContentValues getContentValues() {
         Log.v(TAG, "getContentValues");
