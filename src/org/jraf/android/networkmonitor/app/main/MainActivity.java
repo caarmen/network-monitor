@@ -32,12 +32,12 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 import org.jraf.android.backport.switchwidget.SwitchPreference;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
+import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
 import org.jraf.android.networkmonitor.app.service.NetMonService;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -52,7 +52,7 @@ public class MainActivity extends PreferenceActivity {
         addPreferencesFromResource(R.xml.preferences);
         updateListPreferenceSummary(Constants.PREF_WAKE_INTERVAL, R.string.preferences_wake_interval_summary);
         updateListPreferenceSummary(Constants.PREF_UPDATE_INTERVAL, R.string.preferences_updateInterval_summary);
-        startService(new Intent(MainActivity.this, NetMonService.class));
+        if (NetMonPreferences.getInstance(this).isServiceEnabled()) startService(new Intent(MainActivity.this, NetMonService.class));
     }
 
     @Override
@@ -90,8 +90,7 @@ public class MainActivity extends PreferenceActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         if (hasFocus) {
             // Refresh the 'enabled' preference view
-            boolean enabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.PREF_SERVICE_ENABLED,
-                    Constants.PREF_SERVICE_ENABLED_DEFAULT);
+            boolean enabled = NetMonPreferences.getInstance(this).isServiceEnabled();
             ((SwitchPreference) findPreference(Constants.PREF_SERVICE_ENABLED)).setChecked(enabled);
         }
     }
@@ -99,22 +98,15 @@ public class MainActivity extends PreferenceActivity {
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            boolean broadcastPrefChanged = false;
             if (Constants.PREF_SERVICE_ENABLED.equals(key)) {
                 if (sharedPreferences.getBoolean(Constants.PREF_SERVICE_ENABLED, Constants.PREF_SERVICE_ENABLED_DEFAULT)) {
                     startService(new Intent(MainActivity.this, NetMonService.class));
-                } else {
-                    broadcastPrefChanged = true;
                 }
             } else if (Constants.PREF_UPDATE_INTERVAL.equals(key)) {
                 updateListPreferenceSummary(Constants.PREF_UPDATE_INTERVAL, R.string.preferences_updateInterval_summary);
-                broadcastPrefChanged = true;
-
             } else if (Constants.PREF_WAKE_INTERVAL.equals(key)) {
                 updateListPreferenceSummary(Constants.PREF_WAKE_INTERVAL, R.string.preferences_wake_interval_summary);
             }
-
-            if (broadcastPrefChanged) LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(new Intent(NetMonService.ACTION_PREF_CHANGED));
         }
     };
 

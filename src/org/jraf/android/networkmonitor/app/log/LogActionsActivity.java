@@ -31,12 +31,10 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -52,6 +50,7 @@ import org.jraf.android.networkmonitor.app.export.FileExport;
 import org.jraf.android.networkmonitor.app.export.HTMLExport;
 import org.jraf.android.networkmonitor.app.export.SummaryExport;
 import org.jraf.android.networkmonitor.app.export.kml.KMLExport;
+import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 /**
@@ -126,7 +125,7 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
         // The list of column names (aka google_connection_test) which can be exported to KML.
         final String[] columnNames = getResources().getStringArray(R.array.db_columns);
         // The last column name the user chose to export.
-        String prefColumnName = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.PREF_KML_EXPORT_COLUMN, "google_connection_test");
+        String prefColumnName = NetMonPreferences.getInstance(this).getKMLExportColumn();
         // The position in the list of column names of the last column the user chose to export.
         int prefColumnIndex = 0;
 
@@ -145,9 +144,7 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
             public void onClick(DialogInterface dialog, int which) {
                 int selectedItem = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
                 // Save the column the user chose to export this time.
-                Editor editor = PreferenceManager.getDefaultSharedPreferences(LogActionsActivity.this).edit();
-                editor.putString(Constants.PREF_KML_EXPORT_COLUMN, columnNames[selectedItem]);
-                editor.commit();
+                NetMonPreferences.getInstance(LogActionsActivity.this).setKMLExportColumn(columnNames[selectedItem]);
                 // Do the actual export.
                 try {
                     KMLExport kmlExport = new KMLExport(LogActionsActivity.this, mExportProgressListener, columnNames[selectedItem]);
