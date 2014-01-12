@@ -82,6 +82,9 @@ td.slow {
         <item>gsm_short_cell_id</item>
         <item>gsm_cell_lac</item>
         <item>gsm_cell_psc</item>
+        <item>network_interface</item>
+        <item>ipv4_address</item>
+        <item>ipv6_address</item>
     </string-array>
 
 </resources>

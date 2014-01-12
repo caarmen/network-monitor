@@ -44,7 +44,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
     public static final String DATABASE_NAME = "networkmonitor.db";
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
 
     // @formatter:off
     private static final String SQL_CREATE_TABLE_NETWORKMONITOR = "CREATE TABLE IF NOT EXISTS "
@@ -91,7 +91,10 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.GSM_RNC + " INTEGER, "
             + NetMonColumns.GSM_SHORT_CELL_ID + " INTEGER, "
             + NetMonColumns.GSM_CELL_LAC + " INTEGER, "
-            + NetMonColumns.GSM_CELL_PSC + " INTEGER "
+            + NetMonColumns.GSM_CELL_PSC + " INTEGER, "
+            + NetMonColumns.NETWORK_INTERFACE+ " TEXT, "
+            + NetMonColumns.IPV4_ADDRESS+ " TEXT,"
+            + NetMonColumns.IPV6_ADDRESS+ " TEXT"
             + " );";
     // @formatter:on
 
@@ -143,6 +146,15 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V9_GSM_RNC_UPDATE = "UPDATE " + NetMonColumns.TABLE_NAME + " SET " + NetMonColumns.GSM_RNC
             + " = (" + NetMonColumns.GSM_FULL_CELL_ID + " >> 16) & " + 0xFFFF + " WHERE " + NetMonColumns.GSM_FULL_CELL_ID + " > " + 0xFFFF;
 
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V10_NETWORK_INTERFACE = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.NETWORK_INTERFACE + " STRING";
+
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V10_IPV4_ADDRESS = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.IPV4_ADDRESS + " STRING";
+
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V10_IPV6_ADDRESS = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.IPV6_ADDRESS + " STRING";
+
     private static final String SQL_CREATE_VIEW_CONNECTION_TEST_STATS = "CREATE VIEW " + ConnectionTestStatsColumns.VIEW_NAME + " AS "
             + buildConnectionTestQuery();
 
@@ -192,6 +204,12 @@ public class NetMonDatabase extends SQLiteOpenHelper {
         if (oldVersion < 9) {
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V9_GSM_RNC);
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V9_GSM_RNC_UPDATE);
+        }
+
+        if (oldVersion < 10) {
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V10_NETWORK_INTERFACE);
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V10_IPV4_ADDRESS);
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V10_IPV6_ADDRESS);
         }
     }
 

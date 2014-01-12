@@ -77,6 +77,9 @@ public class NetMonColumns implements BaseColumns {
     public static final String GSM_SHORT_CELL_ID = "gsm_short_cell_id";
     public static final String GSM_CELL_LAC = "gsm_cell_lac";
     public static final String GSM_CELL_PSC = "gsm_cell_psc";
+    public static final String NETWORK_INTERFACE = "network_interface";
+    public static final String IPV4_ADDRESS = "ipv4_address";
+    public static final String IPV6_ADDRESS = "ipv6_address";
 
     static final String DEFAULT_ORDER = _ID;
 }

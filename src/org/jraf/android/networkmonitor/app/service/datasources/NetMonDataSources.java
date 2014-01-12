@@ -46,6 +46,7 @@ public class NetMonDataSources {
         MobileDataConnectionDataSource.class,
         SIMDataSource.class,
         WiFiDataSource.class,
+        NetworkInterfaceDataSource.class,
     };
     // @formatter:on
 

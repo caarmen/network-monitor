@@ -43,5 +43,8 @@
     <string name="gsm_short_cell_id">GSM Short Cell Id</string>
     <string name="gsm_cell_lac">GSM Cell LAC</string>
     <string name="gsm_cell_psc">GSM Cell PSC</string>
+    <string name="network_interface">Network Interface</string>
+    <string name="ipv4_address">IPv4 Address</string>
+    <string name="ipv6_address">IPv6 Address</string>
 
 </resources>
