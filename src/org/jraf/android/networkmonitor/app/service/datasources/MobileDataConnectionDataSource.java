@@ -32,7 +32,7 @@ import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 import org.jraf.android.networkmonitor.util.TelephonyUtil;
 
-public class MobileDataConnectionDataSource implements NetMonDataSource {
+class MobileDataConnectionDataSource implements NetMonDataSource {
 
     private static final String TAG = Constants.TAG + MobileDataConnectionDataSource.class.getSimpleName();
     private TelephonyManager mTelephonyManager;

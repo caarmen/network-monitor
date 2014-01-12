@@ -32,7 +32,7 @@ import android.util.Log;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
-public class WiFiDataSource implements NetMonDataSource {
+class WiFiDataSource implements NetMonDataSource {
 
     private static final String TAG = Constants.TAG + WiFiDataSource.class.getSimpleName();
     private WifiManager mWifiManager;

@@ -86,7 +86,7 @@ class ConnectionTesterDataSource implements NetMonDataSource {
     /**
      * @param maxTimeout the maximum total time it should take to perform all connection tests.
      */
-    void setTimeout(int timeout) {
+    private void setTimeout(int timeout) {
         Log.v(TAG, "setTimeout " + timeout);
         // Divide the total timeout by the total number of connection tests, to get the maximum timeout for each test.
         mTimeout = Math.min(timeout / 2, MAX_TIMEOUT_PER_TEST);
@@ -209,7 +209,7 @@ class ConnectionTesterDataSource implements NetMonDataSource {
         }
     }
 
-    OnSharedPreferenceChangeListener mPrefListener = new OnSharedPreferenceChangeListener() {
+    private OnSharedPreferenceChangeListener mPrefListener = new OnSharedPreferenceChangeListener() {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

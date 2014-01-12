@@ -36,7 +36,7 @@ import android.util.Log;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
-public class CellLocationDataSource implements NetMonDataSource {
+class CellLocationDataSource implements NetMonDataSource {
 
     private static final String TAG = Constants.TAG + CellLocationDataSource.class.getSimpleName();
     private TelephonyManager mTelephonyManager;

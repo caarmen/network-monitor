@@ -35,7 +35,7 @@ import android.util.Log;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
-public class ActiveNetworkInfoDataSource implements NetMonDataSource {
+class ActiveNetworkInfoDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + ActiveNetworkInfoDataSource.class.getSimpleName();
     private ConnectivityManager mConnectivityManager;
 
