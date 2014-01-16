@@ -88,39 +88,37 @@ public class KMLExport extends FileExport {
                 KMLWriter kmlWriter = new KMLWriter(mFile, title, kmlStyle, mContext.getString(R.string.unknown), columnNamesMapping);
 
                 // Write the KML placemarks to the file.
-                if (c.moveToFirst()) {
-                    int rowCount = c.getCount();
-                    int latitudeIndex = c.getColumnIndex(NetMonColumns.DEVICE_LATITUDE);
-                    int longitudeIndex = c.getColumnIndex(NetMonColumns.DEVICE_LONGITUDE);
-                    int timestampIndex = c.getColumnIndex(NetMonColumns.TIMESTAMP);
+                int rowCount = c.getCount();
+                int latitudeIndex = c.getColumnIndex(NetMonColumns.DEVICE_LATITUDE);
+                int longitudeIndex = c.getColumnIndex(NetMonColumns.DEVICE_LONGITUDE);
+                int timestampIndex = c.getColumnIndex(NetMonColumns.TIMESTAMP);
 
-                    // Start writing to the file.
-                    kmlWriter.writeHeader();
+                // Start writing to the file.
+                kmlWriter.writeHeader();
 
-                    // Write one KML placemark for each row in the DB.
-                    while (c.moveToNext()) {
-                        Map<String, String> cellValues = new LinkedHashMap<String, String>(c.getColumnCount());
-                        long timestamp = c.getLong(timestampIndex);
-                        Date date = new Date(timestamp);
-                        String timestampString = DATE_FORMAT.format(date);
-                        for (int i = 0; i < c.getColumnCount(); i++) {
-                            String cellValue;
-                            if (NetMonColumns.TIMESTAMP.equals(c.getColumnName(i))) cellValue = timestampString;
-                            else
-                                cellValue = c.getString(i);
-                            if (cellValue == null) cellValue = "";
-                            cellValues.put(c.getColumnName(i), cellValue);
-                        }
-                        kmlWriter.writePlacemark(cellValues.get(mPlacemarkNameColumn), cellValues, c.getString(latitudeIndex), c.getString(longitudeIndex),
-                                timestamp);
-
-                        // Notify the listener of our progress (progress is 1-based)
-                        if (mListener != null) mListener.onExportProgress(c.getPosition() + 1, rowCount);
+                // Write one KML placemark for each row in the DB.
+                while (c.moveToNext()) {
+                    Map<String, String> cellValues = new LinkedHashMap<String, String>(c.getColumnCount());
+                    long timestamp = c.getLong(timestampIndex);
+                    Date date = new Date(timestamp);
+                    String timestampString = DATE_FORMAT.format(date);
+                    for (int i = 0; i < c.getColumnCount(); i++) {
+                        String cellValue;
+                        if (NetMonColumns.TIMESTAMP.equals(c.getColumnName(i))) cellValue = timestampString;
+                        else
+                            cellValue = c.getString(i);
+                        if (cellValue == null) cellValue = "";
+                        cellValues.put(c.getColumnName(i), cellValue);
                     }
-                    // Write the footer and clean up the file.
-                    kmlWriter.writeFooter();
-                    kmlWriter.close();
+                    kmlWriter.writePlacemark(cellValues.get(mPlacemarkNameColumn), cellValues, c.getString(latitudeIndex), c.getString(longitudeIndex),
+                            timestamp);
+
+                    // Notify the listener of our progress (progress is 1-based)
+                    if (mListener != null) mListener.onExportProgress(c.getPosition() + 1, rowCount);
                 }
+                // Write the footer and clean up the file.
+                kmlWriter.writeFooter();
+                kmlWriter.close();
 
                 return mFile;
             } catch (FileNotFoundException e) {

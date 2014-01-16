@@ -94,26 +94,24 @@ abstract class TableFileExport extends FileExport {
                 writeHeader(usedColumnNames);
 
                 // Write the table rows to the file.
-                if (c.moveToFirst()) {
-                    int rowCount = c.getCount();
-                    while (c.moveToNext()) {
-                        String[] cellValues = new String[c.getColumnCount()];
-                        for (int i = 0; i < c.getColumnCount(); i++) {
-                            String cellValue;
-                            if (NetMonColumns.TIMESTAMP.equals(c.getColumnName(i))) {
-                                long timestamp = c.getLong(i);
-                                Date date = new Date(timestamp);
-                                cellValue = DATE_FORMAT.format(date);
-                            } else {
-                                cellValue = c.getString(i);
-                            }
-                            if (cellValue == null) cellValue = "";
-                            cellValues[i] = cellValue;
+                int rowCount = c.getCount();
+                while (c.moveToNext()) {
+                    String[] cellValues = new String[c.getColumnCount()];
+                    for (int i = 0; i < c.getColumnCount(); i++) {
+                        String cellValue;
+                        if (NetMonColumns.TIMESTAMP.equals(c.getColumnName(i))) {
+                            long timestamp = c.getLong(i);
+                            Date date = new Date(timestamp);
+                            cellValue = DATE_FORMAT.format(date);
+                        } else {
+                            cellValue = c.getString(i);
                         }
-                        writeRow(c.getPosition(), cellValues);
-                        // Notify the listener of our progress (progress is 1-based)
-                        if (mListener != null) mListener.onExportProgress(c.getPosition() + 1, rowCount);
+                        if (cellValue == null) cellValue = "";
+                        cellValues[i] = cellValue;
                     }
+                    writeRow(c.getPosition(), cellValues);
+                    // Notify the listener of our progress (progress is 1-based)
+                    if (mListener != null) mListener.onExportProgress(c.getPosition() + 1, rowCount);
                 }
 
                 // Write the footer and clean up the file.
