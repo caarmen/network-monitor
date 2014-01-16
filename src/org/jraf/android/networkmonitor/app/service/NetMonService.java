@@ -122,45 +122,12 @@ public class NetMonService extends Service {
         Log.v(TAG, "reScheduleMonitorLoop");
         int updateInterval = NetMonPreferences.getInstance(this).getUpdateInterval();
         Log.d(TAG, "reScheduleMonitorLoop: will execute every " + updateInterval / 1000 + " seconds...");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) mAlarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()
-                + updateInterval,
-
-        mPendingIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) mAlarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(),
+                mPendingIntent);
         else
             mAlarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), updateInterval, mPendingIntent);
     }
 
-    private void log() {
-        Log.v(TAG, "log");
-        WakeLock wakeLock = null;
-        try {
-            // Periodically wake up the device to prevent the data connection from being cut.
-            long wakeInterval = NetMonPreferences.getInstance(NetMonService.this).getWakeInterval();
-            long now = System.currentTimeMillis();
-            long timeSinceLastWake = now - mLastWakeUp;
-            Log.d(TAG, "wakeInterval = " + wakeInterval + ", lastWakeUp = " + mLastWakeUp + ", timeSinceLastWake = " + timeSinceLastWake);
-            if (wakeInterval > 0 && timeSinceLastWake > wakeInterval) {
-                Log.d(TAG, "acquiring lock");
-                wakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, TAG);
-                wakeLock.acquire();
-                mLastWakeUp = now;
-            }
-
-            // Insert this ContentValues into the DB.
-            Log.v(TAG, "Inserting data into DB");
-            // Put all the data we want to log, into a ContentValues.
-            ContentValues values = new ContentValues();
-            values.put(NetMonColumns.TIMESTAMP, System.currentTimeMillis());
-            values.putAll(mDataSources.getContentValues());
-            getContentResolver().insert(NetMonColumns.CONTENT_URI, values);
-
-        } catch (Throwable t) {
-            Log.v(TAG, "Error in monitorLoop: " + t.getMessage(), t);
-        } finally {
-            if (wakeLock != null && wakeLock.isHeld()) wakeLock.release();
-        }
-
-    }
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 
@@ -175,7 +142,34 @@ public class NetMonService extends Service {
                     int updateInterval = NetMonPreferences.getInstance(context).getUpdateInterval();
                     mAlarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + updateInterval, mPendingIntent);
                 }
-                log();
+                // Retrieve the log
+                WakeLock wakeLock = null;
+                try {
+                    // Periodically wake up the device to prevent the data connection from being cut.
+                    long wakeInterval = NetMonPreferences.getInstance(NetMonService.this).getWakeInterval();
+                    long now = System.currentTimeMillis();
+                    long timeSinceLastWake = now - mLastWakeUp;
+                    Log.d(TAG, "wakeInterval = " + wakeInterval + ", lastWakeUp = " + mLastWakeUp + ", timeSinceLastWake = " + timeSinceLastWake);
+                    if (wakeInterval > 0 && timeSinceLastWake > wakeInterval) {
+                        Log.d(TAG, "acquiring lock");
+                        wakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, TAG);
+                        wakeLock.acquire();
+                        mLastWakeUp = now;
+                    }
+
+                    // Insert this ContentValues into the DB.
+                    Log.v(TAG, "Inserting data into DB");
+                    // Put all the data we want to log, into a ContentValues.
+                    ContentValues values = new ContentValues();
+                    values.put(NetMonColumns.TIMESTAMP, System.currentTimeMillis());
+                    values.putAll(mDataSources.getContentValues());
+                    getContentResolver().insert(NetMonColumns.CONTENT_URI, values);
+
+                } catch (Throwable t) {
+                    Log.v(TAG, "Error in monitorLoop: " + t.getMessage(), t);
+                } finally {
+                    if (wakeLock != null && wakeLock.isHeld()) wakeLock.release();
+                }
             }
         }
     };
