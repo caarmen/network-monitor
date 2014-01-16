@@ -41,6 +41,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
+import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 /**
@@ -76,6 +77,8 @@ class ConnectionTesterDataSource implements NetMonDataSource {
         Log.v(TAG, "onCreate");
         mContext = context;
         PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(mPrefListener);
+        int updateInterval = NetMonPreferences.getInstance(context).getUpdateInterval();
+        setTimeout(updateInterval);
     }
 
     @Override
@@ -181,10 +184,12 @@ class ConnectionTesterDataSource implements NetMonDataSource {
             long before = System.currentTimeMillis();
             URL url = new URL("http", HOST, PORT, "/");
             URLConnection connection = url.openConnection();
+            Log.v(TAG, "Opened connection");
             connection.setConnectTimeout(mTimeout);
             connection.setReadTimeout(mTimeout);
             connection.addRequestProperty("Cache-Control", "no-cache");
             connection.setUseCaches(false);
+            Log.v(TAG, "Will open input stream");
             inputStream = connection.getInputStream();
             long after = System.currentTimeMillis();
             if (inputStream.read() > 0) {
