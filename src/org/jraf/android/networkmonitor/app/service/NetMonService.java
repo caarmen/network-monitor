@@ -24,6 +24,7 @@
  */
 package org.jraf.android.networkmonitor.app.service;
 
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -122,12 +123,15 @@ public class NetMonService extends Service {
         Log.v(TAG, "reScheduleMonitorLoop");
         int updateInterval = NetMonPreferences.getInstance(this).getUpdateInterval();
         Log.d(TAG, "reScheduleMonitorLoop: will execute every " + updateInterval / 1000 + " seconds...");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) mAlarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(),
-                mPendingIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) scheduleAlarmKitKat(0);
         else
             mAlarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), updateInterval, mPendingIntent);
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private void scheduleAlarmKitKat(int delay) {
+        mAlarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + delay, mPendingIntent);
+    }
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 
@@ -140,7 +144,7 @@ public class NetMonService extends Service {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     Log.v(TAG, "rescheduling for kitkat");
                     int updateInterval = NetMonPreferences.getInstance(context).getUpdateInterval();
-                    mAlarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + updateInterval, mPendingIntent);
+                    scheduleAlarmKitKat(updateInterval);
                 }
                 // Retrieve the log
                 WakeLock wakeLock = null;
