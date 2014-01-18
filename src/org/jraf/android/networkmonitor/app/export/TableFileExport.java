@@ -36,7 +36,6 @@ import android.database.Cursor;
 import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
-import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 /**
@@ -74,21 +73,12 @@ abstract class TableFileExport extends FileExport {
     @Override
     public File export() {
         Log.v(TAG, "export");
-        String[] usedColumnNames = mContext.getResources().getStringArray(R.array.db_columns);
+        String[] usedColumnNames = NetMonColumns.getColumnNames(mContext);
         Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, usedColumnNames, null, null, NetMonColumns.TIMESTAMP);
         if (c != null) {
             try {
-                Log.v(TAG, "Find user-friendly labels for columns " + Arrays.toString(usedColumnNames));
-                for (int i = 0; i < usedColumnNames.length; i++) {
-                    int columnLabelId = mContext.getResources().getIdentifier(usedColumnNames[i], "string", R.class.getPackage().getName());
-                    if (columnLabelId > 0) {
-                        String columnLabel = mContext.getString(columnLabelId);
-                        Log.v(TAG, usedColumnNames[i] + "->" + columnLabel);
-                        usedColumnNames[i] = columnLabel;
-                    }
-                }
+                usedColumnNames = NetMonColumns.getColumnLabels(mContext);
                 Log.v(TAG, "Column names: " + Arrays.toString(usedColumnNames));
-
 
                 // Start writing to the file.
                 writeHeader(usedColumnNames);

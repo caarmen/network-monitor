@@ -38,7 +38,7 @@
     <Preference
         android:icon="@drawable/ic_action_settings"
         android:title="@string/preferences_advanced_title" >
-        <intent android:action="org.jraf.android.networkmonitor.app.prefs.AdvancedSettingsActivity"/>
+        <intent android:action="org.jraf.android.networkmonitor.app.prefs.AdvancedPreferencesActivity"/>
     </Preference>
 
     <Preference

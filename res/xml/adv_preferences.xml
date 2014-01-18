@@ -1,6 +1,10 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="preferenceScreen" >
 
+    <Preference
+        android:title="TODO select fields">
+        <intent android:action="org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity" />
+    </Preference>
     <ListPreference
         android:defaultValue="0"
         android:entries="@array/preferences_wake_interval_labels"

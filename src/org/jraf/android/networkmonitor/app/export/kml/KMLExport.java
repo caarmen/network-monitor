@@ -66,19 +66,16 @@ public class KMLExport extends FileExport {
     @Override
     public File export() {
         Log.v(TAG, "export");
-        final String[] columnsToExport = mContext.getResources().getStringArray(R.array.db_columns);
+        final String[] columnsToExport = NetMonColumns.getColumnNames(mContext);
         Map<String, String> columnNamesMapping = new HashMap<String, String>(columnsToExport.length);
         Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, columnsToExport, null, null, NetMonColumns.TIMESTAMP);
         if (c != null) {
             try {
                 Log.v(TAG, "Find user-friendly labels for columns " + Arrays.toString(columnsToExport));
                 for (String element : columnsToExport) {
-                    int columnLabelId = mContext.getResources().getIdentifier(element, "string", R.class.getPackage().getName());
-                    if (columnLabelId > 0) {
-                        String columnLabel = mContext.getString(columnLabelId);
-                        Log.v(TAG, element + "->" + columnLabel);
-                        columnNamesMapping.put(element, columnLabel);
-                    }
+                    String columnLabel = NetMonColumns.getColumnLabel(mContext, element);
+                    Log.v(TAG, element + "->" + columnLabel);
+                    columnNamesMapping.put(element, columnLabel);
                 }
                 Log.v(TAG, "Column names: " + Arrays.toString(columnsToExport));
 

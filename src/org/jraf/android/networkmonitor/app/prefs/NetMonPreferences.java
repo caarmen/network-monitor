@@ -23,10 +23,14 @@
  */
 package org.jraf.android.networkmonitor.app.prefs;
 
+import java.util.Arrays;
+import java.util.List;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.app.service.scheduler.AlarmManagerScheduler;
@@ -37,6 +41,7 @@ public class NetMonPreferences {
 
     private static NetMonPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
+    private final Context mContext;
 
     public static synchronized NetMonPreferences getInstance(Context context) {
         if (INSTANCE == null) {
@@ -46,6 +51,7 @@ public class NetMonPreferences {
     }
 
     private NetMonPreferences(Context context) {
+        mContext = context;
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
@@ -94,4 +100,17 @@ public class NetMonPreferences {
 
     }
 
+    public List<String> getSelectedColumns() {
+        String selectedColumnsString = mSharedPrefs.getString(Constants.PREF_SELECTED_COLUMNS, null);
+        final String[] selectedColumns;
+        if (TextUtils.isEmpty(selectedColumnsString)) selectedColumns = NetMonColumns.getColumnNames(mContext);
+        else
+            selectedColumns = selectedColumnsString.split(",");
+        return Arrays.asList(selectedColumns);
+    }
+
+    public void setSelectedColumns(List<String> selectedColumns) {
+        String selectedColumnsString = TextUtils.join(",", selectedColumns);
+        mSharedPrefs.edit().putString(Constants.PREF_SELECTED_COLUMNS, selectedColumnsString).commit();
+    }
 }

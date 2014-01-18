@@ -123,17 +123,15 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
     private void shareKml() {
         Log.v(TAG, "shareKml");
         // The list of column names (aka google_connection_test) which can be exported to KML.
-        final String[] columnNames = getResources().getStringArray(R.array.db_columns);
+        final String[] columnNames = NetMonColumns.getColumnNames(this);
         // The last column name the user chose to export.
         String prefColumnName = NetMonPreferences.getInstance(this).getKMLExportColumn();
         // The position in the list of column names of the last column the user chose to export.
         int prefColumnIndex = 0;
 
         // Build the list of choices for the user.  Look up the friendly label of each column name, and pre-select the one the user chose last time.
-        final String[] columnLabels = new String[columnNames.length];
+        final String[] columnLabels = NetMonColumns.getColumnLabels(this);
         for (int i = 0; i < columnNames.length; i++) {
-            int columnLabelId = getResources().getIdentifier(columnNames[i], "string", R.class.getPackage().getName());
-            columnLabels[i] = getString(columnLabelId);
             if (prefColumnName.equals(columnNames[i])) prefColumnIndex = i;
         }
         AlertDialog.Builder kmlColumnDialog = new AlertDialog.Builder(this);

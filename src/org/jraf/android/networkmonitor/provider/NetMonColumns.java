@@ -24,8 +24,11 @@
  */
 package org.jraf.android.networkmonitor.provider;
 
+import android.content.Context;
 import android.net.Uri;
 import android.provider.BaseColumns;
+
+import org.jraf.android.networkmonitor.R;
 
 public class NetMonColumns implements BaseColumns {
     static final String TABLE_NAME = "networkmonitor";
@@ -80,6 +83,26 @@ public class NetMonColumns implements BaseColumns {
     public static final String NETWORK_INTERFACE = "network_interface";
     public static final String IPV4_ADDRESS = "ipv4_address";
     public static final String IPV6_ADDRESS = "ipv6_address";
+
+    public static String[] getColumnNames(Context context) {
+        return context.getResources().getStringArray(R.array.db_columns);
+    }
+
+    public static String[] getColumnLabels(Context context) {
+        String[] columnNames = getColumnNames(context);
+        String[] columnLabels = new String[columnNames.length];
+        for (int i = 0; i < columnNames.length; i++) {
+            columnLabels[i] = getColumnLabel(context, columnNames[i]);
+        }
+        return columnLabels;
+    }
+
+    public static String getColumnLabel(Context context, String columnName) {
+        int columnLabelId = context.getResources().getIdentifier(columnName, "string", R.class.getPackage().getName());
+        String columnLabel = context.getString(columnLabelId);
+        return columnLabel;
+
+    }
 
     static final String DEFAULT_ORDER = _ID;
 }
