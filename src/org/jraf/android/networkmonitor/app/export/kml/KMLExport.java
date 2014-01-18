@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -39,6 +40,7 @@ import android.util.Log;
 
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.export.FileExport;
+import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 /**
@@ -66,7 +68,10 @@ public class KMLExport extends FileExport {
     @Override
     public File export() {
         Log.v(TAG, "export");
-        final String[] columnsToExport = NetMonColumns.getColumnNames(mContext);
+        List<String> selectedColumns = NetMonPreferences.getInstance(mContext).getSelectedColumns();
+        if (!selectedColumns.contains(NetMonColumns.DEVICE_LATITUDE)) selectedColumns.add(NetMonColumns.DEVICE_LATITUDE);
+        if (!selectedColumns.contains(NetMonColumns.DEVICE_LONGITUDE)) selectedColumns.add(NetMonColumns.DEVICE_LONGITUDE);
+        final String[] columnsToExport = (String[]) selectedColumns.toArray();
         Map<String, String> columnNamesMapping = new HashMap<String, String>(columnsToExport.length);
         Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, columnsToExport, null, null, NetMonColumns.TIMESTAMP);
         if (c != null) {
@@ -96,9 +101,13 @@ public class KMLExport extends FileExport {
                 // Write one KML placemark for each row in the DB.
                 while (c.moveToNext()) {
                     Map<String, String> cellValues = new LinkedHashMap<String, String>(c.getColumnCount());
-                    long timestamp = c.getLong(timestampIndex);
-                    Date date = new Date(timestamp);
-                    String timestampString = DATE_FORMAT.format(date);
+                    long timestamp = -1;
+                    String timestampString = null;
+                    if (timestampIndex >= 0) {
+                        timestamp = c.getLong(timestampIndex);
+                        Date date = new Date(timestamp);
+                        timestampString = DATE_FORMAT.format(date);
+                    }
                     for (int i = 0; i < c.getColumnCount(); i++) {
                         String cellValue;
                         if (NetMonColumns.TIMESTAMP.equals(c.getColumnName(i))) cellValue = timestampString;

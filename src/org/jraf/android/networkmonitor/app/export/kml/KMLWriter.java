@@ -80,7 +80,7 @@ class KMLWriter extends PrintWriter {
         println("    <Placemark>");
         writePlacemarkName(name);
         writePlacemarkCoordinates(longitude, latitude);
-        writePlacemarkTimestamp(timestamp);
+        if (timestamp > 0) writePlacemarkTimestamp(timestamp);
         writePlacemarkStyleUrl(name, values);
         writePlacemarkExtendedData(values);
         println("    </Placemark>");

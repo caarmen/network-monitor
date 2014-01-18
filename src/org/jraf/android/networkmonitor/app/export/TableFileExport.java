@@ -36,6 +36,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
+import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 /**
@@ -73,11 +74,12 @@ abstract class TableFileExport extends FileExport {
     @Override
     public File export() {
         Log.v(TAG, "export");
-        String[] usedColumnNames = NetMonColumns.getColumnNames(mContext);
+        String[] usedColumnNames = (String[]) NetMonPreferences.getInstance(mContext).getSelectedColumns().toArray();
         Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, usedColumnNames, null, null, NetMonColumns.TIMESTAMP);
         if (c != null) {
             try {
-                usedColumnNames = NetMonColumns.getColumnLabels(mContext);
+                for (int i = 0; i < usedColumnNames.length; i++)
+                    usedColumnNames[i] = NetMonColumns.getColumnLabel(mContext, usedColumnNames[i]);
                 Log.v(TAG, "Column names: " + Arrays.toString(usedColumnNames));
 
                 // Start writing to the file.
