@@ -31,8 +31,10 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Context;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -69,7 +71,7 @@ class NetworkInterfaceDataSource implements NetMonDataSource {
             Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
             while (networkInterfaces.hasMoreElements()) {
                 NetworkInterface networkInterface = networkInterfaces.nextElement();
-                if (networkInterface.isUp() && !networkInterface.isLoopback()) {
+                if (isValidNetworkInterface(networkInterface)) {
                     Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
                     if (inetAddresses.hasMoreElements()) interfaceNames.add(networkInterface.getName());
                     while (inetAddresses.hasMoreElements()) {
@@ -87,6 +89,16 @@ class NetworkInterfaceDataSource implements NetMonDataSource {
             Log.e(TAG, "getContentValues Could not retrieve NetworkInterfaces:  " + e.getMessage(), e);
         }
         return result;
+    }
+
+    private boolean isValidNetworkInterface(NetworkInterface intf) throws SocketException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) return isValidNetworkInterfaceApi9(intf);
+        return true;
+    }
+
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    private boolean isValidNetworkInterfaceApi9(NetworkInterface intf) throws SocketException {
+        return intf.isUp() && !intf.isLoopback();
     }
 
 }
