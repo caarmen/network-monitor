@@ -37,7 +37,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
+import org.jraf.android.networkmonitor.util.Log;
 import android.widget.Toast;
 
 import org.jraf.android.networkmonitor.Constants;

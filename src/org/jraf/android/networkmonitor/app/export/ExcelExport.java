@@ -43,7 +43,7 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 
 import android.content.Context;
-import android.util.Log;
+import org.jraf.android.networkmonitor.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;

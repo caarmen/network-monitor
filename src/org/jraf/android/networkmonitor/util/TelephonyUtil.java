@@ -29,7 +29,7 @@ import java.util.Map;
 
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
+import org.jraf.android.networkmonitor.util.Log;
 
 public class TelephonyUtil {
     private static final String TAG = TelephonyUtil.class.getSimpleName();

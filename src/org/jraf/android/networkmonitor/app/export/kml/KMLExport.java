@@ -35,7 +35,7 @@ import java.util.Map;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
+import org.jraf.android.networkmonitor.util.Log;
 
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.export.FileExport;
