@@ -26,6 +26,7 @@ package org.jraf.android.networkmonitor.app.export.kml;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -68,10 +69,11 @@ public class KMLExport extends FileExport {
     @Override
     public File export() {
         Log.v(TAG, "export");
-        List<String> selectedColumns = NetMonPreferences.getInstance(mContext).getSelectedColumns();
+        List<String> selectedColumns = new ArrayList<String>(NetMonPreferences.getInstance(mContext).getSelectedColumns());
         if (!selectedColumns.contains(NetMonColumns.DEVICE_LATITUDE)) selectedColumns.add(NetMonColumns.DEVICE_LATITUDE);
         if (!selectedColumns.contains(NetMonColumns.DEVICE_LONGITUDE)) selectedColumns.add(NetMonColumns.DEVICE_LONGITUDE);
-        final String[] columnsToExport = (String[]) selectedColumns.toArray();
+        final String[] columnsToExport = new String[selectedColumns.size()];
+        selectedColumns.toArray(columnsToExport);
         Map<String, String> columnNamesMapping = new HashMap<String, String>(columnsToExport.length);
         Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, columnsToExport, null, null, NetMonColumns.TIMESTAMP);
         if (c != null) {
