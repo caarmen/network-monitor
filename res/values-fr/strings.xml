@@ -2,73 +2,34 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">Network Monitor</string>
-    <string name="preferences_updateInterval_title">Fréquence du test</string>
-    <string name="preferences_updateInterval_summary">%s</string>
-    <string name="preferences_serviceEnabled_summary">Activer ou désactiver le service</string>
-    <string name="preferences_serviceEnabled_title">Activer le service</string>
-    <string name="preferences_wake_interval_title">Empêcher le mode veille</string>
-    <string name="preferences_wake_interval_summary">Réveiller le téléphone périodiquement pour garder la connexion data active (épuise la batterie): %s</string>
-    <string name="preferences_scheduler_title">Précision de l\'intervalle des tests</string>
-    <string name="preferences_scheduler_summary">Choisir entre une précision de minutage ou l\'économie de la batterie: %s</string>
-    <string name="preferences_showLogFile_title">Voir le fichier journal</string>
-    <string name="preferences_advanced_title">Préférences avancées</string>
-    <string name="preferences_about_title">À propos</string>
     <string name="log_title">Fichier journal</string>
+
+    <!-- Strings for the log screen -->
     <string name="action_share">Partager le fichier journal</string>
     <string name="action_refresh">Actualiser</string>
     <string name="action_clear">Réinitialiser le fichier journal</string>
-    <string name="subject_send_log">Fichier journal du Network Monitor</string>
-    <string name="error_sdcard_unmounted">Impossible de créer le fichier journal.  Vérifiez que la carte SD soit disponible.</string>
+    <string name="progress_dialog_message">Veuillez patienter&#8230;</string>
     <string name="error_reading_log">Impossible de lire le fichier journal.</string>
     <string name="success_logs_clear">Le fichier journal a été réinitialisé</string>
     <string name="confirm_logs_clear">Êtes-vous sur de vouloir supprimer les données enregistrées ?</string>
     
-    <string name="export_choice_title">Choisissez le format</string>
-    <string name="export_choice_csv">CSV</string>
-    <string name="export_choice_html">HTML</string>
-    <string name="export_choice_kml">KML</string>
-    <string name="export_choice_excel">Excel</string>
-    <string name="export_choice_db">Base de données</string>
-    <string name="export_choice_text">Résumé en texte</string>
-    <string name="export_kml_choice_title">Choisissez un champ</string>
-    <string name="progress_dialog_message">Veuillez patienter&#8230;</string>
-    <string name="export_progress_preparing_export">Préparation de l\'export&#8230;</string>
-    <string name="export_progress_processing_data">Traitement des données&#8230;</string>
-    <string name="export_progress_finalizing_export">Finalisation&#8230;</string>
     
-	<string name="pref_interval_never">Jamais</string>
-    <string name="pref_interval_10_seconds">10 secondes</string>
-	<string name="pref_interval_20_seconds">20 secondes</string>
-	<string name="pref_interval_30_seconds">30 secondes</string>
-	<string name="pref_interval_1_minute">1 minute</string>
-	<string name="pref_interval_2_minutes">2 minutes</string>
-	<string name="pref_interval_5_minutes">5 minutes</string>
-	<string name="pref_interval_10_minutes">10 minutes</string>
-	<string name="pref_interval_15_minutes">15 minutes</string>
-	<string name="pref_interval_25_minutes">25 minutes</string>
-	<string name="pref_interval_30_minutes">30 minutes</string>
-	<string name="pref_interval_55_minutes">55 minutes</string>
-	<string name="pref_interval_1_hour">1 heure</string>
-	
-	<string name="pref_executor_service_scheduler">Intervalle des tests précis</string>
-	<string name="pref_alarm_manager_scheduler">Économiser la batterie</string>
-	<string name="title_select_fields">Champs</string>
-	<string name="summary_select_fields">Sélectionner les champs pour l\'affichage du journal et l\'export.</string>
+    <!--  Strings for the select_fields activity -->
     <string name="action_select_all">Tout cocher</string>
     <string name="action_select_none">Tout décocher</string>
     <string name="action_select_profile_wifi">Profil WiFi</string>
     <string name="action_select_profile_mobile">Profil mobile</string>
     <string name="action_select_profile_location">Profil localisation</string>
 
-    <string name="error_no_mobile_tests">Aucun test n\'a été effectué avec une connexion data mobile.</string>
-    <string name="export_message_text">Le résumé suivant énumère les antennes relais et points d\'accès WiFi, et les résultats de leurs tests. Pour chaque antenne relais ou point d\'accès WiFi, vous pouvez voir le % de tests de connexion qui ont réussi, et le nombre total de tests effectués. 
-\n\nLes moins bons antennes relais et points d\'accès WiFi se trouvent en haut de la liste. 
-\n\n</string>
-    <string name="export_message_text_file_attached">Ci-joint vous trouverez un fichier avec les données complètes de l\'ensemble des tests.\n\n</string>
+    <!--  Strings for the about screen -->
     <string name="about_title">À propos</string>
     <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
     <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
     <string name="about_projectUrl">https://github.com/BoD/network-monitor</string>
+    <string name="about_issues">Remonter des anomalies :\nhttps://github.com/BoD/network-monitor/issues</string>
+    <string name="about_rate">Donnez votre avis sur le Play Store :\nhttps://play.google.com/store/apps/details?id=ca.rmen.android.networkmonitor</string>
+
+    <!-- Notification -->
     <string name="service_notification_ticker">Network Monitor recueille des données.</string>
     <string name="service_notification_text">Tests de connexion en cours.</string>
     <string name="service_notification_action_stop">Arrêt</string>

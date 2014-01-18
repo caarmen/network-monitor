@@ -3,16 +3,16 @@
 
     <!-- Update interval -->
     <string-array name="preferences_updateInterval_labels">
-        <item>@string/pref_interval_10_seconds</item>
-        <item>@string/pref_interval_20_seconds</item>
-        <item>@string/pref_interval_30_seconds</item>
-        <item>@string/pref_interval_1_minute</item>
-        <item>@string/pref_interval_2_minutes</item>
-        <item>@string/pref_interval_5_minutes</item>
-        <item>@string/pref_interval_10_minutes</item>
-        <item>@string/pref_interval_15_minutes</item>
-        <item>@string/pref_interval_30_minutes</item>
-        <item>@string/pref_interval_1_hour</item>
+        <item>@string/pref_value_interval_10_seconds</item>
+        <item>@string/pref_value_interval_20_seconds</item>
+        <item>@string/pref_value_interval_30_seconds</item>
+        <item>@string/pref_value_interval_1_minute</item>
+        <item>@string/pref_value_interval_2_minutes</item>
+        <item>@string/pref_value_interval_5_minutes</item>
+        <item>@string/pref_value_interval_10_minutes</item>
+        <item>@string/pref_value_interval_15_minutes</item>
+        <item>@string/pref_value_interval_30_minutes</item>
+        <item>@string/pref_value_interval_1_hour</item>
     </string-array>
     <string-array name="preferences_updateInterval_values">
         <item>10000</item>
@@ -35,11 +35,11 @@
         <item>@string/export_choice_text</item>
     </string-array>
     <string-array name="preferences_wake_interval_labels">
-        <item>@string/pref_interval_never</item>
-        <item>@string/pref_interval_5_minutes</item>
-        <item>@string/pref_interval_10_minutes</item>
-        <item>@string/pref_interval_25_minutes</item>
-        <item>@string/pref_interval_55_minutes</item>
+        <item>@string/pref_value_interval_never</item>
+        <item>@string/pref_value_interval_5_minutes</item>
+        <item>@string/pref_value_interval_10_minutes</item>
+        <item>@string/pref_value_interval_25_minutes</item>
+        <item>@string/pref_value_interval_55_minutes</item>
     </string-array>
     <string-array name="preferences_wake_interval_values">
         <item>0</item>
@@ -49,8 +49,8 @@
         <item>3300000</item>
     </string-array>
     <string-array name="preferences_scheduler_labels">_
-        <item>@string/pref_executor_service_scheduler</item>
-        <item>@string/pref_alarm_manager_scheduler</item>
+        <item>@string/pref_value_executor_service_scheduler</item>
+        <item>@string/pref_value_alarm_manager_scheduler</item>
     </string-array>
     <string-array name="preferences_scheduler_values">_
         <item>ExecutorServiceScheduler</item>

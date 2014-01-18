@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Strings for exporting the log file -->
+    <string name="export_subject_send_log">Network Monitor Log</string>
+    <string name="export_error_sdcard_unmounted">Could not create log file. Make sure the SD card is available.</string>
+    <string name="export_choice_title">Choose the format to export</string>
+    <string name="export_choice_csv">CSV</string>
+    <string name="export_choice_html">HTML</string>
+    <string name="export_choice_kml">KML</string>
+    <string name="export_choice_excel">Excel</string>
+    <string name="export_choice_db">Raw database</string>
+    <string name="export_choice_text">Text summary only</string>
+    <string name="export_kml_choice_title">Choose a field to export to KML</string>
+    <string name="export_progress_preparing_export">Preparing export&#8230;</string>
+    <string name="export_progress_processing_data">Processing data&#8230;</string>
+    <string name="export_progress_finalizing_export">Finalizing export&#8230;</string>
+    <string name="export_error_no_mobile_tests">No connection tests have been done on a mobile connection.</string>
+    <string name="export_message_text">The following summary lists the mobile cells and wifi access points, and their connection test results.  For each cell or access point, you can see the % of connection tests which succeeded, and the number of attempted connection tests. 
+\n\nThe worst cells or access points are at the top of the list.
+\n\n</string>
+    <string name="export_message_text_file_attached">Attached is a file with the full data of all tests.\n\n</string>
+    <string name="export_value_unknown">N/A</string>
+</resources>

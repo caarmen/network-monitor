@@ -2,81 +2,36 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">Network Monitor</string>
-    <string name="preferences_updateInterval_title">Test frequency</string>
-    <string name="preferences_updateInterval_summary">%s</string>
-    <string name="preferences_serviceEnabled_summary">Enable or disable the service</string>
-    <string name="preferences_serviceEnabled_title">Enable service</string>
-    <string name="preferences_wake_interval_title">Prevent sleep</string>
-    <string name="preferences_wake_interval_summary">Wake up the phone periodically to make sure the data connection stays on (drains battery): %s</string>
-    <string name="preferences_scheduler_title">Polling interval</string>
-    <string name="preferences_scheduler_summary">Choose whether test intervals should be accurate or if battery should be saved: %s</string>
-    <string name="preferences_showLogFile_title">View log file</string>
-    <string name="preferences_advanced_title">Advanced settings</string>
-    <string name="preferences_about_title">About</string>
     <string name="log_title">Log file</string>
+    
+    <!-- Strings for the log screen -->
     <string name="action_share">Share log file</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_clear">Clear log file</string>
-    <string name="subject_send_log">Network Monitor Log</string>
-    <string name="error_sdcard_unmounted">Could not create log file. Make sure the SD card is available.</string>
+    <string name="progress_dialog_message">Please wait&#8230;</string>
     <string name="error_reading_log">Could not read log file.</string>
     <string name="success_logs_clear">Logs have been cleared</string>
     <string name="confirm_logs_clear">Do you really want to clear all the logs?</string>
     
-    <string name="export_choice_title">Choose the format to export</string>
-    <string name="export_choice_csv">CSV</string>
-    <string name="export_choice_html">HTML</string>
-    <string name="export_choice_kml">KML</string>
-    <string name="export_choice_excel">Excel</string>
-    <string name="export_choice_db">Raw database</string>
-    <string name="export_choice_text">Text summary only</string>
-    <string name="export_kml_choice_title">Choose a field to export to KML</string>
-    <string name="progress_dialog_message">Please wait&#8230;</string>
-    <string name="export_progress_preparing_export">Preparing export&#8230;</string>
-    <string name="export_progress_processing_data">Processing data&#8230;</string>
-    <string name="export_progress_finalizing_export">Finalizing export&#8230;</string>
+    <!--  Strings for the select_fields activity -->
+    <string name="action_select_all">Select all</string>
+    <string name="action_select_none">Select none</string>
+    <string name="action_select_profile_wifi">WiFi profile</string>
+    <string name="action_select_profile_mobile">Mobile profile</string>
+    <string name="action_select_profile_location">Location profile</string>
     
-	<string name="pref_interval_never">Never</string>
-    <string name="pref_interval_10_seconds">10 seconds</string>
-	<string name="pref_interval_20_seconds">20 seconds</string>
-	<string name="pref_interval_30_seconds">30 seconds</string>
-	<string name="pref_interval_1_minute">1 minute</string>
-	<string name="pref_interval_2_minutes">2 minutes</string>
-	<string name="pref_interval_5_minutes">5 minutes</string>
-	<string name="pref_interval_10_minutes">10 minutes</string>
-	<string name="pref_interval_15_minutes">15 minutes</string>
-	<string name="pref_interval_25_minutes">25 minutes</string>
-	<string name="pref_interval_30_minutes">30 minutes</string>
-	<string name="pref_interval_55_minutes">55 minutes</string>
-	<string name="pref_interval_1_hour">1 hour</string>
-
-	<string name="pref_executor_service_scheduler">Precise timing</string>
-	<string name="pref_alarm_manager_scheduler">Save battery</string>
-	<string name="title_select_fields">Fields to monitor</string>
-	<string name="summary_select_fields">Select a set of fields for the log display and export.</string>
-	<string name="action_select_all">Select all</string>
-	<string name="action_select_none">Select none</string>
-	<string name="action_select_profile_wifi">WiFi profile</string>
-	<string name="action_select_profile_mobile">Mobile profile</string>
-	<string name="action_select_profile_location">Location profile</string>
-    
-   
-    <string name="error_no_mobile_tests">No connection tests have been done on a mobile connection.</string>
-    <string name="export_message_text">The following summary lists the mobile cells and wifi access points, and their connection test results.  For each cell or access point, you can see the % of connection tests which succeeded, and the number of attempted connection tests. 
-\n\nThe worst cells or access points are at the top of the list.
-\n\n</string>
-    <string name="export_message_text_file_attached">Attached is a file with the full data of all tests.\n\n</string>
+    <!--  Strings for the about screen -->
     <string name="about_title">About</string>
     <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
     <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
     <string name="about_projectUrl">Source code:\nhttps://github.com/BoD/network-monitor</string>
     <string name="about_issues">Report bugs:\nhttps://github.com/BoD/network-monitor/issues</string>
     <string name="about_rate">Rate the app on the Play Store:\nhttps://play.google.com/store/apps/details?id=ca.rmen.android.networkmonitor</string>
+    
+    <!-- Notification -->
     <string name="service_notification_ticker">Network Monitor is collecting data</string>
     <string name="service_notification_text">Collecting data.</string>
     <string name="service_notification_action_stop">Stop</string>
     <string name="service_notification_action_logs">Logs</string>
-    
-    <string name="unknown">N/A</string>
 
 </resources>

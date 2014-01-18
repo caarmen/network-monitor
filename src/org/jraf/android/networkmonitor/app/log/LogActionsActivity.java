@@ -240,7 +240,7 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                 // Bring up the chooser to share the file.
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject_send_log));
+                sendIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.export_subject_send_log));
                 String messageBody = getString(R.string.export_message_text);
                 if (file != null) {
                     sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getAbsolutePath()));
@@ -262,7 +262,7 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                 DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_TAG);
                 if (fragment != null) fragment.dismissAllowingStateLoss();
                 // Show a toast if we failed to export a file.
-                if (fileExport != null && result == null) Toast.makeText(LogActionsActivity.this, R.string.error_sdcard_unmounted, Toast.LENGTH_LONG).show();
+                if (fileExport != null && result == null) Toast.makeText(LogActionsActivity.this, R.string.export_error_sdcard_unmounted, Toast.LENGTH_LONG).show();
                 finish();
             }
 

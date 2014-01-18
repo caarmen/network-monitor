@@ -226,7 +226,7 @@ public class SummaryExport {
         StringBuilder sb = new StringBuilder();
         sb.append(Build.MODEL + "/" + Build.VERSION.RELEASE + "\n");
         if (cellResults == null || cellResults.size() == 0) {
-            sb.append(context.getString(R.string.error_no_mobile_tests));
+            sb.append(context.getString(R.string.export_error_no_mobile_tests));
         } else
             for (String extraInfo : cellResults.keySet()) {
                 sb.append(extraInfo + ":\n");

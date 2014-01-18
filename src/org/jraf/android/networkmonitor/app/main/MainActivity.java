@@ -49,7 +49,7 @@ public class MainActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         addPreferencesFromResource(R.xml.preferences);
-        updateListPreferenceSummary(NetMonPreferences.PREF_UPDATE_INTERVAL, R.string.preferences_updateInterval_summary);
+        updateListPreferenceSummary(NetMonPreferences.PREF_UPDATE_INTERVAL, R.string.pref_summary_update_interval);
         if (NetMonPreferences.getInstance(this).isServiceEnabled()) startService(new Intent(MainActivity.this, NetMonService.class));
     }
 
@@ -101,7 +101,7 @@ public class MainActivity extends PreferenceActivity {
                     startService(new Intent(MainActivity.this, NetMonService.class));
                 }
             } else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
-                updateListPreferenceSummary(NetMonPreferences.PREF_UPDATE_INTERVAL, R.string.preferences_updateInterval_summary);
+                updateListPreferenceSummary(NetMonPreferences.PREF_UPDATE_INTERVAL, R.string.pref_summary_update_interval);
             }
         }
     };

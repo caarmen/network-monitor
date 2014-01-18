@@ -5,8 +5,8 @@
         android:defaultValue="false"
         android:icon="@drawable/ic_pref_enable_service"
         android:key="PREF_SERVICE_ENABLED"
-        android:summary="@string/preferences_serviceEnabled_summary"
-        android:title="@string/preferences_serviceEnabled_title" />
+        android:summary="@string/pref_summary_service_enabled"
+        android:title="@string/pref_title_service_enabled" />
 
     <ListPreference
         android:defaultValue="10000"
@@ -14,13 +14,13 @@
         android:entryValues="@array/preferences_updateInterval_values"
         android:icon="@drawable/ic_pref_update_interval"
         android:key="PREF_UPDATE_INTERVAL"
-        android:summary="@string/preferences_updateInterval_summary"
-        android:title="@string/preferences_updateInterval_title" />
+        android:summary="@string/pref_summary_update_interval"
+        android:title="@string/pref_title_update_interval" />
 
     <Preference
         android:icon="@drawable/ic_pref_show_log"
         android:key="PREF_SHOW_LOG_FILE"
-        android:title="@string/preferences_showLogFile_title" >
+        android:title="@string/pref_title_show_log_file" >
         <intent android:action="org.jraf.android.networkmonitor.app.log.LogActivity" />
     </Preference>
     <Preference
@@ -37,14 +37,14 @@
     </Preference>
     <Preference
         android:icon="@drawable/ic_action_settings"
-        android:title="@string/preferences_advanced_title" >
+        android:title="@string/pref_title_advanced" >
         <intent android:action="org.jraf.android.networkmonitor.app.prefs.AdvancedPreferencesActivity"/>
     </Preference>
 
     <Preference
         android:icon="@drawable/ic_pref_about"
         android:key="PREF_ABOUT"
-        android:title="@string/preferences_about_title" >
+        android:title="@string/pref_title_about" >
         <intent android:action="org.jraf.android.networkmonitor.app.about.AboutActivity" />
     </Preference>
 

@@ -3,8 +3,8 @@
 
     <Preference
         android:icon="@drawable/ic_action_select_fields"
-        android:summary="@string/summary_select_fields"
-        android:title="@string/title_select_fields" >
+        android:summary="@string/pref_summary_select_fields"
+        android:title="@string/pref_title_select_fields" >
         <intent android:action="org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity" />
     </Preference>
 
@@ -14,15 +14,15 @@
         android:entryValues="@array/preferences_wake_interval_values"
         android:icon="@drawable/ic_pref_wake_interval"
         android:key="PREF_WAKE_INTERVAL"
-        android:summary="@string/preferences_wake_interval_summary"
-        android:title="@string/preferences_wake_interval_title" />
+        android:summary="@string/pref_summary_wake_interval"
+        android:title="@string/pref_title_wake_interval" />
     <ListPreference
         android:defaultValue="ExecutorServiceScheduler"
         android:entries="@array/preferences_scheduler_labels"
         android:entryValues="@array/preferences_scheduler_values"
         android:icon="@drawable/ic_action_scheduler"
         android:key="PREF_SCHEDULER"
-        android:summary="@string/preferences_scheduler_summary"
-        android:title="@string/preferences_scheduler_title" />
+        android:summary="@string/pref_summary_scheduler"
+        android:title="@string/pref_title_scheduler" />
 
 </PreferenceScreen>

@@ -89,7 +89,7 @@ public class KMLExport extends FileExport {
                 KMLStyle kmlStyle = KMLStyleFactory.getKMLStyle(mContext, mPlacemarkNameColumn);
                 String now = DATE_FORMAT.format(new Date());
                 String title = mContext.getString(R.string.app_name) + ": " + columnNamesMapping.get(mPlacemarkNameColumn) + " (" + now + ")";
-                KMLWriter kmlWriter = new KMLWriter(mFile, title, kmlStyle, mContext.getString(R.string.unknown), columnNamesMapping);
+                KMLWriter kmlWriter = new KMLWriter(mFile, title, kmlStyle, mContext.getString(R.string.export_value_unknown), columnNamesMapping);
 
                 // Write the KML placemarks to the file.
                 int rowCount = c.getCount();

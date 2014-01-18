@@ -2,75 +2,34 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">Network Monitor</string>
-    <string name="preferences_updateInterval_title">Frecuencia de la prueba</string>
-    <string name="preferences_updateInterval_summary">%s</string>
-    <string name="preferences_serviceEnabled_summary">Activar o desactivar el servicio</string>
-    <string name="preferences_serviceEnabled_title">Activar el servicio</string>
-    <string name="preferences_wake_interval_title">Evitar el modo de suspensión</string>
-    <string name="preferences_wake_interval_summary">Despertar el móvil periódicamente para mantener la conexión de datos activa (consume batería): %s</string>
-    <string name="preferences_scheduler_title">Precisión del inervalo entre pruebas</string>
-    <string name="preferences_scheduler_summary">Escoger entre un intervalo constante o ahorro de la batería: %s</string>
-    <string name="preferences_showLogFile_title">Ver el archivo log</string>
-    <string name="preferences_advanced_title">Ajustes avanzados</string>
-    <string name="preferences_about_title">Acerca de</string>
     <string name="log_title">Archivo log</string>
+
+    <!-- Strings for the log screen -->
     <string name="action_share">Compartir el archivo log</string>
     <string name="action_refresh">Actualizar</string>
     <string name="action_clear">Reiniciar el archivo log</string>
-    <string name="subject_send_log">Archivo log de Network Monitor</string>
-    <string name="error_sdcard_unmounted">Imposible crear el archivo log. Verifica que la tarjeta SD esté disponible.</string>
+    <string name="progress_dialog_message">Por favor espera&#8230;</string>    
     <string name="error_reading_log">Imposible leer el archivo log.</string>
     <string name="success_logs_clear">El archivo log ha sido reinicializado</string>
     <string name="confirm_logs_clear">¿Estás seguro de querer borrar los datos guardados?</string>
     
-    <string name="export_choice_title">Escoge un formato</string>
-    <string name="export_choice_csv">CSV</string>
-    <string name="export_choice_html">HTML</string>
-    <string name="export_choice_kml">KML</string>
-    <string name="export_choice_excel">Excel</string>
-    <string name="export_choice_db">Base de datos</string>
-    <string name="export_choice_text">Resumen en texto</string>
-    <string name="export_kml_choice_title">Escoge un campo</string>
-    <string name="progress_dialog_message">Por favor espera&#8230;</string>
-    <string name="export_progress_preparing_export">Preparación de la exportación&#8230;</string>
-    <string name="export_progress_processing_data">Tratamiento de datos&#8230;</string>
-    <string name="export_progress_finalizing_export">Finalización&#8230;</string>
-    
-	<string name="pref_interval_never">Nunca</string>
-    <string name="pref_interval_10_seconds">10 segundos</string>
-	<string name="pref_interval_20_seconds">20 segundos</string>
-	<string name="pref_interval_30_seconds">30 segundos</string>
-	<string name="pref_interval_1_minute">1 minuto</string>
-	<string name="pref_interval_2_minutes">2 minutos</string>
-	<string name="pref_interval_5_minutes">5 minutos</string>
-	<string name="pref_interval_10_minutes">10 minutos</string>
-	<string name="pref_interval_15_minutes">15 minutos</string>
-	<string name="pref_interval_25_minutes">25 minutos</string>
-	<string name="pref_interval_30_minutes">30 minutos</string>
-	<string name="pref_interval_55_minutes">55 minutos</string>
-	<string name="pref_interval_1_hour">1 hora</string>
-	
-	<string name="pref_executor_service_scheduler">Intervalo preciso</string>
-	<string name="pref_alarm_manager_scheduler">Economizar la batería</string>
-	
-	<string name="title_select_fields">Campos</string>
-	<string name="summary_select_fields">Escoger los campos fijados en el fichero log y los ficheros exportados.</string>
-	<string name="action_select_all">Marcar todos</string>
-	<string name="action_select_none">Marcar ninguno</string>
-	<string name="action_select_profile_wifi">Perfil WiFi</string>
-	<string name="action_select_profile_mobile">Perfil móvil</string>
-	<string name="action_select_profile_location">Perfil localización</string>
-    
-   
-    <string name="error_no_mobile_tests">Ninguna prueba ha sido realizada con una conexión de datos móviles.</string>
-    <string name="export_message_text">El siguiente resumen enumera las estaciones base y puntos de acceso WiFi y los resultados de sus pruebas de conexión. Para cada estación o punto de acceso, puedes ver el % de las pruebas de conexión que pasaron, y el número total de pruebas de conexión. 
-\n\nLas peores estaciones base aparecen por encima de la lista.
-\n\n</string>
-    <string name="export_message_text_file_attached">El fichero adjunto incluye los datos completos del conjunto de las pruebas.\n\n</string>
+    <!--  Strings for the select_fields activity -->    
+    <string name="action_select_all">Marcar todos</string>
+    <string name="action_select_none">Marcar ninguno</string>
+    <string name="action_select_profile_wifi">Perfil WiFi</string>
+    <string name="action_select_profile_mobile">Perfil móvil</string>
+    <string name="action_select_profile_location">Perfil localización</string>
+
+    <!--  Strings for the about screen -->
     <string name="about_title">Acerca de</string>
     <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
     <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
     <string name="about_projectUrl">https://github.com/BoD/network-monitor</string>
+    <string name="about_issues">Informar sobre un error (bug):\nhttps://github.com/BoD/network-monitor/issues</string>
+    <string name="about_rate">Calificar la aplicación en la tienda de Google Play :\nhttps://play.google.com/store/apps/details?id=ca.rmen.android.networkmonitor</string>
+
+
+    <!-- Notification -->
     <string name="service_notification_ticker">Network Monitor recoge datos.</string>
     <string name="service_notification_text">Recoge datos.</string>
     <string name="service_notification_action_stop">Apagar</string>

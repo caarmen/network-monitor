@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Strings for exporting the log file -->
+    <string name="export_subject_send_log">Archivo log de Network Monitor</string>
+    <string name="export_error_sdcard_unmounted">Imposible crear el archivo log. Verifica que la tarjeta SD esté disponible.</string>
+    <string name="export_choice_title">Escoge un formato</string>
+    <string name="export_choice_csv">CSV</string>
+    <string name="export_choice_html">HTML</string>
+    <string name="export_choice_kml">KML</string>
+    <string name="export_choice_excel">Excel</string>
+    <string name="export_choice_db">Base de datos</string>
+    <string name="export_choice_text">Resumen en texto</string>
+    <string name="export_kml_choice_title">Escoge un campo</string>
+    <string name="export_progress_preparing_export">Preparación de la exportación&#8230;</string>
+    <string name="export_progress_processing_data">Tratamiento de datos&#8230;</string>
+    <string name="export_progress_finalizing_export">Finalización&#8230;</string>
+    <string name="export_error_no_mobile_tests">Ninguna prueba ha sido realizada con una conexión de datos móviles.</string>
+    <string name="export_message_text">El siguiente resumen enumera las estaciones base y puntos de acceso WiFi y los resultados de sus pruebas de conexión. Para cada estación o punto de acceso, puedes ver el % de las pruebas de conexión que pasaron, y el número total de pruebas de conexión. 
+\n\nLas peores estaciones base aparecen por encima de la lista.
+\n\n</string>
+    <string name="export_message_text_file_attached">El fichero adjunto incluye los datos completos del conjunto de las pruebas.\n\n</string>
+
+</resources>
