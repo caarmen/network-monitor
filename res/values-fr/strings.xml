@@ -11,6 +11,7 @@
     <string name="preferences_scheduler_title">Précision de l\'intervalle des tests</string>
     <string name="preferences_scheduler_summary">Choisir entre une précision de minutage ou l\'économie de la batterie: %s</string>
     <string name="preferences_showLogFile_title">Voir le fichier journal</string>
+    <string name="preferences_advanced_title">Préférences avancées</string>
     <string name="preferences_about_title">À propos</string>
     <string name="log_title">Fichier journal</string>
     <string name="action_share">Partager le fichier journal</string>

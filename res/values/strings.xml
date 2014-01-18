@@ -11,7 +11,7 @@
     <string name="preferences_scheduler_title">Polling interval</string>
     <string name="preferences_scheduler_summary">Choose whether test intervals should be accurate or if battery should be saved: %s</string>
     <string name="preferences_showLogFile_title">View log file</string>
-    <string name="preferences_advanced_title">Advanced</string>
+    <string name="preferences_advanced_title">Advanced settings</string>
     <string name="preferences_about_title">About</string>
     <string name="log_title">Log file</string>
     <string name="action_share">Share log file</string>
