@@ -208,7 +208,7 @@ public class Log {
      */
 
     public static void v(String tag, String message) {
-        d(tag, message, null);
+        v(tag, message, null);
     }
 
     public static void v(String tag, String message, Throwable throwable) {
