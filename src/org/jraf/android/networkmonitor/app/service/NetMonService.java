@@ -24,31 +24,26 @@
  */
 package org.jraf.android.networkmonitor.app.service;
 
-import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.os.Build;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
 import org.jraf.android.networkmonitor.app.service.datasources.NetMonDataSources;
+import org.jraf.android.networkmonitor.app.service.scheduler.ExecutorServiceScheduler;
+import org.jraf.android.networkmonitor.app.service.scheduler.Scheduler;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 /**
@@ -56,15 +51,13 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
  */
 public class NetMonService extends Service {
     private static final String TAG = Constants.TAG + NetMonService.class.getSimpleName();
-    private static final String PREFIX = NetMonService.class.getName() + ".";
-    private static final String ACTION_FETCH_DATA = PREFIX + "ACTION_FETCH_DATA";
-    private static final int REQUEST_CODE_FETCH_DATA = 1;
 
     private PowerManager mPowerManager;
     private AlarmManager mAlarmManager;
     private long mLastWakeUp = 0;
     private NetMonDataSources mDataSources;
     private PendingIntent mPendingIntent;
+    private Scheduler mScheduler;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -77,27 +70,19 @@ public class NetMonService extends Service {
 
         mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        mScheduler = new ExecutorServiceScheduler(this);
+        mScheduler.init();
 
         // Show our ongoing notification
         Notification notification = NetMonNotification.createNotification(this);
         startForeground(NetMonNotification.NOTIFICATION_ID, notification);
 
-        // Register the broadcast receiver in a background thread
-        HandlerThread thread = new HandlerThread(TAG);
-        thread.start();
-        Handler handler = new Handler(thread.getLooper());
-        Intent intent = new Intent(ACTION_FETCH_DATA);
-        registerReceiver(mBroadcastReceiver, new IntentFilter(ACTION_FETCH_DATA), null, handler);
-
         // Prepare our data sources
         mDataSources = new NetMonDataSources();
         mDataSources.onCreate(this);
 
-        // Prepare the pending intent which will be executed periodically.
-        mPendingIntent = PendingIntent.getBroadcast(this, REQUEST_CODE_FETCH_DATA, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mSharedPreferenceListener);
-        reScheduleMonitorLoop();
+        mScheduler.schedule(mTask, NetMonPreferences.getInstance(this).getUpdateInterval());
     }
 
     @Override
@@ -110,71 +95,47 @@ public class NetMonService extends Service {
         Log.v(TAG, "onDestroy");
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mSharedPreferenceListener);
         mAlarmManager.cancel(mPendingIntent);
-        unregisterReceiver(mBroadcastReceiver);
         mDataSources.onDestroy();
         NetMonNotification.dismissNotification(this);
+        mScheduler.shutdown();
         super.onDestroy();
     }
 
-    /**
-     * Schedule our task to fetch data based on the interval chosen by the user.
-     */
-    private void reScheduleMonitorLoop() {
-        Log.v(TAG, "reScheduleMonitorLoop");
-        int updateInterval = NetMonPreferences.getInstance(this).getUpdateInterval();
-        Log.d(TAG, "reScheduleMonitorLoop: will execute every " + updateInterval / 1000 + " seconds...");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) scheduleAlarmKitKat(0);
-        else
-            mAlarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), updateInterval, mPendingIntent);
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    private void scheduleAlarmKitKat(int delay) {
-        mAlarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + delay, mPendingIntent);
-    }
-
-    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+    private Runnable mTask = new Runnable() {
 
         @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.v(TAG, "onReceive: " + intent);
-            // The AlarmManager called us.  Let's fetch data.
-            if (ACTION_FETCH_DATA.equals(intent.getAction())) {
-                // Schedule the next one
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    Log.v(TAG, "rescheduling for kitkat");
-                    int updateInterval = NetMonPreferences.getInstance(context).getUpdateInterval();
-                    scheduleAlarmKitKat(updateInterval);
-                }
-                // Retrieve the log
-                WakeLock wakeLock = null;
-                try {
-                    // Periodically wake up the device to prevent the data connection from being cut.
-                    long wakeInterval = NetMonPreferences.getInstance(NetMonService.this).getWakeInterval();
-                    long now = System.currentTimeMillis();
-                    long timeSinceLastWake = now - mLastWakeUp;
-                    Log.d(TAG, "wakeInterval = " + wakeInterval + ", lastWakeUp = " + mLastWakeUp + ", timeSinceLastWake = " + timeSinceLastWake);
-                    if (wakeInterval > 0 && timeSinceLastWake > wakeInterval) {
-                        Log.d(TAG, "acquiring lock");
-                        wakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, TAG);
-                        wakeLock.acquire();
-                        mLastWakeUp = now;
-                    }
+        public void run() {
+            Log.v(TAG, "running task");
 
-                    // Insert this ContentValues into the DB.
-                    Log.v(TAG, "Inserting data into DB");
-                    // Put all the data we want to log, into a ContentValues.
-                    ContentValues values = new ContentValues();
-                    values.put(NetMonColumns.TIMESTAMP, System.currentTimeMillis());
-                    values.putAll(mDataSources.getContentValues());
-                    getContentResolver().insert(NetMonColumns.CONTENT_URI, values);
-
-                } catch (Throwable t) {
-                    Log.v(TAG, "Error in monitorLoop: " + t.getMessage(), t);
-                } finally {
-                    if (wakeLock != null && wakeLock.isHeld()) wakeLock.release();
+            // Retrieve the log
+            WakeLock wakeLock = null;
+            try {
+                // Periodically wake up the device to prevent the data connection from being cut.
+                long wakeInterval = NetMonPreferences.getInstance(NetMonService.this).getWakeInterval();
+                long now = System.currentTimeMillis();
+                long timeSinceLastWake = now - mLastWakeUp;
+                Log.d(TAG, "wakeInterval = " + wakeInterval + ", lastWakeUp = " + mLastWakeUp + ", timeSinceLastWake = " + timeSinceLastWake);
+                if (wakeInterval > 0 && timeSinceLastWake > wakeInterval) {
+                    Log.d(TAG, "acquiring lock");
+                    wakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, TAG);
+                    wakeLock.acquire();
+                    mLastWakeUp = now;
                 }
+
+                // Insert this ContentValues into the DB.
+                Log.v(TAG, "Inserting data into DB");
+                // Put all the data we want to log, into a ContentValues.
+                ContentValues values = new ContentValues();
+                values.put(NetMonColumns.TIMESTAMP, System.currentTimeMillis());
+                values.putAll(mDataSources.getContentValues());
+                getContentResolver().insert(NetMonColumns.CONTENT_URI, values);
+
+            } catch (Throwable t) {
+                Log.v(TAG, "Error in monitorLoop: " + t.getMessage(), t);
+            } finally {
+                if (wakeLock != null && wakeLock.isHeld()) wakeLock.release();
             }
+
         }
     };
 
@@ -192,7 +153,8 @@ public class NetMonService extends Service {
             }
             // Reschedule our task if the user changed the interval
             else if (Constants.PREF_UPDATE_INTERVAL.equals(key)) {
-                reScheduleMonitorLoop();
+                int interval = NetMonPreferences.getInstance(NetMonService.this).getUpdateInterval();
+                mScheduler.setInterval(interval);
             }
         }
     };
