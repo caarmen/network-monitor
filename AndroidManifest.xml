@@ -88,6 +88,7 @@
             android:name="org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
+            android:label="@string/title_select_fields"
             android:parentActivityName="org.jraf.android.networkmonitor.app.prefs.AdvancedPreferencesActivity" >
             <intent-filter>
                 <action android:name="org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity" />

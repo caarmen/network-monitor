@@ -28,6 +28,7 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -35,6 +36,10 @@ import android.widget.ListView;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 public class SelectFieldsFragment extends ListFragment {
+
+    public interface SelectFieldsFragmentListener {
+        void onListItemClick(ListView l, View v, int position, long id);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -54,4 +59,13 @@ public class SelectFieldsFragment extends ListFragment {
             lv.setItemChecked(position, true);
         }
     }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        Activity activity = getActivity();
+        if (activity instanceof SelectFieldsFragmentListener) ((SelectFieldsFragmentListener) activity).onListItemClick(l, v, position, id);
+    }
+
+
 }

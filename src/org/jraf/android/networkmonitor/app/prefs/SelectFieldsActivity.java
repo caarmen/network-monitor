@@ -33,19 +33,77 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.util.SparseBooleanArray;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import org.jraf.android.networkmonitor.R;
+import org.jraf.android.networkmonitor.app.prefs.SelectFieldsFragment.SelectFieldsFragmentListener;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
-public class SelectFieldsActivity extends FragmentActivity {
+public class SelectFieldsActivity extends FragmentActivity implements SelectFieldsFragmentListener {
     private static final String TAG = SelectFieldsActivity.class.getSimpleName();
+    private ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_fields);
+        ListFragment lvf = (ListFragment) getSupportFragmentManager().findFragmentById(R.id.listFragment);
+        mListView = lvf.getListView();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.select_fields, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        View okButton = findViewById(R.id.ok);
+        switch (item.getItemId()) {
+            case R.id.action_select_all:
+                for (int i = 0; i < mListView.getCount(); i++)
+                    mListView.setItemChecked(i, true);
+                okButton.setEnabled(true);
+                break;
+            case R.id.action_select_none:
+                for (int i = 0; i < mListView.getCount(); i++)
+                    mListView.setItemChecked(i, false);
+                okButton.setEnabled(false);
+                break;
+            case R.id.action_select_profile_wifi:
+                selectColumns(getResources().getStringArray(R.array.db_columns_profile_wifi));
+                okButton.setEnabled(true);
+                break;
+            case R.id.action_select_profile_mobile:
+                selectColumns(getResources().getStringArray(R.array.db_columns_profile_mobile));
+                okButton.setEnabled(true);
+                break;
+            case R.id.action_select_profile_location:
+                selectColumns(getResources().getStringArray(R.array.db_columns_profile_location));
+                okButton.setEnabled(true);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
+    private void selectColumns(String[] columnNames) {
+        for (int i = 0; i < mListView.getCount(); i++)
+            mListView.setItemChecked(i, false);
+        ArrayAdapter<CharSequence> adapter = (ArrayAdapter<CharSequence>) mListView.getAdapter();
+        for (String columnName : columnNames) {
+            String columnLabel = NetMonColumns.getColumnLabel(this, columnName);
+            int position = adapter.getPosition(columnLabel);
+            mListView.setItemChecked(position, true);
+        }
     }
 
     public void onCancel(View v) {
@@ -55,8 +113,7 @@ public class SelectFieldsActivity extends FragmentActivity {
 
     public void onOk(View v) {
         Log.v(TAG, "onOk");
-        ListFragment lv = (ListFragment) getSupportFragmentManager().findFragmentById(R.id.listFragment);
-        SparseBooleanArray checkedPositions = lv.getListView().getCheckedItemPositions();
+        SparseBooleanArray checkedPositions = mListView.getCheckedItemPositions();
         String[] dbColumns = NetMonColumns.getColumnNames(this);
         final List<String> selectedColumns = new ArrayList<String>(dbColumns.length);
         for (int i = 0; i < dbColumns.length; i++) {
@@ -75,5 +132,18 @@ public class SelectFieldsActivity extends FragmentActivity {
                 NavUtils.navigateUpFromSameTask(SelectFieldsActivity.this);
             }
         }.execute();
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        View okButton = findViewById(R.id.ok);
+        SparseBooleanArray checkedItemPositions = l.getCheckedItemPositions();
+        for (int i = 0; i < checkedItemPositions.size(); i++) {
+            if (checkedItemPositions.get(checkedItemPositions.keyAt(i))) {
+                okButton.setEnabled(true);
+                return;
+            }
+        }
+        okButton.setEnabled(false);
     }
 }
