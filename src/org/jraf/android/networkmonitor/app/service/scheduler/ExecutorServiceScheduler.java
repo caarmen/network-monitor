@@ -43,12 +43,10 @@ public class ExecutorServiceScheduler implements Scheduler {
     private WakeLock mWakeLock = null;
     private Runnable mRunnableImpl;
 
-    public ExecutorServiceScheduler(Context context) {
-        mContext = context;
-    }
-
     @Override
-    public void init() {
+    public void onCreate(Context context) {
+        Log.v(TAG, "onCreate");
+        mContext = context;
         mExecutorService = Executors.newSingleThreadScheduledExecutor();
         // Prevent the system from closing the connection after 30 minutes of screen off.
         PowerManager powerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
@@ -57,6 +55,7 @@ public class ExecutorServiceScheduler implements Scheduler {
 
     @Override
     public void schedule(Runnable runnable, int interval) {
+        Log.v(TAG, "schedule at interval " + interval);
         mRunnableImpl = runnable;
         mWakeLock.acquire();
         setInterval(interval);
@@ -64,6 +63,7 @@ public class ExecutorServiceScheduler implements Scheduler {
 
     @Override
     public void setInterval(int interval) {
+        Log.v(TAG, "setInterval " + interval);
         if (mFuture != null) mFuture.cancel(true);
         // Issue #20: We should respect the testing interval.  We shouldn't wait for more than this interval for
         // the connection tests to timeout.  
@@ -71,7 +71,8 @@ public class ExecutorServiceScheduler implements Scheduler {
     }
 
     @Override
-    public void shutdown() {
+    public void onDestroy() {
+        Log.v(TAG, "onDestroy");
         if (mWakeLock != null) mWakeLock.release();
         if (mFuture != null) mFuture.cancel(true);
         if (mExecutorService != null) mExecutorService.shutdownNow();

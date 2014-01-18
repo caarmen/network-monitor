@@ -48,5 +48,13 @@
         <item>1500000</item>
         <item>3300000</item>
     </string-array>
+    <string-array name="preferences_scheduler_labels">_
+        <item>@string/pref_executor_service_scheduler</item>
+        <item>@string/pref_alarm_manager_scheduler</item>
+    </string-array>
+    <string-array name="preferences_scheduler_values">_
+        <item>ExecutorServiceScheduler</item>
+        <item>AlarmManagerScheduler</item>
+    </string-array>
     
 </resources>

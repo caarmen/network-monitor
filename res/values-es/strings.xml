@@ -8,6 +8,8 @@
     <string name="preferences_serviceEnabled_title">Activar el servicio</string>
     <string name="preferences_wake_interval_title">Evitar el modo de suspensión</string>
     <string name="preferences_wake_interval_summary">Despertar el móvil periódicamente para mantener la conexión de datos activa (consume batería): %s</string>
+    <string name="preferences_scheduler_title">Precisión del inervalo entre pruebas</string>
+    <string name="preferences_scheduler_summary">Escoger entre un intervalo constante o ahorro de la batería: %s</string>
     <string name="preferences_showLogFile_title">Ver el archivo log</string>
     <string name="preferences_about_title">Acerca de</string>
     <string name="log_title">Archivo log</string>
@@ -46,7 +48,9 @@
 	<string name="pref_interval_30_minutes">30 minutos</string>
 	<string name="pref_interval_55_minutes">55 minutos</string>
 	<string name="pref_interval_1_hour">1 hora</string>
-								
+	
+	<string name="pref_executor_service_scheduler">Intervalo preciso</string>
+	<string name="pref_alarm_manager_scheduler">Economizar la batería</string>
     
    
     <string name="error_no_mobile_tests">Ninguna prueba ha sido realizada con una conexión de datos móviles.</string>

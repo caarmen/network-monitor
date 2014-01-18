@@ -24,6 +24,8 @@
  */
 package org.jraf.android.networkmonitor;
 
+import org.jraf.android.networkmonitor.app.service.scheduler.ExecutorServiceScheduler;
+
 public class Constants {
     public static final String TAG = "NetMon/";
 
@@ -34,6 +36,8 @@ public class Constants {
     public static final String PREF_SERVICE_ENABLED = "PREF_SERVICE_ENABLED";
     public static final boolean PREF_SERVICE_ENABLED_DEFAULT = false;
     public static final String PREF_KML_EXPORT_COLUMN = "PREF_KML_EXPORT_COLUMN";
+    public static final String PREF_SCHEDULER = "PREF_SCHEDULER";
+    public static final String PREF_SCHEDULER_DEFAULT = ExecutorServiceScheduler.class.getSimpleName();
     public static final String CONNECTION_TEST_PASS = "PASS";
     public static final String CONNECTION_TEST_FAIL = "FAIL";
     public static final String CONNECTION_TEST_SLOW = "SLOW";

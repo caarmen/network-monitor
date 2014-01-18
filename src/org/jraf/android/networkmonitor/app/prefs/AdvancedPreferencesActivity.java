@@ -22,54 +22,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jraf.android.networkmonitor.app.main;
+package org.jraf.android.networkmonitor.app.prefs;
 
-import android.app.Dialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
-import org.jraf.android.backport.switchwidget.SwitchPreference;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
-import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
-import org.jraf.android.networkmonitor.app.service.NetMonService;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-
-public class MainActivity extends PreferenceActivity {
+public class AdvancedPreferencesActivity extends PreferenceActivity {
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        addPreferencesFromResource(R.xml.preferences);
-        updateListPreferenceSummary(Constants.PREF_UPDATE_INTERVAL, R.string.preferences_updateInterval_summary);
-        if (NetMonPreferences.getInstance(this).isServiceEnabled()) startService(new Intent(MainActivity.this, NetMonService.class));
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        int playServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (playServicesAvailable != ConnectionResult.SUCCESS) {
-            Dialog errorDialog = null;
-
-            if (GooglePlayServicesUtil.isUserRecoverableError(playServicesAvailable)) {
-                errorDialog = GooglePlayServicesUtil.getErrorDialog(playServicesAvailable, this, 1);
-            }
-            if (errorDialog != null) {
-                errorDialog.show();
-            } else {
-                Toast.makeText(this, "Google Play Services must be installed", Toast.LENGTH_LONG).show();
-            }
-        }
+        PreferenceManager.setDefaultValues(this, R.xml.adv_preferences, false);
+        addPreferencesFromResource(R.xml.adv_preferences);
+        updateListPreferenceSummary(Constants.PREF_WAKE_INTERVAL, R.string.preferences_wake_interval_summary);
     }
 
     @Override
@@ -84,25 +56,13 @@ public class MainActivity extends PreferenceActivity {
         super.onStop();
     }
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public void onWindowFocusChanged(boolean hasFocus) {
-        if (hasFocus) {
-            // Refresh the 'enabled' preference view
-            boolean enabled = NetMonPreferences.getInstance(this).isServiceEnabled();
-            ((SwitchPreference) findPreference(Constants.PREF_SERVICE_ENABLED)).setChecked(enabled);
-        }
-    }
-
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (Constants.PREF_SERVICE_ENABLED.equals(key)) {
-                if (sharedPreferences.getBoolean(Constants.PREF_SERVICE_ENABLED, Constants.PREF_SERVICE_ENABLED_DEFAULT)) {
-                    startService(new Intent(MainActivity.this, NetMonService.class));
-                }
-            } else if (Constants.PREF_UPDATE_INTERVAL.equals(key)) {
-                updateListPreferenceSummary(Constants.PREF_UPDATE_INTERVAL, R.string.preferences_updateInterval_summary);
+            if (Constants.PREF_WAKE_INTERVAL.equals(key)) {
+                updateListPreferenceSummary(Constants.PREF_WAKE_INTERVAL, R.string.preferences_wake_interval_summary);
+            } else if (Constants.PREF_SCHEDULER.equals(key)) {
+                updateListPreferenceSummary(Constants.PREF_SCHEDULER, R.string.preferences_scheduler_summary);
             }
         }
     };

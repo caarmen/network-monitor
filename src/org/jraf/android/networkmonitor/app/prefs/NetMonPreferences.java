@@ -29,6 +29,8 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
 import org.jraf.android.networkmonitor.Constants;
+import org.jraf.android.networkmonitor.app.service.scheduler.AlarmManagerScheduler;
+import org.jraf.android.networkmonitor.app.service.scheduler.ExecutorServiceScheduler;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 public class NetMonPreferences {
@@ -82,6 +84,14 @@ public class NetMonPreferences {
         String valueStr = mSharedPrefs.getString(key, defaultValue);
         int valueInt = Integer.valueOf(valueStr);
         return valueInt;
+    }
+
+    public Class<?> getSchedulerClass() {
+        String schedulerPref = mSharedPrefs.getString(Constants.PREF_SCHEDULER, Constants.PREF_SCHEDULER_DEFAULT);
+        if (schedulerPref.equals(ExecutorServiceScheduler.class.getSimpleName())) return ExecutorServiceScheduler.class;
+        else
+            return AlarmManagerScheduler.class;
+
     }
 
 }

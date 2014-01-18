@@ -23,11 +23,13 @@
  */
 package org.jraf.android.networkmonitor.app.service.scheduler;
 
+import android.content.Context;
+
 
 public interface Scheduler {
-    public void init();
+    public void onCreate(Context context);
 
-    public void shutdown();
+    public void onDestroy();
 
     public void schedule(Runnable runnable, int interval);
 

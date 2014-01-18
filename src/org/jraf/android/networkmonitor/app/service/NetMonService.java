@@ -42,12 +42,14 @@ import android.util.Log;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
 import org.jraf.android.networkmonitor.app.service.datasources.NetMonDataSources;
-import org.jraf.android.networkmonitor.app.service.scheduler.ExecutorServiceScheduler;
 import org.jraf.android.networkmonitor.app.service.scheduler.Scheduler;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 /**
  * This service periodically retrieves network state information and writes it to the database.
+ */
+/**
+ *
  */
 public class NetMonService extends Service {
     private static final String TAG = Constants.TAG + NetMonService.class.getSimpleName();
@@ -70,8 +72,6 @@ public class NetMonService extends Service {
 
         mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        mScheduler = new ExecutorServiceScheduler(this);
-        mScheduler.init();
 
         // Show our ongoing notification
         Notification notification = NetMonNotification.createNotification(this);
@@ -82,8 +82,10 @@ public class NetMonService extends Service {
         mDataSources.onCreate(this);
 
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mSharedPreferenceListener);
-        mScheduler.schedule(mTask, NetMonPreferences.getInstance(this).getUpdateInterval());
+
+        setScheduler();
     }
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -97,8 +99,29 @@ public class NetMonService extends Service {
         mAlarmManager.cancel(mPendingIntent);
         mDataSources.onDestroy();
         NetMonNotification.dismissNotification(this);
-        mScheduler.shutdown();
+        mScheduler.onDestroy();
         super.onDestroy();
+    }
+
+    /**
+     * Start scheduling tests, using the scheduler class chosen by the user in the advanced settings.
+     */
+    private void setScheduler() {
+        Log.v(TAG, "setScheduler");
+        if (mScheduler != null) {
+            mScheduler.onDestroy();
+        }
+        Class<?> schedulerClass = NetMonPreferences.getInstance(this).getSchedulerClass();
+        Log.v(TAG, "Will use scheduler " + schedulerClass);
+        try {
+            mScheduler = (Scheduler) schedulerClass.newInstance();
+            mScheduler.onCreate(this);
+            mScheduler.schedule(mTask, NetMonPreferences.getInstance(this).getUpdateInterval());
+        } catch (InstantiationException e) {
+            Log.e(TAG, "setScheduler Could not create scheduler " + schedulerClass + ": " + e.getMessage(), e);
+        } catch (IllegalAccessException e) {
+            Log.e(TAG, "setScheduler Could not create scheduler " + schedulerClass + ": " + e.getMessage(), e);
+        }
     }
 
     private Runnable mTask = new Runnable() {
@@ -155,6 +178,8 @@ public class NetMonService extends Service {
             else if (Constants.PREF_UPDATE_INTERVAL.equals(key)) {
                 int interval = NetMonPreferences.getInstance(NetMonService.this).getUpdateInterval();
                 mScheduler.setInterval(interval);
+            } else if (Constants.PREF_SCHEDULER.equals(key)) {
+                setScheduler();
             }
         }
     };

@@ -35,14 +35,11 @@
         android:title="@string/action_clear" >
         <intent android:action="org.jraf.android.networkmonitor.app.log_clear" />
     </Preference>
-    <ListPreference
-        android:defaultValue="0"
-        android:entries="@array/preferences_wake_interval_labels"
-        android:entryValues="@array/preferences_wake_interval_values"
-        android:icon="@drawable/ic_pref_wake_interval"
-        android:key="PREF_WAKE_INTERVAL"
-        android:summary="@string/preferences_wake_interval_summary"
-        android:title="@string/preferences_wake_interval_title" />
+    <Preference
+        android:icon="@drawable/ic_action_settings"
+        android:title="@string/preferences_advanced_title" >
+        <intent android:action="org.jraf.android.networkmonitor.app.prefs.AdvancedSettingsActivity"/>
+    </Preference>
 
     <Preference
         android:icon="@drawable/ic_pref_about"

@@ -43,17 +43,15 @@ public class AlarmManagerScheduler implements Scheduler {
     private PendingIntent mPendingIntent;
     private HandlerThread mHandlerThread;
     private AlarmManager mAlarmManager;
-    private final Context mContext;
+    private Context mContext;
     private int mInterval;
     private Runnable mRunnableImpl;
 
-    public AlarmManagerScheduler(Context context) {
+    @Override
+    public void onCreate(Context context) {
+        Log.v(TAG, "onCreate");
         mContext = context;
         mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-    }
-
-    @Override
-    public void init() {
         // Register the broadcast receiver in a background thread
         mHandlerThread = new HandlerThread(TAG);
         mHandlerThread.start();
@@ -62,7 +60,8 @@ public class AlarmManagerScheduler implements Scheduler {
     }
 
     @Override
-    public void shutdown() {
+    public void onDestroy() {
+        Log.v(TAG, "onDestroy");
         mContext.unregisterReceiver(mBroadcastReceiver);
         mAlarmManager.cancel(mPendingIntent);
         mHandlerThread.quit();
@@ -70,6 +69,7 @@ public class AlarmManagerScheduler implements Scheduler {
 
     @Override
     public void schedule(Runnable runnable, int interval) {
+        Log.v(TAG, "schedule at interval " + interval);
         mRunnableImpl = runnable;
         Intent intent = new Intent(ACTION);
         mPendingIntent = PendingIntent.getBroadcast(mContext, TAG.hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -78,6 +78,7 @@ public class AlarmManagerScheduler implements Scheduler {
 
     @Override
     public void setInterval(int interval) {
+        Log.v(TAG, "Set interval " + interval);
         mInterval = interval;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) scheduleAlarmKitKat(0);
         else
@@ -86,6 +87,7 @@ public class AlarmManagerScheduler implements Scheduler {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void scheduleAlarmKitKat(int delay) {
+        Log.v(TAG, "scheduleAlarmKitKat: delay=" + delay);
         mAlarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + delay, mPendingIntent);
     }
 

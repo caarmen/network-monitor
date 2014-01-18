@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -61,6 +61,21 @@
             android:parentActivityName="org.jraf.android.networkmonitor.app.main.MainActivity" >
             <intent-filter>
                 <action android:name="org.jraf.android.networkmonitor.app.about.AboutActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.jraf.android.networkmonitor.app.main.MainActivity" />
+        </activity>
+        <activity
+            android:name="org.jraf.android.networkmonitor.app.prefs.AdvancedPreferencesActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:parentActivityName="org.jraf.android.networkmonitor.app.main.MainActivity" >
+            <intent-filter>
+                <action android:name="org.jraf.android.networkmonitor.app.prefs.AdvancedSettingsActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
