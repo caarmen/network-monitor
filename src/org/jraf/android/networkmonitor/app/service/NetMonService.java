@@ -48,9 +48,6 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
 /**
  * This service periodically retrieves network state information and writes it to the database.
  */
-/**
- *
- */
 public class NetMonService extends Service {
     private static final String TAG = Constants.TAG + NetMonService.class.getSimpleName();
 

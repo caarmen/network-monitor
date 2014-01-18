@@ -35,7 +35,6 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import org.jraf.android.backport.switchwidget.SwitchPreference;
-import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
 import org.jraf.android.networkmonitor.app.service.NetMonService;

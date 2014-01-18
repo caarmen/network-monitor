@@ -31,7 +31,6 @@ import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
-import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 
 public class AdvancedPreferencesActivity extends PreferenceActivity {

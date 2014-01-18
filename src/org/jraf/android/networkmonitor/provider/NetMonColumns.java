@@ -84,10 +84,16 @@ public class NetMonColumns implements BaseColumns {
     public static final String IPV4_ADDRESS = "ipv4_address";
     public static final String IPV6_ADDRESS = "ipv6_address";
 
+    /**
+     * @return the list of column names in the main table. This returns the technical names of the columns, as they appear in the DB.
+     */
     public static String[] getColumnNames(Context context) {
         return context.getResources().getStringArray(R.array.db_columns);
     }
 
+    /**
+     * @return The localized display names of all the columns in the DB.
+     */
     public static String[] getColumnLabels(Context context) {
         String[] columnNames = getColumnNames(context);
         String[] columnLabels = new String[columnNames.length];
@@ -97,6 +103,9 @@ public class NetMonColumns implements BaseColumns {
         return columnLabels;
     }
 
+    /**
+     * @return the localized display name for a particular DB column name.
+     */
     public static String getColumnLabel(Context context, String columnName) {
         int columnLabelId = context.getResources().getIdentifier(columnName, "string", R.class.getPackage().getName());
         String columnLabel = context.getString(columnLabelId);

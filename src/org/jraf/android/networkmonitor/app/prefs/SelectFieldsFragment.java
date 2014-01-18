@@ -37,7 +37,7 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 public class SelectFieldsFragment extends ListFragment {
 
-    public interface SelectFieldsFragmentListener {
+    interface SelectFieldsFragmentListener {
         void onListItemClick(ListView l, View v, int position, long id);
     }
 

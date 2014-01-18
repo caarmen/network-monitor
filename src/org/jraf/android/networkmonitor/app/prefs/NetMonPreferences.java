@@ -43,14 +43,15 @@ public class NetMonPreferences {
 
     public static final String PREF_UPDATE_INTERVAL = "PREF_UPDATE_INTERVAL";
     public static final String PREF_UPDATE_INTERVAL_DEFAULT = "10000";
-    public static final String PREF_WAKE_INTERVAL = "PREF_WAKE_INTERVAL";
-    public static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
+    static final String PREF_WAKE_INTERVAL = "PREF_WAKE_INTERVAL";
     public static final String PREF_SERVICE_ENABLED = "PREF_SERVICE_ENABLED";
     public static final boolean PREF_SERVICE_ENABLED_DEFAULT = false;
-    public static final String PREF_KML_EXPORT_COLUMN = "PREF_KML_EXPORT_COLUMN";
     public static final String PREF_SCHEDULER = "PREF_SCHEDULER";
-    public static final String PREF_SCHEDULER_DEFAULT = ExecutorServiceScheduler.class.getSimpleName();
-    public static final String PREF_SELECTED_COLUMNS = "PREF_SELECTED_COLUMNS";
+
+    private static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
+    private static final String PREF_KML_EXPORT_COLUMN = "PREF_KML_EXPORT_COLUMN";
+    private static final String PREF_SCHEDULER_DEFAULT = ExecutorServiceScheduler.class.getSimpleName();
+    private static final String PREF_SELECTED_COLUMNS = "PREF_SELECTED_COLUMNS";
 
     private static NetMonPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
