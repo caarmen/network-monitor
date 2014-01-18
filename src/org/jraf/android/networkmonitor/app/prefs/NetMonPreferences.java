@@ -108,9 +108,9 @@ public class NetMonPreferences {
 
     public Class<?> getSchedulerClass() {
         String schedulerPref = mSharedPrefs.getString(NetMonPreferences.PREF_SCHEDULER, NetMonPreferences.PREF_SCHEDULER_DEFAULT);
-        if (schedulerPref.equals(ExecutorServiceScheduler.class.getSimpleName())) return ExecutorServiceScheduler.class;
+        if (schedulerPref.equals(AlarmManagerScheduler.class.getSimpleName())) return AlarmManagerScheduler.class;
         else
-            return AlarmManagerScheduler.class;
+            return ExecutorServiceScheduler.class;
 
     }
 
