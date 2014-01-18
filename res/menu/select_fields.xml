@@ -10,14 +10,18 @@
         android:title="@string/action_select_none"/>
     <item
         android:id="@+id/action_select_profile_wifi"
+        android:icon="@drawable/ic_menu_profile_wifi"
         android:showAsAction="never"
         android:title="@string/action_select_profile_wifi"/>
     <item
         android:id="@+id/action_select_profile_mobile"
+        android:icon="@drawable/ic_menu_profile_mobile"
         android:showAsAction="never"
         android:title="@string/action_select_profile_mobile"/>
     <item
         android:id="@+id/action_select_profile_location"
+        android:icon="@drawable/ic_menu_profile_location"
         android:showAsAction="never"
         android:title="@string/action_select_profile_location"/>
+
 </menu>
