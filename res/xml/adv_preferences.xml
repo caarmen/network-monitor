@@ -3,6 +3,7 @@
 
     <Preference
         android:icon="@drawable/ic_action_select_fields"
+        android:summary="@string/summary_select_fields"
         android:title="@string/title_select_fields" >
         <intent android:action="org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity" />
     </Preference>

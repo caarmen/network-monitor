@@ -52,7 +52,8 @@
 
 	<string name="pref_executor_service_scheduler">Precise timing</string>
 	<string name="pref_alarm_manager_scheduler">Save battery</string>
-	<string name="title_select_fields">Select fields to monitor</string>
+	<string name="title_select_fields">Fields to monitor</string>
+	<string name="summary_select_fields">Select a set of fields for the log display and export.</string>
 	<string name="action_select_all">Select all</string>
 	<string name="action_select_none">Select none</string>
 	<string name="action_select_profile_wifi">WiFi profile</string>

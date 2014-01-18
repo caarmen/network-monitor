@@ -52,8 +52,14 @@
 	
 	<string name="pref_executor_service_scheduler">Intervalle des tests précis</string>
 	<string name="pref_alarm_manager_scheduler">Économiser la batterie</string>
-    
-   
+	<string name="title_select_fields">Champs</string>
+	<string name="summary_select_fields">Sélectionner les champs pour l\'affichage du journal et l\'export.</string>
+    <string name="action_select_all">Tout cocher</string>
+    <string name="action_select_none">Tout décocher</string>
+    <string name="action_select_profile_wifi">Profil WiFi</string>
+    <string name="action_select_profile_mobile">Profil mobile</string>
+    <string name="action_select_profile_location">Profil localisation</string>
+
     <string name="error_no_mobile_tests">Aucun test n\'a été effectué avec une connexion data mobile.</string>
     <string name="export_message_text">Le résumé suivant énumère les antennes relais et points d\'accès WiFi, et les résultats de leurs tests. Pour chaque antenne relais ou point d\'accès WiFi, vous pouvez voir le % de tests de connexion qui ont réussi, et le nombre total de tests effectués. 
 \n\nLes moins bons antennes relais et points d\'accès WiFi se trouvent en haut de la liste. 

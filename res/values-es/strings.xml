@@ -52,6 +52,14 @@
 	
 	<string name="pref_executor_service_scheduler">Intervalo preciso</string>
 	<string name="pref_alarm_manager_scheduler">Economizar la batería</string>
+	
+	<string name="title_select_fields">Campos</string>
+	<string name="summary_select_fields">Escoger los campos fijados en el fichero log y los ficheros exportados.</string>
+	<string name="action_select_all">Marcar todos</string>
+	<string name="action_select_none">Marcar ninguno</string>
+	<string name="action_select_profile_wifi">Perfil WiFi</string>
+	<string name="action_select_profile_mobile">Perfil móvil</string>
+	<string name="action_select_profile_location">Perfil localización</string>
     
    
     <string name="error_no_mobile_tests">Ninguna prueba ha sido realizada con una conexión de datos móviles.</string>
