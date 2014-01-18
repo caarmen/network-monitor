@@ -33,9 +33,15 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
 
+/**
+ * Uses a {@link ScheduledExecutorService} to schedule a single task to be run periodically.
+ * 
+ * To ensure accurate scheduling, this class obtains a wake lock as soon as the runnable is first scheduled, which it releases in onDestroy().
+ * 
+ * The wake lock may result in battery drain. For less battery drain, but less accurate scheduling, use {@link AlarmManagerScheduler}.
+ */
 public class ExecutorServiceScheduler implements Scheduler {
     private static final String TAG = ExecutorServiceScheduler.class.getSimpleName();
-
 
     private Context mContext;
     private ScheduledExecutorService mExecutorService;

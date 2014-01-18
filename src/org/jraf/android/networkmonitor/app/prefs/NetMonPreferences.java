@@ -32,12 +32,25 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
-import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.app.service.scheduler.AlarmManagerScheduler;
 import org.jraf.android.networkmonitor.app.service.scheduler.ExecutorServiceScheduler;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
+/**
+ * Convenience methods for getting/setting shared preferences.
+ */
 public class NetMonPreferences {
+
+    public static final String PREF_UPDATE_INTERVAL = "PREF_UPDATE_INTERVAL";
+    public static final String PREF_UPDATE_INTERVAL_DEFAULT = "10000";
+    public static final String PREF_WAKE_INTERVAL = "PREF_WAKE_INTERVAL";
+    public static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
+    public static final String PREF_SERVICE_ENABLED = "PREF_SERVICE_ENABLED";
+    public static final boolean PREF_SERVICE_ENABLED_DEFAULT = false;
+    public static final String PREF_KML_EXPORT_COLUMN = "PREF_KML_EXPORT_COLUMN";
+    public static final String PREF_SCHEDULER = "PREF_SCHEDULER";
+    public static final String PREF_SCHEDULER_DEFAULT = ExecutorServiceScheduler.class.getSimpleName();
+    public static final String PREF_SELECTED_COLUMNS = "PREF_SELECTED_COLUMNS";
 
     private static NetMonPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
@@ -59,30 +72,30 @@ public class NetMonPreferences {
      * @return the interval between log entries, in millis
      */
     public int getUpdateInterval() {
-        return getIntPreference(Constants.PREF_UPDATE_INTERVAL, Constants.PREF_UPDATE_INTERVAL_DEFAULT);
+        return getIntPreference(NetMonPreferences.PREF_UPDATE_INTERVAL, NetMonPreferences.PREF_UPDATE_INTERVAL_DEFAULT);
     }
 
     public int getWakeInterval() {
-        return getIntPreference(Constants.PREF_WAKE_INTERVAL, Constants.PREF_WAKE_INTERVAL_DEFAULT);
+        return getIntPreference(NetMonPreferences.PREF_WAKE_INTERVAL, NetMonPreferences.PREF_WAKE_INTERVAL_DEFAULT);
     }
 
     public boolean isServiceEnabled() {
-        return mSharedPrefs.getBoolean(Constants.PREF_SERVICE_ENABLED, Constants.PREF_SERVICE_ENABLED_DEFAULT);
+        return mSharedPrefs.getBoolean(NetMonPreferences.PREF_SERVICE_ENABLED, NetMonPreferences.PREF_SERVICE_ENABLED_DEFAULT);
     }
 
     public void setServiceEnabled(boolean value) {
         Editor editor = mSharedPrefs.edit();
-        editor.putBoolean(Constants.PREF_SERVICE_ENABLED, value);
+        editor.putBoolean(NetMonPreferences.PREF_SERVICE_ENABLED, value);
         editor.commit();
     }
 
     public String getKMLExportColumn() {
-        return mSharedPrefs.getString(Constants.PREF_KML_EXPORT_COLUMN, NetMonColumns.SOCKET_CONNECTION_TEST);
+        return mSharedPrefs.getString(NetMonPreferences.PREF_KML_EXPORT_COLUMN, NetMonColumns.SOCKET_CONNECTION_TEST);
     }
 
     public void setKMLExportColumn(String value) {
         Editor editor = mSharedPrefs.edit();
-        editor.putString(Constants.PREF_KML_EXPORT_COLUMN, value);
+        editor.putString(NetMonPreferences.PREF_KML_EXPORT_COLUMN, value);
         editor.commit();
     }
 
@@ -93,7 +106,7 @@ public class NetMonPreferences {
     }
 
     public Class<?> getSchedulerClass() {
-        String schedulerPref = mSharedPrefs.getString(Constants.PREF_SCHEDULER, Constants.PREF_SCHEDULER_DEFAULT);
+        String schedulerPref = mSharedPrefs.getString(NetMonPreferences.PREF_SCHEDULER, NetMonPreferences.PREF_SCHEDULER_DEFAULT);
         if (schedulerPref.equals(ExecutorServiceScheduler.class.getSimpleName())) return ExecutorServiceScheduler.class;
         else
             return AlarmManagerScheduler.class;
@@ -101,7 +114,7 @@ public class NetMonPreferences {
     }
 
     public List<String> getSelectedColumns() {
-        String selectedColumnsString = mSharedPrefs.getString(Constants.PREF_SELECTED_COLUMNS, null);
+        String selectedColumnsString = mSharedPrefs.getString(NetMonPreferences.PREF_SELECTED_COLUMNS, null);
         final String[] selectedColumns;
         if (TextUtils.isEmpty(selectedColumnsString)) selectedColumns = NetMonColumns.getColumnNames(mContext);
         else
@@ -111,6 +124,6 @@ public class NetMonPreferences {
 
     public void setSelectedColumns(List<String> selectedColumns) {
         String selectedColumnsString = TextUtils.join(",", selectedColumns);
-        mSharedPrefs.edit().putString(Constants.PREF_SELECTED_COLUMNS, selectedColumnsString).commit();
+        mSharedPrefs.edit().putString(NetMonPreferences.PREF_SELECTED_COLUMNS, selectedColumnsString).commit();
     }
 }

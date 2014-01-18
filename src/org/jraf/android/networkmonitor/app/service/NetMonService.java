@@ -168,17 +168,17 @@ public class NetMonService extends Service {
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             Log.v(TAG, "onSharedPreferenceChanged: " + key);
             // Listen for the user disabling the service
-            if (Constants.PREF_SERVICE_ENABLED.equals(key)) {
-                if (!sharedPreferences.getBoolean(key, Constants.PREF_SERVICE_ENABLED_DEFAULT)) {
+            if (NetMonPreferences.PREF_SERVICE_ENABLED.equals(key)) {
+                if (!sharedPreferences.getBoolean(key, NetMonPreferences.PREF_SERVICE_ENABLED_DEFAULT)) {
                     Log.v(TAG, "Preference to enable service was turned off");
                     stopSelf();
                 }
             }
             // Reschedule our task if the user changed the interval
-            else if (Constants.PREF_UPDATE_INTERVAL.equals(key)) {
+            else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
                 int interval = NetMonPreferences.getInstance(NetMonService.this).getUpdateInterval();
                 mScheduler.setInterval(interval);
-            } else if (Constants.PREF_SCHEDULER.equals(key)) {
+            } else if (NetMonPreferences.PREF_SCHEDULER.equals(key)) {
                 setScheduler();
             }
         }

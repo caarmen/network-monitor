@@ -50,7 +50,7 @@ public class MainActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         addPreferencesFromResource(R.xml.preferences);
-        updateListPreferenceSummary(Constants.PREF_UPDATE_INTERVAL, R.string.preferences_updateInterval_summary);
+        updateListPreferenceSummary(NetMonPreferences.PREF_UPDATE_INTERVAL, R.string.preferences_updateInterval_summary);
         if (NetMonPreferences.getInstance(this).isServiceEnabled()) startService(new Intent(MainActivity.this, NetMonService.class));
     }
 
@@ -90,19 +90,19 @@ public class MainActivity extends PreferenceActivity {
         if (hasFocus) {
             // Refresh the 'enabled' preference view
             boolean enabled = NetMonPreferences.getInstance(this).isServiceEnabled();
-            ((SwitchPreference) findPreference(Constants.PREF_SERVICE_ENABLED)).setChecked(enabled);
+            ((SwitchPreference) findPreference(NetMonPreferences.PREF_SERVICE_ENABLED)).setChecked(enabled);
         }
     }
 
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (Constants.PREF_SERVICE_ENABLED.equals(key)) {
-                if (sharedPreferences.getBoolean(Constants.PREF_SERVICE_ENABLED, Constants.PREF_SERVICE_ENABLED_DEFAULT)) {
+            if (NetMonPreferences.PREF_SERVICE_ENABLED.equals(key)) {
+                if (sharedPreferences.getBoolean(NetMonPreferences.PREF_SERVICE_ENABLED, NetMonPreferences.PREF_SERVICE_ENABLED_DEFAULT)) {
                     startService(new Intent(MainActivity.this, NetMonService.class));
                 }
-            } else if (Constants.PREF_UPDATE_INTERVAL.equals(key)) {
-                updateListPreferenceSummary(Constants.PREF_UPDATE_INTERVAL, R.string.preferences_updateInterval_summary);
+            } else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
+                updateListPreferenceSummary(NetMonPreferences.PREF_UPDATE_INTERVAL, R.string.preferences_updateInterval_summary);
             }
         }
     };

@@ -36,6 +36,16 @@ import android.os.HandlerThread;
 import android.os.SystemClock;
 import android.util.Log;
 
+/**
+ * Schedule a single Runnable periodically. Note that on KitKat devices (and emulator), the specified interval may not be respected, even if the target SDK is
+ * less than 19 or methods like setExact are used.
+ * 
+ * The implementation on KitKat is different compared to older devices. On older devices, the setRepeating method of AlarmManager is used, which results in our
+ * task being executed at precise intervals.
+ * On KitKat, there is no exact repeating method. So, we schedule a task one time, and when the task is executed, it reschedules itself.
+ * 
+ * For more accurate scheduling, but possible more battery drain, use {@link ExecutorServiceScheduler}.
+ */
 public class AlarmManagerScheduler implements Scheduler {
 
     private static final String TAG = AlarmManagerScheduler.class.getSimpleName();
@@ -96,9 +106,9 @@ public class AlarmManagerScheduler implements Scheduler {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.v(TAG, "onReceive: " + intent);
-            // The AlarmManager called us.  Let's fetch data.
+            // The AlarmManager called us.
             if (ACTION.equals(intent.getAction())) {
-                // Schedule the next one
+                // On KitKat we need to reschedule ourselves:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     Log.v(TAG, "rescheduling for kitkat");
                     scheduleAlarmKitKat(mInterval);
