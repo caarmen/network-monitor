@@ -33,7 +33,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Build;
 import android.text.TextUtils;
-import android.util.Log;
+import org.jraf.android.networkmonitor.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.Constants.ConnectionType;

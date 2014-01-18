@@ -33,7 +33,7 @@ import java.util.Locale;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
+import org.jraf.android.networkmonitor.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;

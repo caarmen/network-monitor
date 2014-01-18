@@ -28,7 +28,7 @@ import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.util.Log;
+import org.jraf.android.networkmonitor.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.app.service.NetMonService;

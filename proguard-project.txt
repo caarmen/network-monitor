@@ -25,4 +25,6 @@
 -keep class * extends java.util.ListResourceBundle {
     protected Object[][] getContents();
 }
+-keep class org.jraf.android.networkmonitor.app.service.scheduler.ExecutorServiceScheduler
+-keep class org.jraf.android.networkmonitor.app.service.scheduler.AlarmManagerScheduler
 -keepattributes SourceFile,LineNumberTable

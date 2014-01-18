@@ -29,7 +29,7 @@ import java.lang.reflect.Method;
 import android.content.Context;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
-import android.util.Log;
+import org.jraf.android.networkmonitor.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
 

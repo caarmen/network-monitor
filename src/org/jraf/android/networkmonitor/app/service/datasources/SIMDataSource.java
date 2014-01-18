@@ -26,7 +26,7 @@ package org.jraf.android.networkmonitor.app.service.datasources;
 import android.content.ContentValues;
 import android.content.Context;
 import android.telephony.TelephonyManager;
-import android.util.Log;
+import org.jraf.android.networkmonitor.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;

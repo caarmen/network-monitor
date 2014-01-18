@@ -23,17 +23,24 @@
  */
 package org.jraf.android.networkmonitor.app.about;
 
+import java.io.File;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import org.jraf.android.networkmonitor.R;
+import org.jraf.android.networkmonitor.util.Log;
 
 public class AboutActivity extends Activity {
     @Override
@@ -60,10 +67,39 @@ public class AboutActivity extends Activity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.about, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
+                return true;
+            case R.id.action_send_logs:
+                new AsyncTask<Void, Void, Void>() {
+
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        Log.prepareLogFile();
+                        // Bring up the chooser to share the file.
+                        Intent sendIntent = new Intent();
+                        sendIntent.setAction(Intent.ACTION_SEND);
+                        //sendIntent.setData(Uri.fromParts("mailto", getString(R.string.send_logs_to), null));
+                        sendIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.support_send_debug_logs_subject));
+                        String messageBody = getString(R.string.support_send_debug_logs_body);
+                        File f = new File(getExternalFilesDir(null), Log.FILE);
+                        sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + f.getAbsolutePath()));
+                        sendIntent.setType("message/rfc822");
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, messageBody);
+                        sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { getString(R.string.support_send_debug_logs_to) });
+                        startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.action_share)));
+                        return null;
+                    }
+
+                }.execute();
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -34,7 +34,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
+import org.jraf.android.networkmonitor.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;

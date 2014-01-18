@@ -27,7 +27,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import android.content.Context;
-import android.util.Log;
+import org.jraf.android.networkmonitor.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
 
