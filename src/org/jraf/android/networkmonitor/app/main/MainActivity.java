@@ -24,6 +24,7 @@
  */
 package org.jraf.android.networkmonitor.app.main;
 
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,11 +39,14 @@ import org.jraf.android.backport.switchwidget.SwitchPreference;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
 import org.jraf.android.networkmonitor.app.service.NetMonService;
+import org.jraf.android.networkmonitor.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class MainActivity extends PreferenceActivity {
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +85,16 @@ public class MainActivity extends PreferenceActivity {
     protected void onStop() {
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
         super.onStop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Prevent the monkey from exiting the app, to maximize the time the monkey spends testing the app.
+        if (ActivityManager.isUserAMonkey()) {
+            Log.v(TAG, "Sorry, monkeys must stay in the cage");
+            return;
+        }
+        super.onBackPressed();
     }
 
     @Override

@@ -277,10 +277,8 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
         fragmentArgs.putString(ProgressDialogFragment.EXTRA_PROGRESS_DIALOG_MESSAGE, message);
         dialogFragment.setArguments(fragmentArgs);
         dialogFragment.setCancelable(false);
-        dialogFragment.show(getSupportFragmentManager(), PROGRESS_DIALOG_TAG);
+        getSupportFragmentManager().beginTransaction().add(dialogFragment, PROGRESS_DIALOG_TAG).commitAllowingStateLoss();
     }
-
-
 
     private final FileExport.ExportProgressListener mExportProgressListener = new FileExport.ExportProgressListener() {
 

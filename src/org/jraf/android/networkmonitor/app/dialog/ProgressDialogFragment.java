@@ -4,9 +4,10 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import org.jraf.android.networkmonitor.util.Log;
 
+import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
+import org.jraf.android.networkmonitor.util.Log;
 
 /*
  * This source is part of the
@@ -38,7 +39,7 @@ import org.jraf.android.networkmonitor.R;
  */
 public class ProgressDialogFragment extends DialogFragment { // NO_UCD (use private)
 
-    private static final String TAG = ProgressDialogFragment.class.getSimpleName();
+    private static final String TAG = Constants.TAG + ProgressDialogFragment.class.getSimpleName();
 
     public static final String EXTRA_PROGRESS_DIALOG_STYLE = "progress_dialog_style";
     public static final String EXTRA_PROGRESS_DIALOG_MESSAGE = "progress_dialog_message";
@@ -55,6 +56,8 @@ public class ProgressDialogFragment extends DialogFragment { // NO_UCD (use priv
     public void setProgress(int progress, int max) {
         Log.v(TAG, "setProgress " + progress + "/" + max);
         ProgressDialog dialog = (ProgressDialog) getDialog();
+        // The dialog may have been dismissed: probably a monkey race condition
+        if (dialog == null) return;
         if (progress >= max) {
             dialog.setMax(100);
             dialog.setProgress(0);
