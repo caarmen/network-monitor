@@ -41,6 +41,7 @@ public class AdvancedPreferencesActivity extends PreferenceActivity {
         PreferenceManager.setDefaultValues(this, R.xml.adv_preferences, false);
         addPreferencesFromResource(R.xml.adv_preferences);
         updateListPreferenceSummary(NetMonPreferences.PREF_WAKE_INTERVAL, R.string.pref_summary_wake_interval);
+        updateListPreferenceSummary(NetMonPreferences.PREF_SCHEDULER, R.string.pref_summary_scheduler);
     }
 
     @Override
