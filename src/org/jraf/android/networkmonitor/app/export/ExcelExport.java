@@ -43,10 +43,10 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 
 import android.content.Context;
-import org.jraf.android.networkmonitor.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
+import org.jraf.android.networkmonitor.util.Log;
 
 /**
  * Export the Network Monitor data to an Excel file.
@@ -94,13 +94,13 @@ public class ExcelExport extends TableFileExport {
 
     @Override
     void writeRow(int rowNumber, String[] cellValues) throws IOException {
-        mSheet.insertRow(rowNumber);
+        mSheet.insertRow(rowNumber + 1);
         for (int i = 0; i < cellValues.length; i++) {
             CellFormat cellFormat = null;
             if (Constants.CONNECTION_TEST_PASS.equals(cellValues[i])) cellFormat = mGreenFormat;
             else if (Constants.CONNECTION_TEST_FAIL.equals(cellValues[i])) cellFormat = mRedFormat;
             else if (Constants.CONNECTION_TEST_SLOW.equals(cellValues[i])) cellFormat = mAmberFormat;
-            insertCell(cellValues[i], rowNumber, i, cellFormat);
+            insertCell(cellValues[i], rowNumber + 1, i, cellFormat);
         }
         mRowCount++;
     }
