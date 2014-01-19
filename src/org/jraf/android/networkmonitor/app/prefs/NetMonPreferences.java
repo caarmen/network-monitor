@@ -53,7 +53,7 @@ public class NetMonPreferences {
     private static final String PREF_SCHEDULER_DEFAULT = ExecutorServiceScheduler.class.getSimpleName();
     private static final String PREF_SELECTED_COLUMNS = "PREF_SELECTED_COLUMNS";
     static final String PREF_FILTER_RECORD_COUNT = "PREF_FILTER_RECORD_COUNT";
-    static final String PREF_FILTER_RECORD_COUNT_DEFAULT = "1000";
+    static final String PREF_FILTER_RECORD_COUNT_DEFAULT = "250";
 
     private static NetMonPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
