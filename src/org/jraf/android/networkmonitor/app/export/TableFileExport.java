@@ -33,11 +33,11 @@ import java.util.Locale;
 
 import android.content.Context;
 import android.database.Cursor;
-import org.jraf.android.networkmonitor.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
+import org.jraf.android.networkmonitor.util.Log;
 
 /**
  * Export the Network Monitor data from the DB to a file in a table format.
@@ -75,7 +75,7 @@ abstract class TableFileExport extends FileExport {
     public File export() {
         Log.v(TAG, "export");
         String[] usedColumnNames = (String[]) NetMonPreferences.getInstance(mContext).getSelectedColumns().toArray();
-        Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, usedColumnNames, null, null, NetMonColumns.TIMESTAMP);
+        Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, usedColumnNames, null, null, NetMonColumns.TIMESTAMP + " DESC");
         if (c != null) {
             try {
                 for (int i = 0; i < usedColumnNames.length; i++)
