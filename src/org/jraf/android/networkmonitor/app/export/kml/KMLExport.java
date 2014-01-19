@@ -37,12 +37,12 @@ import java.util.Map;
 
 import android.content.Context;
 import android.database.Cursor;
-import org.jraf.android.networkmonitor.util.Log;
 
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.export.FileExport;
 import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
+import org.jraf.android.networkmonitor.util.Log;
 
 /**
  * Export the Network Monitor data to a KML file. The KML file placemark icon label and color depend on the field the user chose to export.
@@ -72,6 +72,7 @@ public class KMLExport extends FileExport {
         List<String> selectedColumns = new ArrayList<String>(NetMonPreferences.getInstance(mContext).getSelectedColumns());
         if (!selectedColumns.contains(NetMonColumns.DEVICE_LATITUDE)) selectedColumns.add(NetMonColumns.DEVICE_LATITUDE);
         if (!selectedColumns.contains(NetMonColumns.DEVICE_LONGITUDE)) selectedColumns.add(NetMonColumns.DEVICE_LONGITUDE);
+        if (!selectedColumns.contains(mPlacemarkNameColumn)) selectedColumns.add(mPlacemarkNameColumn);
         final String[] columnsToExport = new String[selectedColumns.size()];
         selectedColumns.toArray(columnsToExport);
         Map<String, String> columnNamesMapping = new HashMap<String, String>(columnsToExport.length);
