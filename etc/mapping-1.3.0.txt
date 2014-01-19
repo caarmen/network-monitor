@@ -6732,6 +6732,7 @@ org.jraf.android.networkmonitor.app.export.CSVExport -> org.jraf.android.network
     47:49:void writeHeader(java.lang.String[]) -> a
     54:66:void writeRow(int,java.lang.String[]) -> a
     70:72:void writeFooter() -> a
+    37:37:java.io.File export(int) -> a
     37:37:java.io.File export() -> b
 org.jraf.android.networkmonitor.app.export.DBExport -> org.jraf.android.networkmonitor.app.b.b:
     java.lang.String TAG -> d
@@ -6752,6 +6753,7 @@ org.jraf.android.networkmonitor.app.export.ExcelExport -> org.jraf.android.netwo
     110:124:void writeFooter() -> a
     165:169:int getLongestWordLength(java.lang.String) -> a
     173:180:void insertCell(java.lang.String,int,int,jxl.format.CellFormat) -> a
+    54:54:java.io.File export(int) -> a
     54:54:java.io.File export() -> b
 org.jraf.android.networkmonitor.app.export.FileExport -> org.jraf.android.networkmonitor.app.b.d:
     java.lang.String TAG -> d
@@ -6766,6 +6768,7 @@ org.jraf.android.networkmonitor.app.export.HTMLExport -> org.jraf.android.networ
     53:64:void writeHeader(java.lang.String[]) -> a
     69:83:void writeRow(int,java.lang.String[]) -> a
     87:91:void writeFooter() -> a
+    38:38:java.io.File export(int) -> a
     38:38:java.io.File export() -> b
 org.jraf.android.networkmonitor.app.export.SummaryExport -> org.jraf.android.networkmonitor.app.b.g:
     java.lang.String TAG -> a
@@ -6804,7 +6807,8 @@ org.jraf.android.networkmonitor.app.export.TableFileExport -> org.jraf.android.n
     void writeHeader(java.lang.String[]) -> a
     void writeRow(int,java.lang.String[]) -> a
     void writeFooter() -> a
-    76:118:java.io.File export() -> b
+    77:78:java.io.File export() -> b
+    86:130:java.io.File export(int) -> a
 org.jraf.android.networkmonitor.app.export.kml.KMLExport -> org.jraf.android.networkmonitor.app.b.a.a:
     java.lang.String TAG -> d
     java.text.SimpleDateFormat DATE_FORMAT -> e
@@ -6853,12 +6857,14 @@ org.jraf.android.networkmonitor.app.export.kml.KMLWriter -> org.jraf.android.net
 org.jraf.android.networkmonitor.app.log.LogActionsActivity -> org.jraf.android.networkmonitor.app.log.LogActionsActivity:
     java.lang.String ACTION_SHARE -> n
     java.lang.String ACTION_CLEAR -> o
-    java.lang.String TAG -> p
-    java.lang.String PROGRESS_DIALOG_TAG -> q
-    org.jraf.android.networkmonitor.app.export.FileExport$ExportProgressListener mExportProgressListener -> r
-    android.content.DialogInterface$OnCancelListener mDialogCancelListener -> s
-    69:79:void onCreate(android.os.Bundle) -> onCreate
-    274:284:void showProgressDialog(int,java.lang.String) -> a
+    java.lang.String ACTION_FILTER -> p
+    java.lang.String TAG -> q
+    java.lang.String PROGRESS_DIALOG_TAG -> r
+    org.jraf.android.networkmonitor.app.export.FileExport$ExportProgressListener mExportProgressListener -> s
+    android.content.DialogInterface$OnCancelListener mDialogDismissListener -> t
+    android.content.DialogInterface$OnClickListener mDialogCancelButtonClickListener -> u
+    70:82:void onCreate(android.os.Bundle) -> onCreate
+    271:281:void showProgressDialog(int,java.lang.String) -> a
     60:60:org.jraf.android.networkmonitor.app.export.FileExport$ExportProgressListener access$000(org.jraf.android.networkmonitor.app.log.LogActionsActivity) -> a
     60:60:void access$100(org.jraf.android.networkmonitor.app.log.LogActionsActivity) -> b
     60:60:void access$200(org.jraf.android.networkmonitor.app.log.LogActionsActivity,org.jraf.android.networkmonitor.app.export.FileExport) -> a
@@ -6867,62 +6873,63 @@ org.jraf.android.networkmonitor.app.log.LogActionsActivity -> org.jraf.android.n
     60:60:java.lang.String access$500() -> f
 org.jraf.android.networkmonitor.app.log.LogActionsActivity$1 -> org.jraf.android.networkmonitor.app.log.a:
     org.jraf.android.networkmonitor.app.log.LogActionsActivity this$0 -> a
-    93:115:void onClick(android.content.DialogInterface,int) -> onClick
+    96:118:void onClick(android.content.DialogInterface,int) -> onClick
 org.jraf.android.networkmonitor.app.log.LogActionsActivity$2 -> org.jraf.android.networkmonitor.app.log.b:
-    java.lang.String[] val$columnNames -> a
-    org.jraf.android.networkmonitor.app.log.LogActionsActivity this$0 -> b
-    143:153:void onClick(android.content.DialogInterface,int) -> onClick
+    org.jraf.android.networkmonitor.app.log.LogActionsActivity this$0 -> a
+    134:139:void onPreferenceValueSelected(java.lang.String) -> a
+    143:145:void onCancel() -> onCancel
 org.jraf.android.networkmonitor.app.log.LogActionsActivity$3 -> org.jraf.android.networkmonitor.app.log.c:
     org.jraf.android.networkmonitor.app.log.LogActionsActivity this$0 -> a
-    158:160:void onClick(android.content.DialogInterface,int) -> onClick
-org.jraf.android.networkmonitor.app.log.LogActionsActivity$4 -> org.jraf.android.networkmonitor.app.log.d:
+    160:183:void onClick(android.content.DialogInterface,int) -> onClick
+org.jraf.android.networkmonitor.app.log.LogActionsActivity$3$1 -> org.jraf.android.networkmonitor.app.log.d:
+    org.jraf.android.networkmonitor.app.log.LogActionsActivity$3 this$1 -> a
+    164:164:void onPostExecute(java.lang.Object) -> onPostExecute
+    164:164:java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+org.jraf.android.networkmonitor.app.log.LogActionsActivity$4 -> org.jraf.android.networkmonitor.app.log.e:
     org.jraf.android.networkmonitor.app.log.LogActionsActivity this$0 -> a
-    205:208:void onClick(android.content.DialogInterface,int) -> onClick
-org.jraf.android.networkmonitor.app.log.LogActionsActivity$5 -> org.jraf.android.networkmonitor.app.log.e:
-    org.jraf.android.networkmonitor.app.log.LogActionsActivity this$0 -> a
-    177:200:void onClick(android.content.DialogInterface,int) -> onClick
-org.jraf.android.networkmonitor.app.log.LogActionsActivity$5$1 -> org.jraf.android.networkmonitor.app.log.f:
-    org.jraf.android.networkmonitor.app.log.LogActionsActivity$5 this$1 -> a
-    181:181:void onPostExecute(java.lang.Object) -> onPostExecute
-    181:181:java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-org.jraf.android.networkmonitor.app.log.LogActionsActivity$6 -> org.jraf.android.networkmonitor.app.log.g:
+    197:199:void onPreferenceValueSelected(java.lang.String) -> a
+    203:205:void onCancel() -> onCancel
+org.jraf.android.networkmonitor.app.log.LogActionsActivity$5 -> org.jraf.android.networkmonitor.app.log.f:
     org.jraf.android.networkmonitor.app.export.FileExport val$fileExport -> a
     org.jraf.android.networkmonitor.app.log.LogActionsActivity this$0 -> b
-    227:256:java.io.File doInBackground$5bb45486() -> a
-    223:223:void onPostExecute(java.lang.Object) -> onPostExecute
-    223:223:java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-org.jraf.android.networkmonitor.app.log.LogActionsActivity$7 -> org.jraf.android.networkmonitor.app.log.h:
+    223:252:java.io.File doInBackground$5bb45486() -> a
+    219:219:void onPostExecute(java.lang.Object) -> onPostExecute
+    219:219:java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+org.jraf.android.networkmonitor.app.log.LogActionsActivity$6 -> org.jraf.android.networkmonitor.app.log.g:
     org.jraf.android.networkmonitor.app.log.LogActionsActivity this$0 -> a
-    292:304:void onExportProgress(int,int) -> a
-org.jraf.android.networkmonitor.app.log.LogActionsActivity$7$1 -> org.jraf.android.networkmonitor.app.log.i:
+    289:301:void onExportProgress(int,int) -> a
+org.jraf.android.networkmonitor.app.log.LogActionsActivity$6$1 -> org.jraf.android.networkmonitor.app.log.h:
     int val$progress -> a
     int val$max -> b
-    org.jraf.android.networkmonitor.app.log.LogActionsActivity$7 this$1 -> c
-    298:302:void run() -> run
+    org.jraf.android.networkmonitor.app.log.LogActionsActivity$6 this$1 -> c
+    295:299:void run() -> run
+org.jraf.android.networkmonitor.app.log.LogActionsActivity$7 -> org.jraf.android.networkmonitor.app.log.i:
+    org.jraf.android.networkmonitor.app.log.LogActionsActivity this$0 -> a
+    308:311:void onCancel(android.content.DialogInterface) -> onCancel
 org.jraf.android.networkmonitor.app.log.LogActionsActivity$8 -> org.jraf.android.networkmonitor.app.log.j:
     org.jraf.android.networkmonitor.app.log.LogActionsActivity this$0 -> a
-    311:313:void onCancel(android.content.DialogInterface) -> onCancel
+    316:319:void onClick(android.content.DialogInterface,int) -> onClick
 org.jraf.android.networkmonitor.app.log.LogActivity -> org.jraf.android.networkmonitor.app.log.LogActivity:
     java.lang.String TAG -> n
     android.webkit.WebView mWebView -> o
-    58:63:void onCreate(android.os.Bundle) -> onCreate
-    68:69:boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
-    74:90:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    103:150:void loadHTMLFile() -> f
-    155:162:void onDestroy() -> onDestroy
-    167:170:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
-    51:51:java.lang.String access$000() -> e
-    51:51:android.webkit.WebView access$102(org.jraf.android.networkmonitor.app.log.LogActivity,android.webkit.WebView) -> a
-    51:51:android.webkit.WebView access$100(org.jraf.android.networkmonitor.app.log.LogActivity) -> a
+    62:67:void onCreate(android.os.Bundle) -> onCreate
+    72:73:boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    78:102:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    115:162:void loadHTMLFile() -> f
+    167:174:void onDestroy() -> onDestroy
+    179:183:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    53:53:java.lang.String access$000() -> e
+    53:53:android.webkit.WebView access$102(org.jraf.android.networkmonitor.app.log.LogActivity,android.webkit.WebView) -> a
+    53:53:android.webkit.WebView access$100(org.jraf.android.networkmonitor.app.log.LogActivity) -> a
 org.jraf.android.networkmonitor.app.log.LogActivity$1 -> org.jraf.android.networkmonitor.app.log.k:
     android.widget.ProgressBar val$progressBar -> a
     org.jraf.android.networkmonitor.app.log.LogActivity this$0 -> b
-    110:119:java.io.File doInBackground$5bb45486() -> a
-    106:106:void onPostExecute(java.lang.Object) -> onPostExecute
-    106:106:java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+    122:132:java.io.File doInBackground$5bb45486() -> a
+    118:118:void onPostExecute(java.lang.Object) -> onPostExecute
+    118:118:java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
 org.jraf.android.networkmonitor.app.log.LogActivity$1$1 -> org.jraf.android.networkmonitor.app.log.l:
     org.jraf.android.networkmonitor.app.log.LogActivity$1 this$1 -> a
-    142:145:void onPageFinished(android.webkit.WebView,java.lang.String) -> onPageFinished
+    155:157:void onPageFinished(android.webkit.WebView,java.lang.String) -> onPageFinished
 org.jraf.android.networkmonitor.app.main.MainActivity -> org.jraf.android.networkmonitor.app.main.MainActivity:
     android.content.SharedPreferences$OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener -> a
     49:54:void onCreate(android.os.Bundle) -> onCreate
@@ -6950,17 +6957,41 @@ org.jraf.android.networkmonitor.app.prefs.NetMonPreferences -> org.jraf.android.
     org.jraf.android.networkmonitor.app.prefs.NetMonPreferences INSTANCE -> b
     android.content.SharedPreferences mSharedPrefs -> c
     android.content.Context mContext -> d
-    61:64:org.jraf.android.networkmonitor.app.prefs.NetMonPreferences getInstance(android.content.Context) -> a
-    76:76:int getUpdateInterval() -> a
-    80:80:int getWakeInterval() -> b
-    84:84:boolean isServiceEnabled() -> c
-    88:91:void setServiceEnabled$1385ff() -> d
-    94:94:java.lang.String getKMLExportColumn() -> e
-    98:101:void setKMLExportColumn(java.lang.String) -> a
-    104:106:int getIntPreference(java.lang.String,java.lang.String) -> a
-    110:113:java.lang.Class getSchedulerClass() -> f
-    118:123:java.util.List getSelectedColumns() -> g
-    127:129:void setSelectedColumns(java.util.List) -> a
+    63:66:org.jraf.android.networkmonitor.app.prefs.NetMonPreferences getInstance(android.content.Context) -> a
+    78:78:int getUpdateInterval() -> a
+    82:82:int getWakeInterval() -> b
+    86:86:boolean isServiceEnabled() -> c
+    90:90:int getFilterRecordCount() -> d
+    98:101:void setServiceEnabled$1385ff() -> e
+    114:116:int getIntPreference(java.lang.String,java.lang.String) -> a
+    120:123:java.lang.Class getSchedulerClass() -> f
+    128:133:java.util.List getSelectedColumns() -> g
+    137:139:void setSelectedColumns(java.util.List) -> a
+org.jraf.android.networkmonitor.app.prefs.PreferenceDialog -> org.jraf.android.networkmonitor.app.prefs.c:
+    java.lang.String TAG -> a
+    61:63:void showKMLExportColumnChoiceDialog(android.content.Context,org.jraf.android.networkmonitor.app.prefs.PreferenceDialog$PreferenceChoiceDialogListener) -> a
+    69:72:void showFilterRecordCountChoiceDialog(android.content.Context,org.jraf.android.networkmonitor.app.prefs.PreferenceDialog$PreferenceChoiceDialogListener) -> b
+    88:142:void showPreferenceChoiceDialog(android.content.Context,java.lang.String,java.lang.String,int,java.lang.String[],int,org.jraf.android.networkmonitor.app.prefs.PreferenceDialog$PreferenceChoiceDialogListener) -> a
+org.jraf.android.networkmonitor.app.prefs.PreferenceDialog$1 -> org.jraf.android.networkmonitor.app.prefs.d:
+    java.lang.String[] val$values -> a
+    android.content.SharedPreferences val$sharedPrefs -> b
+    java.lang.String val$preferenceName -> c
+    org.jraf.android.networkmonitor.app.prefs.PreferenceDialog$PreferenceChoiceDialogListener val$listener -> d
+    108:125:void onClick(android.content.DialogInterface,int) -> onClick
+org.jraf.android.networkmonitor.app.prefs.PreferenceDialog$1$1 -> org.jraf.android.networkmonitor.app.prefs.e:
+    java.lang.String val$selectedItemValue -> a
+    org.jraf.android.networkmonitor.app.prefs.PreferenceDialog$1 this$0 -> b
+    110:110:void onPostExecute(java.lang.Object) -> onPostExecute
+    110:110:java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+org.jraf.android.networkmonitor.app.prefs.PreferenceDialog$2 -> org.jraf.android.networkmonitor.app.prefs.f:
+    org.jraf.android.networkmonitor.app.prefs.PreferenceDialog$PreferenceChoiceDialogListener val$listener -> a
+    132:133:void onClick(android.content.DialogInterface,int) -> onClick
+org.jraf.android.networkmonitor.app.prefs.PreferenceDialog$3 -> org.jraf.android.networkmonitor.app.prefs.g:
+    org.jraf.android.networkmonitor.app.prefs.PreferenceDialog$PreferenceChoiceDialogListener val$listener -> a
+    139:140:void onCancel(android.content.DialogInterface) -> onCancel
+org.jraf.android.networkmonitor.app.prefs.PreferenceDialog$PreferenceChoiceDialogListener -> org.jraf.android.networkmonitor.app.prefs.h:
+    void onPreferenceValueSelected(java.lang.String) -> a
+    void onCancel() -> onCancel
 org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity -> org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity:
     java.lang.String TAG -> n
     android.widget.ListView mListView -> o
@@ -6969,9 +7000,9 @@ org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity -> org.jraf.andro
     68:95:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
     99:108:void selectColumns(java.lang.String[]) -> a
     111:113:void onCancel(android.view.View) -> onCancel
-    116:136:void onOk(android.view.View) -> onOk
-    140:149:void onListItemClick$42a3bb55(android.widget.ListView) -> a
-org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity$1 -> org.jraf.android.networkmonitor.app.prefs.c:
+    116:137:void onOk(android.view.View) -> onOk
+    141:150:void onListItemClick$42a3bb55(android.widget.ListView) -> a
+org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity$1 -> org.jraf.android.networkmonitor.app.prefs.i:
     java.util.List val$selectedColumns -> a
     org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity this$0 -> b
     123:123:void onPostExecute(java.lang.Object) -> onPostExecute
@@ -6979,7 +7010,7 @@ org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity$1 -> org.jraf.and
 org.jraf.android.networkmonitor.app.prefs.SelectFieldsFragment -> org.jraf.android.networkmonitor.app.prefs.SelectFieldsFragment:
     46:61:void onActivityCreated(android.os.Bundle) -> c
     65:68:void onListItemClick(android.widget.ListView,android.view.View,int,long) -> a
-org.jraf.android.networkmonitor.app.prefs.SelectFieldsFragment$SelectFieldsFragmentListener -> org.jraf.android.networkmonitor.app.prefs.d:
+org.jraf.android.networkmonitor.app.prefs.SelectFieldsFragment$SelectFieldsFragmentListener -> org.jraf.android.networkmonitor.app.prefs.j:
     void onListItemClick$42a3bb55(android.widget.ListView) -> a
 org.jraf.android.networkmonitor.app.service.NetMonNotification -> org.jraf.android.networkmonitor.app.service.a:
     java.lang.String TAG -> a
