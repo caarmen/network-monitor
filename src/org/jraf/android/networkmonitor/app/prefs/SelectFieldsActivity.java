@@ -26,12 +26,11 @@ package org.jraf.android.networkmonitor.app.prefs;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
-import android.support.v4.app.NavUtils;
-import org.jraf.android.networkmonitor.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +41,7 @@ import android.widget.ListView;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.prefs.SelectFieldsFragment.SelectFieldsFragmentListener;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
+import org.jraf.android.networkmonitor.util.Log;
 
 public class SelectFieldsActivity extends FragmentActivity implements SelectFieldsFragmentListener { // NO_UCD (use default)
     private static final String TAG = SelectFieldsActivity.class.getSimpleName();
@@ -109,7 +109,7 @@ public class SelectFieldsActivity extends FragmentActivity implements SelectFiel
 
     public void onCancel(View v) { // NO_UCD (unused code)
         Log.v(TAG, "onCancel");
-        NavUtils.navigateUpFromSameTask(this);
+        finish();
     }
 
     public void onOk(View v) { // NO_UCD (unused code)
@@ -130,7 +130,8 @@ public class SelectFieldsActivity extends FragmentActivity implements SelectFiel
 
             @Override
             protected void onPostExecute(Void result) {
-                NavUtils.navigateUpFromSameTask(SelectFieldsActivity.this);
+                setResult(Activity.RESULT_OK);
+                finish();
             }
         }.execute();
     }

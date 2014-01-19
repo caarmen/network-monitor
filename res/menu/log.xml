@@ -17,6 +17,12 @@
         android:title="@string/action_clear"/>
 
     <item
+        android:id="@+id/action_select_fields"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_select_fields"
+        android:title="@string/pref_title_select_fields"/>
+
+    <item
         android:id="@+id/action_filter"
         android:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_filter"

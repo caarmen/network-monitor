@@ -47,6 +47,7 @@ import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.export.HTMLExport;
 import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
+import org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity;
 import org.jraf.android.networkmonitor.util.Log;
 
 public class LogActivity extends FragmentActivity {
@@ -54,6 +55,7 @@ public class LogActivity extends FragmentActivity {
     private WebView mWebView;
     private static final int REQUEST_CODE_CLEAR = 1;
     private static final int REQUEST_CODE_FILTER = 2;
+    private static final int REQUEST_CODE_SELECT_FIELDS = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +89,10 @@ public class LogActivity extends FragmentActivity {
             case R.id.action_clear:
                 Intent intentClear = new Intent(LogActionsActivity.ACTION_CLEAR);
                 startActivityForResult(intentClear, REQUEST_CODE_CLEAR);
+                return true;
+            case R.id.action_select_fields:
+                Intent intentSelectFields = new Intent(this, SelectFieldsActivity.class);
+                startActivityForResult(intentSelectFields, REQUEST_CODE_SELECT_FIELDS);
                 return true;
             case R.id.action_filter:
                 Intent intentFilter = new Intent(LogActionsActivity.ACTION_FILTER);
@@ -172,7 +178,8 @@ public class LogActivity extends FragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.v(TAG, "onActivityResult: requestCode = " + requestCode + ", resultCode = " + resultCode + ", data  " + data);
         super.onActivityResult(requestCode, resultCode, data);
-        if ((requestCode == REQUEST_CODE_CLEAR || requestCode == REQUEST_CODE_FILTER) && resultCode == RESULT_OK) loadHTMLFile();
+        if ((requestCode == REQUEST_CODE_CLEAR || requestCode == REQUEST_CODE_FILTER || requestCode == REQUEST_CODE_SELECT_FIELDS) && resultCode == RESULT_OK)
+            loadHTMLFile();
     }
 
 }
