@@ -30,6 +30,7 @@ import java.io.FileNotFoundException;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -37,7 +38,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import org.jraf.android.networkmonitor.util.Log;
 import android.widget.Toast;
 
 import org.jraf.android.networkmonitor.Constants;
@@ -52,6 +52,7 @@ import org.jraf.android.networkmonitor.app.export.SummaryExport;
 import org.jraf.android.networkmonitor.app.export.kml.KMLExport;
 import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
+import org.jraf.android.networkmonitor.util.Log;
 
 /**
  * Provides actions on the network monitor log: sharing and clearing the log file.
@@ -60,6 +61,7 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
 public class LogActionsActivity extends FragmentActivity { // NO_UCD (use default)
     static final String ACTION_SHARE = LogActionsActivity.class.getPackage().getName() + "_share";
     static final String ACTION_CLEAR = LogActionsActivity.class.getPackage().getName() + "_clear";
+    static final String ACTION_FILTER = LogActionsActivity.class.getPackage().getName() + "_filter";
 
     private static final String TAG = Constants.TAG + LogActionsActivity.class.getSimpleName();
     private static final String PROGRESS_DIALOG_TAG = ProgressDialogFragment.class.getSimpleName();
@@ -72,6 +74,8 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
             share();
         } else if (ACTION_CLEAR.equals(action)) {
             clear();
+        } else if (ACTION_FILTER.equals(action)) {
+            filter();
         } else {
             Log.w(TAG, "Activity created without a known action.  Action=" + action);
             finish();
@@ -114,7 +118,7 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                         }
                     }
                 });
-        builder.show().setOnCancelListener(mDialogCancelListener);
+        builder.show().setOnCancelListener(mDialogDismissListener);
     }
 
     /**
@@ -152,15 +156,9 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                 }
             }
         });
-        kmlColumnDialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Log.v(TAG, "Canceled KML export");
-                finish();
-            }
-        });
+        kmlColumnDialog.setNegativeButton(android.R.string.cancel, mDialogCancelButtonClickListener);
         kmlColumnDialog.setTitle(R.string.export_kml_choice_title);
-        kmlColumnDialog.show().setOnCancelListener(mDialogCancelListener);
+        kmlColumnDialog.show().setOnCancelListener(mDialogDismissListener);
     }
 
     /**
@@ -198,16 +196,50 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                         };
                         asyncTask.execute();
                     }
-                }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                }).setNegativeButton(android.R.string.no, mDialogCancelButtonClickListener).setOnCancelListener(mDialogDismissListener).show();
+        ;
+    }
 
+    /**
+     * Show the user the filtering preferences.
+     */
+    private void filter() {
+        Log.v(TAG, "filter");
+        final String[] filterRecordCountValues = getResources().getStringArray(R.array.preferences_filter_record_count_values);
+        int currentPrefValue = NetMonPreferences.getInstance(this).getFilterRecordCount();
+        int currentPrefPosition = 0;
+        for (int i = 0; i < filterRecordCountValues.length; i++) {
+            if (currentPrefValue == Integer.valueOf(filterRecordCountValues[i])) {
+                currentPrefPosition = i;
+                break;
+            }
+        }
+        // Build a chooser dialog for the record count filter.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(R.string.pref_title_filter_record_count)
+                .setSingleChoiceItems(R.array.preferences_filter_record_count_labels, currentPrefPosition, null)
+                .setPositiveButton(android.R.string.ok, new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.v(TAG, "Clicked cancel: not clearing logs");
-                        setResult(RESULT_CANCELED);
-                        finish();
+                        // Save the preference for the record count.
+                        int selectedItem = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                        final String selectedFilterRecordCount = filterRecordCountValues[selectedItem];
+                        new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... params) {
+                                NetMonPreferences.getInstance(LogActionsActivity.this).setFilterRecordCount(Integer.valueOf(selectedFilterRecordCount));
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostExecute(Void result) {
+                                setResult(RESULT_OK);
+                                finish();
+                            }
+                        }.execute();
                     }
-                }).setOnCancelListener(mDialogCancelListener).show();
-        ;
+                });
+        builder.setNegativeButton(android.R.string.cancel, mDialogCancelButtonClickListener);
+        builder.show().setOnCancelListener(mDialogDismissListener);
     }
 
     /**
@@ -262,7 +294,8 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                 DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_TAG);
                 if (fragment != null) fragment.dismissAllowingStateLoss();
                 // Show a toast if we failed to export a file.
-                if (fileExport != null && result == null) Toast.makeText(LogActionsActivity.this, R.string.export_error_sdcard_unmounted, Toast.LENGTH_LONG).show();
+                if (fileExport != null && result == null)
+                    Toast.makeText(LogActionsActivity.this, R.string.export_error_sdcard_unmounted, Toast.LENGTH_LONG).show();
                 finish();
             }
 
@@ -304,11 +337,20 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
         }
     };
 
-    private final DialogInterface.OnCancelListener mDialogCancelListener = new DialogInterface.OnCancelListener() {
+    private final DialogInterface.OnCancelListener mDialogDismissListener = new DialogInterface.OnCancelListener() {
         // When a user cancels a dialog, we have to finish this activity.
         @Override
         public void onCancel(DialogInterface dialog) {
-            Log.v(TAG, "dialog canceled");
+            Log.v(TAG, "Dialog dismissed");
+            setResult(RESULT_CANCELED);
+            finish();
+        }
+    };
+    private final DialogInterface.OnClickListener mDialogCancelButtonClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            Log.v(TAG, "Dialog cancel button clicked");
+            setResult(RESULT_CANCELED);
             finish();
         }
     };

@@ -15,4 +15,10 @@
         android:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_clear"
         android:title="@string/action_clear"/>
+
+    <item
+        android:id="@+id/action_filter"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_filter"
+        android:title="@string/action_filter"/>
 </menu>

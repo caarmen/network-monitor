@@ -68,12 +68,22 @@ abstract class TableFileExport extends FileExport {
      */
     abstract void writeFooter() throws IOException;
 
+
     /**
      * @return the file if it was correctly exported, null otherwise.
      */
     @Override
     public File export() {
         Log.v(TAG, "export");
+        return export(0);
+    }
+
+    /**
+     * @param recordCount export at most this number of records. If recordCount is 0 or less, all records will be exported.
+     * @return the file if it was correctly exported, null otherwise.
+     */
+    public File export(int recordCount) {
+        Log.v(TAG, "export " + (recordCount <= 0 ? "all" : recordCount) + " records");
         String[] usedColumnNames = (String[]) NetMonPreferences.getInstance(mContext).getSelectedColumns().toArray();
         Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, usedColumnNames, null, null, NetMonColumns.TIMESTAMP + " DESC");
         if (c != null) {
@@ -86,8 +96,10 @@ abstract class TableFileExport extends FileExport {
                 writeHeader(usedColumnNames);
 
                 // Write the table rows to the file.
-                int rowCount = c.getCount();
-                while (c.moveToNext()) {
+                int rowsAvailable = c.getCount();
+                // Check if we're supposed to limit the number of rows exported.
+                int rowsToExport = recordCount > 0 ? Math.min(recordCount, rowsAvailable) : rowsAvailable;
+                while (c.moveToNext() && c.getPosition() < rowsToExport) {
                     String[] cellValues = new String[c.getColumnCount()];
                     for (int i = 0; i < c.getColumnCount(); i++) {
                         String cellValue;
@@ -103,7 +115,7 @@ abstract class TableFileExport extends FileExport {
                     }
                     writeRow(c.getPosition(), cellValues);
                     // Notify the listener of our progress (progress is 1-based)
-                    if (mListener != null) mListener.onExportProgress(c.getPosition() + 1, rowCount);
+                    if (mListener != null) mListener.onExportProgress(c.getPosition() + 1, rowsToExport);
                 }
 
                 // Write the footer and clean up the file.

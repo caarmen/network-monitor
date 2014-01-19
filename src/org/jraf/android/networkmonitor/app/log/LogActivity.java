@@ -34,7 +34,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
-import org.jraf.android.networkmonitor.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,11 +46,14 @@ import android.widget.Toast;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.export.HTMLExport;
+import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
+import org.jraf.android.networkmonitor.util.Log;
 
 public class LogActivity extends FragmentActivity {
     private static final String TAG = Constants.TAG + LogActivity.class.getSimpleName();
     private WebView mWebView;
     private static final int REQUEST_CODE_CLEAR = 1;
+    private static final int REQUEST_CODE_FILTER = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,10 @@ public class LogActivity extends FragmentActivity {
                 Intent intentClear = new Intent(LogActionsActivity.ACTION_CLEAR);
                 startActivityForResult(intentClear, REQUEST_CODE_CLEAR);
                 return true;
+            case R.id.action_filter:
+                Intent intentFilter = new Intent(LogActionsActivity.ACTION_FILTER);
+                startActivityForResult(intentFilter, REQUEST_CODE_FILTER);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -111,7 +117,8 @@ public class LogActivity extends FragmentActivity {
                 try {
                     // Export the DB to the HTML file.
                     HTMLExport htmlExport = new HTMLExport(LogActivity.this, false, null);
-                    File file = htmlExport.export();
+                    int recordCount = NetMonPreferences.getInstance(LogActivity.this).getFilterRecordCount();
+                    File file = htmlExport.export(recordCount);
                     return file;
                 } catch (FileNotFoundException e) {
                     Log.e(TAG, "doInBackground Could not load data into html file: " + e.getMessage(), e);
@@ -141,7 +148,6 @@ public class LogActivity extends FragmentActivity {
                     public void onPageFinished(WebView view, String url) {
                         super.onPageFinished(view, url);
                         progressBar.setVisibility(View.GONE);
-                        mWebView.pageDown(true);
                     }
                 });
             }
@@ -166,7 +172,7 @@ public class LogActivity extends FragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.v(TAG, "onActivityResult: requestCode = " + requestCode + ", resultCode = " + resultCode + ", data  " + data);
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_CLEAR && resultCode == RESULT_OK) loadHTMLFile();
+        if ((requestCode == REQUEST_CODE_CLEAR || requestCode == REQUEST_CODE_FILTER) && resultCode == RESULT_OK) loadHTMLFile();
     }
 
 }

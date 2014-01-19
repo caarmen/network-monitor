@@ -56,5 +56,22 @@
         <item>ExecutorServiceScheduler</item>
         <item>AlarmManagerScheduler</item>
     </string-array>
+    <string-array name="preferences_filter_record_count_labels">
+        <item>@string/pref_value_filter_record_count_100</item>
+        <item>@string/pref_value_filter_record_count_250</item>
+        <item>@string/pref_value_filter_record_count_500</item>
+        <item>@string/pref_value_filter_record_count_1000</item>
+        <item>@string/pref_value_filter_record_count_10000</item>
+        <item>@string/pref_value_filter_record_count_all</item>
+    </string-array>
+    <string-array name="preferences_filter_record_count_values">
+        <item>100</item>
+        <item>250</item>
+        <item>500</item>
+        <item>1000</item>
+        <item>10000</item>
+        <item>-1</item>
+    </string-array>
+
     
 </resources>

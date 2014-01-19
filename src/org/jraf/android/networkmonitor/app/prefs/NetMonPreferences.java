@@ -52,6 +52,8 @@ public class NetMonPreferences {
     private static final String PREF_KML_EXPORT_COLUMN = "PREF_KML_EXPORT_COLUMN";
     private static final String PREF_SCHEDULER_DEFAULT = ExecutorServiceScheduler.class.getSimpleName();
     private static final String PREF_SELECTED_COLUMNS = "PREF_SELECTED_COLUMNS";
+    private static final String PREF_FILTER_RECORD_COUNT = "PREF_FILTER_RECORD_COUNT";
+    private static final String PREF_FILTER_RECORD_COUNT_DEFAULT = "1000";
 
     private static NetMonPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
@@ -82,6 +84,14 @@ public class NetMonPreferences {
 
     public boolean isServiceEnabled() {
         return mSharedPrefs.getBoolean(NetMonPreferences.PREF_SERVICE_ENABLED, NetMonPreferences.PREF_SERVICE_ENABLED_DEFAULT);
+    }
+
+    public int getFilterRecordCount() {
+        return getIntPreference(NetMonPreferences.PREF_FILTER_RECORD_COUNT, NetMonPreferences.PREF_FILTER_RECORD_COUNT_DEFAULT);
+    }
+
+    public void setFilterRecordCount(int filterRecordCount) {
+        mSharedPrefs.edit().putString(PREF_FILTER_RECORD_COUNT, String.valueOf(filterRecordCount)).commit();
     }
 
     public void setServiceEnabled(boolean value) {
