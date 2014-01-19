@@ -8,6 +8,7 @@
     <string name="action_share">Partager le fichier journal</string>
     <string name="action_refresh">Actualiser</string>
     <string name="action_clear">Réinitialiser le fichier journal</string>
+    <string name="action_filter">Nombre de lignes</string>
     <string name="progress_dialog_message">Veuillez patienter&#8230;</string>
     <string name="error_reading_log">Impossible de lire le fichier journal.</string>
     <string name="success_logs_clear">Le fichier journal a été réinitialisé</string>
