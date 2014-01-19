@@ -2,7 +2,7 @@
     android:key="preferenceScreen" >
 
     <Preference
-        android:icon="@drawable/ic_action_select_fields"
+        android:icon="@drawable/ic_pref_select_fields"
         android:summary="@string/pref_summary_select_fields"
         android:title="@string/pref_title_select_fields" >
         <intent android:action="org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity" />
@@ -20,7 +20,7 @@
         android:defaultValue="ExecutorServiceScheduler"
         android:entries="@array/preferences_scheduler_labels"
         android:entryValues="@array/preferences_scheduler_values"
-        android:icon="@drawable/ic_action_scheduler"
+        android:icon="@drawable/ic_pref_scheduler"
         android:key="PREF_SCHEDULER"
         android:summary="@string/pref_summary_scheduler"
         android:title="@string/pref_title_scheduler" />

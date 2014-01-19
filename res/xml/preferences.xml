@@ -36,7 +36,7 @@
         <intent android:action="org.jraf.android.networkmonitor.app.log_clear" />
     </Preference>
     <Preference
-        android:icon="@drawable/ic_action_settings"
+        android:icon="@drawable/ic_pref_settings"
         android:title="@string/pref_title_advanced" >
         <intent android:action="org.jraf.android.networkmonitor.app.prefs.AdvancedPreferencesActivity"/>
     </Preference>
