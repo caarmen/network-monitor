@@ -74,6 +74,7 @@
             android:name="org.jraf.android.networkmonitor.app.prefs.AdvancedPreferencesActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
+            android:label="@string/pref_title_advanced"
             android:parentActivityName="org.jraf.android.networkmonitor.app.main.MainActivity" >
             <intent-filter>
                 <action android:name="org.jraf.android.networkmonitor.app.prefs.AdvancedPreferencesActivity" />
