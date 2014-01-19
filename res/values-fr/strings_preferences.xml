@@ -5,10 +5,6 @@
     <string name="pref_summary_update_interval">%s</string>
     <string name="pref_summary_service_enabled">Activer ou désactiver le service</string>
     <string name="pref_title_service_enabled">Activer le service</string>
-    <string name="pref_title_wake_interval">Empêcher le mode veille</string>
-    <string name="pref_summary_wake_interval">Réveiller le téléphone périodiquement pour garder la connexion data active (épuise la batterie): %s</string>
-    <string name="pref_title_scheduler">Précision de l\'intervalle des tests</string>
-    <string name="pref_summary_scheduler">Choisir entre une précision de minutage ou l\'économie de la batterie: %s</string>
     <string name="pref_title_show_log_file">Voir le fichier journal</string>
     <string name="pref_title_advanced">Préférences avancées</string>
     <string name="pref_title_about">À propos</string>
@@ -28,6 +24,10 @@
     <!-- Advanced preferences-->
     <string name="pref_title_select_fields">Champs</string>
     <string name="pref_summary_select_fields">Sélectionner les champs pour l\'affichage du journal et l\'export.</string>
-    <string name="pref_value_executor_service_scheduler">Intervalle des tests précis</string>
-    <string name="pref_value_alarm_manager_scheduler">Économiser la batterie</string>
+    <string name="pref_title_wake_interval">Empêcher le mode veille</string>
+    <string name="pref_summary_wake_interval">Réveiller le téléphone périodiquement pour garder la connexion data active (épuise la batterie) : %s</string>
+    <string name="pref_title_scheduler">Précision de l\'intervalle des tests</string>
+    <string name="pref_summary_scheduler">Valeur actuelle : %s</string>
+    <string name="pref_value_executor_service_scheduler">Précis</string>
+    <string name="pref_value_alarm_manager_scheduler">Imprécis (économise la batterie)</string>
 </resources>

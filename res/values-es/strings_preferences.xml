@@ -5,10 +5,6 @@
     <string name="pref_summary_update_interval">%s</string>
     <string name="pref_summary_service_enabled">Activar o desactivar el servicio</string>
     <string name="pref_title_service_enabled">Activar el servicio</string>
-    <string name="pref_title_wake_interval">Evitar el modo de suspensión</string>
-    <string name="pref_summary_wake_interval">Despertar el móvil periódicamente para mantener la conexión de datos activa (consume batería): %s</string>
-    <string name="pref_title_scheduler">Precisión del inervalo entre pruebas</string>
-    <string name="pref_summary_scheduler">Escoger entre un intervalo constante o ahorro de la batería: %s</string>
     <string name="pref_title_show_log_file">Ver el archivo log</string>
     <string name="pref_title_advanced">Ajustes avanzados</string>
     <string name="pref_title_about">Acerca de</string>
@@ -28,6 +24,10 @@
     <!-- Advanced preferences-->
     <string name="pref_title_select_fields">Campos</string>
     <string name="pref_summary_select_fields">Escoger los campos fijados en el fichero log y los ficheros exportados.</string>
+    <string name="pref_title_wake_interval">Evitar el modo de suspensión</string>
+    <string name="pref_summary_wake_interval">Despertar el móvil periódicamente para mantener la conexión de datos activa (consume batería): %s</string>
+    <string name="pref_title_scheduler">Precisión del inervalo entre pruebas</string>
+    <string name="pref_summary_scheduler">Configuración actual : %s</string>
     <string name="pref_value_executor_service_scheduler">Intervalo preciso</string>
     <string name="pref_value_alarm_manager_scheduler">Economizar la batería</string>
 </resources>

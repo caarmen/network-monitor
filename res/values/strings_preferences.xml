@@ -5,10 +5,6 @@
     <string name="pref_summary_update_interval">%s</string>
     <string name="pref_summary_service_enabled">Enable or disable the service</string>
     <string name="pref_title_service_enabled">Enable service</string>
-    <string name="pref_title_wake_interval">Prevent sleep</string>
-    <string name="pref_summary_wake_interval">Wake up the phone periodically to make sure the data connection stays on (drains battery): %s</string>
-    <string name="pref_title_scheduler">Polling interval</string>
-    <string name="pref_summary_scheduler">Choose whether test intervals should be accurate or if battery should be saved: %s</string>
     <string name="pref_title_show_log_file">View log file</string>
     <string name="pref_title_advanced">Advanced settings</string>
     <string name="pref_title_about">About</string>
@@ -28,6 +24,10 @@
     <!-- Advanced preferences-->
     <string name="pref_title_select_fields">Fields to monitor</string>
     <string name="pref_summary_select_fields">Select a set of fields for the log display and export.</string>
+    <string name="pref_title_wake_interval">Prevent sleep</string>
+    <string name="pref_summary_wake_interval">Wake up the phone periodically to make sure the data connection stays on (drains battery): %s</string>
+    <string name="pref_title_scheduler">Polling interval</string>
+    <string name="pref_summary_scheduler">Current setting: %s</string>
     <string name="pref_value_executor_service_scheduler">Precise timing</string>
     <string name="pref_value_alarm_manager_scheduler">Save battery</string>
 </resources>
