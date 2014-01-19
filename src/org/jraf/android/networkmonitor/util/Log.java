@@ -66,7 +66,6 @@ public class Log {
 
     private static int sMaxLogSize;
     private static BufferedWriter sWriter;
-    private static File sFile;
     private static File sFile0;
     private static File sFile1;
     private static File sCurrentFile;
@@ -74,6 +73,7 @@ public class Log {
     private static boolean sError = true;
     private static boolean sErrorLogged;
     private static boolean sAndroidLogD;
+    private static Context sContext;
 
     /**
      * If you are using ACRA, this method must be called <em>after</em> calling {@code ACRA.init()}.
@@ -85,10 +85,10 @@ public class Log {
     public static void init(Context context, int maxLogSize, boolean androidLogD) {
         if (!sError) logError("Fatal error! Init must be called only once.");
 
+        sContext = context;
         sMaxLogSize = maxLogSize;
         sAndroidLogD = androidLogD;
 
-        sFile = new File(context.getExternalFilesDir(null), FILE);
         sFile0 = new File(context.getFilesDir(), FILE_0);
         sFile1 = new File(context.getFilesDir(), FILE_1);
 
@@ -316,8 +316,10 @@ public class Log {
     /**
      * Prepares the log file by retrieving contents from the temporary files.<br/>
      * This must not be called from the UI thread since it accesses the disk.
+     * 
+     * @return true if we were able to prepare the log file, false if some error occurred.
      */
-    public static void prepareLogFile() {
+    public static boolean prepareLogFile() {
         android.util.Log.d("Log", "Preparing log file...");
         BufferedInputStream in0 = null;
         BufferedInputStream in1 = null;
@@ -325,7 +327,8 @@ public class Log {
         try {
             if (sFile0.exists()) in0 = new BufferedInputStream(new FileInputStream(sFile0));
             if (sFile1.exists()) in1 = new BufferedInputStream(new FileInputStream(sFile1));
-            out = new BufferedOutputStream(new FileOutputStream(sFile, false));
+            File outputFile = new File(sContext.getExternalFilesDir(null), FILE);
+            out = new BufferedOutputStream(new FileOutputStream(outputFile, false));
 
             if (sFile0.exists() && sFile1.exists()) {
                 if (sFile0.lastModified() < sFile1.lastModified()) {
@@ -343,9 +346,11 @@ public class Log {
             out.flush();
         } catch (IOException e) {
             android.util.Log.e("Log", "Could not prepare log file.", e);
+            return false;
         } finally {
             IoUtil.closeSilently(in0, in1, out);
         }
         android.util.Log.d("Log", "Done.");
+        return true;
     }
 }

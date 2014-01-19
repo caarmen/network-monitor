@@ -39,6 +39,7 @@
     <string name="support_send_debug_logs_subject">Debugging logs for Network Monitor</string>
     <string name="support_send_debug_logs_body">Here are the logs ;)</string>
     <string name="support_send_debug_logs_to">c@rmen.ca</string>
+    <string name="support_error">Error creating log file.  Make sure your device\'s SD card is present.</string>
 
     <string name="unknown">N/A</string>
 

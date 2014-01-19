@@ -38,6 +38,7 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.util.Log;
@@ -79,11 +80,13 @@ public class AboutActivity extends Activity {
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             case R.id.action_send_logs:
-                new AsyncTask<Void, Void, Void>() {
+                new AsyncTask<Void, Void, Boolean>() {
 
                     @Override
-                    protected Void doInBackground(Void... params) {
-                        Log.prepareLogFile();
+                    protected Boolean doInBackground(Void... params) {
+                        if (!Log.prepareLogFile()) {
+                            return false;
+                        }
                         // Bring up the chooser to share the file.
                         Intent sendIntent = new Intent();
                         sendIntent.setAction(Intent.ACTION_SEND);
@@ -96,8 +99,14 @@ public class AboutActivity extends Activity {
                         sendIntent.putExtra(Intent.EXTRA_TEXT, messageBody);
                         sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { getString(R.string.support_send_debug_logs_to) });
                         startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.action_share)));
-                        return null;
+                        return true;
                     }
+
+                    @Override
+                    protected void onPostExecute(Boolean result) {
+                        if (!result) Toast.makeText(AboutActivity.this, R.string.support_error, Toast.LENGTH_LONG).show();
+                    }
+
 
                 }.execute();
                 return true;
