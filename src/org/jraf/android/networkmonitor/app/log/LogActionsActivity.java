@@ -30,7 +30,6 @@ import java.io.FileNotFoundException;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -50,7 +49,7 @@ import org.jraf.android.networkmonitor.app.export.FileExport;
 import org.jraf.android.networkmonitor.app.export.HTMLExport;
 import org.jraf.android.networkmonitor.app.export.SummaryExport;
 import org.jraf.android.networkmonitor.app.export.kml.KMLExport;
-import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
+import org.jraf.android.networkmonitor.app.prefs.PreferenceDialog;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 import org.jraf.android.networkmonitor.util.Log;
 
@@ -126,39 +125,25 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
      */
     private void shareKml() {
         Log.v(TAG, "shareKml");
-        // The list of column names (aka google_connection_test) which can be exported to KML.
-        final String[] columnNames = NetMonColumns.getColumnNames(this);
-        // The last column name the user chose to export.
-        String prefColumnName = NetMonPreferences.getInstance(this).getKMLExportColumn();
-        // The position in the list of column names of the last column the user chose to export.
-        int prefColumnIndex = 0;
 
-        // Build the list of choices for the user.  Look up the friendly label of each column name, and pre-select the one the user chose last time.
-        final String[] columnLabels = NetMonColumns.getColumnLabels(this);
-        for (int i = 0; i < columnNames.length; i++) {
-            if (prefColumnName.equals(columnNames[i])) prefColumnIndex = i;
-        }
-        AlertDialog.Builder kmlColumnDialog = new AlertDialog.Builder(this);
-        kmlColumnDialog.setSingleChoiceItems(columnLabels, prefColumnIndex, null);
-        kmlColumnDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+        PreferenceDialog.showKMLExportColumnChoiceDialog(this, new PreferenceDialog.PreferenceChoiceDialogListener() {
 
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                int selectedItem = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                // Save the column the user chose to export this time.
-                NetMonPreferences.getInstance(LogActionsActivity.this).setKMLExportColumn(columnNames[selectedItem]);
-                // Do the actual export.
+            public void onPreferenceValueSelected(String value) {
                 try {
-                    KMLExport kmlExport = new KMLExport(LogActionsActivity.this, mExportProgressListener, columnNames[selectedItem]);
+                    KMLExport kmlExport = new KMLExport(LogActionsActivity.this, mExportProgressListener, value);
                     shareFile(kmlExport);
                 } catch (FileNotFoundException e) {
                     Log.w(TAG, "Error sharing file: " + e.getMessage(), e);
                 }
             }
+
+            @Override
+            public void onCancel() {
+                setResult(RESULT_CANCELED);
+                finish();
+            }
         });
-        kmlColumnDialog.setNegativeButton(android.R.string.cancel, mDialogCancelButtonClickListener);
-        kmlColumnDialog.setTitle(R.string.export_kml_choice_title);
-        kmlColumnDialog.show().setOnCancelListener(mDialogDismissListener);
     }
 
     /**
@@ -205,41 +190,20 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
      */
     private void filter() {
         Log.v(TAG, "filter");
-        final String[] filterRecordCountValues = getResources().getStringArray(R.array.preferences_filter_record_count_values);
-        int currentPrefValue = NetMonPreferences.getInstance(this).getFilterRecordCount();
-        int currentPrefPosition = 0;
-        for (int i = 0; i < filterRecordCountValues.length; i++) {
-            if (currentPrefValue == Integer.valueOf(filterRecordCountValues[i])) {
-                currentPrefPosition = i;
-                break;
-            }
-        }
-        // Build a chooser dialog for the record count filter.
-        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(R.string.pref_title_filter_record_count)
-                .setSingleChoiceItems(R.array.preferences_filter_record_count_labels, currentPrefPosition, null)
-                .setPositiveButton(android.R.string.ok, new OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Save the preference for the record count.
-                        int selectedItem = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                        final String selectedFilterRecordCount = filterRecordCountValues[selectedItem];
-                        new AsyncTask<Void, Void, Void>() {
-                            @Override
-                            protected Void doInBackground(Void... params) {
-                                NetMonPreferences.getInstance(LogActionsActivity.this).setFilterRecordCount(Integer.valueOf(selectedFilterRecordCount));
-                                return null;
-                            }
+        PreferenceDialog.showFilterRecordCountChoiceDialog(this, new PreferenceDialog.PreferenceChoiceDialogListener() {
 
-                            @Override
-                            protected void onPostExecute(Void result) {
-                                setResult(RESULT_OK);
-                                finish();
-                            }
-                        }.execute();
-                    }
-                });
-        builder.setNegativeButton(android.R.string.cancel, mDialogCancelButtonClickListener);
-        builder.show().setOnCancelListener(mDialogDismissListener);
+            @Override
+            public void onPreferenceValueSelected(final String value) {
+                setResult(RESULT_OK);
+                finish();
+            }
+
+            @Override
+            public void onCancel() {
+                setResult(RESULT_CANCELED);
+                finish();
+            }
+        });
     }
 
     /**

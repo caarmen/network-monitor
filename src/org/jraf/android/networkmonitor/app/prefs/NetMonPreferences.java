@@ -49,11 +49,11 @@ public class NetMonPreferences {
     public static final String PREF_SCHEDULER = "PREF_SCHEDULER";
 
     private static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
-    private static final String PREF_KML_EXPORT_COLUMN = "PREF_KML_EXPORT_COLUMN";
+    static final String PREF_KML_EXPORT_COLUMN = "PREF_KML_EXPORT_COLUMN";
     private static final String PREF_SCHEDULER_DEFAULT = ExecutorServiceScheduler.class.getSimpleName();
     private static final String PREF_SELECTED_COLUMNS = "PREF_SELECTED_COLUMNS";
-    private static final String PREF_FILTER_RECORD_COUNT = "PREF_FILTER_RECORD_COUNT";
-    private static final String PREF_FILTER_RECORD_COUNT_DEFAULT = "1000";
+    static final String PREF_FILTER_RECORD_COUNT = "PREF_FILTER_RECORD_COUNT";
+    static final String PREF_FILTER_RECORD_COUNT_DEFAULT = "1000";
 
     private static NetMonPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
@@ -137,4 +137,5 @@ public class NetMonPreferences {
         String selectedColumnsString = TextUtils.join(",", selectedColumns);
         mSharedPrefs.edit().putString(NetMonPreferences.PREF_SELECTED_COLUMNS, selectedColumnsString).commit();
     }
+
 }
