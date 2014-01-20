@@ -8,7 +8,7 @@
         android:summary="@string/pref_summary_service_enabled"
         android:title="@string/pref_title_service_enabled" />
 
-    <ListPreference
+    <org.jraf.android.networkmonitor.app.prefs.ThemedListPreference
         android:defaultValue="10000"
         android:entries="@array/preferences_updateInterval_labels"
         android:entryValues="@array/preferences_updateInterval_values"

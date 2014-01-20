@@ -26,6 +26,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnShowListener;
+import android.content.res.ColorStateList;
 import android.graphics.NinePatch;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -38,6 +39,7 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
@@ -61,25 +63,31 @@ public class DialogStyleHacks {
      */
     public static void styleDialog(final Context context, final AlertDialog dialog) {
         dialog.getContext().setTheme(R.style.dialogStyle);
-        dialog.setOnShowListener(new OnShowListener() {
+        if (dialog.isShowing()) styleDialogElements(context, dialog);
+        else
+            dialog.setOnShowListener(new OnShowListener() {
 
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                // For 3.x+, update the dialog elements which couldn't be updated cleanly with the theme:
-                // The list items.
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    ListView listView = dialog.getListView();
-                    if (listView != null) listView.setSelector(R.drawable.netmon_list_selector_holo_light);
-                    Button button = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-                    if (button != null) button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
-                    button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                    if (button != null) button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
-                    button = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
-                    if (button != null) button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
+                @Override
+                public void onShow(DialogInterface dialogInterface) {
+                    styleDialogElements(context, dialog);
                 }
-                DialogStyleHacks.uglyHackReplaceBlueHoloBackground(context, (ViewGroup) dialog.getWindow().getDecorView(), dialog);
-            }
-        });
+            });
+    }
+
+    public static void styleDialogElements(Context context, AlertDialog dialog) {
+        // For 3.x+, update the dialog elements which couldn't be updated cleanly with the theme:
+        // The list items.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            ListView listView = dialog.getListView();
+            if (listView != null) listView.setSelector(R.drawable.netmon_list_selector_holo_light);
+            Button button = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+            if (button != null) button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
+            button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+            if (button != null) button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
+            button = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+            if (button != null) button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
+        }
+        DialogStyleHacks.uglyHackReplaceBlueHoloBackground(context, (ViewGroup) dialog.getWindow().getDecorView(), dialog);
     }
 
     /**
@@ -88,7 +96,7 @@ public class DialogStyleHacks {
      * For 3.x, the horizontal divider is a nine patch image "divider_strong_holo".
      * For 4.x, the horizontal divider is a holo color.
      */
-    static void uglyHackReplaceBlueHoloBackground(Context context, ViewGroup viewGroup, AlertDialog dialog) {
+    public static void uglyHackReplaceBlueHoloBackground(Context context, ViewGroup viewGroup, AlertDialog dialog) {
         int childCount = viewGroup.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = viewGroup.getChildAt(i);
@@ -111,6 +119,11 @@ public class DialogStyleHacks {
             // 2.x: replace the radio button
             else if (child instanceof CheckedTextView) {
                 ((CheckedTextView) child).setCheckMarkDrawable(R.drawable.netmon_btn_radio_holo_light);
+            } else if (child instanceof TextView) {
+                TextView textView = (TextView) child;
+                ColorStateList textColors = textView.getTextColors();
+                int defaultColor = textColors.getDefaultColor();
+                if (isHoloBlueColor(context, defaultColor)) textView.setTextColor(sHoloPurpleColorId);
             }
             // 4.x: replace the color
             else {
@@ -138,14 +151,17 @@ public class DialogStyleHacks {
         return imageSource != null && (imageSource.contains("divider_strong_holo") || imageSource.contains("divider_horizontal_dark"));
     }
 
+    private static boolean isHoloBlueColor(Context context, int colorId) {
+        lazyInitHoloColors(context);
+        return colorId == sHoloBlueLightColorId || colorId == sHoloBlueDarkColorId;
+    }
+
     /**
      * @return true if the given color is holo blue light or dark
      */
     @TargetApi(14)
     private static boolean isHoloBlueColor(Context context, ColorDrawable c) {
-        lazyInitHoloColors(context);
-        int viewColorId = c.getColor();
-        return viewColorId == sHoloBlueLightColorId || viewColorId == sHoloBlueDarkColorId;
+        return isHoloBlueColor(context, c.getColor());
     }
 
     @TargetApi(14)

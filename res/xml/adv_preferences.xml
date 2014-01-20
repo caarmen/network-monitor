@@ -16,7 +16,7 @@
         android:summary="@string/pref_summary_cell_id_format"
         android:title="@string/pref_title_cell_id_format" >
     </ListPreference>
-    <ListPreference
+    <org.jraf.android.networkmonitor.app.prefs.ThemedListPreference
         android:defaultValue="0"
         android:entries="@array/preferences_wake_interval_labels"
         android:entryValues="@array/preferences_wake_interval_values"
@@ -24,7 +24,7 @@
         android:key="PREF_WAKE_INTERVAL"
         android:summary="@string/pref_summary_wake_interval"
         android:title="@string/pref_title_wake_interval" />
-    <ListPreference
+    <org.jraf.android.networkmonitor.app.prefs.ThemedListPreference
         android:defaultValue="ExecutorServiceScheduler"
         android:entries="@array/preferences_scheduler_labels"
         android:entryValues="@array/preferences_scheduler_values"
