@@ -5,11 +5,11 @@
         AppBaseTheme from BOTH res/values/styles.xml and
         res/values-v11/styles.xml on API 14+ devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="AppBaseTheme" parent="@style/NetMon">
         <!-- API 14 theme customizations can go here. -->
     </style>
 
-    <style name="NetMonNoDisplayTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="NetMonNoDisplayTheme" parent="@style/NetMon">
         <item name="android:windowBackground">@null</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsTranslucent">true</item>

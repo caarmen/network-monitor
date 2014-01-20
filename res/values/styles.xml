@@ -1,0 +1,36 @@
+<resources>
+
+    <style name="SwitchStyle" parent="@style/Widget.Holo.Light.CompoundButton.Switch">
+        <item name="thumb">@drawable/netmon_switch_inner_holo_light</item>
+    </style>
+
+    <style name="dialogStyle" parent="android:Theme.Dialog">
+
+        <!-- Copied from standard android:Theme.Dialog.Alert - cannot just inherit it because of different ids towards android versions -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:buttonStyle">@style/ButtonNetMon</item>
+        <item name="android:textAppearanceLarge">@style/textAppearanceLarge</item>
+        <item name="android:textAppearanceMedium">@style/textAppearanceMedium</item>
+        <item name="android:alertDialogStyle">@style/alertDialogStyle</item>
+        <item name="android:listViewStyle">@style/ListViewNetMon</item>
+        <item name="android:radioButtonStyle">@style/RadioButtonNetMon</item>
+    </style>
+
+    <style name="textAppearanceLarge" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">@color/netmon_color</item>
+    </style>
+
+    <style name="textAppearanceMedium" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="alertDialogStyle">
+        <item name="android:topDark">@drawable/popup_top_bright</item>
+        <item name="android:centerDark">@drawable/popup_center_bright</item>
+        <item name="android:bottomBright">@drawable/popup_bottom_bright</item>
+        <item name="android:bottomMedium">@drawable/popup_bottom_bright</item>
+    </style>
+
+</resources>

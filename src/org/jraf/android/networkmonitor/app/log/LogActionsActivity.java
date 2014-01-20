@@ -43,6 +43,8 @@ import android.widget.Toast;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.dialog.DialogFragmentFactory;
+import org.jraf.android.networkmonitor.app.dialog.DialogStyleHacks;
+import org.jraf.android.networkmonitor.app.dialog.PreferenceDialog;
 import org.jraf.android.networkmonitor.app.dialog.ProgressDialogFragment;
 import org.jraf.android.networkmonitor.app.export.CSVExport;
 import org.jraf.android.networkmonitor.app.export.DBExport;
@@ -51,7 +53,6 @@ import org.jraf.android.networkmonitor.app.export.FileExport;
 import org.jraf.android.networkmonitor.app.export.HTMLExport;
 import org.jraf.android.networkmonitor.app.export.SummaryExport;
 import org.jraf.android.networkmonitor.app.export.kml.KMLExport;
-import org.jraf.android.networkmonitor.app.prefs.PreferenceDialog;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 import org.jraf.android.networkmonitor.util.Log;
 
@@ -116,7 +117,10 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                         }
                     }
                 });
-        builder.show().setOnCancelListener(mDialogDismissListener);
+        AlertDialog dialog = builder.create();
+        DialogStyleHacks.styleDialog(this, dialog);
+        dialog.setOnCancelListener(mDialogDismissListener);
+        dialog.show();
     }
 
     /**
@@ -152,7 +156,7 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
         Log.v(TAG, "clear");
 
         // Bring up a confirmation dialog.
-        new AlertDialog.Builder(this).setTitle(R.string.action_clear).setMessage(R.string.confirm_logs_clear)
+        AlertDialog dialog = new AlertDialog.Builder(this).setTitle(R.string.action_clear).setMessage(R.string.confirm_logs_clear)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -181,8 +185,9 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                         };
                         asyncTask.execute();
                     }
-                }).setNegativeButton(android.R.string.no, mDialogCancelButtonClickListener).setOnCancelListener(mDialogDismissListener).show();
-        ;
+                }).setNegativeButton(android.R.string.no, mDialogCancelButtonClickListener).setOnCancelListener(mDialogDismissListener).create();
+        DialogStyleHacks.styleDialog(LogActionsActivity.this, dialog);
+        dialog.show();
     }
 
     /**

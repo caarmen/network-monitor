@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jraf.android.networkmonitor.app.prefs;
+package org.jraf.android.networkmonitor.app.dialog;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -33,6 +33,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
 import org.jraf.android.networkmonitor.R;
+import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 import org.jraf.android.networkmonitor.util.Log;
 
@@ -91,7 +92,7 @@ public class PreferenceDialog {
     /**
      * Show the user a preference choice dialog.
      */
-    private static void showPreferenceChoiceDialog(Context context, final String preferenceName, String defaultValue, int valuesArrayId, String[] labels,
+    private static void showPreferenceChoiceDialog(final Context context, final String preferenceName, String defaultValue, int valuesArrayId, String[] labels,
             int titleId, final PreferenceDialog.PreferenceChoiceDialogListener listener) {
         Log.v(TAG, "showPreferenceChoic@eDialog");
         final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -140,12 +141,15 @@ public class PreferenceDialog {
                 listener.onCancel();
             }
         });
-        builder.show().setOnCancelListener(new OnCancelListener() {
+        final AlertDialog dialog = builder.create();
+        DialogStyleHacks.styleDialog(context, dialog);
+        dialog.setOnCancelListener(new OnCancelListener() {
 
             @Override
             public void onCancel(DialogInterface dialog) {
                 listener.onCancel();
             }
         });
+        dialog.show();
     }
 }

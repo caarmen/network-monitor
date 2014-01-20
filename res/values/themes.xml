@@ -4,7 +4,7 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
+    <style name="AppBaseTheme" parent="@style/NetMon">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -17,9 +17,16 @@
 
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="switchPreferenceStyle">@style/Preference.SwitchPreference</item>
-        <item name="switchStyle">@style/Widget.Holo.Light.CompoundButton.Switch</item>
+        <item name="switchStyle">@style/SwitchStyle</item>
     </style>
 
-    <style name="NetMonNoDisplayTheme" parent="android:Theme.NoDisplay"/>
+    <style name="NetMonNoDisplayTheme" parent="@style/NetMon">
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowNoDisplay">true</item>
+    </style>
 
 </resources>

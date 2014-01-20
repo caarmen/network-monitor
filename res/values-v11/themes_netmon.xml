@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="NetMon" parent="@style/_NetMon"/>
+
+  <style name="_NetMon" parent="android:Theme.Holo.Light.DarkActionBar">
+
+    <item name="android:listChoiceIndicatorMultiple">@drawable/netmon_btn_check_holo_light</item>
+
+    <item name="android:listChoiceIndicatorSingle">@drawable/netmon_btn_radio_holo_light</item>
+
+    <item name="android:buttonStyle">@style/ButtonNetMon</item>
+
+    <item name="android:imageButtonStyle">@style/ImageButtonNetMon</item>
+
+    <item name="android:listChoiceBackgroundIndicator">@drawable/netmon_list_selector_holo_light</item>
+
+    <item name="android:activatedBackgroundIndicator">@drawable/netmon_activated_background_holo_light</item>
+
+  </style>
+
+</resources>
