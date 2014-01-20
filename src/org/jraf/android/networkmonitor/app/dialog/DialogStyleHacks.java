@@ -34,6 +34,7 @@ import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -69,6 +70,12 @@ public class DialogStyleHacks {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                     ListView listView = dialog.getListView();
                     if (listView != null) listView.setSelector(R.drawable.netmon_list_selector_holo_light);
+                    Button button = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+                    if (button != null) button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
+                    button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                    if (button != null) button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
+                    button = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+                    if (button != null) button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
                 }
                 DialogStyleHacks.uglyHackReplaceBlueHoloBackground(context, (ViewGroup) dialog.getWindow().getDecorView(), dialog);
             }
