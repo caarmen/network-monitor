@@ -30,6 +30,7 @@ import java.io.IOException;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -38,6 +39,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.view.ContextThemeWrapper;
 import android.widget.Toast;
 
 import org.jraf.android.networkmonitor.Constants;
@@ -88,7 +90,8 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
     private void share() {
         Log.v(TAG, "share");
         // Build a chooser dialog for the file format.
-        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(R.string.export_choice_title).setItems(R.array.export_choices,
+        Context context = new ContextThemeWrapper(this, R.style.dialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context).setTitle(R.string.export_choice_title).setItems(R.array.export_choices,
                 new DialogInterface.OnClickListener() {
 
                     @Override
@@ -156,7 +159,8 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
         Log.v(TAG, "clear");
 
         // Bring up a confirmation dialog.
-        AlertDialog dialog = new AlertDialog.Builder(this).setTitle(R.string.action_clear).setMessage(R.string.confirm_logs_clear)
+        Context context = new ContextThemeWrapper(this, R.style.dialogStyle);
+        AlertDialog dialog = new AlertDialog.Builder(context).setTitle(R.string.action_clear).setMessage(R.string.confirm_logs_clear)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int whichButton) {

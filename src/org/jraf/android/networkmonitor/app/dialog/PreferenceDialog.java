@@ -31,6 +31,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.view.ContextThemeWrapper;
 
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
@@ -107,7 +108,8 @@ public class PreferenceDialog {
             }
         }
         // Build a chooser dialog for the preference
-        AlertDialog.Builder builder = new AlertDialog.Builder(context).setTitle(titleId).setSingleChoiceItems(labels, currentPrefPosition, null)
+        Context contextWrapper = new ContextThemeWrapper(context, R.style.dialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(contextWrapper).setTitle(titleId).setSingleChoiceItems(labels, currentPrefPosition, null)
                 .setPositiveButton(android.R.string.ok, new OnClickListener() {
 
 
