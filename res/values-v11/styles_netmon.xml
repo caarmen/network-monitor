@@ -11,4 +11,9 @@
 	  <item name="android:background">@drawable/netmon_btn_default_holo_light</item>
   </style>
 
+  <style name="ProgressBarNetMon" parent="android:Widget.Holo.Light.ProgressBar.Horizontal">
+      <item name="android:progressDrawable">@drawable/netmon_progress_horizontal_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/netmon_progress_indeterminate_horizontal_holo_light</item>
+  </style>
+
 </resources>

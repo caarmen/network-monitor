@@ -39,6 +39,7 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.jraf.android.networkmonitor.Constants;
@@ -124,6 +125,12 @@ public class DialogStyleHacks {
                 ColorStateList textColors = textView.getTextColors();
                 int defaultColor = textColors.getDefaultColor();
                 if (isHoloBlueColor(context, defaultColor)) textView.setTextColor(sHoloPurpleColorId);
+            } else if (child instanceof ProgressBar) {
+                ProgressBar progressBar = (ProgressBar) child;
+                Drawable determinateDrawable = context.getResources().getDrawable(R.drawable.netmon_progress_horizontal_holo_light);
+                Drawable indeterminateDrawable = context.getResources().getDrawable(R.drawable.netmon_progress_indeterminate_horizontal_holo_light);
+                progressBar.setProgressDrawable(determinateDrawable);
+                progressBar.setIndeterminateDrawable(indeterminateDrawable);
             }
             // 4.x: replace the color
             else {

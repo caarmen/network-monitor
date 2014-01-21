@@ -22,6 +22,13 @@
 	  <item name="android:background">@drawable/netmon_btn_default_holo_light</item>
   </style>
 
+  <style name="ProgressBarNetMon" parent="android:Widget.ProgressBar.Horizontal">
+      <item name="android:progressDrawable">@drawable/netmon_progress_horizontal_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/netmon_progress_indeterminate_horizontal_holo_light</item>
+      <item name="android:minHeight">16dip</item>
+      <item name="android:maxHeight">16dip</item>
+  </style>
+
   <style name="ListViewNetMon" parent="android:Widget.ListView">
       <item name="android:listSelector">@drawable/netmon_list_selector_holo_light</item>
   </style>

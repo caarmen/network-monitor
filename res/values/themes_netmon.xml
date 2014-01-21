@@ -15,6 +15,8 @@
 
     <item name="android:imageButtonStyle">@style/ImageButtonNetMon</item>
 
+    <item name="android:progressBarStyleHorizontal">@style/ProgressBarNetMon</item>
+
     <item name="android:listViewStyle">@style/ListViewNetMon</item>
 
     <item name="android:listViewWhiteStyle">@style/ListViewNetMon.White</item>

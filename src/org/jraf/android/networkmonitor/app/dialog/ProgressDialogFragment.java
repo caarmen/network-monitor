@@ -49,6 +49,7 @@ public class ProgressDialogFragment extends DialogFragment { // NO_UCD (use priv
         dialog.setMessage(getArguments().getString(DialogFragmentFactory.EXTRA_MESSAGE));
         dialog.setIndeterminate(true);
         dialog.setProgressStyle(getArguments().getInt(DialogFragmentFactory.EXTRA_PROGRESS_DIALOG_STYLE));
+        DialogStyleHacks.styleDialog(getActivity(), dialog);
         return dialog;
     }
 
