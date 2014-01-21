@@ -18,6 +18,8 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="switchPreferenceStyle">@style/Preference.SwitchPreference</item>
         <item name="switchStyle">@style/SwitchStyle</item>
+        <item name="android:listChoiceIndicatorSingle">@drawable/netmon_btn_radio_holo_light</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/netmon_btn_check_holo_light</item>
     </style>
 
     <style name="NetMonNoDisplayTheme" parent="@style/NetMon">
