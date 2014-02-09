@@ -115,14 +115,6 @@
                 <action android:name="org.jraf.android.networkmonitor.app.log_clear" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="org.jraf.android.networkmonitor.app.log_filter" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="org.jraf.android.networkmonitor.app.log_cell_id_format" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </activity>
     </application>
 

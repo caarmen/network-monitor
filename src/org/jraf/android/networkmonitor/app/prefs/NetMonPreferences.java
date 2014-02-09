@@ -134,7 +134,6 @@ public class NetMonPreferences {
         if (schedulerPref.equals(AlarmManagerScheduler.class.getSimpleName())) return AlarmManagerScheduler.class;
         else
             return ExecutorServiceScheduler.class;
-
     }
 
     public List<String> getSelectedColumns() {

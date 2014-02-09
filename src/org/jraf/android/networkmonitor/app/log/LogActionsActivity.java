@@ -60,8 +60,6 @@ import org.jraf.android.networkmonitor.util.Log;
 public class LogActionsActivity extends FragmentActivity { // NO_UCD (use default)
     static final String ACTION_SHARE = LogActionsActivity.class.getPackage().getName() + "_share";
     static final String ACTION_CLEAR = LogActionsActivity.class.getPackage().getName() + "_clear";
-    static final String ACTION_FILTER = LogActionsActivity.class.getPackage().getName() + "_filter";
-    static final String ACTION_PREF_CELL_ID_FORMAT = LogActionsActivity.class.getPackage().getName() + "_cell_id_format";
 
     private static final String TAG = Constants.TAG + LogActionsActivity.class.getSimpleName();
     private static final String PROGRESS_DIALOG_TAG = ProgressDialogFragment.class.getSimpleName();
@@ -74,10 +72,6 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
             share();
         } else if (ACTION_CLEAR.equals(action)) {
             clear();
-        } else if (ACTION_FILTER.equals(action)) {
-            filter();
-        } else if (ACTION_PREF_CELL_ID_FORMAT.equals(action)) {
-            pref_cell_id_format();
         } else {
             Log.w(TAG, "Activity created without a known action.  Action=" + action);
             finish();
@@ -189,45 +183,6 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
     }
 
     /**
-     * Show the user the filtering preferences.
-     */
-    private void filter() {
-        Log.v(TAG, "filter");
-        PreferenceDialog.showFilterRecordCountChoiceDialog(this, new PreferenceDialog.PreferenceChoiceDialogListener() {
-
-            @Override
-            public void onPreferenceValueSelected(final String value) {
-                setResult(RESULT_OK);
-                finish();
-            }
-
-            @Override
-            public void onCancel() {
-                setResult(RESULT_CANCELED);
-                finish();
-            }
-        });
-    }
-
-    private void pref_cell_id_format() {
-        Log.v(TAG, "pref_cell_id_format");
-        PreferenceDialog.showCellIdFormatChoiceDialog(this, new PreferenceDialog.PreferenceChoiceDialogListener() {
-
-            @Override
-            public void onPreferenceValueSelected(final String value) {
-                setResult(RESULT_OK);
-                finish();
-            }
-
-            @Override
-            public void onCancel() {
-                setResult(RESULT_CANCELED);
-                finish();
-            }
-        });
-    }
-
-    /**
      * Run the given file export, then bring up the chooser intent to share the exported file.
      */
     private void shareFile(final FileExport fileExport) {
@@ -322,8 +277,10 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
         }
     };
 
+    /**
+     * Listener to finish this activity with a canceled result when the user presses back on a dialog.
+     */
     private final DialogInterface.OnCancelListener mDialogDismissListener = new DialogInterface.OnCancelListener() {
-        // When a user cancels a dialog, we have to finish this activity.
         @Override
         public void onCancel(DialogInterface dialog) {
             Log.v(TAG, "Dialog dismissed");
@@ -331,6 +288,10 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
             finish();
         }
     };
+
+    /**
+     * Listener to finish this activity with a canceled result when the user presses the cancel button on a dialog.
+     */
     private final DialogInterface.OnClickListener mDialogCancelButtonClickListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
@@ -339,4 +300,5 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
             finish();
         }
     };
+
 }

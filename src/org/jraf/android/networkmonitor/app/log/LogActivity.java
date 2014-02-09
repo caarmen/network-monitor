@@ -47,6 +47,7 @@ import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.export.HTMLExport;
 import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
+import org.jraf.android.networkmonitor.app.prefs.PreferenceDialog;
 import org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity;
 import org.jraf.android.networkmonitor.util.Log;
 
@@ -54,9 +55,7 @@ public class LogActivity extends FragmentActivity {
     private static final String TAG = Constants.TAG + LogActivity.class.getSimpleName();
     private WebView mWebView;
     private static final int REQUEST_CODE_CLEAR = 1;
-    private static final int REQUEST_CODE_FILTER = 2;
-    private static final int REQUEST_CODE_SELECT_FIELDS = 3;
-    private static final int REQUEST_CODE_CELL_ID_FORMAT = 4;
+    private static final int REQUEST_CODE_SELECT_FIELDS = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,12 +95,10 @@ public class LogActivity extends FragmentActivity {
                 startActivityForResult(intentSelectFields, REQUEST_CODE_SELECT_FIELDS);
                 return true;
             case R.id.action_filter:
-                Intent intentFilter = new Intent(LogActionsActivity.ACTION_FILTER);
-                startActivityForResult(intentFilter, REQUEST_CODE_FILTER);
+                PreferenceDialog.showFilterRecordCountChoiceDialog(this, mPreferenceChoiceDialogListener);
                 return true;
             case R.id.action_cell_id_format:
-                Intent intentCellIdFormat = new Intent(LogActionsActivity.ACTION_PREF_CELL_ID_FORMAT);
-                startActivityForResult(intentCellIdFormat, REQUEST_CODE_CELL_ID_FORMAT);
+                PreferenceDialog.showCellIdFormatChoiceDialog(this, mPreferenceChoiceDialogListener);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -183,8 +180,21 @@ public class LogActivity extends FragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.v(TAG, "onActivityResult: requestCode = " + requestCode + ", resultCode = " + resultCode + ", data  " + data);
         super.onActivityResult(requestCode, resultCode, data);
-        if ((requestCode == REQUEST_CODE_CLEAR || requestCode == REQUEST_CODE_FILTER || requestCode == REQUEST_CODE_SELECT_FIELDS || requestCode == REQUEST_CODE_CELL_ID_FORMAT)
-                && resultCode == RESULT_OK) loadHTMLFile();
+        if ((requestCode == REQUEST_CODE_CLEAR || requestCode == REQUEST_CODE_SELECT_FIELDS) && resultCode == RESULT_OK) loadHTMLFile();
     }
+
+    /**
+     * Reload the page when the user accepts a preference choice dialog.
+     */
+    private final PreferenceDialog.PreferenceChoiceDialogListener mPreferenceChoiceDialogListener = new PreferenceDialog.PreferenceChoiceDialogListener() {
+
+        @Override
+        public void onPreferenceValueSelected(final String value) {
+            loadHTMLFile();
+        }
+
+        @Override
+        public void onCancel() {}
+    };
 
 }
