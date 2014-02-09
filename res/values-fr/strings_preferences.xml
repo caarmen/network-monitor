@@ -35,6 +35,8 @@
     <string name="pref_value_cell_id_format_decimal">Décimal</string>
     <string name="pref_value_cell_id_format_hex">Hexa</string>
     <string name="pref_value_cell_id_format_decimal_hex">Les deux</string>
+    <string name="pref_title_import">Importer</string>
+    <string name="pref_summary_import">Importer une base de données exportée depuis Network Monitor.</string>
     <!--  Other preferences -->
     <string name="pref_title_filter_record_count">Nombre de lignes à afficher</string>
     <string name="pref_value_filter_record_count_all">Toutes</string>
