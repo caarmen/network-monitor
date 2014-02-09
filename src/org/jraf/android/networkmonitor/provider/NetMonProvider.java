@@ -25,10 +25,16 @@
 package org.jraf.android.networkmonitor.provider;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import android.content.ContentProvider;
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
 import android.content.ContentValues;
+import android.content.OperationApplicationException;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteCursor;
@@ -174,6 +180,32 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
         res.setNotificationUri(getContext().getContentResolver(), uri);
         logCursor(res, selectionArgs);
         return res;
+    }
+
+    /**
+     * Perform all operations in a single transaction and notify all relevant URIs at the end. The {@link MemberStatsColumns#CONTENT_URI} uri is always notified
+     * for a successful transaction.
+     * 
+     * @see android.content.ContentProvider#applyBatch(java.util.ArrayList)
+     */
+    @Override
+    public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations) throws OperationApplicationException {
+        Log.v(TAG, "applyBatch: " + operations);
+        Set<Uri> urisToNotify = new HashSet<Uri>();
+        for (ContentProviderOperation operation : operations)
+            urisToNotify.add(operation.getUri());
+        Log.v(TAG, "applyBatch: will notify these uris after persisting: " + urisToNotify);
+        SQLiteDatabase db = mNetworkMonitorDatabase.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            ContentProviderResult[] result = super.applyBatch(operations);
+            db.setTransactionSuccessful();
+            for (Uri uri : urisToNotify)
+                getContext().getContentResolver().notifyChange(uri, null);
+            return result;
+        } finally {
+            db.endTransaction();
+        }
     }
 
     private static class QueryParams {
