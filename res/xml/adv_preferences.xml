@@ -8,6 +8,13 @@
         <intent android:action="org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity" />
     </Preference>
 
+    <Preference
+        android:icon="@drawable/ic_pref_cell_id_format"
+        android:summary="@string/pref_summary_cell_id_format"
+        android:title="@string/pref_title_cell_id_format" >
+        <intent android:action="org.jraf.android.networkmonitor.app.log_cell_id_format" />
+    </Preference>
+
     <ListPreference
         android:defaultValue="0"
         android:entries="@array/preferences_wake_interval_labels"
@@ -16,6 +23,7 @@
         android:key="PREF_WAKE_INTERVAL"
         android:summary="@string/pref_summary_wake_interval"
         android:title="@string/pref_title_wake_interval" />
+
     <ListPreference
         android:defaultValue="ExecutorServiceScheduler"
         android:entries="@array/preferences_scheduler_labels"

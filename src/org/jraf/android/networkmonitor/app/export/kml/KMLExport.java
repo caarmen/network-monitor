@@ -25,14 +25,12 @@ package org.jraf.android.networkmonitor.app.export.kml;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import android.content.Context;
@@ -40,6 +38,7 @@ import android.database.Cursor;
 
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.export.FileExport;
+import org.jraf.android.networkmonitor.app.export.Formatter;
 import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 import org.jraf.android.networkmonitor.util.Log;
@@ -50,7 +49,6 @@ import org.jraf.android.networkmonitor.util.Log;
 public class KMLExport extends FileExport {
     private static final String TAG = KMLExport.class.getSimpleName();
     private static final String KML_FILE_PREFIX = "networkmonitor-";
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss", Locale.US);
 
     // The field which determines the name/label of the KML placemarks we will export.i
     private final String mPlacemarkNameColumn;
@@ -69,6 +67,7 @@ public class KMLExport extends FileExport {
     @Override
     public File export() {
         Log.v(TAG, "export");
+        Formatter formatter = new Formatter(mContext);
         List<String> selectedColumns = new ArrayList<String>(NetMonPreferences.getInstance(mContext).getSelectedColumns());
         if (!selectedColumns.contains(NetMonColumns.DEVICE_LATITUDE)) selectedColumns.add(NetMonColumns.DEVICE_LATITUDE);
         if (!selectedColumns.contains(NetMonColumns.DEVICE_LONGITUDE)) selectedColumns.add(NetMonColumns.DEVICE_LONGITUDE);
@@ -88,7 +87,8 @@ public class KMLExport extends FileExport {
                 Log.v(TAG, "Column names: " + Arrays.toString(columnsToExport));
 
                 KMLStyle kmlStyle = KMLStyleFactory.getKMLStyle(mContext, mPlacemarkNameColumn);
-                String now = DATE_FORMAT.format(new Date());
+                int placemarkNameColumnId = c.getColumnIndex(mPlacemarkNameColumn);
+                String now = Formatter.DATE_FORMAT.format(new Date());
                 String title = mContext.getString(R.string.app_name) + ": " + columnNamesMapping.get(mPlacemarkNameColumn) + " (" + now + ")";
                 KMLWriter kmlWriter = new KMLWriter(mFile, title, kmlStyle, mContext.getString(R.string.export_value_unknown), columnNamesMapping);
 
@@ -105,22 +105,15 @@ public class KMLExport extends FileExport {
                 while (c.moveToNext()) {
                     Map<String, String> cellValues = new LinkedHashMap<String, String>(c.getColumnCount());
                     long timestamp = -1;
-                    String timestampString = null;
                     if (timestampIndex >= 0) {
                         timestamp = c.getLong(timestampIndex);
-                        Date date = new Date(timestamp);
-                        timestampString = DATE_FORMAT.format(date);
                     }
                     for (int i = 0; i < c.getColumnCount(); i++) {
-                        String cellValue;
-                        if (NetMonColumns.TIMESTAMP.equals(c.getColumnName(i))) cellValue = timestampString;
-                        else
-                            cellValue = c.getString(i);
-                        if (cellValue == null) cellValue = "";
+                        String cellValue = formatter.formatXML(c, i);
                         cellValues.put(c.getColumnName(i), cellValue);
                     }
-                    kmlWriter.writePlacemark(cellValues.get(mPlacemarkNameColumn), cellValues, c.getString(latitudeIndex), c.getString(longitudeIndex),
-                            timestamp);
+                    String placemarkName = formatter.formatXML(c, placemarkNameColumnId);
+                    kmlWriter.writePlacemark(placemarkName, cellValues, c.getString(latitudeIndex), c.getString(longitudeIndex), timestamp);
 
                     // Notify the listener of our progress (progress is 1-based)
                     if (mListener != null) mListener.onExportProgress(c.getPosition() + 1, rowCount);

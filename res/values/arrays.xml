@@ -72,6 +72,16 @@
         <item>10000</item>
         <item>-1</item>
     </string-array>
+    <string-array name="preferences_cell_id_format_labels">
+        <item>@string/pref_value_cell_id_format_decimal</item>
+        <item>@string/pref_value_cell_id_format_hex</item>
+        <item>@string/pref_value_cell_id_format_decimal_hex</item>
+    </string-array>
+    <string-array name="preferences_cell_id_format_values">
+        <item>decimal</item>
+        <item>hex</item>
+        <item>decimal_hex</item>
+    </string-array>
 
     
 </resources>

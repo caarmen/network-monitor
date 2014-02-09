@@ -27,4 +27,10 @@
         android:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_filter"
         android:title="@string/action_filter"/>
+
+    <item
+        android:id="@+id/action_cell_id_format"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_cell_id_format"
+        android:title="@string/action_cell_id_format"/>
 </menu>

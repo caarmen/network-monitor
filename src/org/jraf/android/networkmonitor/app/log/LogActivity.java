@@ -56,6 +56,7 @@ public class LogActivity extends FragmentActivity {
     private static final int REQUEST_CODE_CLEAR = 1;
     private static final int REQUEST_CODE_FILTER = 2;
     private static final int REQUEST_CODE_SELECT_FIELDS = 3;
+    private static final int REQUEST_CODE_CELL_ID_FORMAT = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +98,10 @@ public class LogActivity extends FragmentActivity {
             case R.id.action_filter:
                 Intent intentFilter = new Intent(LogActionsActivity.ACTION_FILTER);
                 startActivityForResult(intentFilter, REQUEST_CODE_FILTER);
+                return true;
+            case R.id.action_cell_id_format:
+                Intent intentCellIdFormat = new Intent(LogActionsActivity.ACTION_PREF_CELL_ID_FORMAT);
+                startActivityForResult(intentCellIdFormat, REQUEST_CODE_CELL_ID_FORMAT);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -178,8 +183,8 @@ public class LogActivity extends FragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.v(TAG, "onActivityResult: requestCode = " + requestCode + ", resultCode = " + resultCode + ", data  " + data);
         super.onActivityResult(requestCode, resultCode, data);
-        if ((requestCode == REQUEST_CODE_CLEAR || requestCode == REQUEST_CODE_FILTER || requestCode == REQUEST_CODE_SELECT_FIELDS) && resultCode == RESULT_OK)
-            loadHTMLFile();
+        if ((requestCode == REQUEST_CODE_CLEAR || requestCode == REQUEST_CODE_FILTER || requestCode == REQUEST_CODE_SELECT_FIELDS || requestCode == REQUEST_CODE_CELL_ID_FORMAT)
+                && resultCode == RESULT_OK) loadHTMLFile();
     }
 
 }

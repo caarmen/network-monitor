@@ -30,6 +30,11 @@
     <string name="pref_summary_scheduler">Valeur actuelle : %s</string>
     <string name="pref_value_executor_service_scheduler">Précis</string>
     <string name="pref_value_alarm_manager_scheduler">Imprécis (économise la batterie)</string>
+    <string name="pref_title_cell_id_format">Format des ids d\'antenne</string>
+    <string name="pref_summary_cell_id_format">Choisir le format de l\'affichage des ids d\'antenne.</string>
+    <string name="pref_value_cell_id_format_decimal">Décimal</string>
+    <string name="pref_value_cell_id_format_hex">Hexa</string>
+    <string name="pref_value_cell_id_format_decimal_hex">Les deux</string>
     <!--  Other preferences -->
     <string name="pref_title_filter_record_count">Nombre de lignes à afficher</string>
     <string name="pref_value_filter_record_count_all">Toutes</string>

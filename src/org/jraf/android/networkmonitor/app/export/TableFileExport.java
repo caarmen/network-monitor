@@ -26,10 +26,7 @@ package org.jraf.android.networkmonitor.app.export;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.Locale;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -44,9 +41,6 @@ import org.jraf.android.networkmonitor.util.Log;
  */
 abstract class TableFileExport extends FileExport {
     private static final String TAG = Constants.TAG + TableFileExport.class.getSimpleName();
-
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss", Locale.US);
-
 
     TableFileExport(Context context, File file, FileExport.ExportProgressListener listener) throws FileNotFoundException {
         super(context, file, listener);
@@ -85,6 +79,7 @@ abstract class TableFileExport extends FileExport {
     public File export(int recordCount) {
         Log.v(TAG, "export " + (recordCount <= 0 ? "all" : recordCount) + " records");
         String[] usedColumnNames = (String[]) NetMonPreferences.getInstance(mContext).getSelectedColumns().toArray();
+        Formatter formatter = new Formatter(mContext);
         Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, usedColumnNames, null, null, NetMonColumns.TIMESTAMP + " DESC");
         if (c != null) {
             try {
@@ -101,18 +96,8 @@ abstract class TableFileExport extends FileExport {
                 int rowsToExport = recordCount > 0 ? Math.min(recordCount, rowsAvailable) : rowsAvailable;
                 while (c.moveToNext() && c.getPosition() < rowsToExport) {
                     String[] cellValues = new String[c.getColumnCount()];
-                    for (int i = 0; i < c.getColumnCount(); i++) {
-                        String cellValue;
-                        if (NetMonColumns.TIMESTAMP.equals(c.getColumnName(i))) {
-                            long timestamp = c.getLong(i);
-                            Date date = new Date(timestamp);
-                            cellValue = DATE_FORMAT.format(date);
-                        } else {
-                            cellValue = c.getString(i);
-                        }
-                        if (cellValue == null) cellValue = "";
-                        cellValues[i] = cellValue;
-                    }
+                    for (int i = 0; i < c.getColumnCount(); i++)
+                        cellValues[i] = formatter.format(c, i);
                     writeRow(c.getPosition(), cellValues);
                     // Notify the listener of our progress (progress is 1-based)
                     if (mListener != null) mListener.onExportProgress(c.getPosition() + 1, rowsToExport);
@@ -129,4 +114,5 @@ abstract class TableFileExport extends FileExport {
         }
         return null;
     }
+
 }

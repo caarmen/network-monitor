@@ -9,6 +9,7 @@
     <string name="action_refresh">Actualizar</string>
     <string name="action_clear">Reiniciar el archivo log</string>
     <string name="action_filter">Número de filas</string>
+    <string name="action_cell_id_format">Formato ids de las estaciones base</string>
     <string name="progress_dialog_message">Por favor espera&#8230;</string>    
     <string name="error_reading_log">Imposible leer el archivo log.</string>
     <string name="success_logs_clear">El archivo log ha sido reinicializado</string>

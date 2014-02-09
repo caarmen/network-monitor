@@ -41,6 +41,10 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
  */
 public class NetMonPreferences {
 
+    public enum CellIdFormat {
+        DECIMAL, HEX, DECIMAL_HEX
+    };
+
     public static final String PREF_UPDATE_INTERVAL = "PREF_UPDATE_INTERVAL";
     public static final String PREF_UPDATE_INTERVAL_DEFAULT = "10000";
     static final String PREF_WAKE_INTERVAL = "PREF_WAKE_INTERVAL";
@@ -54,6 +58,8 @@ public class NetMonPreferences {
     private static final String PREF_SELECTED_COLUMNS = "PREF_SELECTED_COLUMNS";
     static final String PREF_FILTER_RECORD_COUNT = "PREF_FILTER_RECORD_COUNT";
     static final String PREF_FILTER_RECORD_COUNT_DEFAULT = "250";
+    static final String PREF_CELL_ID_FORMAT = "PREF_CELL_ID_FORMAT";
+    static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
 
     private static NetMonPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
@@ -92,6 +98,13 @@ public class NetMonPreferences {
 
     public void setFilterRecordCount(int filterRecordCount) {
         mSharedPrefs.edit().putString(PREF_FILTER_RECORD_COUNT, String.valueOf(filterRecordCount)).commit();
+    }
+
+    public CellIdFormat getCellIdFormat() {
+        String cellIdFormat = mSharedPrefs.getString(NetMonPreferences.PREF_CELL_ID_FORMAT, NetMonPreferences.PREF_CELL_ID_FORMAT_DEFAULT);
+        if ("decimal".equals(cellIdFormat)) return CellIdFormat.DECIMAL;
+        if ("hex".equals(cellIdFormat)) return CellIdFormat.HEX;
+        return CellIdFormat.DECIMAL_HEX;
     }
 
     public void setServiceEnabled(boolean value) {
