@@ -4,9 +4,10 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import org.jraf.android.networkmonitor.util.Log;
 
+import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
+import org.jraf.android.networkmonitor.util.Log;
 
 /*
  * This source is part of the
@@ -38,17 +39,16 @@ import org.jraf.android.networkmonitor.R;
  */
 public class ProgressDialogFragment extends DialogFragment { // NO_UCD (use private)
 
-    private static final String TAG = ProgressDialogFragment.class.getSimpleName();
+    private static final String TAG = Constants.TAG + ProgressDialogFragment.class.getSimpleName();
 
-    public static final String EXTRA_PROGRESS_DIALOG_STYLE = "progress_dialog_style";
-    public static final String EXTRA_PROGRESS_DIALOG_MESSAGE = "progress_dialog_message";
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Log.v(TAG, "onCreateDialog");
         ProgressDialog dialog = new ProgressDialog(getActivity());
-        dialog.setMessage(getArguments().getString(EXTRA_PROGRESS_DIALOG_MESSAGE));
+        dialog.setMessage(getArguments().getString(DialogFragmentFactory.EXTRA_MESSAGE));
         dialog.setIndeterminate(true);
-        dialog.setProgressStyle(getArguments().getInt(EXTRA_PROGRESS_DIALOG_STYLE));
+        dialog.setProgressStyle(getArguments().getInt(DialogFragmentFactory.EXTRA_PROGRESS_DIALOG_STYLE));
         return dialog;
     }
 

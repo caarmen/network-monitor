@@ -31,7 +31,7 @@ import android.provider.BaseColumns;
 import org.jraf.android.networkmonitor.R;
 
 public class NetMonColumns implements BaseColumns {
-    static final String TABLE_NAME = "networkmonitor";
+    public static final String TABLE_NAME = "networkmonitor";
     public static final Uri CONTENT_URI = Uri.parse(NetMonProvider.CONTENT_URI_BASE + "/" + TABLE_NAME);
 
     static final String _ID = BaseColumns._ID;

@@ -23,6 +23,9 @@
  */
 package org.jraf.android.networkmonitor.app.prefs;
 
+import android.app.ProgressDialog;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
@@ -31,6 +34,8 @@ import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
 import org.jraf.android.networkmonitor.app.dialog.DialogFragmentFactory;
+import org.jraf.android.networkmonitor.app.dialog.ProgressDialogFragment;
+import org.jraf.android.networkmonitor.app.importdb.DBImport;
 import org.jraf.android.networkmonitor.util.Log;
 
 /**
@@ -40,9 +45,10 @@ import org.jraf.android.networkmonitor.util.Log;
  */
 public class PreferenceFragmentActivity extends FragmentActivity implements DialogButtonListener { // NO_UCD (use default)
     public static final String ACTION_IMPORT = PreferenceFragmentActivity.class.getPackage().getName() + "_import";
-    public static final String EXTRA_DB_URL = PreferenceFragmentActivity.class.getPackage().getName() + "_db_url";
+    public static final String EXTRA_IMPORT_URI = PreferenceFragmentActivity.class.getPackage().getName() + "_db_url";
 
     private static final String TAG = Constants.TAG + PreferenceFragmentActivity.class.getSimpleName();
+    private static final String PROGRESS_DIALOG_FRAGMENT_TAG = "progress_dialog_fragment_tag";
     private static final int ID_ACTION_IMPORT = 1;
 
     @Override
@@ -51,9 +57,9 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
         super.onCreate(bundle);
         String action = getIntent().getAction();
         if (ACTION_IMPORT.equals(action)) {
-            getIntent().getExtras().isEmpty();
-            DialogFragmentFactory.showConfirmDialog(this, getString(R.string.pref_title_import), getString(R.string.pref_summary_import), ID_ACTION_IMPORT,
-                    getIntent().getExtras());
+            Uri importFile = getIntent().getExtras().getParcelable(EXTRA_IMPORT_URI);
+            DialogFragmentFactory.showConfirmDialog(this, getString(R.string.import_confirm_title),
+                    getString(R.string.import_confirm_message, importFile.getPath()), ID_ACTION_IMPORT, getIntent().getExtras());
         } else {
             Log.w(TAG, "Activity created without a known action.  Action=" + action);
             finish();
@@ -64,9 +70,39 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
     public void onOkClicked(int actionId, Bundle extras) {
         Log.v(TAG, "onClicked, actionId=" + actionId + ", extras = " + extras);
         if (actionId == ID_ACTION_IMPORT) {
-            Toast.makeText(this, "Will  " + extras.getParcelable(EXTRA_DB_URL), Toast.LENGTH_LONG).show();
+            final Uri uri = extras.getParcelable(EXTRA_IMPORT_URI);
+            AsyncTask<Void, Void, Boolean> task = new AsyncTask<Void, Void, Boolean>() {
+
+                @Override
+                protected void onPreExecute() {
+                    DialogFragmentFactory.showProgressDialog(PreferenceFragmentActivity.this, getString(R.string.progress_dialog_message),
+                            ProgressDialog.STYLE_SPINNER, PROGRESS_DIALOG_FRAGMENT_TAG);
+                }
+
+                @Override
+                protected Boolean doInBackground(Void... params) {
+                    try {
+                        Log.v(TAG, "Importing db from " + uri);
+                        DBImport.importDB(PreferenceFragmentActivity.this, uri);
+                        return true;
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error importing db: " + e.getMessage(), e);
+                        return false;
+                    }
+                }
+
+                @Override
+                protected void onPostExecute(Boolean result) {
+                    ProgressDialogFragment dialogFragment = (ProgressDialogFragment) getSupportFragmentManager()
+                            .findFragmentByTag(PROGRESS_DIALOG_FRAGMENT_TAG);
+                    if (dialogFragment != null) dialogFragment.dismiss();
+                    String toastText = result ? getString(R.string.import_successful, uri.getPath()) : getString(R.string.import_failed, uri.getPath());
+                    Toast.makeText(PreferenceFragmentActivity.this, toastText, Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            };
+            task.execute();
         }
-        finish();
     }
 
     @Override

@@ -114,7 +114,7 @@ public class AdvancedPreferencesActivity extends PreferenceActivity {
         if (requestCode == ACTIVITY_REQUEST_CODE_IMPORT) {
             if (resultCode == Activity.RESULT_OK) {
                 Intent intent = new Intent(PreferenceFragmentActivity.ACTION_IMPORT);
-                intent.putExtra(PreferenceFragmentActivity.EXTRA_DB_URL, data.getData());
+                intent.putExtra(PreferenceFragmentActivity.EXTRA_IMPORT_URI, data.getData());
                 startActivity(intent);
             }
         }

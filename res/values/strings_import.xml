@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Strings for exporting the log file -->
+    <string name="import_confirm_title">Confirm import</string>
+    <string name="import_confirm_message">Replace current database with the contents of %s?</string>
+    <string name="import_successful">Successfully imported %s.</string>
+    <string name="import_failed">Failed to import %s.</string>
+</resources>

@@ -36,9 +36,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQuery;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import org.jraf.android.networkmonitor.util.Log;
 
 import org.jraf.android.networkmonitor.Constants;
+import org.jraf.android.networkmonitor.util.Log;
 
 public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + NetMonProvider.class.getSimpleName();
@@ -46,10 +46,10 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     private static final String TYPE_CURSOR_ITEM = "vnd.android.cursor.item/";
     private static final String TYPE_CURSOR_DIR = "vnd.android.cursor.dir/";
 
-    private static final String AUTHORITY = "org.jraf.android.networkmonitor.provider";
+    public static final String AUTHORITY = "org.jraf.android.networkmonitor.provider";
     static final String CONTENT_URI_BASE = "content://" + AUTHORITY;
 
-    private static final String QUERY_NOTIFY = "QUERY_NOTIFY";
+    public static final String QUERY_NOTIFY = "QUERY_NOTIFY";
     private static final String QUERY_GROUP_BY = "QUERY_GROUP_BY";
 
     private static final int URI_TYPE_NETWORKMONITOR = 0;

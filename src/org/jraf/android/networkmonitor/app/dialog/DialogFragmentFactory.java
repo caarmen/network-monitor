@@ -39,6 +39,7 @@ public class DialogFragmentFactory extends DialogFragment {
     static final String EXTRA_MESSAGE = "message";
     static final String EXTRA_ACTION_ID = "action_id";
     static final String EXTRA_EXTRAS = "extras";
+    static final String EXTRA_PROGRESS_DIALOG_STYLE = "progress_dialog_style";
 
 
     /**
@@ -59,5 +60,20 @@ public class DialogFragmentFactory extends DialogFragment {
         return result;
     }
 
+    /**
+     * @return a visible dialog fragment with the given message.
+     * @param tag should be used by the calling activity, when the background task is complete, to find the fragment and dismiss it.
+     */
+    public static ProgressDialogFragment showProgressDialog(FragmentActivity activity, String message, int progressDialogStyle, String tag) {
+        Log.v(TAG, "showProgressDialog: message = " + message);
+        Bundle arguments = new Bundle(2);
+        arguments.putString(EXTRA_MESSAGE, message);
+        arguments.putInt(EXTRA_PROGRESS_DIALOG_STYLE, progressDialogStyle);
+        ProgressDialogFragment result = new ProgressDialogFragment();
+        result.setArguments(arguments);
+        result.setCancelable(false);
+        result.show(activity.getSupportFragmentManager(), tag);
+        return result;
+    }
 
 }
