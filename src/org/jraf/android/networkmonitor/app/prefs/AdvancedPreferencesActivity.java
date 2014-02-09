@@ -40,6 +40,7 @@ public class AdvancedPreferencesActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.adv_preferences, false);
         addPreferencesFromResource(R.xml.adv_preferences);
+        updateListPreferenceSummary(NetMonPreferences.PREF_CELL_ID_FORMAT, R.string.pref_summary_cell_id_format);
         updateListPreferenceSummary(NetMonPreferences.PREF_WAKE_INTERVAL, R.string.pref_summary_wake_interval);
         updateListPreferenceSummary(NetMonPreferences.PREF_SCHEDULER, R.string.pref_summary_scheduler);
     }
@@ -59,7 +60,9 @@ public class AdvancedPreferencesActivity extends PreferenceActivity {
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (NetMonPreferences.PREF_WAKE_INTERVAL.equals(key)) {
+            if (NetMonPreferences.PREF_CELL_ID_FORMAT.equals(key)) {
+                updateListPreferenceSummary(NetMonPreferences.PREF_CELL_ID_FORMAT, R.string.pref_summary_cell_id_format);
+            } else if (NetMonPreferences.PREF_WAKE_INTERVAL.equals(key)) {
                 updateListPreferenceSummary(NetMonPreferences.PREF_WAKE_INTERVAL, R.string.pref_summary_wake_interval);
             } else if (NetMonPreferences.PREF_SCHEDULER.equals(key)) {
                 updateListPreferenceSummary(NetMonPreferences.PREF_SCHEDULER, R.string.pref_summary_scheduler);
