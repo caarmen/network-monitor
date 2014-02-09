@@ -46,6 +46,7 @@ import android.content.Context;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
+import org.jraf.android.networkmonitor.app.export.FormatterFactory.FormatterStyle;
 import org.jraf.android.networkmonitor.util.Log;
 
 /**
@@ -67,7 +68,7 @@ public class ExcelExport extends TableFileExport {
     private int mColumnCount;
 
     public ExcelExport(Context context, FileExport.ExportProgressListener listener) throws FileNotFoundException {
-        super(context, new File(context.getExternalFilesDir(null), EXCEL_FILE), listener);
+        super(context, new File(context.getExternalFilesDir(null), EXCEL_FILE), FormatterStyle.DEFAULT, listener);
     }
 
     @Override

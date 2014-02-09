@@ -158,5 +158,15 @@ td.slow {
         <item>ipv4_address</item>
         <item>ipv6_address</item>
     </string-array>
+    
+    <!-- These columns can have any text.  We need to make sure they don't have special characters when we export. -->
+    <string-array name="text_columns">
+        <item>reason</item>
+        <item>extra_info</item>
+        <item>wifi_ssid</item>
+        <item>wifi_rssi</item>
+        <item>sim_operator</item>
+        <item>network_operator</item>
+    </string-array>
 
 </resources>

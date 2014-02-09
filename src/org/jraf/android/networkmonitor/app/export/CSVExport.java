@@ -31,6 +31,8 @@ import java.io.PrintWriter;
 import android.content.Context;
 import android.text.TextUtils;
 
+import org.jraf.android.networkmonitor.app.export.FormatterFactory.FormatterStyle;
+
 /**
  * Export the Network Monitor data to a CSV file.
  */
@@ -39,7 +41,7 @@ public class CSVExport extends TableFileExport {
     private PrintWriter mPrintWriter;
 
     public CSVExport(Context context, FileExport.ExportProgressListener listener) throws FileNotFoundException {
-        super(context, new File(context.getExternalFilesDir(null), CSV_FILE), listener);
+        super(context, new File(context.getExternalFilesDir(null), CSV_FILE), FormatterStyle.DEFAULT, listener);
     }
 
     @Override

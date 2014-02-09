@@ -32,6 +32,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import org.jraf.android.networkmonitor.Constants;
+import org.jraf.android.networkmonitor.app.export.FormatterFactory.FormatterStyle;
 import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 import org.jraf.android.networkmonitor.util.Log;
@@ -41,9 +42,11 @@ import org.jraf.android.networkmonitor.util.Log;
  */
 abstract class TableFileExport extends FileExport {
     private static final String TAG = Constants.TAG + TableFileExport.class.getSimpleName();
+    private final FormatterStyle mFormatterStyle;
 
-    TableFileExport(Context context, File file, FileExport.ExportProgressListener listener) throws FileNotFoundException {
+    TableFileExport(Context context, File file, FormatterStyle formatterStyle, FileExport.ExportProgressListener listener) throws FileNotFoundException {
         super(context, file, listener);
+        mFormatterStyle = formatterStyle;
     }
 
     /**
@@ -79,7 +82,7 @@ abstract class TableFileExport extends FileExport {
     public File export(int recordCount) {
         Log.v(TAG, "export " + (recordCount <= 0 ? "all" : recordCount) + " records");
         String[] usedColumnNames = (String[]) NetMonPreferences.getInstance(mContext).getSelectedColumns().toArray();
-        Formatter formatter = new Formatter(mContext);
+        Formatter formatter = FormatterFactory.getFormatter(mFormatterStyle, mContext);
         Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, usedColumnNames, null, null, NetMonColumns.TIMESTAMP + " DESC");
         if (c != null) {
             try {
