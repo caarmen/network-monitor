@@ -53,16 +53,16 @@ public class Log {
 
     private static final String FILE_0 = "log0.txt";
     private static final String FILE_1 = "log1.txt";
-    protected static final int MSG_V = 0;
-    protected static final int MSG_D = 1;
-    protected static final int MSG_I = 2;
-    protected static final int MSG_W = 3;
-    protected static final int MSG_E = 4;
-    protected static final String KEY_TAG = "KEY_TAG";
-    protected static final String KEY_MESSAGE = "KEY_MESSAGE";
-    protected static final String KEY_DATE = "KEY_DATE";
-    protected static final String KEY_THREADID = "KEY_THREADID";
-    protected static final String KEY_THROWABLE = "KEY_THROWABLE";
+    private static final int MSG_V = 0;
+    private static final int MSG_D = 1;
+    private static final int MSG_I = 2;
+    private static final int MSG_W = 3;
+    private static final int MSG_E = 4;
+    private static final String KEY_TAG = "KEY_TAG";
+    private static final String KEY_MESSAGE = "KEY_MESSAGE";
+    private static final String KEY_DATE = "KEY_DATE";
+    private static final String KEY_THREADID = "KEY_THREADID";
+    private static final String KEY_THROWABLE = "KEY_THROWABLE";
 
     private static int sMaxLogSize;
     private static BufferedWriter sWriter;
@@ -251,7 +251,7 @@ public class Log {
         i(tag, message, null);
     }
 
-    public static void i(String tag, String message, Throwable throwable) {
+    private static void i(String tag, String message, Throwable throwable) {
         if (throwable != null) {
             android.util.Log.i(tag, message, throwable);
         } else {

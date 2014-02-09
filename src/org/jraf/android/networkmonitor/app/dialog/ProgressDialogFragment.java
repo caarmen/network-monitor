@@ -1,14 +1,3 @@
-package org.jraf.android.networkmonitor.app.dialog;
-
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-
-import org.jraf.android.networkmonitor.Constants;
-import org.jraf.android.networkmonitor.R;
-import org.jraf.android.networkmonitor.util.Log;
-
 /*
  * This source is part of the
  *      _____  ___   ____
@@ -19,7 +8,7 @@ import org.jraf.android.networkmonitor.util.Log;
  * repository.
  *
  * Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
- * Copyright (C) 2013 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2014 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +22,17 @@ import org.jraf.android.networkmonitor.util.Log;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.jraf.android.networkmonitor.app.dialog;
+
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+
+import org.jraf.android.networkmonitor.Constants;
+import org.jraf.android.networkmonitor.R;
+import org.jraf.android.networkmonitor.util.Log;
+
 
 /**
  * A ProgressDialog with a message.

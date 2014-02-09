@@ -36,7 +36,7 @@ public class IoUtil {
      * 
      * @param toClose The {@link Closeable}s to close.
      */
-    public static void closeSilently(Closeable... toClose) {
+    static void closeSilently(Closeable... toClose) {
         for (Closeable closeable : toClose) {
             if (closeable != null) {
                 try {

@@ -1,22 +1,26 @@
-/**
- * Copyright 2013 Carmen Alvarez
+/*
+ * This source is part of the
+ *      _____  ___   ____
+ *  __ / / _ \/ _ | / __/___  _______ _
+ * / // / , _/ __ |/ _/_/ _ \/ __/ _ `/
+ * \___/_/|_/_/ |_/_/ (_)___/_/  \_, /
+ *                              /___/
+ * repository.
  *
- * This file is part of Scrum Chatter.
+ * Copyright (C) 2014 Carmen Alvarez (c@rmen.ca)
  *
- * Scrum Chatter is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Scrum Chatter is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU General Public License
- * along with Scrum Chatter. If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
 package org.jraf.android.networkmonitor.app.importdb;
 
 import java.io.File;
@@ -41,9 +45,16 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
 import org.jraf.android.networkmonitor.provider.NetMonProvider;
 import org.jraf.android.networkmonitor.util.IoUtil;
 
+/**
+ * Replace the contents of the current database with the contents of another database.
+ * This is based on DBImport from the scrum chatter project.
+ */
 public class DBImport {
     private static final String TAG = Constants.TAG + "/" + DBImport.class.getSimpleName();
 
+    /**
+     * Replace the database of our app with the contents of the database found at the given uri.
+     */
     public static void importDB(Context context, Uri uri) throws RemoteException, OperationApplicationException, IOException {
         if (uri.getScheme().equals("file")) {
             File db = new File(uri.getEncodedPath());
@@ -59,6 +70,10 @@ public class DBImport {
         }
     }
 
+    /**
+     * In a single database transaction, delete all the cells from the current database, read the data from the given importDb file, create a batch of
+     * corresponding insert operations, and execute the inserts.
+     */
     private static void importDB(Context context, File importDb) throws RemoteException, OperationApplicationException, FileNotFoundException {
         Log.v(TAG, "importDB from " + importDb);
         SQLiteDatabase dbImport = SQLiteDatabase.openDatabase(importDb.getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY);
@@ -71,6 +86,9 @@ public class DBImport {
         dbImport.close();
     }
 
+    /**
+     * Read all cells from the given table from the dbImport database, and add corresponding insert operations to the operations parameter.
+     */
     private static void buildInsertOperations(SQLiteDatabase dbImport, Uri uri, String table, ArrayList<ContentProviderOperation> operations) {
         Log.v(TAG, "buildInsertOperations: uri = " + uri + ", table=" + table);
         Cursor c = dbImport.query(false, table, null, null, null, null, null, null, null);

@@ -43,7 +43,7 @@ import android.widget.Toast;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.util.Log;
 
-public class AboutActivity extends Activity {
+public class AboutActivity extends Activity { // NO_UCD (use default)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

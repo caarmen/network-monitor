@@ -57,6 +57,7 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
         super.onCreate(bundle);
         String action = getIntent().getAction();
         if (ACTION_IMPORT.equals(action)) {
+            // Get the file the user selected, and show a dialog asking for confirmation to import the file.
             Uri importFile = getIntent().getExtras().getParcelable(EXTRA_IMPORT_URI);
             DialogFragmentFactory.showConfirmDialog(this, getString(R.string.import_confirm_title),
                     getString(R.string.import_confirm_message, importFile.getPath()), ID_ACTION_IMPORT, getIntent().getExtras());
@@ -69,6 +70,7 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
     @Override
     public void onOkClicked(int actionId, Bundle extras) {
         Log.v(TAG, "onClicked, actionId=" + actionId + ", extras = " + extras);
+        // Import the database in a background thread.
         if (actionId == ID_ACTION_IMPORT) {
             final Uri uri = extras.getParcelable(EXTRA_IMPORT_URI);
             AsyncTask<Void, Void, Boolean> task = new AsyncTask<Void, Void, Boolean>() {
@@ -108,6 +110,7 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
     @Override
     public void onCancelClicked(int actionId, Bundle extras) {
         Log.v(TAG, "onClicked, actionId=" + actionId + ", extras = " + extras);
+        // If the user dismissed the dialog, let's close this transparent activity.
         finish();
     }
 }
