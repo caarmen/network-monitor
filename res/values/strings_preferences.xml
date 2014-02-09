@@ -35,6 +35,8 @@
     <string name="pref_value_cell_id_format_decimal">Decimal</string>
     <string name="pref_value_cell_id_format_hex">Hex</string>
     <string name="pref_value_cell_id_format_decimal_hex">Both</string>
+    <string name="pref_title_import">Import</string>
+    <string name="pref_summary_import">Import another database which was exported from Network Monitor.</string>
     <!--  Other preferences -->
     <string name="pref_title_filter_record_count">Number of records to display</string>
     <string name="pref_value_filter_record_count_100">100</string>

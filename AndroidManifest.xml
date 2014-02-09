@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.jraf.android.networkmonitor"
-    android:versionCode="1301"
-    android:versionName="1.3.1" >
+    android:versionCode="1400"
+    android:versionName="1.4.0" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -113,6 +113,16 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="org.jraf.android.networkmonitor.app.log_clear" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.jraf.android.networkmonitor.app.prefs.PreferenceFragmentActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:theme="@style/NetMonNoDisplayTheme" >
+            <intent-filter>
+                <action android:name="org.jraf.android.networkmonitor.app.prefs_import" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

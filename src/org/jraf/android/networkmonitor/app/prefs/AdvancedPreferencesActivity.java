@@ -24,16 +24,26 @@
  */
 package org.jraf.android.networkmonitor.app.prefs;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
+import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
+import org.jraf.android.networkmonitor.util.Log;
 
 public class AdvancedPreferencesActivity extends PreferenceActivity {
+    private static final String TAG = Constants.TAG + AdvancedPreferencesActivity.class.getSimpleName();
+    private static final int ACTIVITY_REQUEST_CODE_IMPORT = 1;
+    private static final String PREF_IMPORT = "PREF_IMPORT";
+
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +53,8 @@ public class AdvancedPreferencesActivity extends PreferenceActivity {
         updateListPreferenceSummary(NetMonPreferences.PREF_CELL_ID_FORMAT, R.string.pref_summary_cell_id_format);
         updateListPreferenceSummary(NetMonPreferences.PREF_WAKE_INTERVAL, R.string.pref_summary_wake_interval);
         updateListPreferenceSummary(NetMonPreferences.PREF_SCHEDULER, R.string.pref_summary_scheduler);
+        Preference importPreference = getPreferenceManager().findPreference(PREF_IMPORT);
+        importPreference.setOnPreferenceClickListener(mOnPreferenceClickListener);
     }
 
     @Override
@@ -76,6 +88,36 @@ public class AdvancedPreferencesActivity extends PreferenceActivity {
         CharSequence entry = pref.getEntry();
         String summary = getString(summaryResId, entry);
         pref.setSummary(summary);
+    }
+
+    private final OnPreferenceClickListener mOnPreferenceClickListener = new OnPreferenceClickListener() {
+
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+            Log.v(TAG, "onPreferenceClick: " + preference);
+            if (PREF_IMPORT.equals(preference.getKey())) {
+
+                Intent importIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                importIntent.setType("file/*");
+                startActivityForResult(Intent.createChooser(importIntent, getResources().getText(R.string.pref_summary_import)), ACTIVITY_REQUEST_CODE_IMPORT);
+            }
+            return false;
+        }
+    };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.v(TAG, "onActivityResult: requestCode =  " + requestCode + ", resultCode = " + resultCode + ", data=" + data);
+        /**
+         * Allow the user to choose a DB to import
+         */
+        if (requestCode == ACTIVITY_REQUEST_CODE_IMPORT) {
+            if (resultCode == Activity.RESULT_OK) {
+                Intent intent = new Intent(PreferenceFragmentActivity.ACTION_IMPORT);
+                intent.putExtra(PreferenceFragmentActivity.EXTRA_DB_URL, data.getData());
+                startActivity(intent);
+            }
+        }
     }
 
 }
