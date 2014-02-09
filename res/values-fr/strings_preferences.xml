@@ -6,7 +6,7 @@
     <string name="pref_summary_service_enabled">Activer ou désactiver le service</string>
     <string name="pref_title_service_enabled">Activer le service</string>
     <string name="pref_title_show_log_file">Voir le fichier journal</string>
-    <string name="pref_title_advanced">Préférences avancées</string>
+    <string name="pref_title_advanced">Options avancées</string>
     <string name="pref_title_about">À propos</string>
     <string name="pref_value_interval_never">Jamais</string>
     <string name="pref_value_interval_10_seconds">10 secondes</string>
