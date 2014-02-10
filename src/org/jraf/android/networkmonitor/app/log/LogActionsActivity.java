@@ -26,6 +26,7 @@ package org.jraf.android.networkmonitor.app.log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -110,7 +111,7 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                                 // Text summary only
                             }
                             shareFile(fileExport);
-                        } catch (FileNotFoundException e) {
+                        } catch (IOException e) {
                             Log.w(TAG, "Error sharing file: " + e.getMessage(), e);
                         }
                     }

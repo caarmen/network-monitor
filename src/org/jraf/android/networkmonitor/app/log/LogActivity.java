@@ -25,7 +25,7 @@
 package org.jraf.android.networkmonitor.app.log;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -128,7 +128,7 @@ public class LogActivity extends FragmentActivity {
                     int recordCount = NetMonPreferences.getInstance(LogActivity.this).getFilterRecordCount();
                     File file = htmlExport.export(recordCount);
                     return file;
-                } catch (FileNotFoundException e) {
+                } catch (IOException e) {
                     Log.e(TAG, "doInBackground Could not load data into html file: " + e.getMessage(), e);
                 }
                 return null;

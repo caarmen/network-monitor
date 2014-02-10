@@ -26,6 +26,7 @@ package org.jraf.android.networkmonitor.app.export;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 import android.content.Context;
 
@@ -44,9 +45,9 @@ public class HTMLExport extends TableFileExport {
     /**
      * @param external if true, the file will be exported to the sd card. Otherwise it will written to the app's internal storage.
      */
-    public HTMLExport(Context context, boolean external, FileExport.ExportProgressListener listener) throws FileNotFoundException {
+    public HTMLExport(Context context, boolean external, FileExport.ExportProgressListener listener) throws FileNotFoundException, UnsupportedEncodingException {
         super(context, new File(external ? context.getExternalFilesDir(null) : context.getFilesDir(), HTML_FILE), FormatterStyle.XML, listener);
-        mPrintWriter = new PrintWriter(mFile);
+        mPrintWriter = new PrintWriter(mFile, "utf-8");
     }
 
     @Override

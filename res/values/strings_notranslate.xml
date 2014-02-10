@@ -2,7 +2,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="css" translatable="false">
-<![CDATA[<style type="text/css">
+<![CDATA[
+<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
+<style type="text/css">
 table {
  border-collapse: collapse;
  border: 1px #fd8900 solid;

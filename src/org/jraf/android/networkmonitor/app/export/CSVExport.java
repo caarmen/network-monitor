@@ -46,7 +46,7 @@ public class CSVExport extends TableFileExport {
 
     @Override
     void writeHeader(String[] columnNames) throws IOException {
-        mPrintWriter = new PrintWriter(mFile);
+        mPrintWriter = new PrintWriter(mFile, "utf-8");
         mPrintWriter.println(TextUtils.join(",", columnNames));
     }
 
