@@ -247,7 +247,7 @@ public class Log {
      * Info.
      */
 
-    public static void i(String tag, String message) {
+    public static void i(String tag, String message) { // NO_UCD (unused code)
         i(tag, message, null);
     }
 
@@ -283,7 +283,7 @@ public class Log {
      * Error.
      */
 
-    public static void e(String tag, String message) {
+    public static void e(String tag, String message) { // NO_UCD (unused code)
         e(tag, message, null);
     }
 

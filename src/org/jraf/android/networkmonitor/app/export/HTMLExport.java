@@ -33,14 +33,18 @@ import android.content.Context;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.export.FormatterFactory.FormatterStyle;
+import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
+import org.jraf.android.networkmonitor.app.prefs.SortPreferences;
+import org.jraf.android.networkmonitor.app.prefs.SortPreferences.SortOrder;
+import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 /**
  * Export the Network Monitor data to an HTML file. The HTML file includes CSS specified in the strings XML file.
  */
 public class HTMLExport extends TableFileExport {
+    public static final String SCHEME_NETMON = "netmon:";
     private static final String HTML_FILE = "networkmonitor.html";
     private PrintWriter mPrintWriter;
-
 
     /**
      * @param external if true, the file will be exported to the sd card. Otherwise it will written to the app's internal storage.
@@ -51,7 +55,7 @@ public class HTMLExport extends TableFileExport {
     }
 
     @Override
-    void writeHeader(String[] columnNames) {
+    void writeHeader(String[] columnLabels) {
         mPrintWriter.println("<html>");
         mPrintWriter.println("  <head>");
         mPrintWriter.println(mContext.getString(R.string.css));
@@ -59,8 +63,21 @@ public class HTMLExport extends TableFileExport {
         mPrintWriter.println("<table><thead>");
 
         mPrintWriter.println("  <tr>");
-        for (String columnName : columnNames) {
-            mPrintWriter.println("    <th>" + columnName + "</th>");
+        SortPreferences sortPreferences = NetMonPreferences.getInstance(mContext).getSortPreferences();
+        for (String columnLabel : columnLabels) {
+            // Indicate if this is the sorting column: specify a particular css style
+            // for this cell, and show an up or down arrow depending on if we're
+            // sorting ascending or descending.
+            String dbColumnName = NetMonColumns.getColumnName(mContext, columnLabel);
+            String icon = "";
+            String thClass = "";
+            if (dbColumnName.equals(sortPreferences.sortColumnName)) {
+                thClass = "class=\"sort_column\"";
+                if (sortPreferences.sortOrder == SortOrder.DESC) icon = "&nbsp;&darr;";
+                else
+                    icon = "&nbsp;&uarr;";
+            }
+            mPrintWriter.println("    <th " + thClass + "><a href=\"" + SCHEME_NETMON + dbColumnName + "\">" + columnLabel + "</a>" + icon + "</th>");
         }
         mPrintWriter.println("  </tr></thead><tbody>");
     }

@@ -78,7 +78,7 @@ public class IoUtil {
      * @return a String containing the contents of the given {@link InputStream}.
      * @throws IOException If a error occurs while reading.
      */
-    public static String readFully(InputStream in) throws IOException {
+    public static String readFully(InputStream in) throws IOException { // NO_UCD (unused code)
         StringBuilder stringBuilder = new StringBuilder();
         byte[] buffer = new byte[BUFFER_SIZE];
         int read;

@@ -32,8 +32,10 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import org.jraf.android.networkmonitor.app.prefs.SortPreferences.SortOrder;
 import org.jraf.android.networkmonitor.app.service.scheduler.AlarmManagerScheduler;
 import org.jraf.android.networkmonitor.app.service.scheduler.ExecutorServiceScheduler;
+import org.jraf.android.networkmonitor.app.service.scheduler.Scheduler;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 
 /**
@@ -47,19 +49,24 @@ public class NetMonPreferences {
 
     public static final String PREF_UPDATE_INTERVAL = "PREF_UPDATE_INTERVAL";
     public static final String PREF_UPDATE_INTERVAL_DEFAULT = "10000";
-    static final String PREF_WAKE_INTERVAL = "PREF_WAKE_INTERVAL";
     public static final String PREF_SERVICE_ENABLED = "PREF_SERVICE_ENABLED";
     public static final boolean PREF_SERVICE_ENABLED_DEFAULT = false;
     public static final String PREF_SCHEDULER = "PREF_SCHEDULER";
+    public static final String PREF_SORT_ORDER = "PREF_SORT_ORDER";
+    public static final String PREF_SORT_COLUMN_NAME = "PREF_SORT_COLUMN_NAME";
 
-    private static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
+    static final String PREF_WAKE_INTERVAL = "PREF_WAKE_INTERVAL";
     static final String PREF_KML_EXPORT_COLUMN = "PREF_KML_EXPORT_COLUMN";
-    private static final String PREF_SCHEDULER_DEFAULT = ExecutorServiceScheduler.class.getSimpleName();
-    private static final String PREF_SELECTED_COLUMNS = "PREF_SELECTED_COLUMNS";
     static final String PREF_FILTER_RECORD_COUNT = "PREF_FILTER_RECORD_COUNT";
     static final String PREF_FILTER_RECORD_COUNT_DEFAULT = "250";
     static final String PREF_CELL_ID_FORMAT = "PREF_CELL_ID_FORMAT";
     static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
+
+    private static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
+    private static final String PREF_SCHEDULER_DEFAULT = ExecutorServiceScheduler.class.getSimpleName();
+    private static final String PREF_SELECTED_COLUMNS = "PREF_SELECTED_COLUMNS";
+    private static final String PREF_SORT_COLUMN_NAME_DEFAULT = NetMonColumns.TIMESTAMP;
+    private static final String PREF_SORT_ORDER_DEFAULT = SortOrder.DESC.name();
 
     private static NetMonPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
@@ -84,22 +91,47 @@ public class NetMonPreferences {
         return getIntPreference(NetMonPreferences.PREF_UPDATE_INTERVAL, NetMonPreferences.PREF_UPDATE_INTERVAL_DEFAULT);
     }
 
+    /**
+     * @return the interval, in milliseconds, between forced waking up the device (by turning the screen on). If not positive, we will never force wake up the
+     *         device.
+     */
     public int getWakeInterval() {
         return getIntPreference(NetMonPreferences.PREF_WAKE_INTERVAL, NetMonPreferences.PREF_WAKE_INTERVAL_DEFAULT);
     }
 
+    /**
+     * @return true if we are currently collecting and logging data.
+     */
     public boolean isServiceEnabled() {
         return mSharedPrefs.getBoolean(NetMonPreferences.PREF_SERVICE_ENABLED, NetMonPreferences.PREF_SERVICE_ENABLED_DEFAULT);
     }
 
+    /**
+     * @param value true if we should collect and log data, false otherwise.
+     */
+    public void setServiceEnabled(boolean value) {
+        Editor editor = mSharedPrefs.edit();
+        editor.putBoolean(NetMonPreferences.PREF_SERVICE_ENABLED, value);
+        editor.commit();
+    }
+
+    /**
+     * @return the number of rows we should display in the log view. This is only for display: we always export all rows.
+     */
     public int getFilterRecordCount() {
         return getIntPreference(NetMonPreferences.PREF_FILTER_RECORD_COUNT, NetMonPreferences.PREF_FILTER_RECORD_COUNT_DEFAULT);
     }
 
+    /**
+     * @param filterRecordCount the number of rows we should display in the log view. This is only for display: we always export all rows.
+     */
     public void setFilterRecordCount(int filterRecordCount) {
         mSharedPrefs.edit().putString(PREF_FILTER_RECORD_COUNT, String.valueOf(filterRecordCount)).commit();
     }
 
+    /**
+     * @return the format in which numeric cell id fields should be displayed and exported.
+     */
     public CellIdFormat getCellIdFormat() {
         String cellIdFormat = mSharedPrefs.getString(NetMonPreferences.PREF_CELL_ID_FORMAT, NetMonPreferences.PREF_CELL_ID_FORMAT_DEFAULT);
         if ("decimal".equals(cellIdFormat)) return CellIdFormat.DECIMAL;
@@ -107,28 +139,26 @@ public class NetMonPreferences {
         return CellIdFormat.DECIMAL_HEX;
     }
 
-    public void setServiceEnabled(boolean value) {
-        Editor editor = mSharedPrefs.edit();
-        editor.putBoolean(NetMonPreferences.PREF_SERVICE_ENABLED, value);
-        editor.commit();
-    }
 
+    /**
+     * @return the db column name which will be used for the placemark names in the KML export.
+     */
     public String getKMLExportColumn() {
         return mSharedPrefs.getString(NetMonPreferences.PREF_KML_EXPORT_COLUMN, NetMonColumns.SOCKET_CONNECTION_TEST);
     }
 
+    /**
+     * @param value db column name which will be used for the placemark names in the KML export.
+     */
     public void setKMLExportColumn(String value) {
         Editor editor = mSharedPrefs.edit();
         editor.putString(NetMonPreferences.PREF_KML_EXPORT_COLUMN, value);
         editor.commit();
     }
 
-    private int getIntPreference(String key, String defaultValue) {
-        String valueStr = mSharedPrefs.getString(key, defaultValue);
-        int valueInt = Integer.valueOf(valueStr);
-        return valueInt;
-    }
-
+    /**
+     * @return the implementation of the {@link Scheduler} interface which schedules each logging of data.
+     */
     public Class<?> getSchedulerClass() {
         String schedulerPref = mSharedPrefs.getString(NetMonPreferences.PREF_SCHEDULER, NetMonPreferences.PREF_SCHEDULER_DEFAULT);
         if (schedulerPref.equals(AlarmManagerScheduler.class.getSimpleName())) return AlarmManagerScheduler.class;
@@ -136,6 +166,9 @@ public class NetMonPreferences {
             return ExecutorServiceScheduler.class;
     }
 
+    /**
+     * @return the list of columns which will appear in the log view. This is only for display. All columns will be exported.
+     */
     public List<String> getSelectedColumns() {
         String selectedColumnsString = mSharedPrefs.getString(NetMonPreferences.PREF_SELECTED_COLUMNS, null);
         final String[] selectedColumns;
@@ -145,9 +178,37 @@ public class NetMonPreferences {
         return Arrays.asList(selectedColumns);
     }
 
+    /**
+     * @return the list of columns to appear in the log view. This is only for display. All columns will be exported.
+     */
     public void setSelectedColumns(List<String> selectedColumns) {
         String selectedColumnsString = TextUtils.join(",", selectedColumns);
         mSharedPrefs.edit().putString(NetMonPreferences.PREF_SELECTED_COLUMNS, selectedColumnsString).commit();
+    }
+
+    /**
+     * @return the settings for how rows in the log view or table export formats are sorted.
+     */
+    public SortPreferences getSortPreferences() {
+        String sortColumnName = mSharedPrefs.getString(PREF_SORT_COLUMN_NAME, PREF_SORT_COLUMN_NAME_DEFAULT);
+        SortOrder sortOrder = SortOrder.valueOf(mSharedPrefs.getString(PREF_SORT_ORDER, PREF_SORT_ORDER_DEFAULT));
+        return new SortPreferences(sortColumnName, sortOrder);
+    }
+
+    /**
+     * @return the settings for how rows in the log view or table export formats should be sorted.
+     */
+    public void setSortPreferences(SortPreferences sortPreferences) {
+        Editor editor = mSharedPrefs.edit();
+        editor.putString(PREF_SORT_COLUMN_NAME, sortPreferences.sortColumnName);
+        editor.putString(PREF_SORT_ORDER, sortPreferences.sortOrder.name());
+        editor.commit();
+    }
+
+    private int getIntPreference(String key, String defaultValue) {
+        String valueStr = mSharedPrefs.getString(key, defaultValue);
+        int valueInt = Integer.valueOf(valueStr);
+        return valueInt;
     }
 
 }

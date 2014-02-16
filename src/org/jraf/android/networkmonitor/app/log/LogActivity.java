@@ -29,9 +29,12 @@ import java.io.IOException;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
@@ -49,6 +52,8 @@ import org.jraf.android.networkmonitor.app.export.HTMLExport;
 import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
 import org.jraf.android.networkmonitor.app.prefs.PreferenceDialog;
 import org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity;
+import org.jraf.android.networkmonitor.app.prefs.SortPreferences;
+import org.jraf.android.networkmonitor.app.prefs.SortPreferences.SortOrder;
 import org.jraf.android.networkmonitor.util.Log;
 
 public class LogActivity extends FragmentActivity {
@@ -64,6 +69,20 @@ public class LogActivity extends FragmentActivity {
         setContentView(R.layout.log);
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) setDisplayHomeAsUpEnabled(true);
         loadHTMLFile();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.v(TAG, "onPause");
+        super.onPause();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
+    }
+
+    @Override
+    protected void onResume() {
+        Log.v(TAG, "onResume");
+        super.onResume();
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
     }
 
     @Override
@@ -157,12 +176,38 @@ public class LogActivity extends FragmentActivity {
                         super.onPageFinished(view, url);
                         progressBar.setVisibility(View.GONE);
                     }
+
+                    @Override
+                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                        Log.v(TAG, "url: " + url);
+                        // If the user clicked on one of the column headings, let's update
+                        // the sorting preference (column name, ascending or descending order).
+                        if (url.startsWith(HTMLExport.SCHEME_NETMON)) {
+                            NetMonPreferences prefs = NetMonPreferences.getInstance(LogActivity.this);
+                            SortPreferences oldSortPreferences = prefs.getSortPreferences();
+                            // The new column used for sorting will be the one the user tapped on.
+                            String newSortColumnName = url.substring(HTMLExport.SCHEME_NETMON.length());
+                            SortOrder newSortOrder = oldSortPreferences.sortOrder;
+                            // If the user clicked on the column which is already used for sorting,
+                            // toggle the sort order between ascending and descending.
+                            if (newSortColumnName.equals(oldSortPreferences.sortColumnName)) {
+                                if (oldSortPreferences.sortOrder == SortOrder.DESC) newSortOrder = SortOrder.ASC;
+                                else
+                                    newSortOrder = SortOrder.DESC;
+                            }
+                            // Update the sorting preferences (our shared preference change listener will be notified
+                            // and reload the page).
+                            prefs.setSortPreferences(new SortPreferences(newSortColumnName, newSortOrder));
+                            return true;
+                        } else {
+                            return super.shouldOverrideUrlLoading(view, url);
+                        }
+                    }
                 });
             }
         };
         asyncTask.execute();
     }
-
 
     @Override
     public void onDestroy() {
@@ -195,6 +240,17 @@ public class LogActivity extends FragmentActivity {
 
         @Override
         public void onCancel() {}
+    };
+
+    /**
+     * Refresh the screen when certain shared preferences change.
+     */
+    private final OnSharedPreferenceChangeListener mSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals(NetMonPreferences.PREF_SORT_COLUMN_NAME) || key.equals(NetMonPreferences.PREF_SORT_ORDER)) loadHTMLFile();
+        }
     };
 
 }

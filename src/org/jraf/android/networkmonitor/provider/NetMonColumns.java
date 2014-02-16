@@ -110,7 +110,17 @@ public class NetMonColumns implements BaseColumns {
         int columnLabelId = context.getResources().getIdentifier(columnName, "string", R.class.getPackage().getName());
         String columnLabel = context.getString(columnLabelId);
         return columnLabel;
+    }
 
+    /**
+     * @return the DB column name which has this label
+     */
+    public static String getColumnName(Context context, String columnLabel) {
+        String[] columnNames = getColumnNames(context);
+        for (String columnName : columnNames) {
+            if (columnLabel.equals(getColumnLabel(context, columnName))) return columnName;
+        }
+        return null;
     }
 
     static final String DEFAULT_ORDER = _ID;
