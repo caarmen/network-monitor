@@ -109,7 +109,40 @@ td.slow {
         <item>wifi_rssi</item>
     </string-array>
 
-    <string-array name="db_columns_profile_mobile">
+    <string-array name="db_columns_profile_mobile_gsm">
+        <item>timestamp</item>
+        <item>google_connection_test</item>
+        <item>http_connection_test</item>
+        <item>network_type</item>
+        <item>mobile_data_network_type</item>
+        <item>sim_state</item>
+        <item>detailed_state</item>
+        <item>is_connected</item>
+        <item>is_roaming</item>
+        <item>is_available</item>
+        <item>is_failover</item>
+        <item>data_activity</item>
+        <item>data_state</item>
+        <item>reason</item>
+        <item>extra_info</item>
+        <item>sim_operator</item>
+        <item>sim_mcc</item>
+        <item>sim_mnc</item>
+        <item>network_operator</item>
+        <item>network_mcc</item>
+        <item>network_mnc</item>
+        <item>is_network_metered</item>
+        <item>cell_signal_strength</item>
+        <item>cell_signal_strength_dbm</item>
+        <item>cell_asu_level</item>
+        <item>gsm_full_cell_id</item>
+        <item>gsm_rnc</item>
+        <item>gsm_short_cell_id</item>
+        <item>gsm_cell_lac</item>
+        <item>gsm_cell_psc</item>
+    </string-array>
+
+    <string-array name="db_columns_profile_mobile_cdma">
         <item>timestamp</item>
         <item>google_connection_test</item>
         <item>http_connection_test</item>
@@ -140,11 +173,6 @@ td.slow {
         <item>cdma_cell_longitude</item>
         <item>cdma_cell_network_id</item>
         <item>cdma_cell_system_id</item>
-        <item>gsm_full_cell_id</item>
-        <item>gsm_rnc</item>
-        <item>gsm_short_cell_id</item>
-        <item>gsm_cell_lac</item>
-        <item>gsm_cell_psc</item>
     </string-array>
 
     <string-array name="db_columns_profile_location">

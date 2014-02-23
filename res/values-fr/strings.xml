@@ -20,7 +20,8 @@
     <string name="action_select_all">Tout cocher</string>
     <string name="action_select_none">Tout décocher</string>
     <string name="action_select_profile_wifi">Profil WiFi</string>
-    <string name="action_select_profile_mobile">Profil mobile</string>
+    <string name="action_select_profile_mobile_gsm">Profil mobile (GSM)</string>
+    <string name="action_select_profile_mobile_cdma">Profil mobile (CDMA)</string>
     <string name="action_select_profile_location">Profil localisation</string>
 
     <!--  Strings for the about screen -->

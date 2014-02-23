@@ -81,8 +81,12 @@ public class SelectFieldsActivity extends FragmentActivity implements SelectFiel
                 selectColumns(getResources().getStringArray(R.array.db_columns_profile_wifi));
                 okButton.setEnabled(true);
                 break;
-            case R.id.action_select_profile_mobile:
-                selectColumns(getResources().getStringArray(R.array.db_columns_profile_mobile));
+            case R.id.action_select_profile_mobile_gsm:
+                selectColumns(getResources().getStringArray(R.array.db_columns_profile_mobile_gsm));
+                okButton.setEnabled(true);
+                break;
+            case R.id.action_select_profile_mobile_cdma:
+                selectColumns(getResources().getStringArray(R.array.db_columns_profile_mobile_cdma));
                 okButton.setEnabled(true);
                 break;
             case R.id.action_select_profile_location:

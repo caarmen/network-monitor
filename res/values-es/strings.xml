@@ -19,7 +19,8 @@
     <string name="action_select_all">Marcar todos</string>
     <string name="action_select_none">Marcar ninguno</string>
     <string name="action_select_profile_wifi">Perfil WiFi</string>
-    <string name="action_select_profile_mobile">Perfil móvil</string>
+    <string name="action_select_profile_mobile_gsm">Perfil móvil (GSM)</string>
+    <string name="action_select_profile_mobile_cdma">Perfil móvil (CDMA)</string>
     <string name="action_select_profile_location">Perfil localización</string>
 
     <!--  Strings for the about screen -->

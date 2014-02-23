@@ -19,7 +19,8 @@
     <string name="action_select_all">Select all</string>
     <string name="action_select_none">Select none</string>
     <string name="action_select_profile_wifi">WiFi profile</string>
-    <string name="action_select_profile_mobile">Mobile profile</string>
+    <string name="action_select_profile_mobile_gsm">Mobile profile (GSM)</string>
+    <string name="action_select_profile_mobile_cdma">Mobile profile (CDMA)</string>
     <string name="action_select_profile_location">Location profile</string>
     
     <!--  Strings for the about screen -->
