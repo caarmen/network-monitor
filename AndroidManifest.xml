@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.jraf.android.networkmonitor"
-    android:versionCode="1501"
-    android:versionName="1.5.1" >
+    android:versionCode="1502"
+    android:versionName="1.5.2" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -16,12 +16,13 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
+        android:name="org.jraf.android.networkmonitor.app.NetMonApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:name="org.jraf.android.networkmonitor.app.NetMonApplication"
         android:theme="@style/AppTheme" >
         <provider
             android:name=".provider.NetMonProvider"
@@ -109,10 +110,12 @@
             android:theme="@style/NetMonNoDisplayTheme" >
             <intent-filter>
                 <action android:name="org.jraf.android.networkmonitor.app.log_share" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="org.jraf.android.networkmonitor.app.log_clear" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -123,9 +126,16 @@
             android:theme="@style/NetMonNoDisplayTheme" >
             <intent-filter>
                 <action android:name="org.jraf.android.networkmonitor.app.prefs_import" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <receiver android:name="org.jraf.android.networkmonitor.app.service.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
