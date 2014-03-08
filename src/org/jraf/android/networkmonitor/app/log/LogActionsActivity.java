@@ -216,7 +216,10 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.export_subject_send_log));
-                String messageBody = getString(R.string.export_message_text);
+
+                String dateRange = SummaryExport.getDataCollectionDateRange(LogActionsActivity.this);
+
+                String messageBody = getString(R.string.export_message_text, dateRange);
                 if (file != null) {
                     sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getAbsolutePath()));
                     sendIntent.setType("message/rfc822");

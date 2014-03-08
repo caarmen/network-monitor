@@ -33,12 +33,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Build;
 import android.text.TextUtils;
-import org.jraf.android.networkmonitor.util.Log;
+import android.text.format.DateUtils;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.Constants.ConnectionType;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.provider.ConnectionTestStatsColumns;
+import org.jraf.android.networkmonitor.provider.NetMonColumns;
+import org.jraf.android.networkmonitor.util.Log;
 
 public class SummaryExport {
     private static final String TAG = SummaryExport.class.getSimpleName();
@@ -211,6 +213,23 @@ public class SummaryExport {
             }
         }
         return generateReport(context, testResults);
+    }
+
+    /**
+     * @return a user-friendly string including the earliest and latest timestamps of all data collected.
+     */
+    public static final String getDataCollectionDateRange(Context context) {
+        Log.v(TAG, "getDataCollectionDateRange");
+        String[] projection = new String[] { "MIN(" + NetMonColumns.TIMESTAMP + ")", "MAX(" + NetMonColumns.TIMESTAMP + ")" };
+        Cursor c = context.getContentResolver().query(NetMonColumns.CONTENT_URI, projection, null, null, null);
+        String dateRange = "";
+        if (c.moveToNext()) {
+            long firstTimestamp = c.getLong(0);
+            long lastTimestamp = c.getLong(1);
+            dateRange = DateUtils.formatDateRange(context, firstTimestamp, lastTimestamp, DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME);
+        }
+        c.close();
+        return dateRange;
     }
 
     private static final <T> void add(Map<String, TreeSet<T>> map, String key, T value) {
