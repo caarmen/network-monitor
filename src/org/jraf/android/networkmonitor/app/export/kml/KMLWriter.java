@@ -187,9 +187,9 @@ class KMLWriter extends PrintWriter {
     private void writePlacemarkTimestamp(long timestamp) {
         Date date = new Date(timestamp);
         String timestampString = TIMESTAMP_FORMAT.format(date);
-        print("      <TimeStamp><when>");
+        print("      <when>");
         print(timestampString);
-        println("</when></TimeStamp>");
+        println("</when>>");
     }
 
     /**
