@@ -23,6 +23,7 @@
  */
 package org.jraf.android.networkmonitor.app.prefs;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -194,6 +195,7 @@ public class NetMonPreferences {
 
     public List<String> getColumnFilterValues(String columnName) {
         String filteredValuesString = mSharedPrefs.getString(PREF_FILTER_PREFIX + columnName, "");
+        if (TextUtils.isEmpty(filteredValuesString)) return new ArrayList<String>();
         return Arrays.asList(filteredValuesString.split(","));
     }
 
