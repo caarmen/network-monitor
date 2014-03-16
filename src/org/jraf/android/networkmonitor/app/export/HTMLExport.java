@@ -42,7 +42,9 @@ import org.jraf.android.networkmonitor.provider.NetMonColumns;
  * Export the Network Monitor data to an HTML file. The HTML file includes CSS specified in the strings XML file.
  */
 public class HTMLExport extends TableFileExport {
-    public static final String SCHEME_NETMON = "netmon:";
+    private static final String SCHEME_NETMON = "netmon:";
+    public static final String URL_SORT = SCHEME_NETMON + "//sort";
+    public static final String URL_FILTER = SCHEME_NETMON + "//filter";
     private static final String HTML_FILE = "networkmonitor.html";
     private PrintWriter mPrintWriter;
 
@@ -69,15 +71,23 @@ public class HTMLExport extends TableFileExport {
             // for this cell, and show an up or down arrow depending on if we're
             // sorting ascending or descending.
             String dbColumnName = NetMonColumns.getColumnName(mContext, columnLabel);
-            String icon = "";
-            String thClass = "";
+            String sortIcon = "";
+            String filterClass = "filter_off_column";
+            String filterIcon = "&#9661;";
+            String sortClass = "";
             if (dbColumnName.equals(sortPreferences.sortColumnName)) {
-                thClass = "class=\"sort_column\"";
-                if (sortPreferences.sortOrder == SortOrder.DESC) icon = "&nbsp;&darr;";
+                sortClass = "class=\"sort_column\"";
+                if (sortPreferences.sortOrder == SortOrder.DESC) sortIcon = "&nbsp;&darr;";
                 else
-                    icon = "&nbsp;&uarr;";
+                    sortIcon = "&nbsp;&uarr;";
+                if (false) {
+                    filterClass = "filter_on_column";
+                    filterIcon = "&#9660;";
+                }
             }
-            mPrintWriter.println("    <th " + thClass + "><a href=\"" + SCHEME_NETMON + dbColumnName + "\">" + columnLabel + "</a>" + icon + "</th>");
+            String sort = "<td " + sortClass + ">" + sortIcon + "<a href=\"" + URL_SORT + dbColumnName + "\">" + columnLabel + "</a></td>";
+            String filter = "<td class=\"" + filterClass + "\"><a href=\"" + URL_FILTER + dbColumnName + "\"a>" + filterIcon + "</a></td>";
+            mPrintWriter.println("    <th><table><tr>" + sort + filter + "</tr></table></th>");
         }
         mPrintWriter.println("  </tr></thead><tbody>");
     }

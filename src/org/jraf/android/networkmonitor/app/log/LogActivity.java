@@ -182,11 +182,11 @@ public class LogActivity extends FragmentActivity {
                         Log.v(TAG, "url: " + url);
                         // If the user clicked on one of the column headings, let's update
                         // the sorting preference (column name, ascending or descending order).
-                        if (url.startsWith(HTMLExport.SCHEME_NETMON)) {
+                        if (url.startsWith(HTMLExport.URL_SORT)) {
                             NetMonPreferences prefs = NetMonPreferences.getInstance(LogActivity.this);
                             SortPreferences oldSortPreferences = prefs.getSortPreferences();
                             // The new column used for sorting will be the one the user tapped on.
-                            String newSortColumnName = url.substring(HTMLExport.SCHEME_NETMON.length());
+                            String newSortColumnName = url.substring(HTMLExport.URL_SORT.length());
                             SortOrder newSortOrder = oldSortPreferences.sortOrder;
                             // If the user clicked on the column which is already used for sorting,
                             // toggle the sort order between ascending and descending.
@@ -198,6 +198,9 @@ public class LogActivity extends FragmentActivity {
                             // Update the sorting preferences (our shared preference change listener will be notified
                             // and reload the page).
                             prefs.setSortPreferences(new SortPreferences(newSortColumnName, newSortOrder));
+                            return true;
+                        } else if (url.startsWith(HTMLExport.URL_FILTER)) {
+                            PreferenceDialog.showFilterRecordCountChoiceDialog(LogActivity.this, mPreferenceChoiceDialogListener);
                             return true;
                         } else {
                             return super.shouldOverrideUrlLoading(view, url);

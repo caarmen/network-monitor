@@ -14,14 +14,30 @@ th {
  color: #fd8900;
  border: 1px #fd8900 solid;
 }
+th table , th table tr td{
+ border: 0px #000 solid;
+}
 a:link, a:visited {
  color: #fd8900;
 }
 a:hover, a:active {
  color: #886600;
 }
-th.sort_column, th.sort_column a:link, th.sort_column a:visited {
+td.sort_column, td.sort_column a:link, td.sort_column a:visited {
  color: #553300;
+ display:inline;
+}
+td.filter_on_column, td.filter_on_column a:link, td.filter_on_column a:visited {
+ color: #553300;
+ display:inline;
+ text-decoration:none;
+ font-size: 1.2em;
+}
+td.filter_off_column, td.filter_off_column a:link, td.filter_off_column a:visited {
+ color: #fd8900;
+ display:inline;
+ text-decoration:none;
+ font-size: 1.2em;
 }
 td {
  white-space: pre;
