@@ -125,5 +125,16 @@ public class NetMonColumns implements BaseColumns {
         return null;
     }
 
+    public static String[] getFilterableColumns(Context context) {
+        return context.getResources().getStringArray(R.array.filterable_columns);
+    }
+
+    public static boolean isColumnFilterable(Context context, String columnName) {
+        String[] filterableColumns = getFilterableColumns(context);
+        for (String filterableColumn : filterableColumns)
+            if (columnName.equals(filterableColumn)) return true;
+        return false;
+    }
+
     static final String DEFAULT_ORDER = _ID;
 }

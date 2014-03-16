@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import android.content.Context;
 
@@ -72,15 +73,19 @@ public class HTMLExport extends TableFileExport {
             // sorting ascending or descending.
             String dbColumnName = NetMonColumns.getColumnName(mContext, columnLabel);
             String sortIcon = "";
+            boolean isFilterable = NetMonColumns.isColumnFilterable(mContext, dbColumnName);
             String filterClass = "filter_off_column";
-            String filterIcon = "&#9661;";
+            String filterIcon = isFilterable ? "&#9661;" : "";
             String sortClass = "";
             if (dbColumnName.equals(sortPreferences.sortColumnName)) {
                 sortClass = "class=\"sort_column\"";
                 if (sortPreferences.sortOrder == SortOrder.DESC) sortIcon = "&nbsp;&darr;";
                 else
                     sortIcon = "&nbsp;&uarr;";
-                if (false) {
+            }
+            if (isFilterable) {
+                List<String> columnFilterValues = NetMonPreferences.getInstance(mContext).getColumnFilterValues(dbColumnName);
+                if (columnFilterValues != null && columnFilterValues.size() > 0) {
                     filterClass = "filter_on_column";
                     filterIcon = "&#9660;";
                 }

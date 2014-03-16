@@ -60,11 +60,10 @@ public class FilterPreferences {
      */
     public static Selection getSelectionClause(Context context) {
         Log.v(TAG, "getSelectionClause");
-        String[] columnNames = NetMonColumns.getColumnNames(context);
-        // TODO only filterable columns
+        String[] filterableColumnNames = NetMonColumns.getFilterableColumns(context);
         StringBuilder selection = new StringBuilder();
         List<String> selectionArgs = new ArrayList<String>();
-        for (String columnName : columnNames)
+        for (String columnName : filterableColumnNames)
             addFilterSelection(context, columnName, selection, selectionArgs);
         String[] selectionArgsArr = new String[selectionArgs.size()];
         selectionArgs.toArray(selectionArgsArr);
