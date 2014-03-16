@@ -62,6 +62,7 @@ public class LogActivity extends FragmentActivity {
     private WebView mWebView;
     private static final int REQUEST_CODE_CLEAR = 1;
     private static final int REQUEST_CODE_SELECT_FIELDS = 2;
+    private static final int REQUEST_CODE_FILTER_COLUMN = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,7 +205,7 @@ public class LogActivity extends FragmentActivity {
                             Intent intent = new Intent(LogActivity.this, FilterColumnActivity.class);
                             String columnName = url.substring(HTMLExport.URL_FILTER.length());
                             intent.putExtra(FilterColumnActivity.EXTRA_COLUMN_NAME, columnName);
-                            startActivity(intent);
+                            startActivityForResult(intent, REQUEST_CODE_FILTER_COLUMN);
                             return true;
                         } else {
                             return super.shouldOverrideUrlLoading(view, url);
@@ -232,7 +233,8 @@ public class LogActivity extends FragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.v(TAG, "onActivityResult: requestCode = " + requestCode + ", resultCode = " + resultCode + ", data  " + data);
         super.onActivityResult(requestCode, resultCode, data);
-        if ((requestCode == REQUEST_CODE_CLEAR || requestCode == REQUEST_CODE_SELECT_FIELDS) && resultCode == RESULT_OK) loadHTMLFile();
+        if ((requestCode == REQUEST_CODE_CLEAR || requestCode == REQUEST_CODE_SELECT_FIELDS || requestCode == REQUEST_CODE_FILTER_COLUMN)
+                && resultCode == RESULT_OK) loadHTMLFile();
     }
 
     /**
