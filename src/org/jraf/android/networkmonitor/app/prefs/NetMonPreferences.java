@@ -67,6 +67,7 @@ public class NetMonPreferences {
     private static final String PREF_SELECTED_COLUMNS = "PREF_SELECTED_COLUMNS";
     private static final String PREF_SORT_COLUMN_NAME_DEFAULT = NetMonColumns.TIMESTAMP;
     private static final String PREF_SORT_ORDER_DEFAULT = SortOrder.DESC.name();
+    private static final String PREF_FILTER_PREFIX = "PREF_FILTERED_VALUES_";
 
     private static NetMonPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
@@ -184,6 +185,16 @@ public class NetMonPreferences {
     public void setSelectedColumns(List<String> selectedColumns) {
         String selectedColumnsString = TextUtils.join(",", selectedColumns);
         mSharedPrefs.edit().putString(NetMonPreferences.PREF_SELECTED_COLUMNS, selectedColumnsString).commit();
+    }
+
+    public void setColumnFilterValues(String columnName, List<String> filteredValues) {
+        String filteredValuesString = TextUtils.join(",", filteredValues);
+        mSharedPrefs.edit().putString(NetMonPreferences.PREF_FILTER_PREFIX + columnName, filteredValuesString).commit();
+    }
+
+    public List<String> getColumnFilterValues(String columnName) {
+        String filteredValuesString = mSharedPrefs.getString(PREF_FILTER_PREFIX + columnName, "");
+        return Arrays.asList(filteredValuesString.split(","));
     }
 
     /**

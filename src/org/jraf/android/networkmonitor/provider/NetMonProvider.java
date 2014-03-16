@@ -61,6 +61,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     private static final int URI_TYPE_NETWORKMONITOR = 0;
     private static final int URI_TYPE_NETWORKMONITOR_ID = 1;
     private static final int URI_TYPE_SUMMARY = 2;
+    private static final int URI_TYPE_UNIQUE_VALUES_ID = 3;
 
     private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -68,6 +69,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
         URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME, URI_TYPE_NETWORKMONITOR);
         URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME + "/#", URI_TYPE_NETWORKMONITOR_ID);
         URI_MATCHER.addURI(AUTHORITY, ConnectionTestStatsColumns.VIEW_NAME, URI_TYPE_SUMMARY);
+        URI_MATCHER.addURI(AUTHORITY, NetMonColumns.UNIQUE_VALUES + "/*", URI_TYPE_UNIQUE_VALUES_ID);
     }
 
     private NetMonDatabase mNetworkMonitorDatabase;
@@ -87,6 +89,8 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
                 return TYPE_CURSOR_DIR + NetMonColumns.TABLE_NAME;
             case URI_TYPE_NETWORKMONITOR_ID:
                 return TYPE_CURSOR_ITEM + NetMonColumns.TABLE_NAME;
+            case URI_TYPE_UNIQUE_VALUES_ID:
+                return TYPE_CURSOR_DIR + NetMonColumns.UNIQUE_VALUES;
         }
         return null;
     }
@@ -173,6 +177,14 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
             case URI_TYPE_SUMMARY:
                 res = mNetworkMonitorDatabase.getReadableDatabase().query(ConnectionTestStatsColumns.VIEW_NAME, projection, selection, selectionArgs, groupBy,
                         null, sortOrder);
+                break;
+            case URI_TYPE_UNIQUE_VALUES_ID:
+                String columnName = uri.getLastPathSegment();
+                projection = new String[] { columnName };
+                String orderBy = columnName + " ASC";
+                selection = columnName + " NOT NULL";
+                res = mNetworkMonitorDatabase.getReadableDatabase().query(true, NetMonColumns.TABLE_NAME, projection, selection, null, null, null, orderBy,
+                        null);
                 break;
             default:
                 return null;

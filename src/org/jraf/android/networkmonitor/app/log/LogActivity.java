@@ -49,6 +49,7 @@ import android.widget.Toast;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.export.HTMLExport;
+import org.jraf.android.networkmonitor.app.prefs.FilterColumnActivity;
 import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
 import org.jraf.android.networkmonitor.app.prefs.PreferenceDialog;
 import org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity;
@@ -200,7 +201,10 @@ public class LogActivity extends FragmentActivity {
                             prefs.setSortPreferences(new SortPreferences(newSortColumnName, newSortOrder));
                             return true;
                         } else if (url.startsWith(HTMLExport.URL_FILTER)) {
-                            PreferenceDialog.showFilterRecordCountChoiceDialog(LogActivity.this, mPreferenceChoiceDialogListener);
+                            Intent intent = new Intent(LogActivity.this, FilterColumnActivity.class);
+                            String columnName = url.substring(HTMLExport.URL_FILTER.length());
+                            intent.putExtra(FilterColumnActivity.EXTRA_COLUMN_NAME, columnName);
+                            startActivity(intent);
                             return true;
                         } else {
                             return super.shouldOverrideUrlLoading(view, url);

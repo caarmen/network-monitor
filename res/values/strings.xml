@@ -23,6 +23,9 @@
     <string name="action_select_profile_mobile_cdma">Mobile profile (CDMA)</string>
     <string name="action_select_profile_location">Location profile</string>
     
+    <!--  Strings for the filter_columns activity -->
+    <string name="filter_columns_title">Select values to include</string>
+
     <!--  Strings for the about screen -->
     <string name="about_title">About</string>
     <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>

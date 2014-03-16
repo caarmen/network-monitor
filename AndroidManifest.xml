@@ -104,6 +104,12 @@
                 android:value="org.jraf.android.networkmonitor.app.prefs.AdvancedPreferencesActivity" />
         </activity>
         <activity
+            android:name="org.jraf.android.networkmonitor.app.prefs.FilterColumnActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:label="@string/filter_columns_title">
+        </activity>
+        <activity
             android:name="org.jraf.android.networkmonitor.app.log.LogActionsActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
