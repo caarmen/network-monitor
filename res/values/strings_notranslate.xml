@@ -16,6 +16,8 @@ th {
 }
 th table , th table tr td{
  border: 0px #000 solid;
+ white-space: pre-wrap;
+ font-weight: bold;
 }
 a:link, a:visited {
  color: #fd8900;
@@ -28,16 +30,20 @@ td.sort_column, td.sort_column a:link, td.sort_column a:visited {
  display:inline;
 }
 td.filter_on_column, td.filter_on_column a:link, td.filter_on_column a:visited {
- color: #553300;
+ color: #fd8900;
  display:inline;
  text-decoration:none;
- font-size: 1.2em;
+ font-size: 1.7em;
+ padding-left: 7px;
+ padding-right: 7px;
 }
 td.filter_off_column, td.filter_off_column a:link, td.filter_off_column a:visited {
  color: #fd8900;
  display:inline;
  text-decoration:none;
- font-size: 1.2em;
+ font-size: 1.7em;
+ padding-left: 7px;
+ padding-right: 7px;
 }
 td {
  white-space: pre;
