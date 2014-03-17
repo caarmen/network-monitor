@@ -95,6 +95,13 @@ public class LogActivity extends FragmentActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // Only show the menu item to clear filters if we have filters.
+        menu.findItem(R.id.action_reset_filters).setVisible(NetMonPreferences.getInstance(this).hasColumnFilters());
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -120,6 +127,10 @@ public class LogActivity extends FragmentActivity {
                 return true;
             case R.id.action_cell_id_format:
                 PreferenceDialog.showCellIdFormatChoiceDialog(this, mPreferenceChoiceDialogListener);
+                return true;
+            case R.id.action_reset_filters:
+                NetMonPreferences.getInstance(this).resetColumnFilters();
+                loadHTMLFile();
                 return true;
         }
         return super.onOptionsItemSelected(item);

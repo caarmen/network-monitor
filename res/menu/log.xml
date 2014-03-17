@@ -33,4 +33,9 @@
         android:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_cell_id_format"
         android:title="@string/action_cell_id_format"/>
+    
+    <item
+        android:id="@+id/action_reset_filters"
+        android:showAsAction="never"
+        android:title="@string/action_reset_filters"/>
 </menu>

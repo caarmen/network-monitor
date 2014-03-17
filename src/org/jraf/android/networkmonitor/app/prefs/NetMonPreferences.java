@@ -33,6 +33,7 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.prefs.SortPreferences.SortOrder;
 import org.jraf.android.networkmonitor.app.service.scheduler.AlarmManagerScheduler;
 import org.jraf.android.networkmonitor.app.service.scheduler.ExecutorServiceScheduler;
@@ -197,6 +198,21 @@ public class NetMonPreferences {
         String filteredValuesString = mSharedPrefs.getString(PREF_FILTER_PREFIX + columnName, "");
         if (TextUtils.isEmpty(filteredValuesString)) return new ArrayList<String>();
         return Arrays.asList(filteredValuesString.split(","));
+    }
+
+    public void resetColumnFilters() {
+        String[] filterableColumns = mContext.getResources().getStringArray(R.array.filterable_columns);
+        Editor editor = mSharedPrefs.edit();
+        for (String filterableColumn : filterableColumns)
+            editor.putString(PREF_FILTER_PREFIX + filterableColumn, null);
+        editor.commit();
+    }
+
+    public boolean hasColumnFilters() {
+        String[] filterableColumns = mContext.getResources().getStringArray(R.array.filterable_columns);
+        for (String filterableColumn : filterableColumns)
+            if (!TextUtils.isEmpty(mSharedPrefs.getString(PREF_FILTER_PREFIX + filterableColumn, null))) return true;
+        return false;
     }
 
     /**
