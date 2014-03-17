@@ -43,6 +43,8 @@ import org.jraf.android.networkmonitor.app.export.FileExport;
 import org.jraf.android.networkmonitor.app.export.Formatter;
 import org.jraf.android.networkmonitor.app.export.FormatterFactory;
 import org.jraf.android.networkmonitor.app.export.FormatterFactory.FormatterStyle;
+import org.jraf.android.networkmonitor.app.prefs.FilterPreferences;
+import org.jraf.android.networkmonitor.app.prefs.FilterPreferences.Selection;
 import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 import org.jraf.android.networkmonitor.util.Log;
@@ -80,7 +82,9 @@ public class KMLExport extends FileExport {
         final String[] columnsToExport = new String[selectedColumns.size()];
         selectedColumns.toArray(columnsToExport);
         Map<String, String> columnNamesMapping = new HashMap<String, String>(columnsToExport.length);
-        Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, columnsToExport, null, null, NetMonColumns.TIMESTAMP);
+        Selection selection = FilterPreferences.getSelectionClause(mContext);
+        Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, columnsToExport, selection.selection, selection.selectionArgs,
+                NetMonColumns.TIMESTAMP);
         if (c != null) {
             try {
                 Log.v(TAG, "Find user-friendly labels for columns " + Arrays.toString(columnsToExport));
