@@ -10,13 +10,13 @@
     <string name="action_clear">Réinitialiser le fichier journal</string>
     <string name="action_filter">Nombre de lignes</string>
     <string name="action_cell_id_format">Format des ids d\'antenne</string>
+    <string name="action_reset_filters">Supprimer les filtres</string>
     <string name="progress_dialog_message">Veuillez patienter&#8230;</string>
     <string name="error_reading_log">Impossible de lire le fichier journal.</string>
     <string name="success_logs_clear">Le fichier journal a été réinitialisé</string>
     <string name="confirm_logs_clear">Êtes-vous sur de vouloir supprimer les données enregistrées ?</string>
-    
-    
-    <!--  Strings for the select_fields activity -->
+
+    <!-- Strings for the select_fields activity -->
     <string name="action_select_all">Tout cocher</string>
     <string name="action_select_none">Tout décocher</string>
     <string name="action_select_profile_wifi">Profil WiFi</string>
@@ -24,7 +24,11 @@
     <string name="action_select_profile_mobile_cdma">Profil mobile (CDMA)</string>
     <string name="action_select_profile_location">Profil localisation</string>
 
-    <!--  Strings for the about screen -->
+    <!-- Strings for the filter_columns activity -->
+    <string name="filter_columns_title">Choisir des valeurs (beta)</string>
+    <string name="filter_columns_empty_value">Vide</string>
+
+    <!-- Strings for the about screen -->
     <string name="about_title">À propos</string>
     <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
     <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
