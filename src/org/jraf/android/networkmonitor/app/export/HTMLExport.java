@@ -76,9 +76,9 @@ public class HTMLExport extends TableFileExport {
             boolean isFilterable = NetMonColumns.isColumnFilterable(mContext, dbColumnName);
             String filterClass = "filter_off_column";
             String filterIcon = isFilterable ? "&#9679;" : "";
-            String sortClass = "";
+            String labelClass = "";
             if (dbColumnName.equals(sortPreferences.sortColumnName)) {
-                sortClass = "class=\"sort_column\"";
+                labelClass = "sort_column";
                 if (sortPreferences.sortOrder == SortOrder.DESC) sortIcon = "&nbsp;&darr;";
                 else
                     sortIcon = "&nbsp;&uarr;";
@@ -86,11 +86,12 @@ public class HTMLExport extends TableFileExport {
             if (isFilterable) {
                 List<String> columnFilterValues = NetMonPreferences.getInstance(mContext).getColumnFilterValues(dbColumnName);
                 if (columnFilterValues != null && columnFilterValues.size() > 0) {
+                    labelClass += " filtered_column_label";
                     filterClass = "filter_on_column";
                     filterIcon = "&#9676;";
                 }
             }
-            String sort = "<td " + sortClass + ">" + sortIcon + "<a href=\"" + URL_SORT + dbColumnName + "\">" + columnLabel + "</a></td>";
+            String sort = "<td class=\"" + labelClass + "\">" + sortIcon + "&nbsp;<a href=\"" + URL_SORT + dbColumnName + "\">" + columnLabel + "</a></td>";
             String filter = "<td class=\"" + filterClass + "\"><a href=\"" + URL_FILTER + dbColumnName + "\"a>" + filterIcon + "</a></td>";
             mPrintWriter.println("    <th><table><tr>" + sort + filter + "</tr></table></th>");
         }
