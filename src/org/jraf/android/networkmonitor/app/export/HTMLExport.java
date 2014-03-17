@@ -79,9 +79,9 @@ public class HTMLExport extends TableFileExport {
             String labelClass = "";
             if (dbColumnName.equals(sortPreferences.sortColumnName)) {
                 labelClass = "sort_column";
-                if (sortPreferences.sortOrder == SortOrder.DESC) sortIcon = "&nbsp;&darr;";
+                if (sortPreferences.sortOrder == SortOrder.DESC) sortIcon = "&nbsp;&darr;&nbsp;";
                 else
-                    sortIcon = "&nbsp;&uarr;";
+                    sortIcon = "&nbsp;&uarr;&nbsp;";
             }
             if (isFilterable) {
                 List<String> columnFilterValues = NetMonPreferences.getInstance(mContext).getColumnFilterValues(dbColumnName);
@@ -91,7 +91,7 @@ public class HTMLExport extends TableFileExport {
                     filterIcon = "&#9676;";
                 }
             }
-            String sort = "<td class=\"" + labelClass + "\">" + sortIcon + "&nbsp;<a href=\"" + URL_SORT + dbColumnName + "\">" + columnLabel + "</a></td>";
+            String sort = "<td class=\"" + labelClass + "\">" + sortIcon + "<a href=\"" + URL_SORT + dbColumnName + "\">" + columnLabel + "</a></td>";
             String filter = "<td class=\"" + filterClass + "\"><a href=\"" + URL_FILTER + dbColumnName + "\"a>" + filterIcon + "</a></td>";
             mPrintWriter.println("    <th><table><tr>" + sort + filter + "</tr></table></th>");
         }
