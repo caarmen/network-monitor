@@ -47,6 +47,21 @@ public class FilterColumnListFragment extends ListFragment {
 
     private static String mColumnName;
 
+    static class FilterListItem {
+        final String value;
+        final long count;
+
+        public FilterListItem(String value, long count) {
+            this.value = value;
+            this.count = count;
+        }
+
+        @Override
+        public String toString() {
+            return value + " (" + count + ")";
+        }
+    }
+
     @Override
     public void onAttach(Activity activity) {
         Log.v(TAG, "onAttach");
@@ -60,7 +75,9 @@ public class FilterColumnListFragment extends ListFragment {
         @Override
         public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
             Log.v(TAG, "onCreateLoader, loaderId = " + loaderId + ", bundle = " + bundle);
-            CursorLoader loader = new CursorLoader(getActivity(), Uri.withAppendedPath(NetMonColumns.UNIQUE_VALUES_URI, mColumnName), null, null, null, null);
+            String[] projection = new String[] { NetMonColumns.UNIQUE_VALUES_VALUE, NetMonColumns.UNIQUE_VALUES_COUNT };
+            CursorLoader loader = new CursorLoader(getActivity(), Uri.withAppendedPath(NetMonColumns.UNIQUE_VALUES_URI, mColumnName), projection, null, null,
+                    null);
             return loader;
         }
 
@@ -70,21 +87,25 @@ public class FilterColumnListFragment extends ListFragment {
             Context context = getActivity();
             if (context == null) return;
 
-            String[] values = new String[cursor.getCount()];
+            FilterListItem[] values = new FilterListItem[cursor.getCount()];
             int i = 0;
-            while (cursor.moveToNext())
-                values[i++] = cursor.getString(0);
+            while (cursor.moveToNext()) {
+                String value = cursor.getString(0);
+                long count = cursor.getLong(1);
+                values[i++] = new FilterListItem(value, count);
+            }
 
-            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(context, android.R.layout.simple_list_item_multiple_choice, values);
+            ArrayAdapter<FilterListItem> adapter = new ArrayAdapter<FilterListItem>(context, android.R.layout.simple_list_item_multiple_choice, values);
             setListAdapter(adapter);
             ListView lv = getListView();
             lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
             // Preselect the columns from the preferences
             List<String> selectedColumns = NetMonPreferences.getInstance(context).getColumnFilterValues(mColumnName);
-            for (String selectedColumn : selectedColumns) {
-                int position = adapter.getPosition(selectedColumn);
-                lv.setItemChecked(position, true);
+            for (i = 0; i < lv.getCount(); i++) {
+                FilterListItem item = adapter.getItem(i);
+                if (selectedColumns.contains(item.value)) lv.setItemChecked(i, true);
             }
+
             setListShown(true);
         }
 

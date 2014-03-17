@@ -27,7 +27,9 @@ package org.jraf.android.networkmonitor.provider;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import android.content.ContentProvider;
@@ -40,6 +42,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQuery;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -180,11 +183,17 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
                 break;
             case URI_TYPE_UNIQUE_VALUES_ID:
                 String columnName = uri.getLastPathSegment();
-                projection = new String[] { columnName };
+                Map<String, String> projectionMap = new HashMap<String, String>();
+                projectionMap.put(NetMonColumns.UNIQUE_VALUES_VALUE, columnName);
+                projectionMap.put(NetMonColumns.UNIQUE_VALUES_COUNT, "count(*)");
                 String orderBy = columnName + " ASC";
                 selection = columnName + " NOT NULL";
-                res = mNetworkMonitorDatabase.getReadableDatabase().query(true, NetMonColumns.TABLE_NAME, projection, selection, null, null, null, orderBy,
-                        null);
+                SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+                qb.setDistinct(true);
+                qb.setTables(NetMonColumns.TABLE_NAME);
+                qb.setProjectionMap(projectionMap);
+                String queryString = qb.buildQuery(projection, selection, null, columnName, null, orderBy, null);
+                res = mNetworkMonitorDatabase.getReadableDatabase().rawQuery(queryString, null);
                 break;
             default:
                 return null;

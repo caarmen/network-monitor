@@ -86,6 +86,9 @@ public class NetMonColumns implements BaseColumns {
     public static final String IPV4_ADDRESS = "ipv4_address";
     public static final String IPV6_ADDRESS = "ipv6_address";
 
+    public static final String UNIQUE_VALUES_VALUE = "unique_values_value";
+    public static final String UNIQUE_VALUES_COUNT = "unique_values_count";
+
     /**
      * @return the list of column names in the main table. This returns the technical names of the columns, as they appear in the DB.
      */

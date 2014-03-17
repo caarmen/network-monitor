@@ -38,6 +38,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import org.jraf.android.networkmonitor.R;
+import org.jraf.android.networkmonitor.app.prefs.FilterColumnListFragment.FilterListItem;
 import org.jraf.android.networkmonitor.util.Log;
 
 public class FilterColumnActivity extends FragmentActivity { // NO_UCD (use default)
@@ -88,7 +89,7 @@ public class FilterColumnActivity extends FragmentActivity { // NO_UCD (use defa
         SparseBooleanArray checkedPositions = mListView.getCheckedItemPositions();
         final List<String> selectedValues = new ArrayList<String>(mListView.getCount());
         for (int i = 0; i < mListView.getCount(); i++) {
-            if (checkedPositions.get(i)) selectedValues.add((String) mListView.getAdapter().getItem(i));
+            if (checkedPositions.get(i)) selectedValues.add(((FilterListItem) mListView.getAdapter().getItem(i)).value);
         }
         new AsyncTask<Void, Void, Void>() {
 
