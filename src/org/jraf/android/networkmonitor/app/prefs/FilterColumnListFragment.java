@@ -34,10 +34,12 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 import org.jraf.android.networkmonitor.util.Log;
 
@@ -47,18 +49,18 @@ public class FilterColumnListFragment extends ListFragment {
 
     private static String mColumnName;
 
-    static class FilterListItem {
+    public static class FilterListItem {
         final String value;
-        final long count;
+        final String label;
 
-        public FilterListItem(String value, long count) {
+        public FilterListItem(String value, String label) {
             this.value = value;
-            this.count = count;
+            this.label = label;
         }
 
         @Override
         public String toString() {
-            return value + " (" + count + ")";
+            return label;
         }
     }
 
@@ -92,7 +94,13 @@ public class FilterColumnListFragment extends ListFragment {
             while (cursor.moveToNext()) {
                 String value = cursor.getString(0);
                 long count = cursor.getLong(1);
-                values[i++] = new FilterListItem(value, count);
+                String displayValue = value;
+                if (TextUtils.isEmpty(value)) {
+                    value = FilterPreferences.EMPTY;
+                    displayValue = getString(R.string.filter_columns_empty_value);
+                }
+                String label = displayValue + " (" + count + ")";
+                values[i++] = new FilterListItem(value, label);
             }
 
             ArrayAdapter<FilterListItem> adapter = new ArrayAdapter<FilterListItem>(context, android.R.layout.simple_list_item_multiple_choice, values);

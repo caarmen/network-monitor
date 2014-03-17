@@ -24,7 +24,8 @@
     <string name="action_select_profile_location">Location profile</string>
     
     <!--  Strings for the filter_columns activity -->
-    <string name="filter_columns_title">Select values to include</string>
+    <string name="filter_columns_title">Select values (beta)</string>
+    <string name="filter_columns_empty_value">Empty</string>
 
     <!--  Strings for the about screen -->
     <string name="about_title">About</string>

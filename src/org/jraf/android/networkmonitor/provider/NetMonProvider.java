@@ -187,12 +187,11 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
                 projectionMap.put(NetMonColumns.UNIQUE_VALUES_VALUE, columnName);
                 projectionMap.put(NetMonColumns.UNIQUE_VALUES_COUNT, "count(*)");
                 String orderBy = columnName + " ASC";
-                selection = columnName + " NOT NULL";
                 SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
                 qb.setDistinct(true);
                 qb.setTables(NetMonColumns.TABLE_NAME);
                 qb.setProjectionMap(projectionMap);
-                String queryString = qb.buildQuery(projection, selection, null, columnName, null, orderBy, null);
+                String queryString = qb.buildQuery(projection, selection, selectionArgs, columnName, null, orderBy, null);
                 res = mNetworkMonitorDatabase.getReadableDatabase().rawQuery(queryString, null);
                 break;
             default:

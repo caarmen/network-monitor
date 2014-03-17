@@ -39,6 +39,7 @@ import org.jraf.android.networkmonitor.util.Log;
 public class FilterPreferences {
 
     private static final String TAG = FilterPreferences.class.getSimpleName();
+    public static final String EMPTY = "##EMPTY##";
 
     public static class Selection {
         public final String selection;
@@ -78,14 +79,25 @@ public class FilterPreferences {
         List<String> values = NetMonPreferences.getInstance(context).getColumnFilterValues(columnName);
         if (values != null && values.size() > 0) {
             if (outSelection.length() > 0) outSelection.append(" AND ");
+            outSelection.append("(");
+            // If we support empty value, add the special condition for that.
+            if (values.contains(EMPTY)) {
+                outSelection.append(columnName + " IS NULL OR " + columnName + " = ''");
+                // If we only have the empty value, we're done.
+                if (values.size() == 1) {
+                    outSelection.append(")\n");
+                    return;
+                } else
+                    outSelection.append(" OR ");
+            }
             outSelection.append(" " + columnName + " in (");
             for (int i = 0; i < values.size(); i++) {
+                if (values.get(i).equals(EMPTY)) continue;
                 outSelection.append("?");
                 outSelectionArgs.add(values.get(i));
                 if (i < values.size() - 1) outSelection.append(",");
             }
-            outSelection.append(")\n");
+            outSelection.append("))\n");
         }
     }
-
 }
