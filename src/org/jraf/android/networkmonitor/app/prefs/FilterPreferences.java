@@ -58,10 +58,27 @@ public class FilterPreferences {
 
     /**
      * @return a string which can be used as an selection clause in a query.
+     * @param excludeColumn return a selection query for all filtered columns except this one.
+     */
+    public static Selection getSelectionClause(Context context, String excludeColumn) {
+        Log.v(TAG, "getSelectionClause: exclude column " + excludeColumn);
+        String[] filterableColumnNames = NetMonColumns.getFilterableColumns(context);
+        List<String> filterableColumnNamesList = new ArrayList<String>();
+        for (String filterableColumnName : filterableColumnNames)
+            if (!filterableColumnName.equals(excludeColumn)) filterableColumnNamesList.add(filterableColumnName);
+        return getSelectionClause(context, filterableColumnNamesList);
+    }
+
+    /**
+     * @return a string which can be used as an selection clause in a query.
      */
     public static Selection getSelectionClause(Context context) {
         Log.v(TAG, "getSelectionClause");
         String[] filterableColumnNames = NetMonColumns.getFilterableColumns(context);
+        return getSelectionClause(context, Arrays.asList(filterableColumnNames));
+    }
+
+    private static Selection getSelectionClause(Context context, List<String> filterableColumnNames) {
         StringBuilder selection = new StringBuilder();
         List<String> selectionArgs = new ArrayList<String>();
         for (String columnName : filterableColumnNames)
@@ -71,7 +88,6 @@ public class FilterPreferences {
         Selection result = new Selection(selection.toString(), selectionArgsArr);
         Log.v(TAG, "returning " + result);
         return result;
-
     }
 
     private static void addFilterSelection(Context context, String columnName, StringBuilder outSelection, List<String> outSelectionArgs) {

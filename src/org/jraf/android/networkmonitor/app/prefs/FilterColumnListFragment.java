@@ -40,6 +40,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.jraf.android.networkmonitor.R;
+import org.jraf.android.networkmonitor.app.prefs.FilterPreferences.Selection;
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 import org.jraf.android.networkmonitor.util.Log;
 
@@ -78,8 +79,9 @@ public class FilterColumnListFragment extends ListFragment {
         public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
             Log.v(TAG, "onCreateLoader, loaderId = " + loaderId + ", bundle = " + bundle);
             String[] projection = new String[] { NetMonColumns.UNIQUE_VALUES_VALUE, NetMonColumns.UNIQUE_VALUES_COUNT };
-            CursorLoader loader = new CursorLoader(getActivity(), Uri.withAppendedPath(NetMonColumns.UNIQUE_VALUES_URI, mColumnName), projection, null, null,
-                    null);
+            Selection selection = FilterPreferences.getSelectionClause(getActivity(), mColumnName);
+            CursorLoader loader = new CursorLoader(getActivity(), Uri.withAppendedPath(NetMonColumns.UNIQUE_VALUES_URI, mColumnName), projection,
+                    selection.selection, selection.selectionArgs, null);
             return loader;
         }
 
