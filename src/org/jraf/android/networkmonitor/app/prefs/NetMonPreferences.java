@@ -58,11 +58,11 @@ public class NetMonPreferences {
     public static final String PREF_SORT_COLUMN_NAME = "PREF_SORT_COLUMN_NAME";
 
     static final String PREF_WAKE_INTERVAL = "PREF_WAKE_INTERVAL";
-    static final String PREF_KML_EXPORT_COLUMN = "PREF_KML_EXPORT_COLUMN";
-    static final String PREF_FILTER_RECORD_COUNT = "PREF_FILTER_RECORD_COUNT";
-    static final String PREF_FILTER_RECORD_COUNT_DEFAULT = "250";
-    static final String PREF_CELL_ID_FORMAT = "PREF_CELL_ID_FORMAT";
-    static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
+    public static final String PREF_KML_EXPORT_COLUMN = "PREF_KML_EXPORT_COLUMN";
+    public static final String PREF_FILTER_RECORD_COUNT = "PREF_FILTER_RECORD_COUNT";
+    public static final String PREF_FILTER_RECORD_COUNT_DEFAULT = "250";
+    public static final String PREF_CELL_ID_FORMAT = "PREF_CELL_ID_FORMAT";
+    public static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
 
     private static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
     private static final String PREF_SCHEDULER_DEFAULT = ExecutorServiceScheduler.class.getSimpleName();
