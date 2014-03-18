@@ -192,7 +192,7 @@ public class NetMonPreferences {
     /**
      * The report will only show rows where the given column has one of the given values.
      */
-    public void setColumnFilterValues(String columnName, List<String> filteredValues) {
+    void setColumnFilterValues(String columnName, List<String> filteredValues) {
         String filteredValuesString = TextUtils.join(",", filteredValues);
         mSharedPrefs.edit().putString(NetMonPreferences.PREF_FILTER_PREFIX + columnName, filteredValuesString).commit();
     }

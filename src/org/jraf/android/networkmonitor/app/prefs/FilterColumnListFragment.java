@@ -56,14 +56,14 @@ public class FilterColumnListFragment extends ListFragment {
     /**
      * The list will contain FilterListItems.
      */
-    public static class FilterListItem {
+    static class FilterListItem {
         // The value to use for the query selection.
         final String value;
 
         // The string to display for this item in the list.
-        final String label;
+        private final String label;
 
-        public FilterListItem(String value, String label) {
+        private FilterListItem(String value, String label) {
             this.value = value;
             this.label = label;
         }

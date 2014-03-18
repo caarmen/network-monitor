@@ -40,13 +40,13 @@ import org.jraf.android.networkmonitor.util.Log;
 public class FilterPreferences {
 
     private static final String TAG = FilterPreferences.class.getSimpleName();
-    public static final String EMPTY = "##EMPTY##";
+    static final String EMPTY = "##EMPTY##";
 
     public static class Selection {
         public final String selectionString;
         public final String[] selectionArgs;
 
-        public Selection(String selectionString, String[] selectionArgs) {
+        private Selection(String selectionString, String[] selectionArgs) {
             this.selectionString = selectionString;
             this.selectionArgs = selectionArgs;
         }
@@ -60,7 +60,7 @@ public class FilterPreferences {
     /**
      * @return a selection clause based on all the filters the user chose for all columns, except the given excludeColumn.
      */
-    public static Selection getSelectionClause(Context context, String excludeColumn) {
+    static Selection getSelectionClause(Context context, String excludeColumn) {
         Log.v(TAG, "getSelectionClause: exclude column " + excludeColumn);
         String[] filterableColumnNames = NetMonColumns.getFilterableColumns(context);
         List<String> filterableColumnNamesList = new ArrayList<String>();
