@@ -190,8 +190,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
                 qb.setDistinct(true);
                 qb.setTables(NetMonColumns.TABLE_NAME);
                 qb.setProjectionMap(projectionMap);
-                String queryString = qb.buildQuery(projection, selection, selectionArgs, columnName, null, sortOrder, null);
-                res = mNetworkMonitorDatabase.getReadableDatabase().rawQuery(queryString, selectionArgs);
+                res = qb.query(mNetworkMonitorDatabase.getReadableDatabase(), projection, selection, selectionArgs, columnName, null, sortOrder);
                 break;
             default:
                 return null;
