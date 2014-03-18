@@ -86,9 +86,10 @@ abstract class TableFileExport extends FileExport {
         Log.v(TAG, "export " + (recordCount <= 0 ? "all" : recordCount) + " records");
         String[] usedColumnNames = (String[]) NetMonPreferences.getInstance(mContext).getSelectedColumns().toArray();
         Formatter formatter = FormatterFactory.getFormatter(mFormatterStyle, mContext);
+        // Order and filter the results based on the user's preferences.
         SortPreferences sortPreferences = NetMonPreferences.getInstance(mContext).getSortPreferences();
         Selection selection = FilterPreferences.getSelectionClause(mContext);
-        Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, usedColumnNames, selection.selection, selection.selectionArgs,
+        Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, usedColumnNames, selection.selectionString, selection.selectionArgs,
                 sortPreferences.getOrderByClause());
         if (c != null) {
             try {

@@ -68,31 +68,40 @@ public class HTMLExport extends TableFileExport {
         mPrintWriter.println("  <tr>");
         SortPreferences sortPreferences = NetMonPreferences.getInstance(mContext).getSortPreferences();
         for (String columnLabel : columnLabels) {
-            // Indicate if this is the sorting column: specify a particular css style
-            // for this cell, and show an up or down arrow depending on if we're
-            // sorting ascending or descending.
             String dbColumnName = NetMonColumns.getColumnName(mContext, columnLabel);
-            String sortIcon = "";
-            boolean isFilterable = NetMonColumns.isColumnFilterable(mContext, dbColumnName);
-            String filterClass = "filter_off_column";
-            String filterIcon = isFilterable ? "&#9679;" : "";
             String labelClass = "";
+
+            // Indicate if this is the sorting column: specify a particular css style
+            // for the label, and show an up or down arrow depending on if we're
+            // sorting ascending or descending.
+            String sortIconCharacter = "";
             if (dbColumnName.equals(sortPreferences.sortColumnName)) {
                 labelClass = "sort_column";
-                if (sortPreferences.sortOrder == SortOrder.DESC) sortIcon = "&nbsp;&darr;&nbsp;";
+                if (sortPreferences.sortOrder == SortOrder.DESC) sortIconCharacter = mContext.getString(R.string.icon_sort_desc);
                 else
-                    sortIcon = "&nbsp;&uarr;&nbsp;";
+                    sortIconCharacter = mContext.getString(R.string.icon_sort_asc);
             }
+
+            // Indicate if this is a filtered column: specify a particular css style
+            // for the label, and show the filter on or off icon.
+            boolean isFilterable = NetMonColumns.isColumnFilterable(mContext, dbColumnName);
+            String filterIconClass = "filter_icon";
+            String filterIconCharacter = isFilterable ? mContext.getString(R.string.icon_filter_off) : "";
             if (isFilterable) {
                 List<String> columnFilterValues = NetMonPreferences.getInstance(mContext).getColumnFilterValues(dbColumnName);
                 if (columnFilterValues != null && columnFilterValues.size() > 0) {
                     labelClass += " filtered_column_label";
-                    filterClass = "filter_on_column";
-                    filterIcon = "&#9676;";
+                    filterIconCharacter = mContext.getString(R.string.icon_filter_on);
                 }
             }
-            String sort = "<td class=\"" + labelClass + "\">" + sortIcon + "<a href=\"" + URL_SORT + dbColumnName + "\">" + columnLabel + "</a></td>";
-            String filter = "<td class=\"" + filterClass + "\"><a href=\"" + URL_FILTER + dbColumnName + "\"a>" + filterIcon + "</a></td>";
+
+            // One cell for the sort icon and column label.
+            String sort = "<td class=\"" + labelClass + "\">" + sortIconCharacter + "<a href=\"" + URL_SORT + dbColumnName + "\">" + columnLabel + "</a></td>";
+
+            // One cell for the filter icon.
+            String filter = "<td class=\"" + filterIconClass + "\"><a href=\"" + URL_FILTER + dbColumnName + "\"a>" + filterIconCharacter + "</a></td>";
+
+            // Write out the table cell for this column header.
             mPrintWriter.println("    <th><table><tr>" + sort + filter + "</tr></table></th>");
         }
         mPrintWriter.println("  </tr></thead><tbody>");

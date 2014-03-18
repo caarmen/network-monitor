@@ -41,17 +41,26 @@ import android.widget.ListView;
 
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.prefs.FilterPreferences.Selection;
-import org.jraf.android.networkmonitor.provider.NetMonColumns;
+import org.jraf.android.networkmonitor.provider.UniqueValuesColumns;
 import org.jraf.android.networkmonitor.util.Log;
 
+/**
+ * A list of the unique values for a particular column.
+ */
 public class FilterColumnListFragment extends ListFragment {
     private static final String TAG = FilterColumnListFragment.class.getSimpleName();
     private static final int URL_LOADER = 0;
 
     private static String mColumnName;
 
+    /**
+     * The list will contain FilterListItems.
+     */
     public static class FilterListItem {
+        // The value to use for the query selection.
         final String value;
+
+        // The string to display for this item in the list.
         final String label;
 
         public FilterListItem(String value, String label) {
@@ -78,10 +87,12 @@ public class FilterColumnListFragment extends ListFragment {
         @Override
         public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
             Log.v(TAG, "onCreateLoader, loaderId = " + loaderId + ", bundle = " + bundle);
-            String[] projection = new String[] { NetMonColumns.UNIQUE_VALUES_VALUE, NetMonColumns.UNIQUE_VALUES_COUNT };
+            String[] projection = new String[] { UniqueValuesColumns.VALUE, UniqueValuesColumns.COUNT };
+            // We only want to show values for this column that appear with all the filters for the other columns being used at the same time.
+            // So we build a query with a selection applying the filters on all the other columns.
             Selection selection = FilterPreferences.getSelectionClause(getActivity(), mColumnName);
-            CursorLoader loader = new CursorLoader(getActivity(), Uri.withAppendedPath(NetMonColumns.UNIQUE_VALUES_URI, mColumnName), projection,
-                    selection.selection, selection.selectionArgs, null);
+            CursorLoader loader = new CursorLoader(getActivity(), Uri.withAppendedPath(UniqueValuesColumns.CONTENT_URI, mColumnName), projection,
+                    selection.selectionString, selection.selectionArgs, mColumnName + " ASC");
             return loader;
         }
 
@@ -96,6 +107,10 @@ public class FilterColumnListFragment extends ListFragment {
             while (cursor.moveToNext()) {
                 String value = cursor.getString(0);
                 long count = cursor.getLong(1);
+
+                // The string we display in the list is the value, plus
+                // the number of occurrences of this value (given all the other column filters).
+                // For null or empty values, we display a special label.
                 String displayValue = value;
                 if (TextUtils.isEmpty(value)) {
                     value = FilterPreferences.EMPTY;
@@ -109,7 +124,8 @@ public class FilterColumnListFragment extends ListFragment {
             setListAdapter(adapter);
             ListView lv = getListView();
             lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-            // Preselect the columns from the preferences
+
+            // Preselect the filtered values from the preferences
             List<String> selectedColumns = NetMonPreferences.getInstance(context).getColumnFilterValues(mColumnName);
             for (i = 0; i < lv.getCount(); i++) {
                 FilterListItem item = adapter.getItem(i);
@@ -124,7 +140,4 @@ public class FilterColumnListFragment extends ListFragment {
             Log.v(TAG, "onLoaderReset " + loader);
         }
     };
-
-
-
 }

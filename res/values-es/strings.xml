@@ -15,6 +15,8 @@
     <string name="error_reading_log">Imposible leer el archivo log.</string>
     <string name="success_logs_clear">El archivo log ha sido reinicializado</string>
     <string name="confirm_logs_clear">¿Estás seguro de querer borrar los datos guardados?</string>
+    <string name="clear_filters_confirm_dialog_title">¿Borrar filtros?</string>
+    <string name="clear_filters_confirm_dialog_message">¿Estás seguro de querer borrar todos los filtros?</string>
 
     <!-- Strings for the select_fields activity -->
     <string name="action_select_all">Marcar todos</string>
@@ -25,8 +27,9 @@
     <string name="action_select_profile_location">Perfil localización</string>
 
     <!-- Strings for the filter_columns activity -->
-    <string name="filter_columns_title">Escoger valores (beta)</string>
+    <string name="filter_columns_title">Filtrar valores (beta)</string>
     <string name="filter_columns_empty_value">Vacío</string>
+    <string name="filter_columns_hint">Seleccionar los valores de %s que deseas ver en el informe. Si ningún valor es seleccionado, los datos no se filtrarán (todos los valores aparecerán).</string>
 
     <!-- Strings for the about screen -->
     <string name="about_title">Acerca de</string>

@@ -8,13 +8,21 @@
     android:showDividers="middle"
     tools:ignore="NewApi" >
 
+    <TextView
+        android:id="@+id/filter_columns_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffe1"
+        android:padding="8dp"
+        android:text="@string/filter_columns_hint"
+        android:textColor="#fd8900" />
+
     <fragment
         android:id="@+id/listFragment"
         android:name="org.jraf.android.networkmonitor.app.prefs.FilterColumnListFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        tools:layout="@layout/select_fields_list" />
+        android:layout_weight="1" />
 
     <LinearLayout
         style="?android:attr/buttonBarStyle"

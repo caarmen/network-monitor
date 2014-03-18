@@ -82,8 +82,9 @@ public class KMLExport extends FileExport {
         final String[] columnsToExport = new String[selectedColumns.size()];
         selectedColumns.toArray(columnsToExport);
         Map<String, String> columnNamesMapping = new HashMap<String, String>(columnsToExport.length);
+        // Filter the results based on the user's preferences.
         Selection selection = FilterPreferences.getSelectionClause(mContext);
-        Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, columnsToExport, selection.selection, selection.selectionArgs,
+        Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, columnsToExport, selection.selectionString, selection.selectionArgs,
                 NetMonColumns.TIMESTAMP);
         if (c != null) {
             try {

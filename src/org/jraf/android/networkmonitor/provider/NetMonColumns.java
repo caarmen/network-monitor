@@ -32,9 +32,7 @@ import org.jraf.android.networkmonitor.R;
 
 public class NetMonColumns implements BaseColumns {
     public static final String TABLE_NAME = "networkmonitor";
-    public static final String UNIQUE_VALUES = "unique_values";
     public static final Uri CONTENT_URI = Uri.parse(NetMonProvider.CONTENT_URI_BASE + "/" + TABLE_NAME);
-    public static final Uri UNIQUE_VALUES_URI = Uri.parse(NetMonProvider.CONTENT_URI_BASE + "/" + UNIQUE_VALUES);
 
     static final String _ID = BaseColumns._ID;
 
@@ -86,8 +84,6 @@ public class NetMonColumns implements BaseColumns {
     public static final String IPV4_ADDRESS = "ipv4_address";
     public static final String IPV6_ADDRESS = "ipv6_address";
 
-    public static final String UNIQUE_VALUES_VALUE = "unique_values_value";
-    public static final String UNIQUE_VALUES_COUNT = "unique_values_count";
 
     /**
      * @return the list of column names in the main table. This returns the technical names of the columns, as they appear in the DB.

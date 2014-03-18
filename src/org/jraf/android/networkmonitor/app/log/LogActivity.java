@@ -195,7 +195,7 @@ public class LogActivity extends FragmentActivity implements DialogButtonListene
                     @Override
                     public boolean shouldOverrideUrlLoading(WebView view, String url) {
                         Log.v(TAG, "url: " + url);
-                        // If the user clicked on one of the column headings, let's update
+                        // If the user clicked on one of the column names, let's update
                         // the sorting preference (column name, ascending or descending order).
                         if (url.startsWith(HTMLExport.URL_SORT)) {
                             NetMonPreferences prefs = NetMonPreferences.getInstance(LogActivity.this);
@@ -214,7 +214,9 @@ public class LogActivity extends FragmentActivity implements DialogButtonListene
                             // and reload the page).
                             prefs.setSortPreferences(new SortPreferences(newSortColumnName, newSortOrder));
                             return true;
-                        } else if (url.startsWith(HTMLExport.URL_FILTER)) {
+                        }
+                        // If the user clicked on the filter icon, start the filter activity for this column.
+                        else if (url.startsWith(HTMLExport.URL_FILTER)) {
                             Intent intent = new Intent(LogActivity.this, FilterColumnActivity.class);
                             String columnName = url.substring(HTMLExport.URL_FILTER.length());
                             intent.putExtra(FilterColumnActivity.EXTRA_COLUMN_NAME, columnName);
@@ -277,6 +279,7 @@ public class LogActivity extends FragmentActivity implements DialogButtonListene
 
     @Override
     public void onOkClicked(int actionId, Bundle extras) {
+        // The user confirmed to clear the logs.  Let's do that and refresh the screen.
         if (actionId == R.id.action_reset_filters) {
             NetMonPreferences.getInstance(this).resetColumnFilters();
             loadHTMLFile();

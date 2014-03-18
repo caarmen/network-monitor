@@ -28,13 +28,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 import org.jraf.android.networkmonitor.util.Log;
 
 
 /**
- * TODO add javadoc and logging
+ * Based on the filtering preferences the user has chosen, build a selection clause which can be used in the DB query.
  */
 public class FilterPreferences {
 
@@ -42,23 +43,22 @@ public class FilterPreferences {
     public static final String EMPTY = "##EMPTY##";
 
     public static class Selection {
-        public final String selection;
+        public final String selectionString;
         public final String[] selectionArgs;
 
-        public Selection(String selection, String[] selectionArgs) {
-            this.selection = selection;
+        public Selection(String selectionString, String[] selectionArgs) {
+            this.selectionString = selectionString;
             this.selectionArgs = selectionArgs;
         }
 
         @Override
         public String toString() {
-            return Selection.class.getSimpleName() + ": " + selection + ", " + Arrays.toString(selectionArgs);
+            return Selection.class.getSimpleName() + ": " + selectionString + ", " + Arrays.toString(selectionArgs);
         }
     }
 
     /**
-     * @return a string which can be used as an selection clause in a query.
-     * @param excludeColumn return a selection query for all filtered columns except this one.
+     * @return a selection clause based on all the filters the user chose for all columns, except the given excludeColumn.
      */
     public static Selection getSelectionClause(Context context, String excludeColumn) {
         Log.v(TAG, "getSelectionClause: exclude column " + excludeColumn);
@@ -70,7 +70,7 @@ public class FilterPreferences {
     }
 
     /**
-     * @return a string which can be used as an selection clause in a query.
+     * @return a selection clause based on all the filters the user chose for all columns.
      */
     public static Selection getSelectionClause(Context context) {
         Log.v(TAG, "getSelectionClause");
@@ -78,42 +78,58 @@ public class FilterPreferences {
         return getSelectionClause(context, Arrays.asList(filterableColumnNames));
     }
 
-    private static Selection getSelectionClause(Context context, List<String> filterableColumnNames) {
-        StringBuilder selection = new StringBuilder();
+    /**
+     * @return a selection clause based on all the filters the user chose for the given column names.
+     */
+    private static Selection getSelectionClause(Context context, List<String> columnNames) {
+        List<String> selectionStrings = new ArrayList<String>();
         List<String> selectionArgs = new ArrayList<String>();
-        for (String columnName : filterableColumnNames)
-            addFilterSelection(context, columnName, selection, selectionArgs);
-        String[] selectionArgsArr = new String[selectionArgs.size()];
-        selectionArgs.toArray(selectionArgsArr);
-        Selection result = new Selection(selection.toString(), selectionArgsArr);
+        for (String columnName : columnNames) {
+            Selection selection = createSelection(context, columnName);
+            if (selection != null) {
+                selectionStrings.add(selection.selectionString);
+                selectionArgs.addAll(Arrays.asList(selection.selectionArgs));
+            }
+        }
+        String selectionString = TextUtils.join(" AND ", selectionStrings);
+        Selection result = new Selection(selectionString.toString(), selectionArgs.toArray(new String[selectionArgs.size()]));
         Log.v(TAG, "returning " + result);
         return result;
     }
 
-    private static void addFilterSelection(Context context, String columnName, StringBuilder outSelection, List<String> outSelectionArgs) {
+    /**
+     * Create a selection clause for the filters the user chose for the given column.
+     */
+    private static Selection createSelection(Context context, String columnName) {
         Log.v(TAG, "addFilterSelection for " + columnName);
         List<String> values = NetMonPreferences.getInstance(context).getColumnFilterValues(columnName);
         if (values != null && values.size() > 0) {
-            if (outSelection.length() > 0) outSelection.append(" AND ");
-            outSelection.append("(");
+
+            StringBuilder selectionString = new StringBuilder();
+            List<String> selectionArgs = new ArrayList<String>();
+            selectionString.append("(");
             // If we support empty value, add the special condition for that.
             if (values.contains(EMPTY)) {
-                outSelection.append(columnName + " IS NULL OR " + columnName + " = ''");
+                selectionString.append(columnName + " IS NULL OR " + columnName + " = ''");
                 // If we only have the empty value, we're done.
                 if (values.size() == 1) {
-                    outSelection.append(")\n");
-                    return;
+                    selectionString.append(")\n");
+                    return new Selection(selectionString.toString(), new String[0]);
                 } else
-                    outSelection.append(" OR ");
+                    selectionString.append(" OR ");
             }
-            outSelection.append(" " + columnName + " in (");
+
+            // Add each value (other than the special empty value).
+            selectionString.append(columnName + " in (");
             for (int i = 0; i < values.size(); i++) {
                 if (values.get(i).equals(EMPTY)) continue;
-                outSelection.append("?");
-                outSelectionArgs.add(values.get(i));
-                if (i < values.size() - 1) outSelection.append(",");
+                selectionString.append("?");
+                selectionArgs.add(values.get(i));
+                if (i < values.size() - 1) selectionString.append(",");
             }
-            outSelection.append("))\n");
+            selectionString.append("))\n");
+            return new Selection(selectionString.toString(), selectionArgs.toArray(new String[selectionArgs.size()]));
         }
+        return null;
     }
 }

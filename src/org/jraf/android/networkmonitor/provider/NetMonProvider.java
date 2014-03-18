@@ -72,7 +72,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
         URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME, URI_TYPE_NETWORKMONITOR);
         URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME + "/#", URI_TYPE_NETWORKMONITOR_ID);
         URI_MATCHER.addURI(AUTHORITY, ConnectionTestStatsColumns.VIEW_NAME, URI_TYPE_SUMMARY);
-        URI_MATCHER.addURI(AUTHORITY, NetMonColumns.UNIQUE_VALUES + "/*", URI_TYPE_UNIQUE_VALUES_ID);
+        URI_MATCHER.addURI(AUTHORITY, UniqueValuesColumns.NAME + "/*", URI_TYPE_UNIQUE_VALUES_ID);
     }
 
     private NetMonDatabase mNetworkMonitorDatabase;
@@ -93,7 +93,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
             case URI_TYPE_NETWORKMONITOR_ID:
                 return TYPE_CURSOR_ITEM + NetMonColumns.TABLE_NAME;
             case URI_TYPE_UNIQUE_VALUES_ID:
-                return TYPE_CURSOR_DIR + NetMonColumns.UNIQUE_VALUES;
+                return TYPE_CURSOR_DIR + UniqueValuesColumns.NAME;
         }
         return null;
     }
@@ -184,14 +184,13 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
             case URI_TYPE_UNIQUE_VALUES_ID:
                 String columnName = uri.getLastPathSegment();
                 Map<String, String> projectionMap = new HashMap<String, String>();
-                projectionMap.put(NetMonColumns.UNIQUE_VALUES_VALUE, columnName);
-                projectionMap.put(NetMonColumns.UNIQUE_VALUES_COUNT, "count(*)");
-                String orderBy = columnName + " ASC";
+                projectionMap.put(UniqueValuesColumns.VALUE, columnName);
+                projectionMap.put(UniqueValuesColumns.COUNT, "count(*)");
                 SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
                 qb.setDistinct(true);
                 qb.setTables(NetMonColumns.TABLE_NAME);
                 qb.setProjectionMap(projectionMap);
-                String queryString = qb.buildQuery(projection, selection, selectionArgs, columnName, null, orderBy, null);
+                String queryString = qb.buildQuery(projection, selection, selectionArgs, columnName, null, sortOrder, null);
                 res = mNetworkMonitorDatabase.getReadableDatabase().rawQuery(queryString, selectionArgs);
                 break;
             default:

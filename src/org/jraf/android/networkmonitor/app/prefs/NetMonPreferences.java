@@ -189,17 +189,26 @@ public class NetMonPreferences {
         mSharedPrefs.edit().putString(NetMonPreferences.PREF_SELECTED_COLUMNS, selectedColumnsString).commit();
     }
 
+    /**
+     * The report will only show rows where the given column has one of the given values.
+     */
     public void setColumnFilterValues(String columnName, List<String> filteredValues) {
         String filteredValuesString = TextUtils.join(",", filteredValues);
         mSharedPrefs.edit().putString(NetMonPreferences.PREF_FILTER_PREFIX + columnName, filteredValuesString).commit();
     }
 
+    /**
+     * Get the list of values for this column on which we'll filter the report.
+     */
     public List<String> getColumnFilterValues(String columnName) {
         String filteredValuesString = mSharedPrefs.getString(PREF_FILTER_PREFIX + columnName, "");
         if (TextUtils.isEmpty(filteredValuesString)) return new ArrayList<String>();
         return Arrays.asList(filteredValuesString.split(","));
     }
 
+    /**
+     * Clear any filtering preferences the user has set.
+     */
     public void resetColumnFilters() {
         String[] filterableColumns = mContext.getResources().getStringArray(R.array.filterable_columns);
         Editor editor = mSharedPrefs.edit();
@@ -208,6 +217,9 @@ public class NetMonPreferences {
         editor.commit();
     }
 
+    /**
+     * @return true if the user has chosen to filter at least one column.
+     */
     public boolean hasColumnFilters() {
         String[] filterableColumns = mContext.getResources().getStringArray(R.array.filterable_columns);
         for (String filterableColumn : filterableColumns)

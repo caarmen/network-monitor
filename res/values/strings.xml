@@ -15,6 +15,8 @@
     <string name="error_reading_log">Could not read log file.</string>
     <string name="success_logs_clear">Logs have been cleared</string>
     <string name="confirm_logs_clear">Do you really want to clear all the logs?</string>
+    <string name="clear_filters_confirm_dialog_title">Clear filters?</string>
+    <string name="clear_filters_confirm_dialog_message">Are you sure you want to remove all filters?</string>
     
     <!--  Strings for the select_fields activity -->
     <string name="action_select_all">Select all</string>
@@ -25,8 +27,9 @@
     <string name="action_select_profile_location">Location profile</string>
     
     <!--  Strings for the filter_columns activity -->
-    <string name="filter_columns_title">Select values (beta)</string>
+    <string name="filter_columns_title">Filter values (beta)</string>
     <string name="filter_columns_empty_value">Empty</string>
+    <string name="filter_columns_hint">Select the values for %s you wish to appear in the report. If you select no values, no filtering will be done (all values will appear).</string>
 
     <!--  Strings for the about screen -->
     <string name="about_title">About</string>

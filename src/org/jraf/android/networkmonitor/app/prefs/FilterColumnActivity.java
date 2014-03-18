@@ -43,6 +43,9 @@ import org.jraf.android.networkmonitor.app.prefs.FilterColumnListFragment.Filter
 import org.jraf.android.networkmonitor.provider.NetMonColumns;
 import org.jraf.android.networkmonitor.util.Log;
 
+/**
+ * Activity which lets the user choose which values for a particular column will appear in the report.
+ */
 public class FilterColumnActivity extends FragmentActivity { // NO_UCD (use default)
     private static final String TAG = FilterColumnActivity.class.getSimpleName();
     public static final String EXTRA_COLUMN_NAME = "column_name";
@@ -54,12 +57,14 @@ public class FilterColumnActivity extends FragmentActivity { // NO_UCD (use defa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.filter_columns);
         ListFragment lvf = (ListFragment) getSupportFragmentManager().findFragmentById(R.id.listFragment);
+        mListView = lvf.getListView();
+
+        // Show a hint to the user, explaining what filtering this column does.
         TextView tvHint = (TextView) findViewById(R.id.filter_columns_hint);
         String columnName = getIntent().getStringExtra(EXTRA_COLUMN_NAME);
         String columnLabel = NetMonColumns.getColumnLabel(this, columnName);
         String hintText = getString(R.string.filter_columns_hint, columnLabel);
         tvHint.setText(hintText);
-        mListView = lvf.getListView();
     }
 
     @Override
@@ -93,6 +98,9 @@ public class FilterColumnActivity extends FragmentActivity { // NO_UCD (use defa
 
     public void onOk(View v) { // NO_UCD (unused code)
         Log.v(TAG, "onOk");
+        // Update the preference for values to filter, for this particular column.
+
+        // Build a list of all the values the user selected.
         SparseBooleanArray checkedPositions = mListView.getCheckedItemPositions();
         final List<String> selectedValues = new ArrayList<String>(mListView.getCount());
         for (int i = 0; i < mListView.getCount(); i++) {
@@ -102,6 +110,7 @@ public class FilterColumnActivity extends FragmentActivity { // NO_UCD (use defa
 
             @Override
             protected Void doInBackground(Void... params) {
+                // Update the filter preference for this column.
                 String columnName = getIntent().getExtras().getString(EXTRA_COLUMN_NAME);
                 NetMonPreferences.getInstance(FilterColumnActivity.this).setColumnFilterValues(columnName, selectedValues);
                 return null;
