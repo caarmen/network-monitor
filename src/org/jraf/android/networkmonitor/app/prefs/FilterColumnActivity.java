@@ -36,9 +36,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.prefs.FilterColumnListFragment.FilterListItem;
+import org.jraf.android.networkmonitor.provider.NetMonColumns;
 import org.jraf.android.networkmonitor.util.Log;
 
 public class FilterColumnActivity extends FragmentActivity { // NO_UCD (use default)
@@ -52,6 +54,11 @@ public class FilterColumnActivity extends FragmentActivity { // NO_UCD (use defa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.filter_columns);
         ListFragment lvf = (ListFragment) getSupportFragmentManager().findFragmentById(R.id.listFragment);
+        TextView tvHint = (TextView) findViewById(R.id.filter_columns_hint);
+        String columnName = getIntent().getStringExtra(EXTRA_COLUMN_NAME);
+        String columnLabel = NetMonColumns.getColumnLabel(this, columnName);
+        String hintText = getString(R.string.filter_columns_hint, columnLabel);
+        tvHint.setText(hintText);
         mListView = lvf.getListView();
     }
 
