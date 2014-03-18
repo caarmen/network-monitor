@@ -48,6 +48,8 @@ import android.widget.Toast;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
+import org.jraf.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
+import org.jraf.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import org.jraf.android.networkmonitor.app.export.HTMLExport;
 import org.jraf.android.networkmonitor.app.prefs.FilterColumnActivity;
 import org.jraf.android.networkmonitor.app.prefs.NetMonPreferences;
@@ -57,7 +59,7 @@ import org.jraf.android.networkmonitor.app.prefs.SortPreferences;
 import org.jraf.android.networkmonitor.app.prefs.SortPreferences.SortOrder;
 import org.jraf.android.networkmonitor.util.Log;
 
-public class LogActivity extends FragmentActivity {
+public class LogActivity extends FragmentActivity implements DialogButtonListener {
     private static final String TAG = Constants.TAG + LogActivity.class.getSimpleName();
     private WebView mWebView;
     private static final int REQUEST_CODE_CLEAR = 1;
@@ -129,8 +131,8 @@ public class LogActivity extends FragmentActivity {
                 PreferenceDialog.showCellIdFormatChoiceDialog(this, mPreferenceChoiceDialogListener);
                 return true;
             case R.id.action_reset_filters:
-                NetMonPreferences.getInstance(this).resetColumnFilters();
-                loadHTMLFile();
+                DialogFragmentFactory.showConfirmDialog(this, getString(R.string.clear_filters_confirm_dialog_title),
+                        getString(R.string.clear_filters_confirm_dialog_message), R.id.action_reset_filters, null);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -272,5 +274,16 @@ public class LogActivity extends FragmentActivity {
             if (key.equals(NetMonPreferences.PREF_SORT_COLUMN_NAME) || key.equals(NetMonPreferences.PREF_SORT_ORDER)) loadHTMLFile();
         }
     };
+
+    @Override
+    public void onOkClicked(int actionId, Bundle extras) {
+        if (actionId == R.id.action_reset_filters) {
+            NetMonPreferences.getInstance(this).resetColumnFilters();
+            loadHTMLFile();
+        }
+    }
+
+    @Override
+    public void onCancelClicked(int actionId, Bundle extras) {}
 
 }
