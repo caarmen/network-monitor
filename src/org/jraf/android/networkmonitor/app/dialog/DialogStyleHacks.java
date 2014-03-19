@@ -78,16 +78,14 @@ public class DialogStyleHacks {
     public static void styleDialogElements(Context context, AlertDialog dialog) {
         // For 3.x+, update the dialog elements which couldn't be updated cleanly with the theme:
         // The list items.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            ListView listView = dialog.getListView();
-            if (listView != null) listView.setSelector(R.drawable.netmon_list_selector_holo_light);
-            Button button = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-            if (button != null) button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
-            button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-            if (button != null) button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
-            button = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
-            if (button != null) button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
-        }
+        ListView listView = dialog.getListView();
+        if (listView != null) listView.setSelector(R.drawable.netmon_list_selector_holo_light);
+        Button button = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        if (button != null) button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
+        button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        if (button != null) button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
+        button = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+        if (button != null) button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
         DialogStyleHacks.uglyHackReplaceBlueHoloBackground(context, (ViewGroup) dialog.getWindow().getDecorView(), dialog);
     }
 
