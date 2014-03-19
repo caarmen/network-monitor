@@ -100,6 +100,7 @@ public class DialogStyleHacks {
         for (int i = 0; i < childCount; i++) {
             View child = viewGroup.getChildAt(i);
             if (child instanceof ViewGroup) {
+                uglyHackReplaceDialogCorners(context, (ViewGroup) child);
                 uglyHackReplaceBlueHoloBackground(context, (ViewGroup) child, dialog);
             }
             // 2.x and 3.x: replace the nine patch
@@ -141,9 +142,32 @@ public class DialogStyleHacks {
     }
 
     /**
+     * Replace dark dialog corners with bright ones (2.x)
+     */
+    private static void uglyHackReplaceDialogCorners(Context context, ViewGroup viewGroup) {
+        Drawable background = viewGroup.getBackground();
+        if (background instanceof NinePatchDrawable) {
+            String imageSource = getNinePatchImageSource((NinePatchDrawable) background);
+            if (imageSource != null) {
+                if (imageSource.contains("popup_top_dark") || imageSource.contains("popup_top_medium")) viewGroup
+                        .setBackgroundResource(R.drawable.popup_top_bright);
+                else if (imageSource.contains("popup_center_dark") || imageSource.contains("popup_center_medium")
+                        || imageSource.contains("popup_center_bright")) viewGroup.setBackgroundResource(R.drawable.popup_center_bright);
+                else if (imageSource.contains("popup_bottom_dark") || imageSource.contains("popup_bottom_medium"))
+                    viewGroup.setBackgroundResource(R.drawable.popup_center_bright);
+            }
+        }
+    }
+
+    /**
      * @return true if the given nine patch is the divider_strong_holo nine patch.
      */
     private static boolean isHoloBlueNinePatch(NinePatchDrawable n) {
+        String imageSource = getNinePatchImageSource(n);
+        return imageSource != null && (imageSource.contains("divider_strong_holo") || imageSource.contains("divider_horizontal_dark"));
+    }
+
+    private static String getNinePatchImageSource(NinePatchDrawable n) {
         // horrible, horrible...
         String imageSource = null;
         lazyInitCrazyReflectionCrap();
@@ -153,7 +177,7 @@ public class DialogStyleHacks {
         } catch (IllegalAccessException e) {
             Log.v(TAG, "Oops: " + e.getMessage(), e);
         }
-        return imageSource != null && (imageSource.contains("divider_strong_holo") || imageSource.contains("divider_horizontal_dark"));
+        return imageSource;
     }
 
     private static boolean isHoloBlueColor(Context context, int colorId) {
@@ -189,6 +213,6 @@ public class DialogStyleHacks {
         } catch (NoSuchFieldException e) {
             Log.v(TAG, "An exception is what we deserve doing code like this: " + e.getMessage(), e);
         }
-
     }
+
 }
