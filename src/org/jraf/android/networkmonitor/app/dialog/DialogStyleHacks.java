@@ -1,20 +1,25 @@
-/**
- * Copyright 2013 Carmen Alvarez
+/*
+ * This source is part of the
+ *      _____  ___   ____
+ *  __ / / _ \/ _ | / __/___  _______ _
+ * / // / , _/ __ |/ _/_/ _ \/ __/ _ `/
+ * \___/_/|_/_/ |_/_/ (_)___/_/  \_, /
+ *                              /___/
+ * repository.
  *
- * This file is part of Scrum Chatter.
+ * Copyright (C) 2014 Carmen Alvarez (c@rmen.ca)
  *
- * Scrum Chatter is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Scrum Chatter is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU General Public License
- * along with Scrum Chatter. If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.jraf.android.networkmonitor.app.dialog;
 
@@ -55,7 +60,7 @@ public class DialogStyleHacks {
     private static final int DIALOG_STYLE = R.style.dialogStyle;
     private static int sHoloBlueLightColorId = -1;
     private static int sHoloBlueDarkColorId = -1;
-    private static int sHoloPurpleColorId = -1;
+    private static int sMyAppColorId = -1;
     private static Field sNinePatchSourceField = null;
     private static Field sNinePatchField = null;
 
@@ -75,7 +80,7 @@ public class DialogStyleHacks {
             });
     }
 
-    public static void styleDialogElements(Context context, AlertDialog dialog) {
+    private static void styleDialogElements(Context context, AlertDialog dialog) {
         // Update the dialog elements which couldn't be updated cleanly with the theme:
         ListView listView = dialog.getListView();
         int listViewStyle = Attributes.getResourceIdStyleAttribute(context, DIALOG_STYLE, android.R.attr.listViewStyle);
@@ -111,7 +116,7 @@ public class DialogStyleHacks {
      * For 3.x, the horizontal divider is a nine patch image "divider_strong_holo".
      * For 4.x, the horizontal divider is a holo color.
      */
-    public static void uglyHackReplaceBlueHoloBackground(Context context, ViewGroup viewGroup, AlertDialog dialog) {
+    private static void uglyHackReplaceBlueHoloBackground(Context context, ViewGroup viewGroup, AlertDialog dialog) {
         int childCount = viewGroup.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = viewGroup.getChildAt(i);
@@ -140,13 +145,13 @@ public class DialogStyleHacks {
                 TextView textView = (TextView) child;
                 ColorStateList textColors = textView.getTextColors();
                 int defaultColor = textColors.getDefaultColor();
-                if (isHoloBlueColor(context, defaultColor)) textView.setTextColor(sHoloPurpleColorId);
+                if (isHoloBlueColor(context, defaultColor)) textView.setTextColor(sMyAppColorId);
             }
             // 4.x: replace the color
             else {
                 Drawable drawable = child.getBackground();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH && drawable instanceof ColorDrawable) {
-                    if (isHoloBlueColor(context, (ColorDrawable) drawable)) child.setBackgroundColor(sHoloPurpleColorId);
+                    if (isHoloBlueColor(context, (ColorDrawable) drawable)) child.setBackgroundColor(sMyAppColorId);
                 }
             }
         }
@@ -213,7 +218,7 @@ public class DialogStyleHacks {
         if (sHoloBlueLightColorId == -1) {
             sHoloBlueLightColorId = context.getResources().getColor(android.R.color.holo_blue_light);
             sHoloBlueDarkColorId = context.getResources().getColor(android.R.color.holo_blue_dark);
-            sHoloPurpleColorId = context.getResources().getColor(R.color.netmon_color);
+            sMyAppColorId = context.getResources().getColor(R.color.netmon_color);
         }
     }
 

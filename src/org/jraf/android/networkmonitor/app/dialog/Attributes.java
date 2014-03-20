@@ -30,7 +30,7 @@ import android.graphics.drawable.Drawable;
 /**
  * Some helper methods to get style attributes
  */
-public class Attributes {
+class Attributes {
 
 
     static int getDimensionStyleAttribute(Context context, int styleId, int attrId) {
