@@ -54,6 +54,7 @@ import org.jraf.android.networkmonitor.R;
 public class DialogStyleHacks {
 
     private static final String TAG = Constants.TAG + "/" + DialogStyleHacks.class.getSimpleName();
+    private static final int DIALOG_STYLE = R.style.dialogStyle;
     private static int sHoloBlueLightColorId = -1;
     private static int sHoloBlueDarkColorId = -1;
     private static int sHoloPurpleColorId = -1;
@@ -64,7 +65,7 @@ public class DialogStyleHacks {
      * @param dialog apply our custom theme to the given dialog, once the dialog is visible.
      */
     public static void styleDialog(final Context context, final AlertDialog dialog) {
-        dialog.getContext().setTheme(R.style.dialogStyle);
+        dialog.getContext().setTheme(DIALOG_STYLE);
         if (dialog.isShowing()) styleDialogElements(context, dialog);
         else
             dialog.setOnShowListener(new OnShowListener() {
@@ -94,27 +95,36 @@ public class DialogStyleHacks {
      * Set the min height, min width, text color, and background drawable of this button based on our ButtonNetMon style.
      */
     private static void styleButton(Context context, Button button) {
-        int styleId = R.style.ButtonNetMon;
-        int[] buttonWidthAttrs = new int[] { android.R.attr.minWidth };
-        int[] buttonHeightAttrs = new int[] { android.R.attr.minHeight };
-        int[] buttonDrawableAttrs = new int[] { android.R.attr.background };
-        int[] buttonColorAttrs = new int[] { android.R.attr.textColor };
-        TypedArray values = context.getTheme().obtainStyledAttributes(styleId, buttonWidthAttrs);
-        int minWidth = values.getLayoutDimension(0, 0);
-        values.recycle();
-        values = context.getTheme().obtainStyledAttributes(styleId, buttonHeightAttrs);
-        int minHeight = values.getLayoutDimension(0, 0);
-        values.recycle();
-        values = context.getTheme().obtainStyledAttributes(styleId, buttonDrawableAttrs);
-        int backgroundId = values.getResourceId(0, 0);
-        values.recycle();
-        values = context.getTheme().obtainStyledAttributes(styleId, buttonColorAttrs);
-        int textColor = values.getColor(0, android.R.color.primary_text_dark);
-        values.recycle();
+        int buttonStyleId = getResourceIdStyleAttribute(context, DIALOG_STYLE, android.R.attr.buttonStyle);
+        int minWidth = getDimensionStyleAttribute(context, buttonStyleId, android.R.attr.minWidth);
+        int minHeight = getDimensionStyleAttribute(context, buttonStyleId, android.R.attr.minHeight);
+        int textColor = getColorStyleAttribute(context, buttonStyleId, android.R.attr.textColor);
+        int backgroundId = getResourceIdStyleAttribute(context, buttonStyleId, android.R.attr.background);
         button.setMinHeight(minHeight);
         button.setMinWidth(minWidth);
         button.setBackgroundResource(backgroundId);
         button.setTextColor(textColor);
+    }
+
+    private static int getDimensionStyleAttribute(Context context, int styleId, int attrId) {
+        TypedArray values = context.getTheme().obtainStyledAttributes(styleId, new int[] { attrId });
+        int value = values.getLayoutDimension(0, 0);
+        values.recycle();
+        return value;
+    }
+
+    private static int getColorStyleAttribute(Context context, int styleId, int attrId) {
+        TypedArray values = context.getTheme().obtainStyledAttributes(styleId, new int[] { attrId });
+        int value = values.getColor(0, android.R.color.primary_text_dark);
+        values.recycle();
+        return value;
+    }
+
+    private static int getResourceIdStyleAttribute(Context context, int styleId, int attrId) {
+        TypedArray values = context.getTheme().obtainStyledAttributes(styleId, new int[] { attrId });
+        int value = values.getResourceId(0, 0);
+        values.recycle();
+        return value;
     }
 
     /**
