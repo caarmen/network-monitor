@@ -160,12 +160,16 @@ public class DialogStyleHacks {
         if (background instanceof NinePatchDrawable) {
             String imageSource = getNinePatchImageSource((NinePatchDrawable) background);
             if (imageSource != null) {
-                if (imageSource.contains("popup_top_dark") || imageSource.contains("popup_top_medium")) viewGroup
-                        .setBackgroundResource(R.drawable.popup_top_bright);
-                else if (imageSource.contains("popup_center_dark") || imageSource.contains("popup_center_medium")
-                        || imageSource.contains("popup_center_bright")) viewGroup.setBackgroundResource(R.drawable.popup_center_bright);
-                else if (imageSource.contains("popup_bottom_dark") || imageSource.contains("popup_bottom_medium"))
-                    viewGroup.setBackgroundResource(R.drawable.popup_bottom_bright);
+                int alertDialogStyleId = Attributes.getResourceIdStyleAttribute(context, DIALOG_STYLE, android.R.attr.alertDialogStyle);
+                if (imageSource.contains("popup_top_dark") || imageSource.contains("popup_top_bright")) {
+                    viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(context, alertDialogStyleId, android.R.attr.topBright));
+                } else if (imageSource.contains("popup_center_dark") || imageSource.contains("popup_center_medium")
+                        || imageSource.contains("popup_center_bright")) {
+                    viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(context, alertDialogStyleId, android.R.attr.centerBright));
+                } else if (imageSource.contains("popup_bottom_dark") || imageSource.contains("popup_bottom_medium")
+                        || imageSource.contains("popup_bottom_bright")) {
+                    viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(context, alertDialogStyleId, android.R.attr.bottomBright));
+                }
             }
         }
     }

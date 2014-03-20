@@ -28,10 +28,15 @@
     <!-- Style the edges of alert dialogs for 2.x -->
     <style name="alertDialogStyle">
         <item name="android:topDark">@drawable/popup_top_bright</item>
-        <item name="android:centerDark">@drawable/popup_center_bright</item>
+        <item name="android:topBright">@drawable/popup_top_bright</item>
+
         <item name="android:centerBright">@drawable/popup_center_bright</item>
+        <item name="android:centerMedium">@drawable/popup_center_bright</item>
+        <item name="android:centerDark">@drawable/popup_center_bright</item>
+
         <item name="android:bottomBright">@drawable/popup_bottom_bright</item>
         <item name="android:bottomMedium">@drawable/popup_bottom_bright</item>
+        <item name="android:bottomDark">@drawable/popup_bottom_bright</item>
     </style>
 
 </resources>
