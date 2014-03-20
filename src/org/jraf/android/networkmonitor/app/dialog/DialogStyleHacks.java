@@ -153,11 +153,13 @@ public class DialogStyleHacks {
                 int defaultColor = textColors.getDefaultColor();
                 if (isHoloBlueColor(context, defaultColor)) textView.setTextColor(sHoloPurpleColorId);
             } else if (child instanceof ProgressBar) {
-                ProgressBar progressBar = (ProgressBar) child;
-                Drawable determinateDrawable = context.getResources().getDrawable(R.drawable.netmon_progress_horizontal_holo_light);
-                Drawable indeterminateDrawable = context.getResources().getDrawable(R.drawable.netmon_progress_indeterminate_horizontal_holo_light);
-                progressBar.setProgressDrawable(determinateDrawable);
-                progressBar.setIndeterminateDrawable(indeterminateDrawable);
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
+                    ProgressBar progressBar = (ProgressBar) child;
+                    Drawable determinateDrawable = context.getResources().getDrawable(R.drawable.netmon_progress_horizontal_holo_light);
+                    Drawable indeterminateDrawable = context.getResources().getDrawable(R.drawable.netmon_progress_indeterminate_horizontal_holo_light);
+                    progressBar.setProgressDrawable(determinateDrawable);
+                    progressBar.setIndeterminateDrawable(indeterminateDrawable);
+                }
             }
             // 4.x: replace the color
             else {
