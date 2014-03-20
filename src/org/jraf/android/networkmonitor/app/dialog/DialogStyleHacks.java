@@ -27,7 +27,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnShowListener;
 import android.content.res.ColorStateList;
-import android.content.res.TypedArray;
 import android.graphics.NinePatch;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -78,10 +77,11 @@ public class DialogStyleHacks {
     }
 
     public static void styleDialogElements(Context context, AlertDialog dialog) {
-        // For 3.x+, update the dialog elements which couldn't be updated cleanly with the theme:
-        // The list items.
+        // Update the dialog elements which couldn't be updated cleanly with the theme:
         ListView listView = dialog.getListView();
-        if (listView != null) listView.setSelector(R.drawable.netmon_list_selector_holo_light);
+        int listViewStyle = Attributes.getResourceIdStyleAttribute(context, DIALOG_STYLE, android.R.attr.listViewStyle);
+        Drawable listSelector = Attributes.getDrawableStyleAttribute(context, listViewStyle, android.R.attr.listSelector);
+        if (listView != null) listView.setSelector(listSelector);
         Button button = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
         if (button != null) styleButton(context, button);//button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
         button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
@@ -95,36 +95,15 @@ public class DialogStyleHacks {
      * Set the min height, min width, text color, and background drawable of this button based on our ButtonNetMon style.
      */
     private static void styleButton(Context context, Button button) {
-        int buttonStyleId = getResourceIdStyleAttribute(context, DIALOG_STYLE, android.R.attr.buttonStyle);
-        int minWidth = getDimensionStyleAttribute(context, buttonStyleId, android.R.attr.minWidth);
-        int minHeight = getDimensionStyleAttribute(context, buttonStyleId, android.R.attr.minHeight);
-        int textColor = getColorStyleAttribute(context, buttonStyleId, android.R.attr.textColor);
-        int backgroundId = getResourceIdStyleAttribute(context, buttonStyleId, android.R.attr.background);
+        int buttonStyleId = Attributes.getResourceIdStyleAttribute(context, DIALOG_STYLE, android.R.attr.buttonStyle);
+        int minWidth = Attributes.getDimensionStyleAttribute(context, buttonStyleId, android.R.attr.minWidth);
+        int minHeight = Attributes.getDimensionStyleAttribute(context, buttonStyleId, android.R.attr.minHeight);
+        int textColor = Attributes.getColorStyleAttribute(context, buttonStyleId, android.R.attr.textColor);
+        int backgroundId = Attributes.getResourceIdStyleAttribute(context, buttonStyleId, android.R.attr.background);
         button.setMinHeight(minHeight);
         button.setMinWidth(minWidth);
         button.setBackgroundResource(backgroundId);
         button.setTextColor(textColor);
-    }
-
-    private static int getDimensionStyleAttribute(Context context, int styleId, int attrId) {
-        TypedArray values = context.getTheme().obtainStyledAttributes(styleId, new int[] { attrId });
-        int value = values.getLayoutDimension(0, 0);
-        values.recycle();
-        return value;
-    }
-
-    private static int getColorStyleAttribute(Context context, int styleId, int attrId) {
-        TypedArray values = context.getTheme().obtainStyledAttributes(styleId, new int[] { attrId });
-        int value = values.getColor(0, android.R.color.primary_text_dark);
-        values.recycle();
-        return value;
-    }
-
-    private static int getResourceIdStyleAttribute(Context context, int styleId, int attrId) {
-        TypedArray values = context.getTheme().obtainStyledAttributes(styleId, new int[] { attrId });
-        int value = values.getResourceId(0, 0);
-        values.recycle();
-        return value;
     }
 
     /**
@@ -156,7 +135,8 @@ public class DialogStyleHacks {
             }
             // 2.x: replace the radio button
             else if (child instanceof CheckedTextView) {
-                ((CheckedTextView) child).setCheckMarkDrawable(R.drawable.netmon_btn_radio_holo_light);
+                Drawable radioButtonDrawable = Attributes.getDrawableStyleAttribute(context, DIALOG_STYLE, android.R.attr.listChoiceIndicatorSingle);
+                ((CheckedTextView) child).setCheckMarkDrawable(radioButtonDrawable);
             } else if (child instanceof TextView) {
                 TextView textView = (TextView) child;
                 ColorStateList textColors = textView.getTextColors();
