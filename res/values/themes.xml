@@ -18,10 +18,17 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="switchPreferenceStyle">@style/Preference.SwitchPreference</item>
         <item name="switchStyle">@style/SwitchStyle</item>
-        <item name="android:listChoiceIndicatorSingle">@drawable/netmon_btn_radio_holo_light</item>
+        <!--
+        Not sure why listChoiceIndicatorMultiple is only generated
+        in themes_netmon.xml for v11.  We need it for 2.x too, for SelectFieldsFragment -->
+        -->
         <item name="android:listChoiceIndicatorMultiple">@drawable/netmon_btn_check_holo_light</item>
     </style>
 
+    <!--
+    Special theme for a transparent activity (used when we need to 
+    show a dialog on top of a PreferenceActivity
+    -->
     <style name="NetMonNoDisplayTheme" parent="@style/NetMon">
         <item name="android:windowBackground">@null</item>
         <item name="android:windowContentOverlay">@null</item>

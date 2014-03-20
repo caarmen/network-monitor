@@ -1,5 +1,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- This style is referenced from code: DialogStyleHacks applies this style to dialogs. -->
     <style name="dialogStyle">
         <item name="android:textColor">@color/netmon_color</item>
         <item name="android:listViewStyle">@style/ListViewNetMon</item>
