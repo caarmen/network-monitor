@@ -45,7 +45,7 @@ import android.widget.Toast;
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
 import org.jraf.android.networkmonitor.app.dialog.DialogFragmentFactory;
-import org.jraf.android.networkmonitor.app.dialog.DialogStyleHacks;
+import org.jraf.android.networkmonitor.app.dialog.NetMonDialogStyleHacks;
 import org.jraf.android.networkmonitor.app.dialog.PreferenceDialog;
 import org.jraf.android.networkmonitor.app.dialog.ProgressDialogFragment;
 import org.jraf.android.networkmonitor.app.export.CSVExport;
@@ -121,7 +121,7 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                     }
                 });
         AlertDialog dialog = builder.create();
-        DialogStyleHacks.styleDialog(this, dialog);
+        new NetMonDialogStyleHacks(this).styleDialog(dialog);
         dialog.setOnCancelListener(mDialogDismissListener);
         dialog.show();
     }
@@ -190,7 +190,7 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                         asyncTask.execute();
                     }
                 }).setNegativeButton(android.R.string.no, mDialogCancelButtonClickListener).setOnCancelListener(mDialogDismissListener).create();
-        DialogStyleHacks.styleDialog(LogActionsActivity.this, dialog);
+        new NetMonDialogStyleHacks(LogActionsActivity.this).styleDialog(dialog);
         dialog.show();
     }
 

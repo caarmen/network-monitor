@@ -21,31 +21,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jraf.android.networkmonitor.app.prefs;
+package org.jraf.android.networkmonitor.app.dialog;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.os.Bundle;
-import android.preference.ListPreference;
-import android.util.AttributeSet;
 
-import org.jraf.android.networkmonitor.app.dialog.NetMonDialogStyleHacks;
+import org.jraf.android.networkmonitor.R;
 
-public class ThemedListPreference extends ListPreference {
+/**
+ * Provide the NetMon-specific styles to DialogStyleHacks.
+ */
+public class NetMonDialogStyleHacks extends DialogStyleHacks {
 
-    public ThemedListPreference(Context context) {
-        super(context);
+    public NetMonDialogStyleHacks(Context context) {
+        super(context, R.style.dialogStyle, R.color.netmon_color, R.drawable.divider_strong_netmon);
     }
-
-    public ThemedListPreference(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    @Override
-    protected void showDialog(Bundle state) {
-        super.showDialog(state);
-        AlertDialog dialog = (AlertDialog) getDialog();
-        new NetMonDialogStyleHacks(getContext()).styleDialog(dialog);
-    }
-
 }

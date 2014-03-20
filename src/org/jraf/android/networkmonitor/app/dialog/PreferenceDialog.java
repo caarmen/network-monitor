@@ -144,7 +144,7 @@ public class PreferenceDialog {
             }
         });
         final AlertDialog dialog = builder.create();
-        DialogStyleHacks.styleDialog(context, dialog);
+        new NetMonDialogStyleHacks(context).styleDialog(dialog);
         dialog.setOnCancelListener(new OnCancelListener() {
 
             @Override

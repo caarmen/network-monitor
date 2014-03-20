@@ -47,7 +47,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.jraf.android.networkmonitor.Constants;
-import org.jraf.android.networkmonitor.R;
 
 /**
  * Boy is customizing alert dialogs a pain in the booty. Tried the android-styled-dialogs library but it didn't fit the needs of this app: no support for alert
@@ -56,54 +55,72 @@ import org.jraf.android.networkmonitor.R;
  */
 public class DialogStyleHacks {
 
-    private static final String TAG = Constants.TAG + "/" + DialogStyleHacks.class.getSimpleName();
-    private static final int DIALOG_STYLE = R.style.dialogStyle;
+    private final String TAG = Constants.TAG + "/" + DialogStyleHacks.class.getSimpleName();
     private static int sHoloBlueLightColorId = -1;
     private static int sHoloBlueDarkColorId = -1;
-    private static int sMyAppColorId = -1;
     private static Field sNinePatchSourceField = null;
     private static Field sNinePatchField = null;
+
+    private final int mDialogStyleId;
+    private final int mMyAppColorId;
+    private final int mHorizontalDividerDrawableId;
+    private final Context mContext;
+
+    /**
+     * @param dialogStyleId refers to a style which defines all the styling attributes for the dialog.
+     * @param myAppColorId will be used for the dialog title text and, depending on the OS version (4.x), the horizontal divider.
+     * @param horizontalDividerDrawableId the drawable to use for the horizontal divider for 2.x and 3.x.
+     * 
+     */
+    public DialogStyleHacks(Context context, int dialogStyleId, int myAppColorId, int horizontalDividerDrawableId) {
+        mContext = context;
+        mDialogStyleId = dialogStyleId;
+        mMyAppColorId = mContext.getResources().getColor(myAppColorId);
+        mHorizontalDividerDrawableId = horizontalDividerDrawableId;
+    }
 
     /**
      * @param dialog apply our custom theme to the given dialog, once the dialog is visible.
      */
-    public static void styleDialog(final Context context, final AlertDialog dialog) {
-        dialog.getContext().setTheme(DIALOG_STYLE);
-        if (dialog.isShowing()) styleDialogElements(context, dialog);
+    public void styleDialog(final AlertDialog dialog) {
+        dialog.getContext().setTheme(mDialogStyleId);
+        if (dialog.isShowing()) styleDialogElements(dialog);
         else
             dialog.setOnShowListener(new OnShowListener() {
 
                 @Override
                 public void onShow(DialogInterface dialogInterface) {
-                    styleDialogElements(context, dialog);
+                    styleDialogElements(dialog);
                 }
             });
     }
 
-    private static void styleDialogElements(Context context, AlertDialog dialog) {
-        // Update the dialog elements which couldn't be updated cleanly with the theme:
+    /**
+     * Update colors and other attributes of the different views contained within this dialog.
+     */
+    private void styleDialogElements(AlertDialog dialog) {
         ListView listView = dialog.getListView();
-        int listViewStyle = Attributes.getResourceIdStyleAttribute(context, DIALOG_STYLE, android.R.attr.listViewStyle);
-        Drawable listSelector = Attributes.getDrawableStyleAttribute(context, listViewStyle, android.R.attr.listSelector);
+        int listViewStyle = Attributes.getResourceIdStyleAttribute(mContext, mDialogStyleId, android.R.attr.listViewStyle);
+        Drawable listSelector = Attributes.getDrawableStyleAttribute(mContext, listViewStyle, android.R.attr.listSelector);
         if (listView != null) listView.setSelector(listSelector);
         Button button = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        if (button != null) styleButton(context, button);//button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
+        if (button != null) styleButton(button);
         button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        if (button != null) styleButton(context, button);//button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
+        if (button != null) styleButton(button);
         button = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
-        if (button != null) styleButton(context, button);//button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
-        DialogStyleHacks.uglyHackReplaceBlueHoloBackground(context, (ViewGroup) dialog.getWindow().getDecorView(), dialog);
+        if (button != null) styleButton(button);
+        uglyHackReplaceBlueHoloBackground((ViewGroup) dialog.getWindow().getDecorView(), dialog);
     }
 
     /**
      * Set the min height, min width, text color, and background drawable of this button based on our ButtonNetMon style.
      */
-    private static void styleButton(Context context, Button button) {
-        int buttonStyleId = Attributes.getResourceIdStyleAttribute(context, DIALOG_STYLE, android.R.attr.buttonStyle);
-        int minWidth = Attributes.getDimensionStyleAttribute(context, buttonStyleId, android.R.attr.minWidth);
-        int minHeight = Attributes.getDimensionStyleAttribute(context, buttonStyleId, android.R.attr.minHeight);
-        int textColor = Attributes.getColorStyleAttribute(context, buttonStyleId, android.R.attr.textColor);
-        int backgroundId = Attributes.getResourceIdStyleAttribute(context, buttonStyleId, android.R.attr.background);
+    private void styleButton(Button button) {
+        int buttonStyleId = Attributes.getResourceIdStyleAttribute(mContext, mDialogStyleId, android.R.attr.buttonStyle);
+        int minWidth = Attributes.getDimensionStyleAttribute(mContext, buttonStyleId, android.R.attr.minWidth);
+        int minHeight = Attributes.getDimensionStyleAttribute(mContext, buttonStyleId, android.R.attr.minHeight);
+        int textColor = Attributes.getColorStyleAttribute(mContext, buttonStyleId, android.R.attr.textColor);
+        int backgroundId = Attributes.getResourceIdStyleAttribute(mContext, buttonStyleId, android.R.attr.background);
         button.setMinHeight(minHeight);
         button.setMinWidth(minWidth);
         button.setBackgroundResource(backgroundId);
@@ -116,42 +133,44 @@ public class DialogStyleHacks {
      * For 3.x, the horizontal divider is a nine patch image "divider_strong_holo".
      * For 4.x, the horizontal divider is a holo color.
      */
-    private static void uglyHackReplaceBlueHoloBackground(Context context, ViewGroup viewGroup, AlertDialog dialog) {
+    private void uglyHackReplaceBlueHoloBackground(ViewGroup viewGroup, AlertDialog dialog) {
         int childCount = viewGroup.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = viewGroup.getChildAt(i);
             if (child instanceof ViewGroup) {
-                uglyHackReplaceDialogCorners(context, (ViewGroup) child);
-                uglyHackReplaceBlueHoloBackground(context, (ViewGroup) child, dialog);
+                uglyHackReplaceDialogCorners((ViewGroup) child);
+                uglyHackReplaceBlueHoloBackground((ViewGroup) child, dialog);
             }
-            // 2.x and 3.x: replace the nine patch
+            // 2.x and 3.x: replace the nine patch horizontal divider
             else if (child instanceof ImageView) {
                 ImageView imageView = (ImageView) child;
                 Drawable drawable = imageView.getDrawable();
                 if (drawable instanceof NinePatchDrawable) {
                     if (isHoloBlueNinePatch((NinePatchDrawable) drawable)) {
-                        imageView.setImageResource(R.drawable.divider_strong_netmon);
+                        imageView.setImageResource(mHorizontalDividerDrawableId);
                         // On 2.x, in a dialog with a list, the divider is hidden.  Let's show it.
                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB && !(dialog instanceof ProgressDialog))
                             imageView.setVisibility(View.VISIBLE);
                     }
                 }
             }
-            // 2.x: replace the radio button
+            // replace the radio button
             else if (child instanceof CheckedTextView) {
-                Drawable radioButtonDrawable = Attributes.getDrawableStyleAttribute(context, DIALOG_STYLE, android.R.attr.listChoiceIndicatorSingle);
+                Drawable radioButtonDrawable = Attributes.getDrawableStyleAttribute(mContext, mDialogStyleId, android.R.attr.listChoiceIndicatorSingle);
                 ((CheckedTextView) child).setCheckMarkDrawable(radioButtonDrawable);
-            } else if (child instanceof TextView) {
+            }
+            // replace the title text color
+            else if (child instanceof TextView) {
                 TextView textView = (TextView) child;
                 ColorStateList textColors = textView.getTextColors();
                 int defaultColor = textColors.getDefaultColor();
-                if (isHoloBlueColor(context, defaultColor)) textView.setTextColor(sMyAppColorId);
+                if (isHoloBlueColor(defaultColor)) textView.setTextColor(mMyAppColorId);
             }
-            // 4.x: replace the color
+            // 4.x: replace the color of the horizontal divider
             else {
                 Drawable drawable = child.getBackground();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH && drawable instanceof ColorDrawable) {
-                    if (isHoloBlueColor(context, (ColorDrawable) drawable)) child.setBackgroundColor(sMyAppColorId);
+                    if (isHoloBlueColor((ColorDrawable) drawable)) child.setBackgroundColor(mMyAppColorId);
                 }
             }
         }
@@ -160,20 +179,20 @@ public class DialogStyleHacks {
     /**
      * Replace dark dialog corners with bright ones (2.x)
      */
-    private static void uglyHackReplaceDialogCorners(Context context, ViewGroup viewGroup) {
+    private void uglyHackReplaceDialogCorners(ViewGroup viewGroup) {
         Drawable background = viewGroup.getBackground();
         if (background instanceof NinePatchDrawable) {
             String imageSource = getNinePatchImageSource((NinePatchDrawable) background);
             if (imageSource != null) {
-                int alertDialogStyleId = Attributes.getResourceIdStyleAttribute(context, DIALOG_STYLE, android.R.attr.alertDialogStyle);
+                int alertDialogStyleId = Attributes.getResourceIdStyleAttribute(mContext, mDialogStyleId, android.R.attr.alertDialogStyle);
                 if (imageSource.contains("popup_top_dark") || imageSource.contains("popup_top_bright")) {
-                    viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(context, alertDialogStyleId, android.R.attr.topBright));
+                    viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(mContext, alertDialogStyleId, android.R.attr.topBright));
                 } else if (imageSource.contains("popup_center_dark") || imageSource.contains("popup_center_medium")
                         || imageSource.contains("popup_center_bright")) {
-                    viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(context, alertDialogStyleId, android.R.attr.centerBright));
+                    viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(mContext, alertDialogStyleId, android.R.attr.centerBright));
                 } else if (imageSource.contains("popup_bottom_dark") || imageSource.contains("popup_bottom_medium")
                         || imageSource.contains("popup_bottom_bright")) {
-                    viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(context, alertDialogStyleId, android.R.attr.bottomBright));
+                    viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(mContext, alertDialogStyleId, android.R.attr.bottomBright));
                 }
             }
         }
@@ -182,12 +201,15 @@ public class DialogStyleHacks {
     /**
      * @return true if the given nine patch is the divider_strong_holo nine patch.
      */
-    private static boolean isHoloBlueNinePatch(NinePatchDrawable n) {
+    private boolean isHoloBlueNinePatch(NinePatchDrawable n) {
         String imageSource = getNinePatchImageSource(n);
         return imageSource != null && (imageSource.contains("divider_strong_holo") || imageSource.contains("divider_horizontal_dark"));
     }
 
-    private static String getNinePatchImageSource(NinePatchDrawable n) {
+    /**
+     * @return the filename for this nine patch.
+     */
+    private String getNinePatchImageSource(NinePatchDrawable n) {
         // horrible, horrible...
         String imageSource = null;
         lazyInitCrazyReflectionCrap();
@@ -200,8 +222,8 @@ public class DialogStyleHacks {
         return imageSource;
     }
 
-    private static boolean isHoloBlueColor(Context context, int colorId) {
-        lazyInitHoloColors(context);
+    private boolean isHoloBlueColor(int colorId) {
+        lazyInitHoloColors();
         return colorId == sHoloBlueLightColorId || colorId == sHoloBlueDarkColorId;
     }
 
@@ -209,20 +231,19 @@ public class DialogStyleHacks {
      * @return true if the given color is holo blue light or dark
      */
     @TargetApi(14)
-    private static boolean isHoloBlueColor(Context context, ColorDrawable c) {
-        return isHoloBlueColor(context, c.getColor());
+    private boolean isHoloBlueColor(ColorDrawable c) {
+        return isHoloBlueColor(c.getColor());
     }
 
     @TargetApi(14)
-    private static void lazyInitHoloColors(Context context) {
+    private void lazyInitHoloColors() {
         if (sHoloBlueLightColorId == -1) {
-            sHoloBlueLightColorId = context.getResources().getColor(android.R.color.holo_blue_light);
-            sHoloBlueDarkColorId = context.getResources().getColor(android.R.color.holo_blue_dark);
-            sMyAppColorId = context.getResources().getColor(R.color.netmon_color);
+            sHoloBlueLightColorId = mContext.getResources().getColor(android.R.color.holo_blue_light);
+            sHoloBlueDarkColorId = mContext.getResources().getColor(android.R.color.holo_blue_dark);
         }
     }
 
-    private static void lazyInitCrazyReflectionCrap() {
+    private void lazyInitCrazyReflectionCrap() {
         try {
             if (sNinePatchSourceField == null) {
                 sNinePatchField = NinePatchDrawable.class.getDeclaredField("mNinePatch");

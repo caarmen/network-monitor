@@ -91,7 +91,7 @@ public class ConfirmDialogFragment extends DialogFragment { // NO_UCD (use defau
         builder.setNegativeButton(android.R.string.cancel, negativeListener);
         builder.setPositiveButton(android.R.string.ok, positiveListener);
         final AlertDialog dialog = builder.create();
-        DialogStyleHacks.styleDialog(getActivity(), dialog);
+        new NetMonDialogStyleHacks(getActivity()).styleDialog(dialog);
         return dialog;
 
     }
