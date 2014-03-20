@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnShowListener;
 import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
 import android.graphics.NinePatch;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -81,12 +82,39 @@ public class DialogStyleHacks {
         ListView listView = dialog.getListView();
         if (listView != null) listView.setSelector(R.drawable.netmon_list_selector_holo_light);
         Button button = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        if (button != null) button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
+        if (button != null) styleButton(context, button);//button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
         button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        if (button != null) button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
+        if (button != null) styleButton(context, button);//button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
         button = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
-        if (button != null) button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
+        if (button != null) styleButton(context, button);//button.setBackgroundResource(R.drawable.netmon_btn_default_holo_light);
         DialogStyleHacks.uglyHackReplaceBlueHoloBackground(context, (ViewGroup) dialog.getWindow().getDecorView(), dialog);
+    }
+
+    /**
+     * Set the min height, min width, text color, and background drawable of this button based on our ButtonNetMon style.
+     */
+    private static void styleButton(Context context, Button button) {
+        int styleId = R.style.ButtonNetMon;
+        int[] buttonWidthAttrs = new int[] { android.R.attr.minWidth };
+        int[] buttonHeightAttrs = new int[] { android.R.attr.minHeight };
+        int[] buttonDrawableAttrs = new int[] { android.R.attr.background };
+        int[] buttonColorAttrs = new int[] { android.R.attr.textColor };
+        TypedArray values = context.getTheme().obtainStyledAttributes(styleId, buttonWidthAttrs);
+        int minWidth = values.getLayoutDimension(0, 0);
+        values.recycle();
+        values = context.getTheme().obtainStyledAttributes(styleId, buttonHeightAttrs);
+        int minHeight = values.getLayoutDimension(0, 0);
+        values.recycle();
+        values = context.getTheme().obtainStyledAttributes(styleId, buttonDrawableAttrs);
+        int backgroundId = values.getResourceId(0, 0);
+        values.recycle();
+        values = context.getTheme().obtainStyledAttributes(styleId, buttonColorAttrs);
+        int textColor = values.getColor(0, android.R.color.primary_text_dark);
+        values.recycle();
+        button.setMinHeight(minHeight);
+        button.setMinWidth(minWidth);
+        button.setBackgroundResource(backgroundId);
+        button.setTextColor(textColor);
     }
 
     /**
@@ -154,7 +182,7 @@ public class DialogStyleHacks {
                 else if (imageSource.contains("popup_center_dark") || imageSource.contains("popup_center_medium")
                         || imageSource.contains("popup_center_bright")) viewGroup.setBackgroundResource(R.drawable.popup_center_bright);
                 else if (imageSource.contains("popup_bottom_dark") || imageSource.contains("popup_bottom_medium"))
-                    viewGroup.setBackgroundResource(R.drawable.popup_center_bright);
+                    viewGroup.setBackgroundResource(R.drawable.popup_bottom_bright);
             }
         }
     }
