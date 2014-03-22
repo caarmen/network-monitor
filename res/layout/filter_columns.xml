@@ -15,7 +15,7 @@
         android:background="#ffffe1"
         android:padding="8dp"
         android:text="@string/filter_columns_hint"
-        android:textColor="#fd8900" />
+        android:textColor="@color/netmon_color" />
 
     <fragment
         android:id="@+id/listFragment"
