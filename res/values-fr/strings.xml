@@ -29,7 +29,7 @@
     <!-- Strings for the filter_columns activity -->
     <string name="filter_columns_title">Filtrer des valeurs (beta)</string>
     <string name="filter_columns_empty_value">Vide</string>
-    <string name="filter_columns_hint">Selectionner les valeurs de %s à inclure dans le journal.  Si aucune valeur n\'est cochée, les données ne seront pas filtrées (toutes les valeurs apparaitront).</string>
+    <string name="filter_columns_hint">Selectionner les valeurs de \"%s\" à inclure dans le journal.  Si aucune valeur n\'est cochée, les données ne seront pas filtrées (toutes les valeurs apparaitront).</string>
 
     <!-- Strings for the about screen -->
     <string name="about_title">À propos</string>
