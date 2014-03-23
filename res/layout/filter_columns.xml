@@ -15,7 +15,13 @@
         android:background="#ffffe1"
         android:padding="8dp"
         android:text="@string/filter_columns_hint"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/netmon_color" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/netmon_color" />
 
     <fragment
         android:id="@+id/listFragment"
