@@ -31,7 +31,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnShowListener;
-import android.content.res.ColorStateList;
 import android.graphics.NinePatch;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -44,7 +43,6 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.jraf.android.networkmonitor.Constants;
 
@@ -158,13 +156,6 @@ class DialogStyleHacks {
             else if (child instanceof CheckedTextView) {
                 Drawable radioButtonDrawable = Attributes.getDrawableStyleAttribute(mContext, mDialogStyleId, android.R.attr.listChoiceIndicatorSingle);
                 ((CheckedTextView) child).setCheckMarkDrawable(radioButtonDrawable);
-            }
-            // replace the title text color
-            else if (child instanceof TextView) {
-                TextView textView = (TextView) child;
-                ColorStateList textColors = textView.getTextColors();
-                int defaultColor = textColors.getDefaultColor();
-                if (isHoloBlueColor(defaultColor)) textView.setTextColor(mMyAppColorId);
             }
             // 4.x: replace the color of the horizontal divider
             else {
