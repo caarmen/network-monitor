@@ -53,7 +53,7 @@ import org.jraf.android.networkmonitor.Constants;
  * dialogs with EditTexts, and not a clean way to manage clicks on the dialog buttons. Started out trying to copy the resources used for dialogs, one-by-one,
  * from the core android framework, but that was more pain than the approach I decided to take in this class.
  */
-public class DialogStyleHacks {
+class DialogStyleHacks {
 
     private final String TAG = Constants.TAG + "/" + DialogStyleHacks.class.getSimpleName();
     private static int sHoloBlueLightColorId = -1;
@@ -72,7 +72,7 @@ public class DialogStyleHacks {
      * @param horizontalDividerDrawableId the drawable to use for the horizontal divider for 2.x and 3.x.
      * 
      */
-    public DialogStyleHacks(Context context, int dialogStyleId, int myAppColorId, int horizontalDividerDrawableId) {
+    DialogStyleHacks(Context context, int dialogStyleId, int myAppColorId, int horizontalDividerDrawableId) {
         mContext = context;
         mDialogStyleId = dialogStyleId;
         mMyAppColorId = mContext.getResources().getColor(myAppColorId);
@@ -185,15 +185,22 @@ public class DialogStyleHacks {
             String imageSource = getNinePatchImageSource((NinePatchDrawable) background);
             if (imageSource != null) {
                 int alertDialogStyleId = Attributes.getResourceIdStyleAttribute(mContext, mDialogStyleId, android.R.attr.alertDialogStyle);
-                if (imageSource.contains("popup_top_dark") || imageSource.contains("popup_top_bright")) {
-                    viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(mContext, alertDialogStyleId, android.R.attr.topBright));
-                } else if (imageSource.contains("popup_center_dark") || imageSource.contains("popup_center_medium")
-                        || imageSource.contains("popup_center_bright")) {
-                    viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(mContext, alertDialogStyleId, android.R.attr.centerBright));
-                } else if (imageSource.contains("popup_bottom_dark") || imageSource.contains("popup_bottom_medium")
-                        || imageSource.contains("popup_bottom_bright")) {
+                if (imageSource.contains("popup_top_dark")) viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(mContext,
+                        alertDialogStyleId, android.R.attr.topDark));
+                else if (imageSource.contains("popup_top_bright")) viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(mContext,
+                        alertDialogStyleId, android.R.attr.topBright));
+                else if (imageSource.contains("popup_center_dark")) viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(mContext,
+                        alertDialogStyleId, android.R.attr.centerDark));
+                else if (imageSource.contains("popup_center_medium")) viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(mContext,
+                        alertDialogStyleId, android.R.attr.centerMedium));
+                else if (imageSource.contains("popup_center_bright")) viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(mContext,
+                        alertDialogStyleId, android.R.attr.centerBright));
+                else if (imageSource.contains("popup_bottom_dark")) viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(mContext,
+                        alertDialogStyleId, android.R.attr.bottomDark));
+                else if (imageSource.contains("popup_bottom_medium")) viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(mContext,
+                        alertDialogStyleId, android.R.attr.bottomMedium));
+                else if (imageSource.contains("popup_bottom_bright"))
                     viewGroup.setBackgroundResource(Attributes.getResourceIdStyleAttribute(mContext, alertDialogStyleId, android.R.attr.bottomBright));
-                }
             }
         }
     }

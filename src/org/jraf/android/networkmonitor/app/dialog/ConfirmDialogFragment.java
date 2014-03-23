@@ -26,13 +26,18 @@ package org.jraf.android.networkmonitor.app.dialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import org.jraf.android.networkmonitor.Constants;
+import org.jraf.android.networkmonitor.R;
 
 /**
  * A dialog fragment with a title, message, ok and cancel buttons. This is based on ConfirmDialogFragment from the scrum chatter project.
@@ -63,7 +68,9 @@ public class ConfirmDialogFragment extends DialogFragment { // NO_UCD (use defau
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         Bundle arguments = getArguments();
-        builder.setTitle(arguments.getString(DialogFragmentFactory.EXTRA_TITLE)).setMessage(arguments.getString(DialogFragmentFactory.EXTRA_MESSAGE));
+        TextView customTitle = (TextView) View.inflate(getActivity(), R.layout.dialog_title, null);
+        customTitle.setText(arguments.getString(DialogFragmentFactory.EXTRA_TITLE));
+        builder.setCustomTitle(customTitle).setMessage(arguments.getString(DialogFragmentFactory.EXTRA_MESSAGE));
         final int actionId = arguments.getInt(DialogFragmentFactory.EXTRA_ACTION_ID);
         final Bundle extras = arguments.getBundle(DialogFragmentFactory.EXTRA_EXTRAS);
         OnClickListener positiveListener = null;
@@ -90,9 +97,18 @@ public class ConfirmDialogFragment extends DialogFragment { // NO_UCD (use defau
         }
         builder.setNegativeButton(android.R.string.cancel, negativeListener);
         builder.setPositiveButton(android.R.string.ok, positiveListener);
+        if (getActivity() instanceof OnCancelListener) builder.setOnCancelListener((OnCancelListener) getActivity());
         final AlertDialog dialog = builder.create();
+        if (getActivity() instanceof OnDismissListener) dialog.setOnDismissListener((OnDismissListener) getActivity());
         new NetMonDialogStyleHacks(getActivity()).styleDialog(dialog);
         return dialog;
 
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        Log.v(TAG, "onDismiss");
+        super.onDismiss(dialog);
+        if (getActivity() instanceof OnDismissListener) ((OnDismissListener) getActivity()).onDismiss(dialog);
     }
 }

@@ -27,11 +27,12 @@ package org.jraf.android.networkmonitor.app.log;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -39,13 +40,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.view.ContextThemeWrapper;
 import android.widget.Toast;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
+import org.jraf.android.networkmonitor.app.dialog.ChoiceDialogFragment.DialogItemListener;
+import org.jraf.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
 import org.jraf.android.networkmonitor.app.dialog.DialogFragmentFactory;
-import org.jraf.android.networkmonitor.app.dialog.NetMonDialogStyleHacks;
 import org.jraf.android.networkmonitor.app.dialog.PreferenceDialog;
 import org.jraf.android.networkmonitor.app.dialog.ProgressDialogFragment;
 import org.jraf.android.networkmonitor.app.export.CSVExport;
@@ -62,68 +63,27 @@ import org.jraf.android.networkmonitor.util.Log;
  * Provides actions on the network monitor log: sharing and clearing the log file.
  * This activity has a transparent theme. The only thing the user will see will be alert dialogs that this activity creates.
  */
-public class LogActionsActivity extends FragmentActivity { // NO_UCD (use default)
+public class LogActionsActivity extends FragmentActivity implements DialogButtonListener, DialogItemListener, OnCancelListener, OnDismissListener { // NO_UCD (use default)
     static final String ACTION_SHARE = LogActionsActivity.class.getPackage().getName() + "_share";
     static final String ACTION_CLEAR = LogActionsActivity.class.getPackage().getName() + "_clear";
 
     private static final String TAG = Constants.TAG + LogActionsActivity.class.getSimpleName();
     private static final String PROGRESS_DIALOG_TAG = ProgressDialogFragment.class.getSimpleName();
+    private boolean mListItemSelected = false;
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         String action = getIntent().getAction();
         if (ACTION_SHARE.equals(action)) {
-            share();
+            DialogFragmentFactory.showChoiceDialog(this, getString(R.string.export_choice_title), getResources().getStringArray(R.array.export_choices), -1,
+                    R.id.action_share);
         } else if (ACTION_CLEAR.equals(action)) {
-            clear();
+            DialogFragmentFactory.showConfirmDialog(this, getString(R.string.action_clear), getString(R.string.confirm_logs_clear), R.id.action_clear, null);
         } else {
             Log.w(TAG, "Activity created without a known action.  Action=" + action);
             finish();
         }
-    }
-
-    /**
-     * Ask the user to choose an export format, generate the file in that format, then bring up the share chooser intent so the user can choose how to share
-     * the file.
-     */
-    private void share() {
-        Log.v(TAG, "share");
-        // Build a chooser dialog for the file format.
-        Context context = new ContextThemeWrapper(this, R.style.dialogStyle);
-        AlertDialog.Builder builder = new AlertDialog.Builder(context).setTitle(R.string.export_choice_title).setItems(R.array.export_choices,
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String[] exportChoices = getResources().getStringArray(R.array.export_choices);
-                        FileExport fileExport = null;
-                        try {
-                            if (getString(R.string.export_choice_csv).equals(exportChoices[which])) {
-                                fileExport = new CSVExport(LogActionsActivity.this, mExportProgressListener);
-                            } else if (getString(R.string.export_choice_html).equals(exportChoices[which])) {
-                                fileExport = new HTMLExport(LogActionsActivity.this, true, mExportProgressListener);
-                            } else if (getString(R.string.export_choice_kml).equals(exportChoices[which])) {
-                                // The KML export requires a second dialog before we can share, so we return here.
-                                shareKml();
-                                return;
-                            } else if (getString(R.string.export_choice_excel).equals(exportChoices[which])) {
-                                fileExport = new ExcelExport(LogActionsActivity.this, mExportProgressListener);
-                            } else if (getString(R.string.export_choice_db).equals(exportChoices[which])) {
-                                fileExport = new DBExport(LogActionsActivity.this, mExportProgressListener);
-                            } else {
-                                // Text summary only
-                            }
-                            shareFile(fileExport);
-                        } catch (IOException e) {
-                            Log.w(TAG, "Error sharing file: " + e.getMessage(), e);
-                        }
-                    }
-                });
-        AlertDialog dialog = builder.create();
-        new NetMonDialogStyleHacks(this).styleDialog(dialog);
-        dialog.setOnCancelListener(mDialogDismissListener);
-        dialog.show();
     }
 
     /**
@@ -150,48 +110,6 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
                 finish();
             }
         });
-    }
-
-    /**
-     * Clear the DB.
-     */
-    private void clear() {
-        Log.v(TAG, "clear");
-
-        // Bring up a confirmation dialog.
-        Context context = new ContextThemeWrapper(this, R.style.dialogStyle);
-        AlertDialog dialog = new AlertDialog.Builder(context).setTitle(R.string.action_clear).setMessage(R.string.confirm_logs_clear)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Log.v(TAG, "Clicked ok to clear log");
-                        // If the user agrees to delete the logs, run
-                        // the delete in the background.
-                        DialogFragmentFactory.showProgressDialog(LogActionsActivity.this, getString(R.string.progress_dialog_message),
-                                ProgressDialog.STYLE_SPINNER, PROGRESS_DIALOG_TAG);
-                        AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
-
-                            @Override
-                            protected Void doInBackground(Void... params) {
-                                Log.v(TAG, "clear:doInBackground");
-                                getContentResolver().delete(NetMonColumns.CONTENT_URI, null, null);
-                                return null;
-                            }
-
-                            @Override
-                            protected void onPostExecute(Void result) {
-                                // Once the DB is deleted, reload the WebView.
-                                Log.v(TAG, "clear:onPostExecute");
-                                Toast.makeText(LogActionsActivity.this, R.string.success_logs_clear, Toast.LENGTH_LONG).show();
-                                setResult(RESULT_OK);
-                                finish();
-                            }
-                        };
-                        asyncTask.execute();
-                    }
-                }).setNegativeButton(android.R.string.no, mDialogCancelButtonClickListener).setOnCancelListener(mDialogDismissListener).create();
-        new NetMonDialogStyleHacks(LogActionsActivity.this).styleDialog(dialog);
-        dialog.show();
     }
 
     /**
@@ -277,28 +195,96 @@ public class LogActionsActivity extends FragmentActivity { // NO_UCD (use defaul
         }
     };
 
+    @Override
+    public void onOkClicked(int actionId, Bundle extras) {
+        Log.v(TAG, "onOkClicked, actionId = " + actionId);
+        // The user confirmed to clear the logs.
+        if (actionId == R.id.action_clear) {
+            Log.v(TAG, "Clicked ok to clear log");
+            DialogFragmentFactory.showProgressDialog(LogActionsActivity.this, getString(R.string.progress_dialog_message), ProgressDialog.STYLE_SPINNER,
+                    PROGRESS_DIALOG_TAG);
+            AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    Log.v(TAG, "clear:doInBackground");
+                    getContentResolver().delete(NetMonColumns.CONTENT_URI, null, null);
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void result) {
+                    // Once the DB is deleted, reload the WebView.
+                    Log.v(TAG, "clear:onPostExecute");
+                    Toast.makeText(LogActionsActivity.this, R.string.success_logs_clear, Toast.LENGTH_LONG).show();
+                    setResult(RESULT_OK);
+                    finish();
+                }
+            };
+            asyncTask.execute();
+        }
+    }
+
+    @Override
+    public void onItemSelected(int actionId, CharSequence[] choices, int which) {
+        Log.v(TAG, "onItemSelected: actionId =  " + actionId + ", choices = " + Arrays.toString(choices) + ", which = " + which);
+        mListItemSelected = true;
+        // The user picked a file format to export.
+        if (actionId == R.id.action_share) {
+
+            String[] exportChoices = getResources().getStringArray(R.array.export_choices);
+            FileExport fileExport = null;
+            try {
+                if (getString(R.string.export_choice_csv).equals(exportChoices[which])) {
+                    fileExport = new CSVExport(LogActionsActivity.this, mExportProgressListener);
+                } else if (getString(R.string.export_choice_html).equals(exportChoices[which])) {
+                    fileExport = new HTMLExport(LogActionsActivity.this, true, mExportProgressListener);
+                } else if (getString(R.string.export_choice_kml).equals(exportChoices[which])) {
+                    // The KML export requires a second dialog before we can share, so we return here.
+                    shareKml();
+                    return;
+                } else if (getString(R.string.export_choice_excel).equals(exportChoices[which])) {
+                    fileExport = new ExcelExport(LogActionsActivity.this, mExportProgressListener);
+                } else if (getString(R.string.export_choice_db).equals(exportChoices[which])) {
+                    fileExport = new DBExport(LogActionsActivity.this, mExportProgressListener);
+                } else {
+                    // Text summary only
+                }
+                shareFile(fileExport);
+            } catch (IOException e) {
+                Log.w(TAG, "Error sharing file: " + e.getMessage(), e);
+            }
+        }
+    }
+
+    @Override
+    public void onCancelClicked(int actionId, Bundle extras) {
+        Log.v(TAG, "onCancelClicked, actionId = " + actionId);
+        if (actionId == R.id.action_clear || actionId == R.id.action_share) dismiss();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        Log.v(TAG, "onDismiss");
+        if (mListItemSelected) {
+            // Ignore, the share choice dialog was dismissed because the user selected one of the file formats
+        } else {
+            dismiss();
+        }
+    }
+
     /**
      * Listener to finish this activity with a canceled result when the user presses back on a dialog.
      */
-    private final DialogInterface.OnCancelListener mDialogDismissListener = new DialogInterface.OnCancelListener() {
-        @Override
-        public void onCancel(DialogInterface dialog) {
-            Log.v(TAG, "Dialog dismissed");
-            setResult(RESULT_CANCELED);
-            finish();
-        }
-    };
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        Log.v(TAG, "onCancel");
+        dismiss();
+    }
 
-    /**
-     * Listener to finish this activity with a canceled result when the user presses the cancel button on a dialog.
-     */
-    private final DialogInterface.OnClickListener mDialogCancelButtonClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            Log.v(TAG, "Dialog cancel button clicked");
-            setResult(RESULT_CANCELED);
-            finish();
-        }
-    };
-
+    private void dismiss() {
+        Log.v(TAG, "dismiss");
+        setResult(RESULT_CANCELED);
+        finish();
+    }
 }
