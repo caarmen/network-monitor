@@ -51,7 +51,7 @@ public class FilterColumnListFragment extends ListFragment {
     private static final String TAG = FilterColumnListFragment.class.getSimpleName();
     private static final int URL_LOADER = 0;
 
-    private static String mColumnName;
+    private String mColumnName;
 
     /**
      * The list will contain FilterListItems.
