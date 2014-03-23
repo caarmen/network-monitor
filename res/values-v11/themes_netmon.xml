@@ -5,7 +5,7 @@
 
   <style name="NetMon" parent="@style/_NetMon"/>
 
-  <style name="_NetMon" parent="android:Theme.WithActionBar">
+  <style name="_NetMon" parent="android:Theme.Holo.Light">
 
     <item name="android:listChoiceIndicatorMultiple">@drawable/netmon_btn_check_holo_light</item>
 
