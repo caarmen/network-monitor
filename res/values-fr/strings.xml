@@ -33,8 +33,8 @@
 
     <!-- Strings for the about screen -->
     <string name="about_title">À propos</string>
-    <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
-    <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
+    <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2014 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
+    <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2014 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
     <string name="about_projectUrl">https://github.com/BoD/network-monitor</string>
     <string name="about_issues">Remonter des anomalies :\nhttps://github.com/BoD/network-monitor/issues</string>
     <string name="about_rate">Donnez votre avis sur le Play Store :\nhttps://play.google.com/store/apps/details?id=ca.rmen.android.networkmonitor</string>
