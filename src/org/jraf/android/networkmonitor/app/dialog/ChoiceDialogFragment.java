@@ -30,8 +30,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
-import android.view.View;
-import android.widget.TextView;
 
 import org.jraf.android.networkmonitor.Constants;
 import org.jraf.android.networkmonitor.R;
@@ -63,9 +61,7 @@ public class ChoiceDialogFragment extends DialogFragment { // NO_UCD (use defaul
         Context context = new ContextThemeWrapper(getActivity(), R.style.dialogStyle);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         Bundle arguments = getArguments();
-        TextView customTitle = (TextView) View.inflate(getActivity(), R.layout.dialog_title, null);
-        customTitle.setText(arguments.getString(DialogFragmentFactory.EXTRA_TITLE));
-        builder.setCustomTitle(customTitle).setMessage(arguments.getString(DialogFragmentFactory.EXTRA_MESSAGE));
+        DialogStyle.setCustomTitle(context, builder, arguments.getString(DialogFragmentFactory.EXTRA_TITLE));
         final int actionId = arguments.getInt(DialogFragmentFactory.EXTRA_ACTION_ID);
         int selectedItem = arguments.getInt(DialogFragmentFactory.EXTRA_SELECTED_ITEM);
         final CharSequence[] choices = arguments.getCharSequenceArray(DialogFragmentFactory.EXTRA_CHOICES);

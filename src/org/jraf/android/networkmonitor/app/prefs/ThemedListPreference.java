@@ -28,10 +28,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.TextView;
 
-import org.jraf.android.networkmonitor.R;
+import org.jraf.android.networkmonitor.app.dialog.DialogStyle;
 import org.jraf.android.networkmonitor.app.dialog.NetMonDialogStyleHacks;
 
 public class ThemedListPreference extends ListPreference {
@@ -46,9 +44,7 @@ public class ThemedListPreference extends ListPreference {
 
     @Override
     protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
-        TextView customTitle = (TextView) View.inflate(getContext(), R.layout.dialog_title, null);
-        customTitle.setText(getTitle());
-        builder.setCustomTitle(customTitle);
+        DialogStyle.setCustomTitle(getContext(), builder, getTitle());
         super.onPrepareDialogBuilder(builder);
     }
 
