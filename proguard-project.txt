@@ -27,4 +27,7 @@
 }
 -keep class org.jraf.android.networkmonitor.app.service.scheduler.ExecutorServiceScheduler
 -keep class org.jraf.android.networkmonitor.app.service.scheduler.AlarmManagerScheduler
+
+-optimizations !code/allocation/variable
+
 -keepattributes SourceFile,LineNumberTable
