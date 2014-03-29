@@ -10,6 +10,11 @@ This project depends on the following libraries:
 * Google Play Services Lib: available in the Android SDK in this folder: extras/google/google_play_services/libproject/google-play-services_lib/
 * android-switch-backport: https://github.com/BoD/android-switch-backport
 
+Credits
+-------
+This project was initially created by Benoit 'BoD' Lubek (BoD@JRAF.org / http://github.com/BoD),
+but most of the current code was contributed by Carmen Alvarez (c@rmen.ca / http://github.com/caarmen).
+
 Licence
 -------
 
