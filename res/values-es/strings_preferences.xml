@@ -35,6 +35,10 @@
     <string name="pref_value_cell_id_format_decimal">Decimal</string>
     <string name="pref_value_cell_id_format_hex">Hexa</string>
     <string name="pref_value_cell_id_format_decimal_hex">Ambos</string>
+    <string name="pref_title_location_fetching_strategy">Precisión de localización</string>
+    <string name="pref_summary_location_fetching_strategy">Escoger entre una gran precisión o el ahorro de energía: %s</string>
+    <string name="pref_value_location_fetching_strategy_accurate">Gran precisión</string>
+    <string name="pref_value_location_fetching_strategy_save_power">Economizar la bateria</string>
     <string name="pref_title_import">Importar</string>
     <string name="pref_summary_import">Importar una base de datos exportada desde Network Monitor.</string>
     <!--  Other preferences -->

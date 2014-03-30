@@ -33,7 +33,7 @@
     
     <!--  Strings for warning about location settings -->
     <string name="no_location_confirm_dialog_title">Locations not enabled</string>
-    <string name="no_location_confirm_dialog_message">You have disabled location tracking in your system settings.  Please enable location tracking, or Network Monitor won\'t be able to log your location.</string>
+    <string name="no_location_confirm_dialog_message">You have disabled location tracking in your system settings.  Enable location tracking so that Network Monitor can log your location.</string>
 
     <!--  Strings for the about screen -->
     <string name="about_title">About</string>

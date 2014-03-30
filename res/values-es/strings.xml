@@ -31,6 +31,10 @@
     <string name="filter_columns_empty_value">Vacío</string>
     <string name="filter_columns_hint">Seleccionar los valores de \"%s\" que deseas ver en el informe. Si ningún valor es seleccionado, los datos no se filtrarán (todos los valores aparecerán).</string>
 
+    <!--  Strings for warning about location settings -->
+    <string name="no_location_confirm_dialog_title">Ubicación desactivada</string>
+    <string name="no_location_confirm_dialog_message">La ubicación está desactivada en los ajustes del sistema. Activar la ubicación para que Network Monitor pueda registrar las coordenadas del dispositivo.</string>
+
     <!-- Strings for the about screen -->
     <string name="about_title">Acerca de</string>
     <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2014 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
