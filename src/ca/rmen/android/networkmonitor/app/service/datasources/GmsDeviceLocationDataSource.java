@@ -98,13 +98,16 @@ class GmsDeviceLocationDataSource implements NetMonDataSource {
         LocationFetchingStrategy locationFetchingStrategy = NetMonPreferences.getInstance(mContext).getLocationFetchingStrategy();
         Log.v(TAG, "registerLocationListener: strategy = " + locationFetchingStrategy);
         mLocationClient.removeLocationUpdates(mGmsLocationListener);
+        LocationRequest request = new LocationRequest();
         if (locationFetchingStrategy == LocationFetchingStrategy.HIGH_ACCURACY) {
-            int pollingInterval = NetMonPreferences.getInstance(mContext).getUpdateInterval();
-            LocationRequest request = new LocationRequest();
             request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            int pollingInterval = NetMonPreferences.getInstance(mContext).getUpdateInterval();
             request.setFastestInterval(pollingInterval);
-            mLocationClient.requestLocationUpdates(request, mGmsLocationListener);
+        } else {
+            request.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+            request.setNumUpdates(1);
         }
+        mLocationClient.requestLocationUpdates(request, mGmsLocationListener);
     }
 
     private LocationListener mGmsLocationListener = new LocationListener() {
