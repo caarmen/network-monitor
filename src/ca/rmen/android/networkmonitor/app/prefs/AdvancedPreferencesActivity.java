@@ -53,6 +53,7 @@ public class AdvancedPreferencesActivity extends PreferenceActivity {
         updateListPreferenceSummary(NetMonPreferences.PREF_CELL_ID_FORMAT, R.string.pref_summary_cell_id_format);
         updateListPreferenceSummary(NetMonPreferences.PREF_WAKE_INTERVAL, R.string.pref_summary_wake_interval);
         updateListPreferenceSummary(NetMonPreferences.PREF_SCHEDULER, R.string.pref_summary_scheduler);
+        updateListPreferenceSummary(NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY, R.string.pref_summary_location_fetching_strategy);
         Preference importPreference = getPreferenceManager().findPreference(PREF_IMPORT);
         importPreference.setOnPreferenceClickListener(mOnPreferenceClickListener);
     }
@@ -78,6 +79,8 @@ public class AdvancedPreferencesActivity extends PreferenceActivity {
                 updateListPreferenceSummary(NetMonPreferences.PREF_WAKE_INTERVAL, R.string.pref_summary_wake_interval);
             } else if (NetMonPreferences.PREF_SCHEDULER.equals(key)) {
                 updateListPreferenceSummary(NetMonPreferences.PREF_SCHEDULER, R.string.pref_summary_scheduler);
+            } else if (NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY.equals(key)) {
+                updateListPreferenceSummary(NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY, R.string.pref_summary_location_fetching_strategy);
             }
         }
     };

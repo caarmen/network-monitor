@@ -23,41 +23,34 @@
  */
 package ca.rmen.android.networkmonitor.app.service.datasources;
 
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
-import android.location.Location;
-import android.location.LocationManager;
-import android.os.Bundle;
-import ca.rmen.android.networkmonitor.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
+import ca.rmen.android.networkmonitor.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
-import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 /**
- * Retrieves the device's location, using either Google Play Services or one of the location providers.
+ * Retrieves the device's location, using Google Play Services if it is available, or one of the location providers otherwise.
  */
 class DeviceLocationDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + DeviceLocationDataSource.class.getSimpleName();
-    private LocationManager mLocationManager;
-    private LocationClient mLocationClient;
+    private NetMonDataSource mDeviceLocationDataSourceImpl;
 
     public DeviceLocationDataSource() {}
 
     @Override
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
-        mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        mLocationClient = new LocationClient(context, mConnectionCallbacks, mConnectionFailedListener);
-        mLocationClient.connect();
+        int playServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+        if (playServicesAvailable == ConnectionResult.SUCCESS) mDeviceLocationDataSourceImpl = new GmsDeviceLocationDataSource();
+        else
+            mDeviceLocationDataSourceImpl = new StandardDeviceLocationDataSource();
+        mDeviceLocationDataSourceImpl.onCreate(context);
     }
-
 
     /**
      * @return the last location the device recorded in a ContentValues with keys {@link NetMonColumns#DEVICE_LATITUDE} and
@@ -67,59 +60,14 @@ class DeviceLocationDataSource implements NetMonDataSource {
     @Override
     public ContentValues getContentValues() {
         Log.v(TAG, "getContentValues");
-        ContentValues values = new ContentValues(2);
-        Location mostRecentLocation = null;
-        // Try getting the location from the LocationClient
-        if (mLocationClient.isConnected()) {
-            mostRecentLocation = mLocationClient.getLastLocation();
-            Log.v(TAG, "Got location from LocationClient: " + mostRecentLocation);
-        }
-        // Fall back to the old way.
-        if (mostRecentLocation == null) {
-            List<String> providers = mLocationManager.getProviders(true);
-            long mostRecentFix = 0;
-            for (String provider : providers) {
-                Location location = mLocationManager.getLastKnownLocation(provider);
-                Log.v(TAG, "Location for provider " + provider + ": " + location);
-                if (location == null) continue;
-                long time = location.getTime();
-                if (time > mostRecentFix) {
-                    time = mostRecentFix;
-                    mostRecentLocation = location;
-                }
-            }
-        }
-        Log.v(TAG, "Most recent location: " + mostRecentLocation);
-        if (mostRecentLocation != null) {
-            values.put(NetMonColumns.DEVICE_LATITUDE, mostRecentLocation.getLatitude());
-            values.put(NetMonColumns.DEVICE_LONGITUDE, mostRecentLocation.getLongitude());
-            values.put(NetMonColumns.DEVICE_POSITION_ACCURACY, mostRecentLocation.getAccuracy());
-        }
-        return values;
+        return mDeviceLocationDataSourceImpl.getContentValues();
     }
+
 
     @Override
     public void onDestroy() {
         Log.v(TAG, "onDestroy");
-        if (mLocationClient != null) mLocationClient.disconnect();
+        mDeviceLocationDataSourceImpl.onDestroy();
     }
 
-    private ConnectionCallbacks mConnectionCallbacks = new ConnectionCallbacks() {
-        @Override
-        public void onConnected(Bundle bundle) {
-            Log.v(TAG, "onConnected: " + bundle);
-        }
-
-        @Override
-        public void onDisconnected() {
-            Log.v(TAG, "onDisconnected");
-        }
-    };
-
-    private OnConnectionFailedListener mConnectionFailedListener = new OnConnectionFailedListener() {
-        @Override
-        public void onConnectionFailed(ConnectionResult result) {
-            Log.v(TAG, "onConnectionFailed: " + result);
-        }
-    };
 }

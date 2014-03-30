@@ -49,6 +49,10 @@ public class NetMonPreferences {
         DECIMAL, HEX, DECIMAL_HEX
     };
 
+    public enum LocationFetchingStrategy {
+        SAVE_POWER, HIGH_ACCURACY
+    };
+
     public static final String PREF_UPDATE_INTERVAL = "PREF_UPDATE_INTERVAL";
     public static final String PREF_UPDATE_INTERVAL_DEFAULT = "10000";
     public static final String PREF_SERVICE_ENABLED = "PREF_SERVICE_ENABLED";
@@ -63,6 +67,7 @@ public class NetMonPreferences {
     public static final String PREF_FILTER_RECORD_COUNT_DEFAULT = "250";
     public static final String PREF_CELL_ID_FORMAT = "PREF_CELL_ID_FORMAT";
     public static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
+    public static final String PREF_LOCATION_FETCHING_STRATEGY = "PREF_LOCATION_FETCHING_STRATEGY";
 
     private static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
     private static final String PREF_SCHEDULER_DEFAULT = ExecutorServiceScheduler.class.getSimpleName();
@@ -244,6 +249,14 @@ public class NetMonPreferences {
         editor.putString(PREF_SORT_COLUMN_NAME, sortPreferences.sortColumnName);
         editor.putString(PREF_SORT_ORDER, sortPreferences.sortOrder.name());
         editor.commit();
+    }
+
+    /**
+     * @return the strategy we should use for requesting location updates.
+     */
+    public LocationFetchingStrategy getLocationFetchingStrategy() {
+        String value = mSharedPrefs.getString(PREF_LOCATION_FETCHING_STRATEGY, LocationFetchingStrategy.SAVE_POWER.name());
+        return LocationFetchingStrategy.valueOf(value);
     }
 
     private int getIntPreference(String key, String defaultValue) {

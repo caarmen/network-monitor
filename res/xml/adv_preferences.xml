@@ -32,6 +32,14 @@
         android:key="PREF_SCHEDULER"
         android:summary="@string/pref_summary_scheduler"
         android:title="@string/pref_title_scheduler" />
+    <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
+        android:defaultValue="SAVE_POWER"
+        android:entries="@array/preferences_location_fetching_strategy_labels"
+        android:entryValues="@array/preferences_location_fetching_strategy_values"
+        android:icon="@drawable/ic_pref_location_fetching_strategy"
+        android:key="PREF_LOCATION_FETCHING_STRATEGY"
+        android:summary="@string/pref_summary_location_fetching_strategy"
+        android:title="@string/pref_title_location_fetching_strategy" />
 
     <Preference
         android:icon="@drawable/ic_pref_import"
