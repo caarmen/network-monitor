@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="netmon_color">#fd8900</color>
+    <color name="netmon_color_light">#ffffe1</color>
 </resources>

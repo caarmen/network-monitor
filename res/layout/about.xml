@@ -18,7 +18,8 @@
             android:id="@+id/txtVersion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -26,7 +27,8 @@
             android:layout_marginTop="16dp"
             android:autoLink="all"
             android:text="@string/about_copyright_1"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColorLink="@color/netmon_color" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -34,7 +36,8 @@
             android:layout_marginTop="16dp"
             android:autoLink="all"
             android:text="@string/about_copyright_2"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColorLink="@color/netmon_color" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -44,7 +47,8 @@
             android:drawableLeft="@drawable/ic_about_source_code"
             android:drawablePadding="8dp"
             android:text="@string/about_projectUrl"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColorLink="@color/netmon_color" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -54,7 +58,8 @@
             android:drawableLeft="@drawable/ic_about_bug"
             android:drawablePadding="8dp"
             android:text="@string/about_issues"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColorLink="@color/netmon_color" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -64,7 +69,8 @@
             android:drawableLeft="@drawable/ic_about_rate"
             android:drawablePadding="8dp"
             android:text="@string/about_rate"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColorLink="@color/netmon_color" />
     </LinearLayout>
 
 </ScrollView>
