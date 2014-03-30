@@ -1,0 +1,67 @@
+/*
+ * This source is part of the
+ *      _____  ___   ____
+ *  __ / / _ \/ _ | / __/___  _______ _
+ * / // / , _/ __ |/ _/_/ _ \/ __/ _ `/
+ * \___/_/|_/_/ |_/_/ (_)___/_/  \_, /
+ *                              /___/
+ * repository.
+ *
+ * Copyright (C) 2014 Carmen Alvarez (c@rmen.ca)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package ca.rmen.android.networkmonitor.app.service.datasources;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import ca.rmen.android.networkmonitor.util.Log;
+
+import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.provider.NetMonColumns;
+
+/**
+ * @return the SSID, BSSID, signal strength, and RSSI of the currently connected WiFi network, if any.
+ */
+class WiFiDataSource implements NetMonDataSource {
+
+    private static final String TAG = Constants.TAG + WiFiDataSource.class.getSimpleName();
+    private WifiManager mWifiManager;
+
+    @Override
+    public void onCreate(Context context) {
+        Log.v(TAG, "onCreate");
+        mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+    }
+
+    @Override
+    public void onDestroy() {}
+
+    @Override
+    public ContentValues getContentValues() {
+        Log.v(TAG, "getContentValues");
+        WifiInfo connectionInfo = mWifiManager.getConnectionInfo();
+        ContentValues result = new ContentValues(2);
+        if (connectionInfo == null || connectionInfo.getNetworkId() < 0) return result;
+        result.put(NetMonColumns.WIFI_SSID, connectionInfo.getSSID());
+        result.put(NetMonColumns.WIFI_BSSID, connectionInfo.getBSSID());
+        int signalLevel = WifiManager.calculateSignalLevel(connectionInfo.getRssi(), 5);
+        result.put(NetMonColumns.WIFI_SIGNAL_STRENGTH, signalLevel);
+        result.put(NetMonColumns.WIFI_RSSI, connectionInfo.getRssi());
+
+        return result;
+    }
+
+}

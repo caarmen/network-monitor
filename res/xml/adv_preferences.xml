@@ -5,17 +5,17 @@
         android:icon="@drawable/ic_pref_select_fields"
         android:summary="@string/pref_summary_select_fields"
         android:title="@string/pref_title_select_fields" >
-        <intent android:action="org.jraf.android.networkmonitor.app.prefs.SelectFieldsActivity" />
+        <intent android:action="ca.rmen.android.networkmonitor.app.prefs.SelectFieldsActivity" />
     </Preference>
 
-    <org.jraf.android.networkmonitor.app.prefs.ThemedListPreference
+    <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
         android:entries="@array/preferences_cell_id_format_labels"
         android:entryValues="@array/preferences_cell_id_format_values"
         android:icon="@drawable/ic_pref_cell_id_format"
         android:key="PREF_CELL_ID_FORMAT"
         android:summary="@string/pref_summary_cell_id_format"
         android:title="@string/pref_title_cell_id_format" />
-    <org.jraf.android.networkmonitor.app.prefs.ThemedListPreference
+    <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
         android:defaultValue="0"
         android:entries="@array/preferences_wake_interval_labels"
         android:entryValues="@array/preferences_wake_interval_values"
@@ -23,7 +23,7 @@
         android:key="PREF_WAKE_INTERVAL"
         android:summary="@string/pref_summary_wake_interval"
         android:title="@string/pref_title_wake_interval" />
-    <org.jraf.android.networkmonitor.app.prefs.ThemedListPreference
+    <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
         android:defaultValue="ExecutorServiceScheduler"
         android:entries="@array/preferences_scheduler_labels"
         android:entryValues="@array/preferences_scheduler_values"

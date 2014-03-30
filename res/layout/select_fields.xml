@@ -10,7 +10,7 @@
 
     <fragment
         android:id="@+id/listFragment"
-        android:name="org.jraf.android.networkmonitor.app.prefs.SelectFieldsFragment"
+        android:name="ca.rmen.android.networkmonitor.app.prefs.SelectFieldsFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
