@@ -74,7 +74,9 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
     private static final String TAG = Constants.TAG + LogActionsActivity.class.getSimpleName();
     private static final String PROGRESS_DIALOG_TAG = ProgressDialogFragment.class.getSimpleName();
     private static final int ID_ACTION_LOCATION_SETTINGS = 1;
-    private boolean mListItemSelected = false;
+    // True if the user interacted with a dialog other than to dismiss it.
+    // IE: they clicked "ok" or selected an item from the list.
+    private boolean mUserInput = false;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -220,6 +222,7 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
     @Override
     public void onOkClicked(int actionId, Bundle extras) {
         Log.v(TAG, "onOkClicked, actionId = " + actionId);
+        mUserInput = true;
         // The user confirmed to clear the logs.
         if (actionId == R.id.action_clear) {
             Log.v(TAG, "Clicked ok to clear log");
@@ -254,7 +257,7 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
     @Override
     public void onItemSelected(int actionId, CharSequence[] choices, int which) {
         Log.v(TAG, "onItemSelected: actionId =  " + actionId + ", choices = " + Arrays.toString(choices) + ", which = " + which);
-        mListItemSelected = true;
+        mUserInput = true;
         // The user picked a file format to export.
         if (actionId == R.id.action_share) {
 
@@ -292,8 +295,8 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
     @Override
     public void onDismiss(DialogInterface dialog) {
         Log.v(TAG, "onDismiss");
-        if (mListItemSelected) {
-            // Ignore, the share choice dialog was dismissed because the user selected one of the file formats
+        if (mUserInput) {
+            // Ignore, the dialog was dismissed because the user tapped ok on the dialog or selected an item from the list in the dialog.
         } else {
             dismiss();
         }
