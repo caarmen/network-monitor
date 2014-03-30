@@ -12,7 +12,7 @@
         android:id="@+id/filter_columns_hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffe1"
+        android:background="@color/netmon_color_light"
         android:padding="8dp"
         android:text="@string/filter_columns_hint"
         android:textAppearance="?android:attr/textAppearanceMedium"

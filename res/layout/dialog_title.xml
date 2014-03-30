@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="#ffffe1"
+        android:background="@color/netmon_color_light"
         android:gravity="center"
         android:minHeight="@dimen/alert_dialog_title_height"
         android:padding="8dp"
