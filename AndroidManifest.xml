@@ -124,6 +124,11 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="ca.rmen.android.networkmonitor.app.log_check_location_settings" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name="ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity"

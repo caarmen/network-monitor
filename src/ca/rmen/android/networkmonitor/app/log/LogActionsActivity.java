@@ -30,14 +30,17 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
@@ -66,9 +69,11 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class LogActionsActivity extends FragmentActivity implements DialogButtonListener, DialogItemListener, OnCancelListener, OnDismissListener { // NO_UCD (use default)
     static final String ACTION_SHARE = LogActionsActivity.class.getPackage().getName() + "_share";
     static final String ACTION_CLEAR = LogActionsActivity.class.getPackage().getName() + "_clear";
+    public static final String ACTION_CHECK_LOCATION_SETTINGS = LogActionsActivity.class.getPackage().getName() + "_check_location_settings";
 
     private static final String TAG = Constants.TAG + LogActionsActivity.class.getSimpleName();
     private static final String PROGRESS_DIALOG_TAG = ProgressDialogFragment.class.getSimpleName();
+    private static final int ID_ACTION_LOCATION_SETTINGS = 1;
     private boolean mListItemSelected = false;
 
     @Override
@@ -80,6 +85,8 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
                     R.id.action_share);
         } else if (ACTION_CLEAR.equals(action)) {
             DialogFragmentFactory.showConfirmDialog(this, getString(R.string.action_clear), getString(R.string.confirm_logs_clear), R.id.action_clear, null);
+        } else if (ACTION_CHECK_LOCATION_SETTINGS.equals(action)) {
+            checkLocationSettings();
         } else {
             Log.w(TAG, "Activity created without a known action.  Action=" + action);
             finish();
@@ -176,6 +183,21 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
         asyncTask.execute();
     }
 
+    /**
+     * Checks if we have either the GPS or Network location provider enabled. If not, shows a popup dialog telling the user they should go to the system
+     * settings to enable location tracking.
+     */
+    private void checkLocationSettings() {
+        // If the user chose high accuracy, make sure we have at least one location provider.
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))) {
+            DialogFragmentFactory.showConfirmDialog(this, getString(R.string.no_location_confirm_dialog_title),
+                    getString(R.string.no_location_confirm_dialog_message), ID_ACTION_LOCATION_SETTINGS, null);
+        } else {
+            finish();
+        }
+    }
+
     private final FileExport.ExportProgressListener mExportProgressListener = new FileExport.ExportProgressListener() {
 
         @Override
@@ -222,6 +244,10 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
                 }
             };
             asyncTask.execute();
+        } else if (actionId == ID_ACTION_LOCATION_SETTINGS) {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+            finish();
         }
     }
 
@@ -260,7 +286,7 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
     @Override
     public void onCancelClicked(int actionId, Bundle extras) {
         Log.v(TAG, "onCancelClicked, actionId = " + actionId);
-        if (actionId == R.id.action_clear || actionId == R.id.action_share) dismiss();
+        if (actionId == R.id.action_clear || actionId == R.id.action_share || actionId == ID_ACTION_LOCATION_SETTINGS) dismiss();
     }
 
     @Override
