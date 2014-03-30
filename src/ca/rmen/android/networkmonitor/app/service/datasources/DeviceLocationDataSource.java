@@ -71,7 +71,6 @@ class DeviceLocationDataSource implements NetMonDataSource {
         }
     }
 
-
     @Override
     public void onDestroy() {
         Log.v(TAG, "onDestroy");
@@ -106,7 +105,6 @@ class DeviceLocationDataSource implements NetMonDataSource {
             selectLocationDataSource();
         }
     };
-
 
     private OnConnectionFailedListener mConnectionFailedListener = new OnConnectionFailedListener() {
         @Override

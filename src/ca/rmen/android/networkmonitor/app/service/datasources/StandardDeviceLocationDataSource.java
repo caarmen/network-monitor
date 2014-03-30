@@ -42,7 +42,7 @@ import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
- * Retrieves the device's location, using one of the location providers.
+ * Retrieves the device's location, using the most recent Location retrieved among all of the available the location providers.
  */
 class StandardDeviceLocationDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + StandardDeviceLocationDataSource.class.getSimpleName();
@@ -50,7 +50,7 @@ class StandardDeviceLocationDataSource implements NetMonDataSource {
     private Location mMostRecentLocation;
     private Context mContext;
 
-    public StandardDeviceLocationDataSource() {}
+    StandardDeviceLocationDataSource() {}
 
     @Override
     public void onCreate(Context context) {
@@ -61,11 +61,9 @@ class StandardDeviceLocationDataSource implements NetMonDataSource {
         registerLocationListener();
     }
 
-
     /**
      * @return the last location the device recorded in a ContentValues with keys {@link NetMonColumns#DEVICE_LATITUDE} and
-     *         {@link NetMonColumns#DEVICE_LONGITUDE}. Tries to use Google Play Services if available. Otherwise falls back
-     *         to the most recently retrieved location among all the providers.
+     *         Uses the most recently retrieved location among all the providers.
      */
     @Override
     public ContentValues getContentValues() {
@@ -90,7 +88,6 @@ class StandardDeviceLocationDataSource implements NetMonDataSource {
         return values;
     }
 
-
     @Override
     public void onDestroy() {
         Log.v(TAG, "onDestroy");
@@ -113,19 +110,17 @@ class StandardDeviceLocationDataSource implements NetMonDataSource {
     }
 
     /**
-     * @return true if location1 is better than location2
+     * @return true if location1 is better than location2.
+     *         For now, we just use the most recent location.
      */
     private boolean isBetter(Location location1, Location location2) {
         if (location1 == null && location2 == null) return false;
         if (location1 == null && location2 != null) return true;
         if (location1 != null && location2 == null) return false;
         return location2.getTime() > location1.getTime();
-
-
     }
 
-    LocationListener mLocationListener = new LocationListener() {
-
+    private LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
             extras.isEmpty();
@@ -152,7 +147,7 @@ class StandardDeviceLocationDataSource implements NetMonDataSource {
         }
     };
 
-    OnSharedPreferenceChangeListener mPreferenceListener = new OnSharedPreferenceChangeListener() {
+    private OnSharedPreferenceChangeListener mPreferenceListener = new OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             Log.v(TAG, "onSharedPreferenceChanged: key = " + key);

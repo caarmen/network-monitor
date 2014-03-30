@@ -49,7 +49,7 @@ class GmsDeviceLocationDataSource implements NetMonDataSource {
     private Location mMostRecentLocation;
     private Context mContext;
 
-    public GmsDeviceLocationDataSource(LocationClient locationClient) {
+    GmsDeviceLocationDataSource(LocationClient locationClient) {
         mLocationClient = locationClient;
     }
 
@@ -61,10 +61,9 @@ class GmsDeviceLocationDataSource implements NetMonDataSource {
         registerLocationListener();
     }
 
-
     /**
      * @return the last location the device recorded in a ContentValues with keys {@link NetMonColumns#DEVICE_LATITUDE} and
-     *         {@link NetMonColumns#DEVICE_LONGITUDE}. Uses Google Play Services
+     *         {@link NetMonColumns#DEVICE_LONGITUDE}. Uses Google Play Services.
      */
     @Override
     public ContentValues getContentValues() {
@@ -72,7 +71,6 @@ class GmsDeviceLocationDataSource implements NetMonDataSource {
         ContentValues values = new ContentValues(2);
         // Try getting the location from the LocationClient
         mMostRecentLocation = mLocationClient.getLastLocation();
-        Log.v(TAG, "Got location from LocationClient: " + mMostRecentLocation);
         Log.v(TAG, "Most recent location: " + mMostRecentLocation);
         if (mMostRecentLocation != null) {
             values.put(NetMonColumns.DEVICE_LATITUDE, mMostRecentLocation.getLatitude());
@@ -81,7 +79,6 @@ class GmsDeviceLocationDataSource implements NetMonDataSource {
         }
         return values;
     }
-
 
     @Override
     public void onDestroy() {
@@ -93,6 +90,10 @@ class GmsDeviceLocationDataSource implements NetMonDataSource {
         }
     }
 
+    /**
+     * Depending on the location fetching strategy, and the app's test interval register a listener to
+     * receive location updates.
+     */
     private void registerLocationListener() {
         LocationFetchingStrategy locationFetchingStrategy = NetMonPreferences.getInstance(mContext).getLocationFetchingStrategy();
         Log.v(TAG, "registerLocationListener: strategy = " + locationFetchingStrategy);
@@ -103,13 +104,10 @@ class GmsDeviceLocationDataSource implements NetMonDataSource {
             request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             request.setFastestInterval(pollingInterval);
             mLocationClient.requestLocationUpdates(request, mGmsLocationListener);
-            Log.v(TAG, "registered location listener");
         }
     }
 
-
-    LocationListener mGmsLocationListener = new LocationListener() {
-
+    private LocationListener mGmsLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             Log.v(TAG, "onLocationChanged, location = " + location);
@@ -117,11 +115,11 @@ class GmsDeviceLocationDataSource implements NetMonDataSource {
         }
     };
 
-    OnSharedPreferenceChangeListener mPreferenceListener = new OnSharedPreferenceChangeListener() {
+    private OnSharedPreferenceChangeListener mPreferenceListener = new OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
-            if (NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY.equals(key)) {
+            if (NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY.equals(key) || NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
                 registerLocationListener();
             }
         }
