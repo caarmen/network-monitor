@@ -34,17 +34,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import ca.rmen.android.networkmonitor.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.Constants.ConnectionType;
+import ca.rmen.android.networkmonitor.util.Log;
 import ca.rmen.android.networkmonitor.util.TelephonyUtil;
 
 public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
     public static final String DATABASE_NAME = "networkmonitor.db";
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
 
     // @formatter:off
     private static final String SQL_CREATE_TABLE_NETWORKMONITOR = "CREATE TABLE IF NOT EXISTS "
@@ -94,7 +94,8 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.GSM_CELL_PSC + " INTEGER, "
             + NetMonColumns.NETWORK_INTERFACE+ " TEXT, "
             + NetMonColumns.IPV4_ADDRESS+ " TEXT,"
-            + NetMonColumns.IPV6_ADDRESS+ " TEXT"
+            + NetMonColumns.IPV6_ADDRESS+ " TEXT,"
+            + NetMonColumns.BATTERY_LEVEL+ " INTEGER"
             + " );";
     // @formatter:on
 
@@ -155,6 +156,9 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V10_IPV6_ADDRESS = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
             + NetMonColumns.IPV6_ADDRESS + " STRING";
 
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V11_BATTERY_LEVEL = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.BATTERY_LEVEL + " INTEGER";
+
     private static final String SQL_CREATE_VIEW_CONNECTION_TEST_STATS = "CREATE VIEW " + ConnectionTestStatsColumns.VIEW_NAME + " AS "
             + buildConnectionTestQuery();
 
@@ -210,6 +214,10 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V10_NETWORK_INTERFACE);
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V10_IPV4_ADDRESS);
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V10_IPV6_ADDRESS);
+        }
+
+        if (oldVersion < 11) {
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V11_BATTERY_LEVEL);
         }
     }
 

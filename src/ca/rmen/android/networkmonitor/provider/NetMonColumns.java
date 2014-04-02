@@ -83,6 +83,7 @@ public class NetMonColumns implements BaseColumns {
     public static final String NETWORK_INTERFACE = "network_interface";
     public static final String IPV4_ADDRESS = "ipv4_address";
     public static final String IPV6_ADDRESS = "ipv6_address";
+    public static final String BATTERY_LEVEL = "battery_level";
 
 
     /**

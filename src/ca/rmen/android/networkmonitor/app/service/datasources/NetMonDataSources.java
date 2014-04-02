@@ -28,10 +28,10 @@ import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
-import ca.rmen.android.networkmonitor.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.service.NetMonService;
+import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Maintains the list of {@link NetMonDataSource}s. For now, the list of available data sources is hardcoded in this class. {@link NetMonService} has a
@@ -44,6 +44,7 @@ public class NetMonDataSources {
     // @formatter:off
     private static final Class<?>[] DATA_SOURCE_CLASSES = new Class<?>[] { 
         ActiveNetworkInfoDataSource.class,
+        BatteryDataSource.class,
         CellLocationDataSource.class,
         CellSignalStrengthDataSource.class,
         ConnectionTesterDataSource.class,

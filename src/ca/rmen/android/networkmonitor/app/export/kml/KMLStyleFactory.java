@@ -52,6 +52,7 @@ class KMLStyleFactory {
         else if (NetMonColumns.SIM_STATE.equals(fieldName)) result = new KMLStyleSIMState(fieldName);
         else if (NetMonColumns.DATA_ACTIVITY.equals(fieldName)) result = new KMLStyleDataActivity(fieldName);
         else if (NetMonColumns.DATA_STATE.equals(fieldName)) result = new KMLStyleDataState(fieldName);
+        else if (NetMonColumns.BATTERY_LEVEL.equals(fieldName)) result = new KMLStyleBatteryLevel(fieldName);
         else
             result = new KMLStyleDefault(fieldName);
         return result;
@@ -190,6 +191,25 @@ class KMLStyleFactory {
             if ("CONNECTED".equals(value)) return IconColor.GREEN;
             if ("CONNECTING".equals(value)) return IconColor.YELLOW;
             return IconColor.RED;
+        }
+    }
+
+    private static class KMLStyleBatteryLevel extends KMLStyleDefault {
+        private KMLStyleBatteryLevel(String columnName) {
+            super(columnName);
+        }
+
+        @Override
+        protected IconColor getColor(String value) {
+            if (TextUtils.isEmpty(value)) return IconColor.YELLOW;
+            try {
+                Integer batteryLevel = Integer.valueOf(value);
+                if (batteryLevel > 67) return IconColor.GREEN;
+                if (batteryLevel > 33) return IconColor.YELLOW;
+                return IconColor.RED;
+            } catch (NumberFormatException e) {
+                return IconColor.YELLOW;
+            }
         }
     }
 }

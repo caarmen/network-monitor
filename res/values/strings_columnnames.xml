@@ -46,5 +46,6 @@
     <string name="network_interface">Network Interface</string>
     <string name="ipv4_address">IPv4 Address</string>
     <string name="ipv6_address">IPv6 Address</string>
+    <string name="battery_level">Battery Level</string>
 
 </resources>
