@@ -68,7 +68,11 @@ class GmsDeviceLocationDataSource implements NetMonDataSource {
     @Override
     public ContentValues getContentValues() {
         Log.v(TAG, "getContentValues");
-        ContentValues values = new ContentValues(2);
+        ContentValues values = new ContentValues(3);
+        if (!mLocationClient.isConnected()) {
+            Log.v(TAG, "LocationClient not connected, doing nothing");
+            return values;
+        }
         // Try getting the location from the LocationClient
         mMostRecentLocation = mLocationClient.getLastLocation();
         Log.v(TAG, "Most recent location: " + mMostRecentLocation);
@@ -97,6 +101,10 @@ class GmsDeviceLocationDataSource implements NetMonDataSource {
     private void registerLocationListener() {
         LocationFetchingStrategy locationFetchingStrategy = NetMonPreferences.getInstance(mContext).getLocationFetchingStrategy();
         Log.v(TAG, "registerLocationListener: strategy = " + locationFetchingStrategy);
+        if (!mLocationClient.isConnected()) {
+            Log.v(TAG, "LocationClient not connected, doing nothing");
+            return;
+        }
         mLocationClient.removeLocationUpdates(mGmsLocationListener);
         LocationRequest request = new LocationRequest();
         if (locationFetchingStrategy == LocationFetchingStrategy.HIGH_ACCURACY) {
