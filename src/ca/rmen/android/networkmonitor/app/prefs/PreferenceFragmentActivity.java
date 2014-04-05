@@ -97,7 +97,7 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
                 protected void onPostExecute(Boolean result) {
                     ProgressDialogFragment dialogFragment = (ProgressDialogFragment) getSupportFragmentManager()
                             .findFragmentByTag(PROGRESS_DIALOG_FRAGMENT_TAG);
-                    if (dialogFragment != null) dialogFragment.dismiss();
+                    if (dialogFragment != null) dialogFragment.dismissAllowingStateLoss();
                     String toastText = result ? getString(R.string.import_successful, uri.getPath()) : getString(R.string.import_failed, uri.getPath());
                     Toast.makeText(PreferenceFragmentActivity.this, toastText, Toast.LENGTH_SHORT).show();
                     finish();
