@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ import android.text.TextUtils;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.EmailPreferences;
 
 public class EmailPreferencesActivity extends PreferenceActivity {
     private static final String TAG = Constants.TAG + EmailPreferencesActivity.class.getSimpleName();
@@ -67,6 +69,25 @@ public class EmailPreferencesActivity extends PreferenceActivity {
     protected void onStart() {
         super.onStart();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        int emailInterval = NetMonPreferences.getInstance(this).getEmailReportInterval();
+        // If the user enabled sending e-mails, make sure we have enough info.
+        if (emailInterval > 0) {
+            EmailPreferences emailPreferences = NetMonPreferences.getInstance(this).getEmailPreferences();
+            if (!emailPreferences.isValid()) {
+                NetMonPreferences.getInstance(this).setEmailReportInterval(0);
+                // We can't show a dialog directly here because we're a PreferenceActivity.
+                // We use this convoluted hack to ask the PreferenceFragmentActivity to show the dialog for us.
+                Intent intent = new Intent(PreferenceFragmentActivity.ACTION_SHOW_INFO_DIALOG);
+                intent.putExtra(PreferenceFragmentActivity.EXTRA_INFO_DIALOG_TITLE, getString(R.string.missing_email_settings_info_dialog_title));
+                intent.putExtra(PreferenceFragmentActivity.EXTRA_INFO_DIALOG_MESSAGE, getString(R.string.missing_email_settings_info_dialog_message));
+                startActivity(intent);
+            }
+        }
     }
 
     @Override

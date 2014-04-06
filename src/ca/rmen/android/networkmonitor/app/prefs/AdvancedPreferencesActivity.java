@@ -38,7 +38,6 @@ import android.preference.PreferenceManager;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.log.LogActionsActivity;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.LocationFetchingStrategy;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -90,7 +89,7 @@ public class AdvancedPreferencesActivity extends PreferenceActivity {
             } else if (NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY.equals(key)) {
                 updateListPreferenceSummary(NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY, R.string.pref_summary_location_fetching_strategy);
                 if (NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getLocationFetchingStrategy() == LocationFetchingStrategy.HIGH_ACCURACY) {
-                    Intent intent = new Intent(LogActionsActivity.ACTION_CHECK_LOCATION_SETTINGS);
+                    Intent intent = new Intent(PreferenceFragmentActivity.ACTION_CHECK_LOCATION_SETTINGS);
                     startActivity(intent);
                 }
             }

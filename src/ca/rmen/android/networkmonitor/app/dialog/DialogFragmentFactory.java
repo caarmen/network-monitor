@@ -52,6 +52,20 @@ public class DialogFragmentFactory extends DialogFragment {
     static final String EXTRA_CHOICES = "choices";
 
     /**
+     * @return a visible dialog fragment with the given title and message, and just one OK button.
+     */
+    public static InfoDialogFragment showInfoDialog(FragmentActivity activity, String title, String message) {
+        Log.v(TAG, "showInfoDialog");
+        Bundle arguments = new Bundle(3);
+        arguments.putString(EXTRA_TITLE, title);
+        arguments.putString(EXTRA_MESSAGE, message);
+        InfoDialogFragment result = new InfoDialogFragment();
+        result.setArguments(arguments);
+        result.show(activity.getSupportFragmentManager(), InfoDialogFragment.class.getSimpleName());
+        return result;
+    }
+
+    /**
      * @return a visible dialog fragment with the given title and message, and an ok and cancel button. If the given activity implements
      *         {@link DialogButtonListener}, the actionId and extras parameter will be provided in
      *         the {@link DialogButtonListener#onOkClicked(int, Bundle)} callback on the activity, when the user clicks on the ok button.

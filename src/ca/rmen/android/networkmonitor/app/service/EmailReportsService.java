@@ -85,9 +85,13 @@ public class EmailReportsService extends IntentService {
         Log.v(TAG, "onHandleIntent, intent = " + intent);
 
         final EmailPreferences emailPreferences = NetMonPreferences.getInstance(this).getEmailPreferences();
-        Session mailSession = getMailSession(emailPreferences);
-        Message message = createMessage(mailSession, emailPreferences);
-        if (message != null) sendMail(mailSession, message);
+        if (emailPreferences.isValid()) {
+            Session mailSession = getMailSession(emailPreferences);
+            Message message = createMessage(mailSession, emailPreferences);
+            if (message != null) sendMail(mailSession, message);
+        } else {
+            Log.w(TAG, "Cannot send mail with the current email settings: " + emailPreferences);
+        }
 
         // Schedule our next run
         scheduleEmailReports();

@@ -24,9 +24,16 @@
 package ca.rmen.android.networkmonitor.app.prefs;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnDismissListener;
+import android.content.Intent;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
@@ -34,6 +41,7 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
+import ca.rmen.android.networkmonitor.app.dialog.InfoDialogFragment.InfoDialogListener;
 import ca.rmen.android.networkmonitor.app.dialog.ProgressDialogFragment;
 import ca.rmen.android.networkmonitor.app.importdb.DBImport;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -43,13 +51,22 @@ import ca.rmen.android.networkmonitor.util.Log;
  * functions which require a FragmentActivity.
  * This activity has a transparent theme. The only thing the user will see will be alert dialogs that this activity creates.
  */
-public class PreferenceFragmentActivity extends FragmentActivity implements DialogButtonListener { // NO_UCD (use default)
+public class PreferenceFragmentActivity extends FragmentActivity implements DialogButtonListener, OnDismissListener, OnCancelListener, InfoDialogListener { // NO_UCD (use default)
     public static final String ACTION_IMPORT = PreferenceFragmentActivity.class.getPackage().getName() + "_import";
+    public static final String ACTION_CHECK_LOCATION_SETTINGS = PreferenceFragmentActivity.class.getPackage().getName() + "_check_location_settings";
+    public static final String ACTION_SHOW_INFO_DIALOG = PreferenceFragmentActivity.class.getPackage().getName() + "_show_info_dialog";
     public static final String EXTRA_IMPORT_URI = PreferenceFragmentActivity.class.getPackage().getName() + "_db_url";
+    public static final String EXTRA_INFO_DIALOG_TITLE = PreferenceFragmentActivity.class.getPackage().getName() + "_dialog_title";
+    public static final String EXTRA_INFO_DIALOG_MESSAGE = PreferenceFragmentActivity.class.getPackage().getName() + "_dialog_message";
 
     private static final String TAG = Constants.TAG + PreferenceFragmentActivity.class.getSimpleName();
     private static final String PROGRESS_DIALOG_FRAGMENT_TAG = "progress_dialog_fragment_tag";
     private static final int ID_ACTION_IMPORT = 1;
+    private static final int ID_ACTION_LOCATION_SETTINGS = 2;
+
+    // True if the user interacted with a dialog other than to dismiss it.
+    // IE: they clicked "ok" or selected an item from the list.
+    private boolean mUserInput = false;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -61,6 +78,11 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
             Uri importFile = getIntent().getExtras().getParcelable(EXTRA_IMPORT_URI);
             DialogFragmentFactory.showConfirmDialog(this, getString(R.string.import_confirm_title),
                     getString(R.string.import_confirm_message, importFile.getPath()), ID_ACTION_IMPORT, getIntent().getExtras());
+        } else if (ACTION_CHECK_LOCATION_SETTINGS.equals(action)) {
+            checkLocationSettings();
+        } else if (ACTION_SHOW_INFO_DIALOG.equals(action)) {
+            DialogFragmentFactory.showInfoDialog(this, getIntent().getExtras().getString(EXTRA_INFO_DIALOG_TITLE),
+                    getIntent().getExtras().getString(EXTRA_INFO_DIALOG_MESSAGE));
         } else {
             Log.w(TAG, "Activity created without a known action.  Action=" + action);
             finish();
@@ -70,6 +92,7 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
     @Override
     public void onOkClicked(int actionId, Bundle extras) {
         Log.v(TAG, "onClicked, actionId=" + actionId + ", extras = " + extras);
+        mUserInput = true;
         // Import the database in a background thread.
         if (actionId == ID_ACTION_IMPORT) {
             final Uri uri = extras.getParcelable(EXTRA_IMPORT_URI);
@@ -104,6 +127,10 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
                 }
             };
             task.execute();
+        } else if (actionId == ID_ACTION_LOCATION_SETTINGS) {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+            finish();
         }
     }
 
@@ -111,6 +138,49 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
     public void onCancelClicked(int actionId, Bundle extras) {
         Log.v(TAG, "onClicked, actionId=" + actionId + ", extras = " + extras);
         // If the user dismissed the dialog, let's close this transparent activity.
+        dismiss();
+    }
+
+    /**
+     * Checks if we have either the GPS or Network location provider enabled. If not, shows a popup dialog telling the user they should go to the system
+     * settings to enable location tracking.
+     */
+    private void checkLocationSettings() {
+        // If the user chose high accuracy, make sure we have at least one location provider.
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))) {
+            DialogFragmentFactory.showConfirmDialog(this, getString(R.string.no_location_confirm_dialog_title),
+                    getString(R.string.no_location_confirm_dialog_message), ID_ACTION_LOCATION_SETTINGS, null);
+        } else {
+            finish();
+        }
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        Log.v(TAG, "onDismiss");
+        if (mUserInput) {
+            // Ignore, the dialog was dismissed because the user tapped ok on the dialog or selected an item from the list in the dialog.
+        } else {
+            dismiss();
+        }
+    }
+
+    private void dismiss() {
+        Log.v(TAG, "dismiss");
+        setResult(RESULT_CANCELED);
         finish();
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        Log.v(TAG, "onCancel");
+        dismiss();
+    }
+
+    @Override
+    public void onNeutralClicked(int actionId, Bundle extras) {
+        Log.v(TAG, "onNeutralClicked, actionId = " + actionId + ", extras = " + extras);
+        dismiss();
     }
 }

@@ -78,6 +78,20 @@ public class NetMonPreferences {
             this.recipients = recipients;
             this.security = security;
         }
+
+        /**
+         * @return true if we have enough info to attempt to send a mail.
+         */
+        public boolean isValid() {
+            return !TextUtils.isEmpty(server) && port > 0 && !TextUtils.isEmpty(user) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(recipients);
+        }
+
+        @Override
+        public String toString() {
+            return EmailPreferences.class.getSimpleName() + " [reportFormats=" + reportFormats + ", server=" + server + ", port=" + port + ", user=" + user
+                    + ", password=" + password + ", recipients=" + recipients + ", security=" + security + "]";
+        }
+
     }
 
     public static final String PREF_UPDATE_INTERVAL = "PREF_UPDATE_INTERVAL";
@@ -150,6 +164,15 @@ public class NetMonPreferences {
      */
     public int getEmailReportInterval() {
         return getIntPreference(NetMonPreferences.PREF_EMAIL_INTERVAL, "0") * 60 * 1000;
+    }
+
+    /**
+     * @return set the interval, in milliseconds, between e-mailing reports.
+     */
+    public void setEmailReportInterval(int interval) {
+        Editor editor = mSharedPrefs.edit();
+        editor.putString(NetMonPreferences.PREF_EMAIL_INTERVAL, String.valueOf(interval));
+        editor.commit();
     }
 
     /**
