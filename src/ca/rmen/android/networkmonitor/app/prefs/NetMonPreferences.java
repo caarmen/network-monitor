@@ -59,6 +59,27 @@ public class NetMonPreferences {
         NONE, SSL, TLS
     };
 
+    public class EmailPreferences {
+        public final Set<String> reportFormats;
+        public final String server;
+        public final int port;
+        public final String user;
+        public final String password;
+        public final String recipients;
+        public final EmailSecurity security;
+
+        public EmailPreferences(Set<String> reportFormats, String server, int port, String user, String password, String recipients, EmailSecurity security) {
+            super();
+            this.reportFormats = reportFormats;
+            this.server = server;
+            this.port = port;
+            this.user = user;
+            this.password = password;
+            this.recipients = recipients;
+            this.security = security;
+        }
+    }
+
     public static final String PREF_UPDATE_INTERVAL = "PREF_UPDATE_INTERVAL";
     public static final String PREF_UPDATE_INTERVAL_DEFAULT = "10000";
     public static final String PREF_SERVICE_ENABLED = "PREF_SERVICE_ENABLED";
@@ -283,35 +304,15 @@ public class NetMonPreferences {
         return LocationFetchingStrategy.valueOf(value);
     }
 
-    /**
-     * @return the set of file attachment types to include in the periodic e-mail report.
-     */
-    public Set<String> getEmailReportFormats() {
-        return mSharedPrefs.getStringSet(PREF_EMAIL_REPORT_FORMATS, new HashSet<String>());
-    }
-
-    public String getEmailServer() {
-        return mSharedPrefs.getString(PREF_EMAIL_SERVER, "");
-    }
-
-    public int getEmailPort() {
-        return getIntPreference(PREF_EMAIL_PORT, PREF_EMAIL_PORT_DEFAULT);
-    }
-
-    public String getEmailUser() {
-        return mSharedPrefs.getString(PREF_EMAIL_USER, "");
-    }
-
-    public String getEmailPassword() {
-        return mSharedPrefs.getString(PREF_EMAIL_PASSWORD, "");
-    }
-
-    public String getEmailRecipients() {
-        return mSharedPrefs.getString(PREF_EMAIL_RECIPIENTS, "");
-    }
-
-    public EmailSecurity getEmailSecurity() {
-        return EmailSecurity.valueOf(mSharedPrefs.getString(PREF_EMAIL_SECURITY, EmailSecurity.NONE.name()));
+    public EmailPreferences getEmailPreferences() {
+        Set<String> reportFormats = mSharedPrefs.getStringSet(PREF_EMAIL_REPORT_FORMATS, new HashSet<String>());
+        String server = mSharedPrefs.getString(PREF_EMAIL_SERVER, "");
+        int port = getIntPreference(PREF_EMAIL_PORT, PREF_EMAIL_PORT_DEFAULT);
+        String user = mSharedPrefs.getString(PREF_EMAIL_USER, "");
+        String password = mSharedPrefs.getString(PREF_EMAIL_PASSWORD, "");
+        String recipients = mSharedPrefs.getString(PREF_EMAIL_RECIPIENTS, "");
+        EmailSecurity security = EmailSecurity.valueOf(mSharedPrefs.getString(PREF_EMAIL_SECURITY, EmailSecurity.NONE.name()));
+        return new EmailPreferences(reportFormats, server, port, user, password, recipients, security);
     }
 
     private int getIntPreference(String key, String defaultValue) {
