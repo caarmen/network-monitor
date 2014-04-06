@@ -9,6 +9,14 @@
         android:summary="@string/pref_summary_email_report_interval"
         android:title="@string/pref_title_email_report_interval" />
 
+    <MultiSelectListPreference
+        android:defaultValue="@array/empty_array"
+        android:entries="@array/export_choices"
+        android:entryValues="@array/preferences_email_report_formats_values"
+        android:key="PREF_EMAIL_REPORT_FORMATS"
+        android:summary="@string/pref_summary_email_report_formats"
+        android:title="@string/pref_title_email_report_formats" />
+
     <EditTextPreference
         android:defaultValue="smtp.gmail.com"
         android:hint="@string/pref_hint_email_server"

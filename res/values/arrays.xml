@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <string-array name="empty_array"/>
     <!-- Update interval -->
     <string-array name="preferences_updateInterval_labels">
         <item>@string/pref_value_interval_10_seconds</item>
@@ -122,6 +123,16 @@
         <item>none</item>
         <item>ssl</item>
         <item>tls</item>
+    </string-array>
+    
+    <!-- Report formats -->
+    <string-array name="preferences_email_report_formats_values">
+        <item>csv</item>
+        <item>html</item>
+        <item>excel</item>
+        <item>kml</item>
+        <item>db</item>
+        <item>text</item>
     </string-array>
     
 </resources>

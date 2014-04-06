@@ -71,6 +71,7 @@ public class NetMonPreferences {
 
     public static final String PREF_EMAIL_REPORTS = "PREF_EMAIL_REPORTS";
     public static final String PREF_EMAIL_INTERVAL = "PREF_EMAIL_INTERVAL";
+    public static final String PREF_EMAIL_REPORT_FORMATS = "PREF_EMAIL_REPORT_FORMATS";
     public static final String PREF_EMAIL_SERVER = "PREF_EMAIL_SERVER";
     public static final String PREF_EMAIL_PORT = "PREF_EMAIL_PORT";
     public static final String PREF_EMAIL_SECURITY = "PREF_EMAIL_SECURITY";
