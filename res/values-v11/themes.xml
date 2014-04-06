@@ -9,15 +9,4 @@
         <item name="android:actionBarStyle">@style/NetMonActionBar</item>
     </style>
 
-    <style name="NetMonActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-       <item name="android:background">@android:color/black</item>
-       <item name="android:titleTextStyle">@style/NetMonActionBarTitleStyle</item>
-    </style>
-    
-    <style name="NetMonActionBarTitleStyle">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">18sp</item>
-    </style>
-
 </resources>

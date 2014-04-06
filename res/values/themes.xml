@@ -21,8 +21,8 @@
         <!--
         Not sure why listChoiceIndicatorMultiple is only generated
         in themes_netmon.xml for v11.  We need it for 2.x too, for SelectFieldsFragment -->
-        -->
         <item name="android:listChoiceIndicatorMultiple">@drawable/netmon_btn_check_holo_light</item>
+        <item name="android:listSeparatorTextViewStyle">@style/NetMonListViewSeparatorStyle</item>
     </style>
 
     <!--
