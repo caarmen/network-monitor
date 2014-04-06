@@ -99,30 +99,12 @@ public class EmailReportsService extends IntentService {
         }
 
         // Schedule our next run
-        scheduleEmailReports();
+        scheduleNext();
     }
 
-    private void sendMail(Session mailSession, Message message) {
-        Log.v(TAG, "sendMail");
-        Transport transport = null;
-        try {
-            transport = mailSession.getTransport();
-            transport.connect();
-            transport.sendMessage(message, message.getAllRecipients());
-            Log.v(TAG, "sent message");
-            success();
-        } catch (MessagingException e) {
-            Log.e(TAG, "Could not send mail " + e.getMessage(), e);
-            failure();
-        } finally {
-            try {
-                if (transport != null) transport.close();
-            } catch (MessagingException e) {
-                Log.e(TAG, "onHandleIntent Could not close the transport", e);
-            }
-        }
-    }
-
+    /**
+     * @return an SMTP Session that we can open to send a message on.
+     */
     private static Session getMailSession(final EmailPreferences emailPreferences) {
         Log.v(TAG, "getMailSession: emailPreferences = " + emailPreferences);
         // Set up properties for mail sending.
@@ -157,13 +139,37 @@ public class EmailReportsService extends IntentService {
     }
 
     /**
+     * Actually send the e-mail.
+     */
+    private void sendMail(Session mailSession, Message message) {
+        Log.v(TAG, "sendMail");
+        Transport transport = null;
+        try {
+            transport = mailSession.getTransport();
+            transport.connect();
+            transport.sendMessage(message, message.getAllRecipients());
+            Log.v(TAG, "sent message");
+            success();
+        } catch (MessagingException e) {
+            Log.e(TAG, "Could not send mail " + e.getMessage(), e);
+            failure();
+        } finally {
+            try {
+                if (transport != null) transport.close();
+            } catch (MessagingException e) {
+                Log.e(TAG, "onHandleIntent Could not close the transport", e);
+            }
+        }
+    }
+
+
+    /**
      * @return a Message we can send using the given mailSession, or null if there was a problem creating the message.
      */
     private Message createMessage(Session mailSession, EmailPreferences emailPreferences) {
         Log.v(TAG, "createMessage: emailPreferences = " + emailPreferences);
 
         try {
-            // Create the mail
             MimeMessage message = new MimeMessage(mailSession);
             // Set the subject, from, and to fields.
             String subject = getString(R.string.export_subject_send_log);
@@ -172,7 +178,7 @@ public class EmailReportsService extends IntentService {
             message.setFrom(new InternetAddress(from));
             message.addRecipients(Message.RecipientType.TO, InternetAddress.parse(emailPreferences.recipients));
 
-            // Now for the body of the mail...
+            // Get the plain text of the mail body.
             String messageText = getMessageBody(emailPreferences);
 
             // Case 1: No file attachment, just send a plain text mail with the summary.
@@ -191,8 +197,7 @@ public class EmailReportsService extends IntentService {
 
                 // Now add the file attachments.
                 for (String fileType : emailPreferences.reportFormats) {
-                    FileExport fileExport = getFileExport(fileType);
-                    bp = createBodyPart(fileExport);
+                    bp = createBodyPart(fileType);
                     mp.addBodyPart(bp);
                 }
                 message.setContent(mp);
@@ -229,18 +234,20 @@ public class EmailReportsService extends IntentService {
         return from;
     }
 
-    private FileExport getFileExport(String fileType) throws FileNotFoundException, UnsupportedEncodingException {
-        Log.v(TAG, "getFileExport: fileType = " + fileType);
-        if ("csv".equals(fileType)) return new CSVExport(this, null);
-        if ("html".equals(fileType)) return new HTMLExport(this, true, null);
-        if ("excel".equals(fileType)) return new ExcelExport(this, null);
-        if ("kml".equals(fileType)) return new KMLExport(this, null, NetMonColumns.SOCKET_CONNECTION_TEST);
-        if ("db".equals(fileType)) return new DBExport(this, null);
-        return null;
-    }
-
-    private static BodyPart createBodyPart(FileExport fileExport) throws MessagingException {
-        Log.v(TAG, "createBodyPart: fileExport = " + fileExport);
+    /**
+     * @param fileType one of the file types the user selected in the preference
+     * @return the BodyPart containing the exported file of this type.
+     */
+    private BodyPart createBodyPart(String fileType) throws MessagingException, FileNotFoundException, UnsupportedEncodingException {
+        Log.v(TAG, "createBodyPart: fileType = " + fileType);
+        // Get the FileExport instance which can export this file type.
+        final FileExport fileExport;
+        if ("csv".equals(fileType)) fileExport = new CSVExport(this, null);
+        else if ("html".equals(fileType)) fileExport = new HTMLExport(this, true, null);
+        else if ("excel".equals(fileType)) fileExport = new ExcelExport(this, null);
+        else if ("kml".equals(fileType)) fileExport = new KMLExport(this, null, NetMonColumns.SOCKET_CONNECTION_TEST);
+        else
+            /*if ("db".equals(fileType)) */fileExport = new DBExport(this, null);
         BodyPart bp = new MimeBodyPart();
         File file = fileExport.export();
         DataSource dataSource = new FileDataSource(file);
@@ -250,18 +257,25 @@ public class EmailReportsService extends IntentService {
         return bp;
     }
 
+    /**
+     * @return the text of the mail that the recipient will receive.
+     */
     private String getMessageBody(EmailPreferences emailPreferences) {
         Log.v(TAG, "getMessageBody, emailPreferences =" + emailPreferences);
         String reportSummary = SummaryExport.getSummary(this);
         String dateRange = SummaryExport.getDataCollectionDateRange(this);
         String messageBody = getString(R.string.export_message_text, dateRange);
+        // If we're attaching files, add a sentence to the mail saying so.
         if (!emailPreferences.reportFormats.isEmpty()) messageBody += getString(R.string.export_message_text_file_attached);
         messageBody += reportSummary;
         Log.v(TAG, "getMessageBody, created message body " + messageBody);
         return messageBody;
     }
 
-    private void scheduleEmailReports() {
+    /**
+     * Plan the next e-mail sending.
+     */
+    private void scheduleNext() {
         Log.v(TAG, "scheduleEmailReports");
         PendingIntent pendingIntent = getPendingIntent(this);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -271,12 +285,18 @@ public class EmailReportsService extends IntentService {
         if (emailInterval > 0) alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + emailInterval, pendingIntent);
     }
 
+    /**
+     * We sent the mail fine. Clear any error notification.
+     */
     private void success() {
         Log.v(TAG, "success");
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID_FAILED_EMAIL);
     }
 
+    /**
+     * There was a problem sending the mail. Show an error notification.
+     */
     private void failure() {
         Log.v(TAG, "failure");
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
@@ -293,6 +313,9 @@ public class EmailReportsService extends IntentService {
 
     }
 
+    /**
+     * @return the PendingIntent which is used to plan this Service.
+     */
     static PendingIntent getPendingIntent(Context context) {
         Intent intent = new Intent(context.getApplicationContext(), EmailReportsService.class);
         PendingIntent pendingIntent = PendingIntent.getService(context.getApplicationContext(), PENDING_INTENT_REQUEST_CODE, intent,
