@@ -41,6 +41,9 @@
     <string name="pref_value_location_fetching_strategy_save_power">Save battery</string>
     <string name="pref_title_import">Import</string>
     <string name="pref_summary_import">Import another database which was exported from Network Monitor.</string>
+    <string name="pref_title_email">Send yourself reports by e-mail</string>
+    <string name="pref_summary_email">Periodically send yourself a report in one or several formats, by e-mail.</string>
+    
     <!--  Other preferences -->
     <string name="pref_title_filter_record_count">Number of records to display</string>
     <string name="pref_value_filter_record_count_100">100</string>
@@ -49,4 +52,31 @@
     <string name="pref_value_filter_record_count_1000">1000</string>
     <string name="pref_value_filter_record_count_10000">10000</string>
     <string name="pref_value_filter_record_count_all">All</string>
+    
+    <!-- Email sending preferences -->
+    <string name="pref_title_email_report_interval">Periodically send a report by e-mail</string>
+    <string name="pref_summary_email_report_interval">Current setting: %s</string>
+    <string name="pref_value_email_report_interval_never">Never</string>
+    <string name="pref_value_email_report_interval_1_minute">Every minute</string>
+    <string name="pref_value_email_report_interval_10_minutes">Every 10 minutes</string>
+    <string name="pref_value_email_report_interval_1_hour">Once an hour</string>
+    <string name="pref_value_email_report_interval_2_hours">Once every 2 hours</string>
+    <string name="pref_value_email_report_interval_6_hours">Once every 6 hours</string>
+    <string name="pref_value_email_report_interval_1_day">Once a day</string>
+    <string name="pref_title_email_server">SMTP server name</string>
+    <string name="pref_summary_email_server">Current setting: %s</string>
+    <string name="pref_hint_email_server">smtp.gmail.com</string>
+    <string name="pref_title_email_port">SMTP server port</string>
+    <string name="pref_summary_email_port">Current setting: %s</string>
+    <string name="pref_hint_email_port">587</string>
+    <string name="pref_title_email_security">Security type</string>
+    <string name="pref_summary_email_security">Current setting: %s</string>
+    <string name="pref_value_email_security_none">None</string>
+    <string name="pref_value_email_security_ssl">SSL</string>
+    <string name="pref_value_email_security_tls">TLS</string>
+    <string name="pref_title_email_user">SMTP username</string>
+    <string name="pref_summary_email_user">Current setting: %s</string>
+    <string name="pref_hint_email_user">user@gmail.com</string>
+    <string name="pref_title_email_password">SMTP password</string>
+    <string name="pref_summary_email_password">Current setting: %s</string>
 </resources>

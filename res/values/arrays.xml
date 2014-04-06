@@ -92,5 +92,36 @@
         <item>SAVE_POWER</item>
     </string-array>
 
+    <!-- E-mail report interval -->
+    <string-array name="preferences_email_report_interval_labels">
+        <item>@string/pref_value_email_report_interval_never</item>
+        <item>@string/pref_value_email_report_interval_1_minute</item>
+        <item>@string/pref_value_email_report_interval_10_minutes</item>
+        <item>@string/pref_value_email_report_interval_1_hour</item>
+        <item>@string/pref_value_email_report_interval_2_hours</item>
+        <item>@string/pref_value_email_report_interval_6_hours</item>
+        <item>@string/pref_value_email_report_interval_1_day</item>
+    </string-array>
+    <string-array name="preferences_email_report_interval_values">
+        <item>0</item>
+        <item>1</item>
+        <item>10</item>
+        <item>60</item>
+        <item>120</item>
+        <item>360</item>
+        <item>1440</item>
+    </string-array>
+
+    <!-- Email server security -->
+    <string-array name="preferences_email_security_labels">
+        <item>@string/pref_value_email_security_none</item>
+        <item>@string/pref_value_email_security_ssl</item>
+        <item>@string/pref_value_email_security_tls</item>
+    </string-array>
+    <string-array name="preferences_email_security_values">
+        <item>none</item>
+        <item>ssl</item>
+        <item>tls</item>
+    </string-array>
     
 </resources>

@@ -1,0 +1,46 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="preferenceScreen" >
+
+    <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
+        android:defaultValue="0"
+        android:entries="@array/preferences_email_report_interval_labels"
+        android:entryValues="@array/preferences_email_report_interval_values"
+        android:key="PREF_EMAIL_INTERVAL"
+        android:summary="@string/pref_summary_email_report_interval"
+        android:title="@string/pref_title_email_report_interval" />
+
+    <EditTextPreference
+        android:defaultValue="smtp.gmail.com"
+        android:hint="@string/pref_hint_email_server"
+        android:key="PREF_EMAIL_SERVER"
+        android:summary="@string/pref_summary_email_server"
+        android:title="@string/pref_title_email_server" />
+    <EditTextPreference
+        android:defaultValue="587"
+        android:hint="@string/pref_hint_email_port"
+        android:key="PREF_EMAIL_PORT"
+        android:summary="@string/pref_summary_email_port"
+        android:title="@string/pref_title_email_port" />
+
+    <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
+        android:defaultValue="tls"
+        android:entries="@array/preferences_email_security_labels"
+        android:entryValues="@array/preferences_email_security_values"
+        android:key="PREF_EMAIL_SECURITY"
+        android:summary="@string/pref_summary_email_security"
+        android:title="@string/pref_title_email_security" />
+
+    <EditTextPreference
+        android:defaultValue=""
+        android:hint="@string/pref_hint_email_user"
+        android:key="PREF_EMAIL_USER"
+        android:summary="@string/pref_summary_email_user"
+        android:title="@string/pref_title_email_user" />
+    <EditTextPreference
+        android:defaultValue=""
+        android:inputType="textPassword"
+        android:key="PREF_EMAIL_PASSWORD"
+        android:summary="@string/pref_summary_email_password"
+        android:title="@string/pref_title_email_password" />
+
+</PreferenceScreen>

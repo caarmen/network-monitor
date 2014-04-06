@@ -69,6 +69,13 @@ public class NetMonPreferences {
     public static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
     public static final String PREF_LOCATION_FETCHING_STRATEGY = "PREF_LOCATION_FETCHING_STRATEGY";
 
+    public static final String PREF_EMAIL_INTERVAL = "PREF_EMAIL_INTERVAL";
+    public static final String PREF_EMAIL_SERVER = "PREF_EMAIL_SERVER";
+    public static final String PREF_EMAIL_PORT = "PREF_EMAIL_PORT";
+    public static final String PREF_EMAIL_SECURITY = "PREF_EMAIL_SECURITY";
+    public static final String PREF_EMAIL_USER = "PREF_EMAIL_USER";
+    public static final String PREF_EMAIL_PASSWORD = "PREF_EMAIL_PASSWORD";
+
     private static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
     private static final String PREF_SCHEDULER_DEFAULT = ExecutorServiceScheduler.class.getSimpleName();
     private static final String PREF_SELECTED_COLUMNS = "PREF_SELECTED_COLUMNS";
