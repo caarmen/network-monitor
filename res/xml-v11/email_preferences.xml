@@ -17,7 +17,7 @@
         android:summary="@string/pref_summary_email_recipients"
         android:title="@string/pref_title_email_recipients" />
 
-    <MultiSelectListPreference
+    <ca.rmen.android.networkmonitor.app.prefs.ThemedMultiSelectListPreference
         android:defaultValue="@array/empty_array"
         android:entries="@array/preferences_email_report_formats_labels"
         android:entryValues="@array/preferences_email_report_formats_values"
