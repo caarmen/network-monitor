@@ -31,3 +31,7 @@
 -optimizations !code/allocation/variable
 
 -keepattributes SourceFile,LineNumberTable
+
+-dontwarn java.awt.**
+-dontwarn javax.security.**
+-dontwarn java.beans.**
