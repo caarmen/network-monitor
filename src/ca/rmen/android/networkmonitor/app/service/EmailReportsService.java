@@ -107,7 +107,20 @@ public class EmailReportsService extends IntentService {
         // Set the subject, from, and to fields.
         try {
             message.setSubject(MimeUtility.encodeText(subject, ENCODING, "Q"));
-            message.setFrom(new InternetAddress(user));
+            // We try to guess the from address.
+            final String from;
+            // If the user name for the smtp server is an e-mail address, we just use that.
+            if (user.indexOf("@") > 0) {
+                from = user;
+            }
+            // Otherwise we use the user@server.  We try to strip any "smtp" part of the server domain.
+            else {
+                String server = NetMonPreferences.getInstance(this).getEmailServer();
+                server = server.replaceAll("smtp[^\\.]*\\.", "");
+                from = user + "@" + server;
+            }
+            Log.v(TAG, "Sending mail from " + from);
+            message.setFrom(new InternetAddress(from));
             message.addRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));
             if (fileTypes.isEmpty()) {
                 // No file attachment, just send a plain text mail with the summary.
@@ -178,12 +191,16 @@ public class EmailReportsService extends IntentService {
         props.put(propertyPrefix + "host", serverName);
         props.put(propertyPrefix + "port", String.valueOf(port));
         props.put(propertyPrefix + "auth", "true");
+        props.put(propertyPrefix + "timeout", "15000");
+        props.put(propertyPrefix + "connectiontimeout", "15000");
+        props.put(propertyPrefix + "writetimeout", "15000");
         if (security == EmailSecurity.TLS) props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.debug", String.valueOf(true));
         props.put("mail.transport.protocol", transportProtocol);
         Log.v(TAG, "Sending mail on " + serverName + ":" + port + " using " + security + " security");
         return props;
     }
+
 
     private FileExport getFileExport(String fileType) throws FileNotFoundException, UnsupportedEncodingException {
         Log.v(TAG, "getFileExport: fileType = " + fileType);
