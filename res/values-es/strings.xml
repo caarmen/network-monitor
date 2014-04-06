@@ -56,4 +56,10 @@
     <string name="support_send_debug_logs_to">c@rmen.ca</string>
     <string name="support_error">Imposible crear el fichero log. Verifica que la tarjeta SD esté presente.</string>
 
+    <!-- Strings about sending emails -->
+	<string name="missing_email_settings_info_dialog_title">Falta información</string>
+	<string name="missing_email_settings_info_dialog_message">Imposible enviar correos, porque hay campos no rellenados. La frecuencia de los correos ha sido reinicializado a \'Nunca\'"</string>
+	<string name="warning_notification_ticker_email_failed">Error del envío del informe</string>
+	<string name="warning_notification_message_email_failed">Imposible enviar el informe.</string>
+
 </resources>

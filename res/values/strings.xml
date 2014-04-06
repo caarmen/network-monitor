@@ -59,6 +59,8 @@
     <!-- Strings about sending emails -->
 	<string name="missing_email_settings_info_dialog_title">Missing information</string>
 	<string name="missing_email_settings_info_dialog_message">E-mail reports cannot be sent, because not all of the e-mail settings have been filled in. The e-mail report frequency has been reset to \'Never\'.</string>
+	<string name="warning_notification_ticker_email_failed">Error sending report</string>
+	<string name="warning_notification_message_email_failed">Could not send the report.</string>
 
     <string name="unknown">N/A</string>
 

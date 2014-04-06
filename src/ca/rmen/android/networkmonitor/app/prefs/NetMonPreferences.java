@@ -89,7 +89,7 @@ public class NetMonPreferences {
         @Override
         public String toString() {
             return EmailPreferences.class.getSimpleName() + " [reportFormats=" + reportFormats + ", server=" + server + ", port=" + port + ", user=" + user
-                    + ", password=" + password + ", recipients=" + recipients + ", security=" + security + "]";
+                    + ", password=******, recipients=" + recipients + ", security=" + security + "]";
         }
 
     }
