@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Preferences in the main screen -->
+    <string name="pref_category_monitoring_settings">PRÉFÉRENCES DES TESTS</string>
+    <string name="pref_category_log_actions">FICHIER JOURNAL</string>
+    <string name="pref_category_other">AUTRES</string>
     <string name="pref_title_update_interval">Fréquence du test</string>
     <string name="pref_summary_update_interval">%s</string>
     <string name="pref_summary_service_enabled">Activer ou désactiver le service</string>
@@ -22,6 +25,8 @@
     <string name="pref_value_interval_55_minutes">55 minutes</string>
     <string name="pref_value_interval_1_hour">1 heure</string>
     <!-- Advanced preferences-->
+    <string name="pref_category_report_content">CONTENU DU RAPPORT</string>
+    <string name="pref_category_performance">PERFORMANCE</string>
     <string name="pref_title_select_fields">Champs</string>
     <string name="pref_summary_select_fields">Sélectionner les champs pour l\'affichage du journal et l\'export.</string>
     <string name="pref_title_wake_interval">Empêcher le mode veille</string>
@@ -41,7 +46,43 @@
     <string name="pref_value_location_fetching_strategy_save_power">Économiser la batterie</string>
     <string name="pref_title_import">Importer</string>
     <string name="pref_summary_import">Importer une base de données exportée depuis Network Monitor.</string>
+    <string name="pref_title_email">Envoyer des rapports par courriel</string>
+    <string name="pref_summary_email">Envoyer périodiquement un rapport en plusieurs formats, par courriel.</string>
     <!--  Other preferences -->
     <string name="pref_title_filter_record_count">Nombre de lignes à afficher</string>
     <string name="pref_value_filter_record_count_all">Toutes</string>
+    
+    <!-- Email sending preferences -->
+    <string name="pref_category_email_sending_settings">PRÉFÉRENCES DU COURRIEL</string>
+    <string name="pref_category_email_server_settings">AUTHENTIFICATION DU SERVEUR SMTP</string>
+    <string name="pref_email_unavailable">Disponible sous Android 3.x et plus</string>
+    <string name="pref_title_email_report_interval">Fréquence du rapport par courriel</string>
+    <string name="pref_summary_email_report_interval">%s</string>
+    <string name="pref_value_email_report_interval_never">Jamais</string>
+    <string name="pref_value_email_report_interval_1_minute">Chaque minute</string>
+    <string name="pref_value_email_report_interval_10_minutes">Toutes les 10 minutes</string>
+    <string name="pref_value_email_report_interval_1_hour">Toutes les heures</string>
+    <string name="pref_value_email_report_interval_2_hours">Toutes les deux heures</string>
+    <string name="pref_value_email_report_interval_6_hours">Toutes les 6 heures</string>
+    <string name="pref_value_email_report_interval_1_day">Une fois par jour</string>
+    <string name="pref_title_email_recipients">Destinataires du rapport</string>
+    <string name="pref_summary_email_recipients">%s</string>
+    <string name="pref_hint_email_recipients">user@domain.com</string>
+    <string name="pref_title_email_report_formats">Pièces jointes à incluir</string>
+    <string name="pref_summary_email_report_formats">%s</string>
+    <string name="pref_title_email_server">Nom du serveur</string>
+    <string name="pref_summary_email_server">%s</string>
+    <string name="pref_hint_email_server">smtp.gmail.com</string>
+    <string name="pref_title_email_port">Port</string>
+    <string name="pref_summary_email_port">%s</string>
+    <string name="pref_hint_email_port">587</string>
+    <string name="pref_title_email_security">Type de sécurité</string>
+    <string name="pref_summary_email_security">%s</string>
+    <string name="pref_value_email_security_none">Aucun</string>
+    <string name="pref_value_email_security_ssl">SSL</string>
+    <string name="pref_value_email_security_tls">TLS</string>
+    <string name="pref_title_email_user">Nom de l\'utilisateur</string>
+    <string name="pref_summary_email_user">%s</string>
+    <string name="pref_hint_email_user">user@gmail.com</string>
+    <string name="pref_title_email_password">Mot de passe</string>
 </resources>
