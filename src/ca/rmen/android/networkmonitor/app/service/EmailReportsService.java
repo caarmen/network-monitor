@@ -54,6 +54,7 @@ import android.content.Intent;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 
+import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.export.CSVExport;
@@ -124,7 +125,7 @@ public class EmailReportsService extends IntentService {
         props.put(propertyPrefix + "connectiontimeout", "15000");
         props.put(propertyPrefix + "writetimeout", "15000");
         if (emailPreferences.security == EmailSecurity.TLS) props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", String.valueOf(true));
+        props.put("mail.debug", String.valueOf(BuildConfig.DEBUG));
         props.put("mail.transport.protocol", transportProtocol);
 
         // Create the session with the properties.
