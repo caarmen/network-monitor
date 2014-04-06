@@ -31,20 +31,6 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_email_server_settings" >
         <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
-            android:defaultValue=""
-            android:hint="@string/pref_hint_email_user"
-            android:icon="@drawable/ic_pref_email_user"
-            android:inputType="textEmailAddress"
-            android:key="PREF_EMAIL_USER"
-            android:summary="@string/pref_summary_email_user"
-            android:title="@string/pref_title_email_user" />
-        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
-            android:defaultValue=""
-            android:icon="@drawable/ic_pref_email_password"
-            android:inputType="textPassword"
-            android:key="PREF_EMAIL_PASSWORD"
-            android:title="@string/pref_title_email_password" />
-        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
             android:defaultValue="smtp.gmail.com"
             android:hint="@string/pref_hint_email_server"
             android:icon="@drawable/ic_pref_email_server"
@@ -58,6 +44,20 @@
             android:key="PREF_EMAIL_PORT"
             android:summary="@string/pref_summary_email_port"
             android:title="@string/pref_title_email_port" />
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+            android:defaultValue=""
+            android:hint="@string/pref_hint_email_user"
+            android:icon="@drawable/ic_pref_email_user"
+            android:inputType="textEmailAddress"
+            android:key="PREF_EMAIL_USER"
+            android:summary="@string/pref_summary_email_user"
+            android:title="@string/pref_title_email_user" />
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+            android:defaultValue=""
+            android:icon="@drawable/ic_pref_email_password"
+            android:inputType="textPassword"
+            android:key="PREF_EMAIL_PASSWORD"
+            android:title="@string/pref_title_email_password" />
 
         <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
             android:defaultValue="TLS"
