@@ -55,6 +55,7 @@ public class EmailPreferencesActivity extends PreferenceActivity {
         addPreferencesFromResource(R.xml.email_preferences);
         updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_INTERVAL, R.string.pref_summary_email_report_interval);
         updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_REPORT_FORMATS, R.string.pref_summary_email_report_formats);
+        updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_RECIPIENTS, R.string.pref_summary_email_recipients);
         updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_SERVER, R.string.pref_summary_email_server);
         updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_PORT, R.string.pref_summary_email_port);
         updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_SECURITY, R.string.pref_summary_email_security);
@@ -81,6 +82,8 @@ public class EmailPreferencesActivity extends PreferenceActivity {
             if (NetMonPreferences.PREF_EMAIL_INTERVAL.equals(key)) {
                 updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_INTERVAL, R.string.pref_summary_email_report_interval);
 
+            } else if (NetMonPreferences.PREF_EMAIL_RECIPIENTS.equals(key)) {
+                updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_RECIPIENTS, R.string.pref_summary_email_recipients);
             } else if (NetMonPreferences.PREF_EMAIL_REPORT_FORMATS.equals(key)) {
                 updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_REPORT_FORMATS, R.string.pref_summary_email_report_formats);
             } else if (NetMonPreferences.PREF_EMAIL_SERVER.equals(key)) {

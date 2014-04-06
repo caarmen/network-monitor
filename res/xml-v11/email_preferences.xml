@@ -9,9 +9,17 @@
         android:summary="@string/pref_summary_email_report_interval"
         android:title="@string/pref_title_email_report_interval" />
 
+    <EditTextPreference
+        android:defaultValue=""
+        android:hint="@string/pref_hint_email_recipients"
+        android:inputType="textEmailAddress"
+        android:key="PREF_EMAIL_RECIPIENTS"
+        android:summary="@string/pref_summary_email_recipients"
+        android:title="@string/pref_title_email_recipients" />
+
     <MultiSelectListPreference
         android:defaultValue="@array/empty_array"
-        android:entries="@array/export_choices"
+        android:entries="@array/preferences_email_report_formats_labels"
         android:entryValues="@array/preferences_email_report_formats_values"
         android:key="PREF_EMAIL_REPORT_FORMATS"
         android:summary="@string/pref_summary_email_report_formats"
@@ -31,7 +39,7 @@
         android:title="@string/pref_title_email_port" />
 
     <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
-        android:defaultValue="tls"
+        android:defaultValue="TLS"
         android:entries="@array/preferences_email_security_labels"
         android:entryValues="@array/preferences_email_security_values"
         android:key="PREF_EMAIL_SECURITY"
@@ -41,6 +49,7 @@
     <EditTextPreference
         android:defaultValue=""
         android:hint="@string/pref_hint_email_user"
+        android:inputType="textEmailAddress"
         android:key="PREF_EMAIL_USER"
         android:summary="@string/pref_summary_email_user"
         android:title="@string/pref_title_email_user" />

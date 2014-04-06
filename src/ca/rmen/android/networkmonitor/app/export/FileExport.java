@@ -27,9 +27,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import android.content.Context;
-import ca.rmen.android.networkmonitor.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Export the Network Monitor data from the DB to a file.

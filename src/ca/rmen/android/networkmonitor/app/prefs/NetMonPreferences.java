@@ -25,7 +25,9 @@ package ca.rmen.android.networkmonitor.app.prefs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -53,6 +55,10 @@ public class NetMonPreferences {
         SAVE_POWER, HIGH_ACCURACY
     };
 
+    public enum EmailSecurity {
+        NONE, SSH, TLS
+    };
+
     public static final String PREF_UPDATE_INTERVAL = "PREF_UPDATE_INTERVAL";
     public static final String PREF_UPDATE_INTERVAL_DEFAULT = "10000";
     public static final String PREF_SERVICE_ENABLED = "PREF_SERVICE_ENABLED";
@@ -77,6 +83,7 @@ public class NetMonPreferences {
     public static final String PREF_EMAIL_SECURITY = "PREF_EMAIL_SECURITY";
     public static final String PREF_EMAIL_USER = "PREF_EMAIL_USER";
     public static final String PREF_EMAIL_PASSWORD = "PREF_EMAIL_PASSWORD";
+    public static final String PREF_EMAIL_RECIPIENTS = "PREF_EMAIL_RECIPIENTS";
 
     private static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
     private static final String PREF_SCHEDULER_DEFAULT = ExecutorServiceScheduler.class.getSimpleName();
@@ -84,6 +91,7 @@ public class NetMonPreferences {
     private static final String PREF_SORT_COLUMN_NAME_DEFAULT = NetMonColumns.TIMESTAMP;
     private static final String PREF_SORT_ORDER_DEFAULT = SortOrder.DESC.name();
     private static final String PREF_FILTER_PREFIX = "PREF_FILTERED_VALUES_";
+    private static final String PREF_EMAIL_PORT_DEFAULT = "587";
 
     private static NetMonPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
@@ -273,6 +281,37 @@ public class NetMonPreferences {
     public LocationFetchingStrategy getLocationFetchingStrategy() {
         String value = mSharedPrefs.getString(PREF_LOCATION_FETCHING_STRATEGY, LocationFetchingStrategy.SAVE_POWER.name());
         return LocationFetchingStrategy.valueOf(value);
+    }
+
+    /**
+     * @return the set of file attachment types to include in the periodic e-mail report.
+     */
+    public Set<String> getEmailReportFormats() {
+        return mSharedPrefs.getStringSet(PREF_EMAIL_REPORT_FORMATS, new HashSet<String>());
+    }
+
+    public String getEmailServer() {
+        return mSharedPrefs.getString(PREF_EMAIL_SERVER, "");
+    }
+
+    public int getEmailPort() {
+        return getIntPreference(PREF_EMAIL_PORT, PREF_EMAIL_PORT_DEFAULT);
+    }
+
+    public String getEmailUser() {
+        return mSharedPrefs.getString(PREF_EMAIL_USER, "");
+    }
+
+    public String getEmailPassword() {
+        return mSharedPrefs.getString(PREF_EMAIL_PASSWORD, "");
+    }
+
+    public String getEmailRecipients() {
+        return mSharedPrefs.getString(PREF_EMAIL_RECIPIENTS, "");
+    }
+
+    public EmailSecurity getEmailSecurity() {
+        return EmailSecurity.valueOf(mSharedPrefs.getString(PREF_EMAIL_SECURITY, EmailSecurity.NONE.name()));
     }
 
     private int getIntPreference(String key, String defaultValue) {

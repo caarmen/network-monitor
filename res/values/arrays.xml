@@ -120,19 +120,26 @@
         <item>@string/pref_value_email_security_tls</item>
     </string-array>
     <string-array name="preferences_email_security_values">
-        <item>none</item>
-        <item>ssl</item>
-        <item>tls</item>
+        <item>NONE</item>
+        <item>SSL</item>
+        <item>TLS</item>
     </string-array>
     
     <!-- Report formats -->
+    <!-- Report formats -->
+    <string-array name="preferences_email_report_formats_labels">
+        <item>CSV</item>
+        <item>HTML</item>
+        <item>Excel</item>
+        <item>KML</item>
+        <item>Raw database</item>
+    </string-array>
     <string-array name="preferences_email_report_formats_values">
         <item>csv</item>
         <item>html</item>
         <item>excel</item>
         <item>kml</item>
         <item>db</item>
-        <item>text</item>
     </string-array>
     
 </resources>
