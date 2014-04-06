@@ -127,6 +127,7 @@ public class NetMonPreferences {
     private static final String PREF_SORT_ORDER_DEFAULT = SortOrder.DESC.name();
     private static final String PREF_FILTER_PREFIX = "PREF_FILTERED_VALUES_";
     private static final String PREF_EMAIL_PORT_DEFAULT = "587";
+    private static final String PREF_LAST_EMAIL_SENT = "last_email_sent";
 
     private static NetMonPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
@@ -173,6 +174,16 @@ public class NetMonPreferences {
         Editor editor = mSharedPrefs.edit();
         editor.putString(NetMonPreferences.PREF_EMAIL_INTERVAL, String.valueOf(interval));
         editor.commit();
+    }
+
+    public void setLastEmailSent(long when) {
+        Editor editor = mSharedPrefs.edit();
+        editor.putLong(NetMonPreferences.PREF_LAST_EMAIL_SENT, when);
+        editor.commit();
+    }
+
+    public long getLastEmailSent() {
+        return mSharedPrefs.getLong(PREF_LAST_EMAIL_SENT, 0);
     }
 
     /**

@@ -35,6 +35,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 
 import ca.rmen.android.networkmonitor.Constants;
@@ -124,8 +125,14 @@ public class NetMonService extends Service {
     private void scheduleEmailReports() {
         Log.v(TAG, "scheduleEmailReports");
         mAlarmManager.cancel(EmailReportsService.getPendingIntent(this));
-        int emailInterval = NetMonPreferences.getInstance(NetMonService.this).getEmailReportInterval();
-        if (emailInterval > 0) startService(new Intent(getApplicationContext(), EmailReportsService.class));
+        int emailInterval = NetMonPreferences.getInstance(this).getEmailReportInterval();
+        if (emailInterval > 0) {
+            long timeSinceLast = System.currentTimeMillis() - NetMonPreferences.getInstance(this).getLastEmailSent();
+            long delayTillNext = emailInterval - timeSinceLast;
+            if (delayTillNext < 0) delayTillNext = 0;
+            Log.v(TAG, "scheduling in " + delayTillNext + " ms");
+            mAlarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + delayTillNext, EmailReportsService.getPendingIntent(this));
+        }
     }
 
     private Runnable mTask = new Runnable() {

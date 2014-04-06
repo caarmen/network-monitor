@@ -293,6 +293,7 @@ public class EmailReportsService extends IntentService {
         Log.v(TAG, "success");
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID_FAILED_EMAIL);
+        NetMonPreferences.getInstance(this).setLastEmailSent(System.currentTimeMillis());
     }
 
     /**
