@@ -34,4 +34,6 @@
 
 -dontwarn java.awt.**
 -dontwarn javax.security.**
--dontwarn java.beans.**
+-dontwarn java.beans.Beans
+-keep class javax.mail.** {*;}
+-keep class com.sun.mail.** {*;}
