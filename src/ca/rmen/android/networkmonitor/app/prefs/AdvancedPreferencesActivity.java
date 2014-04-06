@@ -28,6 +28,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -58,6 +59,11 @@ public class AdvancedPreferencesActivity extends PreferenceActivity {
         updateListPreferenceSummary(NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY, R.string.pref_summary_location_fetching_strategy);
         Preference importPreference = getPreferenceManager().findPreference(PREF_IMPORT);
         importPreference.setOnPreferenceClickListener(mOnPreferenceClickListener);
+        Preference emailPreference = findPreference(NetMonPreferences.PREF_EMAIL_REPORTS);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            emailPreference.setEnabled(false);
+            emailPreference.setSummary(R.string.pref_email_unavailable);
+        }
     }
 
     @Override

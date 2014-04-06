@@ -69,6 +69,7 @@ public class NetMonPreferences {
     public static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
     public static final String PREF_LOCATION_FETCHING_STRATEGY = "PREF_LOCATION_FETCHING_STRATEGY";
 
+    public static final String PREF_EMAIL_REPORTS = "PREF_EMAIL_REPORTS";
     public static final String PREF_EMAIL_INTERVAL = "PREF_EMAIL_INTERVAL";
     public static final String PREF_EMAIL_SERVER = "PREF_EMAIL_SERVER";
     public static final String PREF_EMAIL_PORT = "PREF_EMAIL_PORT";

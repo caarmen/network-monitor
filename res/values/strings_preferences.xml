@@ -54,6 +54,7 @@
     <string name="pref_value_filter_record_count_all">All</string>
     
     <!-- Email sending preferences -->
+    <string name="pref_email_unavailable">Available on Android 3.x and higher</string>
     <string name="pref_title_email_report_interval">Periodically send a report by e-mail</string>
     <string name="pref_summary_email_report_interval">Current setting: %s</string>
     <string name="pref_value_email_report_interval_never">Never</string>

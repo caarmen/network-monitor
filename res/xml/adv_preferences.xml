@@ -43,10 +43,10 @@
 
     <Preference
         android:icon="@drawable/ic_pref_email"
+        android:key="PREF_EMAIL_REPORTS"
         android:title="@string/pref_title_email" >
-        <intent android:action="ca.rmen.android.networkmonitor.app.prefs.EmailPreferencesActivity"/>
+        <intent android:action="ca.rmen.android.networkmonitor.app.prefs.EmailPreferencesActivity" />
     </Preference>
-
     <Preference
         android:icon="@drawable/ic_pref_import"
         android:key="PREF_IMPORT"
