@@ -18,7 +18,7 @@
     </style>
 
     <style name="textAppearanceLarge" parent="@android:style/TextAppearance.Large">
-        <item name="android:textColor">@color/netmon_color</item>
+        <item name="android:textColor">@color/netmon_text_color</item>
     </style>
 
     <style name="textAppearanceMedium" parent="@android:style/TextAppearance.Medium">

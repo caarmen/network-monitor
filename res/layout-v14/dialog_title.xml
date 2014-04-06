@@ -10,4 +10,4 @@
     android:minHeight="@dimen/alert_dialog_title_height"
     android:padding="8dp"
     android:textAppearance="?android:attr/textAppearanceLarge"
-    android:textColor="@color/netmon_color" />
+    android:textColor="@color/netmon_text_color" />
