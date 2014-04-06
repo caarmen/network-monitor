@@ -60,7 +60,6 @@ public class EmailPreferencesActivity extends PreferenceActivity {
         updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_PORT, R.string.pref_summary_email_port);
         updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_SECURITY, R.string.pref_summary_email_security);
         updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_USER, R.string.pref_summary_email_user);
-        updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_PASSWORD, R.string.pref_summary_email_password);
         findPreference(NetMonPreferences.PREF_EMAIL_REPORT_FORMATS).setOnPreferenceChangeListener(mOnPreferenceChangeListener);
     }
 
@@ -94,8 +93,6 @@ public class EmailPreferencesActivity extends PreferenceActivity {
                 updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_SECURITY, R.string.pref_summary_email_security);
             } else if (NetMonPreferences.PREF_EMAIL_USER.equals(key)) {
                 updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_USER, R.string.pref_summary_email_user);
-            } else if (NetMonPreferences.PREF_EMAIL_PASSWORD.equals(key)) {
-                updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_PASSWORD, R.string.pref_summary_email_password);
             }
         }
     };
