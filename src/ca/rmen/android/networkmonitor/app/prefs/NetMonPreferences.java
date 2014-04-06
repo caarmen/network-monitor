@@ -56,7 +56,7 @@ public class NetMonPreferences {
     };
 
     public enum EmailSecurity {
-        NONE, SSH, TLS
+        NONE, SSL, TLS
     };
 
     public static final String PREF_UPDATE_INTERVAL = "PREF_UPDATE_INTERVAL";

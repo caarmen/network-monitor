@@ -80,8 +80,6 @@ public class EmailReportsService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.v(TAG, "onHandleIntent, intent = " + intent);
-        // Schedule our next run
-        scheduleEmailReports();
 
         Set<String> fileTypes = NetMonPreferences.getInstance(this).getEmailReportFormats();
         String reportSummary = SummaryExport.getSummary(this);
@@ -90,21 +88,11 @@ public class EmailReportsService extends IntentService {
         if (!fileTypes.isEmpty()) messageBody += getString(R.string.export_message_text_file_attached);
         messageBody += reportSummary;
 
-        String serverName = NetMonPreferences.getInstance(this).getEmailServer();
-        int port = NetMonPreferences.getInstance(this).getEmailPort();
+        String recipients = NetMonPreferences.getInstance(this).getEmailRecipients();
         final String user = NetMonPreferences.getInstance(this).getEmailUser();
         final String password = NetMonPreferences.getInstance(this).getEmailPassword();
-        EmailSecurity security = NetMonPreferences.getInstance(this).getEmailSecurity();
-        String recipients = NetMonPreferences.getInstance(this).getEmailRecipients();
+        Properties props = createMailProperties();
 
-        // Set up properties for mail sending.
-        Properties props = new Properties();
-        props.put("mail.smtp.host", serverName);
-        props.put("mail.smtp.port", port);
-        props.put("mail.smtp.auth", "true");
-        if (security == EmailSecurity.TLS) props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", String.valueOf(true));
-        props.put("mail.transport.protocol", "smtp");
         Session mailSession = Session.getInstance(props, new javax.mail.Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -168,6 +156,33 @@ public class EmailReportsService extends IntentService {
                 Log.e(TAG, "onHandleIntent Could not close the transport", e);
             }
         }
+        // Schedule our next run
+        scheduleEmailReports();
+    }
+
+    private Properties createMailProperties() {
+        String serverName = NetMonPreferences.getInstance(this).getEmailServer();
+        int port = NetMonPreferences.getInstance(this).getEmailPort();
+        EmailSecurity security = NetMonPreferences.getInstance(this).getEmailSecurity();
+        // Set up properties for mail sending.
+        Properties props = new Properties();
+        String propertyPrefix, transportProtocol;
+        if (security == EmailSecurity.SSL) {
+            propertyPrefix = "mail.smtps.";
+            transportProtocol = "smtps";
+        } else {
+            propertyPrefix = "mail.smtp.";
+            transportProtocol = "smtp";
+        }
+        ;
+        props.put(propertyPrefix + "host", serverName);
+        props.put(propertyPrefix + "port", String.valueOf(port));
+        props.put(propertyPrefix + "auth", "true");
+        if (security == EmailSecurity.TLS) props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", String.valueOf(true));
+        props.put("mail.transport.protocol", transportProtocol);
+        Log.v(TAG, "Sending mail on " + serverName + ":" + port + " using " + security + " security");
+        return props;
     }
 
     private FileExport getFileExport(String fileType) throws FileNotFoundException, UnsupportedEncodingException {
