@@ -45,8 +45,12 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
@@ -66,6 +70,7 @@ public class EmailReportsService extends IntentService {
 
     private static final String TAG = Constants.TAG + EmailReportsService.class.getSimpleName();
     private static final String ENCODING = "UTF-8";
+    private static final int PENDING_INTENT_REQUEST_CODE = 123;
 
     public EmailReportsService() {
         super(TAG);
@@ -75,6 +80,9 @@ public class EmailReportsService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.v(TAG, "onHandleIntent, intent = " + intent);
+        // Schedule our next run
+        scheduleEmailReports();
+
         Set<String> fileTypes = NetMonPreferences.getInstance(this).getEmailReportFormats();
         String reportSummary = SummaryExport.getSummary(this);
         String dateRange = SummaryExport.getDataCollectionDateRange(this);
@@ -181,6 +189,23 @@ public class EmailReportsService extends IntentService {
         bp.setFileName(file.getName());
         Log.v(TAG, "created body part for " + fileExport);
         return bp;
+    }
+
+    static PendingIntent getPendingIntent(Context context) {
+        Intent intent = new Intent(context.getApplicationContext(), EmailReportsService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(context.getApplicationContext(), PENDING_INTENT_REQUEST_CODE, intent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        return pendingIntent;
+    }
+
+    private void scheduleEmailReports() {
+        Log.v(TAG, "scheduleEmailReports");
+        PendingIntent pendingIntent = getPendingIntent(this);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+        int emailInterval = NetMonPreferences.getInstance(this).getEmailReportInterval();
+        Log.v(TAG, "email interval = " + emailInterval);
+        if (emailInterval > 0) alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + emailInterval, pendingIntent);
     }
 
 }

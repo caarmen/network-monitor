@@ -26,7 +26,6 @@ package ca.rmen.android.networkmonitor.app.service;
 
 import android.app.AlarmManager;
 import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
@@ -36,7 +35,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 
 import ca.rmen.android.networkmonitor.Constants;
@@ -52,13 +50,11 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class NetMonService extends Service {
     private static final String TAG = Constants.TAG + NetMonService.class.getSimpleName();
 
-    private static final int REQUEST_CODE_EMAIL_REPORTS_SERVICE = 123;
 
     private PowerManager mPowerManager;
     private AlarmManager mAlarmManager;
     private long mLastWakeUp = 0;
     private NetMonDataSources mDataSources;
-    private PendingIntent mPendingIntentEmailReports;
     private Scheduler mScheduler;
 
     @Override
@@ -81,10 +77,6 @@ public class NetMonService extends Service {
         mDataSources = new NetMonDataSources();
         mDataSources.onCreate(this);
 
-        Intent intent = new Intent(this, EmailReportsService.class);
-        mPendingIntentEmailReports = PendingIntent.getService(getApplicationContext(), REQUEST_CODE_EMAIL_REPORTS_SERVICE, intent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
-
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mSharedPreferenceListener);
 
         scheduleTests();
@@ -101,7 +93,7 @@ public class NetMonService extends Service {
     public void onDestroy() {
         Log.v(TAG, "onDestroy");
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mSharedPreferenceListener);
-        mAlarmManager.cancel(mPendingIntentEmailReports);
+        mAlarmManager.cancel(EmailReportsService.getPendingIntent(this));
         mDataSources.onDestroy();
         NetMonNotification.dismissNotification(this);
         mScheduler.onDestroy();
@@ -131,12 +123,9 @@ public class NetMonService extends Service {
 
     private void scheduleEmailReports() {
         Log.v(TAG, "scheduleEmailReports");
-        mAlarmManager.cancel(mPendingIntentEmailReports);
+        mAlarmManager.cancel(EmailReportsService.getPendingIntent(this));
         int emailInterval = NetMonPreferences.getInstance(NetMonService.this).getEmailReportInterval();
-        Log.v(TAG, "email interval = " + emailInterval);
-        if (emailInterval > 0)
-            mAlarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), emailInterval, mPendingIntentEmailReports);
-
+        if (emailInterval > 0) startService(new Intent(getApplicationContext(), EmailReportsService.class));
     }
 
     private Runnable mTask = new Runnable() {
