@@ -129,7 +129,7 @@ public class EmailReportsService extends IntentService {
             } else {
                 // We have file attachments, so we need to do a multi-part mail.
                 // Add the plain text version of the mail
-                Multipart mp = new MimeMultipart("alternative");
+                Multipart mp = new MimeMultipart("mixed");
                 BodyPart bp = new MimeBodyPart();
                 bp.setContent(messageBody, "text/plain;charset=" + ENCODING);
                 bp.setHeader("Content-Transfer-Encoding", "quoted-printable");
