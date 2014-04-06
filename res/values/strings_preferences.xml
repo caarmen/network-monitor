@@ -64,7 +64,7 @@
     <string name="pref_value_email_report_interval_2_hours">Once every 2 hours</string>
     <string name="pref_value_email_report_interval_6_hours">Once every 6 hours</string>
     <string name="pref_value_email_report_interval_1_day">Once a day</string>
-    <string name="pref_title_email_recipients">Address(es) to send the report to.</string>
+    <string name="pref_title_email_recipients">Address(es) to send the report to</string>
     <string name="pref_summary_email_recipients">Current setting: %s</string>
     <string name="pref_hint_email_recipients">user@domain.com</string>
     <string name="pref_title_email_report_formats">File attachments to include</string>

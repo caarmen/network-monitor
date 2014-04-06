@@ -9,7 +9,7 @@
         android:summary="@string/pref_summary_email_report_interval"
         android:title="@string/pref_title_email_report_interval" />
 
-    <EditTextPreference
+    <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
         android:defaultValue=""
         android:hint="@string/pref_hint_email_recipients"
         android:inputType="textEmailAddress"
@@ -25,13 +25,13 @@
         android:summary="@string/pref_summary_email_report_formats"
         android:title="@string/pref_title_email_report_formats" />
 
-    <EditTextPreference
+    <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
         android:defaultValue="smtp.gmail.com"
         android:hint="@string/pref_hint_email_server"
         android:key="PREF_EMAIL_SERVER"
         android:summary="@string/pref_summary_email_server"
         android:title="@string/pref_title_email_server" />
-    <EditTextPreference
+    <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
         android:defaultValue="587"
         android:hint="@string/pref_hint_email_port"
         android:key="PREF_EMAIL_PORT"
@@ -46,14 +46,14 @@
         android:summary="@string/pref_summary_email_security"
         android:title="@string/pref_title_email_security" />
 
-    <EditTextPreference
+    <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
         android:defaultValue=""
         android:hint="@string/pref_hint_email_user"
         android:inputType="textEmailAddress"
         android:key="PREF_EMAIL_USER"
         android:summary="@string/pref_summary_email_user"
         android:title="@string/pref_title_email_user" />
-    <EditTextPreference
+    <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
         android:defaultValue=""
         android:inputType="textPassword"
         android:key="PREF_EMAIL_PASSWORD"
