@@ -36,14 +36,15 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import ca.rmen.android.networkmonitor.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.service.datasources.NetMonDataSources;
 import ca.rmen.android.networkmonitor.app.service.scheduler.Scheduler;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
+import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * This service periodically retrieves network state information and writes it to the database.
@@ -51,11 +52,13 @@ import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 public class NetMonService extends Service {
     private static final String TAG = Constants.TAG + NetMonService.class.getSimpleName();
 
+    private static final int REQUEST_CODE_EMAIL_REPORTS_SERVICE = 123;
+
     private PowerManager mPowerManager;
     private AlarmManager mAlarmManager;
     private long mLastWakeUp = 0;
     private NetMonDataSources mDataSources;
-    private PendingIntent mPendingIntent;
+    private PendingIntent mPendingIntentEmailReports;
     private Scheduler mScheduler;
 
     @Override
@@ -78,9 +81,14 @@ public class NetMonService extends Service {
         mDataSources = new NetMonDataSources();
         mDataSources.onCreate(this);
 
+        Intent intent = new Intent(this, EmailReportsService.class);
+        mPendingIntentEmailReports = PendingIntent.getService(getApplicationContext(), REQUEST_CODE_EMAIL_REPORTS_SERVICE, intent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mSharedPreferenceListener);
 
-        setScheduler();
+        scheduleTests();
+        scheduleEmailReports();
     }
 
 
@@ -93,7 +101,7 @@ public class NetMonService extends Service {
     public void onDestroy() {
         Log.v(TAG, "onDestroy");
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mSharedPreferenceListener);
-        mAlarmManager.cancel(mPendingIntent);
+        mAlarmManager.cancel(mPendingIntentEmailReports);
         mDataSources.onDestroy();
         NetMonNotification.dismissNotification(this);
         mScheduler.onDestroy();
@@ -103,8 +111,8 @@ public class NetMonService extends Service {
     /**
      * Start scheduling tests, using the scheduler class chosen by the user in the advanced settings.
      */
-    private void setScheduler() {
-        Log.v(TAG, "setScheduler");
+    private void scheduleTests() {
+        Log.v(TAG, "scheduleTests");
         if (mScheduler != null) {
             mScheduler.onDestroy();
         }
@@ -119,6 +127,16 @@ public class NetMonService extends Service {
         } catch (IllegalAccessException e) {
             Log.e(TAG, "setScheduler Could not create scheduler " + schedulerClass + ": " + e.getMessage(), e);
         }
+    }
+
+    private void scheduleEmailReports() {
+        Log.v(TAG, "scheduleEmailReports");
+        mAlarmManager.cancel(mPendingIntentEmailReports);
+        int emailInterval = NetMonPreferences.getInstance(NetMonService.this).getEmailReportInterval();
+        Log.v(TAG, "email interval = " + emailInterval);
+        if (emailInterval > 0)
+            mAlarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), emailInterval, mPendingIntentEmailReports);
+
     }
 
     private Runnable mTask = new Runnable() {
@@ -176,9 +194,12 @@ public class NetMonService extends Service {
                 int interval = NetMonPreferences.getInstance(NetMonService.this).getUpdateInterval();
                 mScheduler.setInterval(interval);
             } else if (NetMonPreferences.PREF_SCHEDULER.equals(key)) {
-                setScheduler();
+                scheduleTests();
+            } else if (NetMonPreferences.PREF_EMAIL_INTERVAL.equals(key)) {
+                scheduleEmailReports();
             }
         }
     };
+
 
 }

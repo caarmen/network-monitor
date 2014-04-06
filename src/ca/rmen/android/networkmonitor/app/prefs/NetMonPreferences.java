@@ -117,6 +117,13 @@ public class NetMonPreferences {
     }
 
     /**
+     * @return the interval, in milliseconds, between e-mailing reports.
+     */
+    public int getEmailReportInterval() {
+        return getIntPreference(NetMonPreferences.PREF_EMAIL_INTERVAL, "0") * 60 * 1000;
+    }
+
+    /**
      * @return true if we are currently collecting and logging data.
      */
     public boolean isServiceEnabled() {

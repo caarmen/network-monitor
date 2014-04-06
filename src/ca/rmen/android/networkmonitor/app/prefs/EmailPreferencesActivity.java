@@ -46,6 +46,7 @@ import ca.rmen.android.networkmonitor.R;
 public class EmailPreferencesActivity extends PreferenceActivity {
     private static final String TAG = Constants.TAG + EmailPreferencesActivity.class.getSimpleName();
 
+
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,7 @@ public class EmailPreferencesActivity extends PreferenceActivity {
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (NetMonPreferences.PREF_EMAIL_INTERVAL.equals(key)) {
                 updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_INTERVAL, R.string.pref_summary_email_report_interval);
+
             } else if (NetMonPreferences.PREF_EMAIL_REPORT_FORMATS.equals(key)) {
                 updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_REPORT_FORMATS, R.string.pref_summary_email_report_formats);
             } else if (NetMonPreferences.PREF_EMAIL_SERVER.equals(key)) {
