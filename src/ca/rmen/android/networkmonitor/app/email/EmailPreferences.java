@@ -38,20 +38,20 @@ import android.text.TextUtils;
 public class EmailPreferences {
 
 
-    public enum EmailSecurity {
+    enum EmailSecurity {
         NONE, SSL, TLS
     };
 
-    public static class EmailConfig {
-        public final Set<String> reportFormats;
-        public final String server;
-        public final int port;
-        public final String user;
-        public final String password;
-        public final String recipients;
-        public final EmailSecurity security;
+    static class EmailConfig {
+        final Set<String> reportFormats;
+        final String server;
+        final int port;
+        final String user;
+        final String password;
+        final String recipients;
+        final EmailSecurity security;
 
-        public EmailConfig(Set<String> reportFormats, String server, int port, String user, String password, String recipients, EmailSecurity security) {
+        private EmailConfig(Set<String> reportFormats, String server, int port, String user, String password, String recipients, EmailSecurity security) {
             this.reportFormats = reportFormats;
             this.server = server;
             this.port = port;
@@ -78,15 +78,14 @@ public class EmailPreferences {
 
     public static final String PREF_EMAIL_REPORTS = "PREF_EMAIL_REPORTS";
     public static final String PREF_EMAIL_INTERVAL = "PREF_EMAIL_INTERVAL";
-    public static final String PREF_EMAIL_REPORT_FORMATS = "PREF_EMAIL_REPORT_FORMATS";
-    public static final String PREF_EMAIL_SERVER = "PREF_EMAIL_SERVER";
-    public static final String PREF_EMAIL_PORT = "PREF_EMAIL_PORT";
-    public static final String PREF_EMAIL_SECURITY = "PREF_EMAIL_SECURITY";
-    public static final String PREF_EMAIL_USER = "PREF_EMAIL_USER";
-    public static final String PREF_EMAIL_PASSWORD = "PREF_EMAIL_PASSWORD";
-    public static final String PREF_EMAIL_RECIPIENTS = "PREF_EMAIL_RECIPIENTS";
-
+    static final String PREF_EMAIL_REPORT_FORMATS = "PREF_EMAIL_REPORT_FORMATS";
+    static final String PREF_EMAIL_SERVER = "PREF_EMAIL_SERVER";
+    static final String PREF_EMAIL_PORT = "PREF_EMAIL_PORT";
+    static final String PREF_EMAIL_SECURITY = "PREF_EMAIL_SECURITY";
+    static final String PREF_EMAIL_USER = "PREF_EMAIL_USER";
+    static final String PREF_EMAIL_RECIPIENTS = "PREF_EMAIL_RECIPIENTS";
     static final String PREF_EMAIL_LAST_EMAIL_SENT = "PREF_EMAIL_LAST_EMAIL_SENT";
+    private static final String PREF_EMAIL_PASSWORD = "PREF_EMAIL_PASSWORD";
 
     private static final String PREF_EMAIL_PORT_DEFAULT = "587";
 

@@ -28,11 +28,11 @@ import java.util.Arrays;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.dialog.ChoiceDialogFragment.DialogItemListener;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
+import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Create different types of dialog fragments (edit text input, information, choice, confirmation, progress).

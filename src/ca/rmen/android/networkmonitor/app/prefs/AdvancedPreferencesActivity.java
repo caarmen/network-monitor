@@ -42,7 +42,7 @@ import ca.rmen.android.networkmonitor.app.email.EmailPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.LocationFetchingStrategy;
 import ca.rmen.android.networkmonitor.util.Log;
 
-public class AdvancedPreferencesActivity extends PreferenceActivity {
+public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + AdvancedPreferencesActivity.class.getSimpleName();
     private static final int ACTIVITY_REQUEST_CODE_IMPORT = 1;
     private static final String PREF_IMPORT = "PREF_IMPORT";
