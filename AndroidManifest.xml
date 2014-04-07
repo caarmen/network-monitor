@@ -31,7 +31,7 @@
             android:exported="false" />
 
         <service android:name="ca.rmen.android.networkmonitor.app.service.NetMonService" />
-        <service android:name="ca.rmen.android.networkmonitor.app.service.EmailReportsService" />
+        <service android:name="ca.rmen.android.networkmonitor.app.email.EmailReportsService" />
 
         <activity
             android:name="ca.rmen.android.networkmonitor.app.main.MainActivity"
@@ -90,7 +90,7 @@
                 android:value="ca.rmen.android.networkmonitor.app.main.MainActivity" />
         </activity>
         <activity
-            android:name="ca.rmen.android.networkmonitor.app.prefs.EmailPreferencesActivity"
+            android:name="ca.rmen.android.networkmonitor.app.email.EmailPreferencesActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:label="@string/pref_title_email"

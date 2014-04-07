@@ -38,6 +38,7 @@ import android.preference.PreferenceManager;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.email.EmailPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.LocationFetchingStrategy;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -58,7 +59,7 @@ public class AdvancedPreferencesActivity extends PreferenceActivity {
         updateListPreferenceSummary(NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY, R.string.pref_summary_location_fetching_strategy);
         Preference importPreference = getPreferenceManager().findPreference(PREF_IMPORT);
         importPreference.setOnPreferenceClickListener(mOnPreferenceClickListener);
-        Preference emailPreference = findPreference(NetMonPreferences.PREF_EMAIL_REPORTS);
+        Preference emailPreference = findPreference(EmailPreferences.PREF_EMAIL_REPORTS);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             emailPreference.setEnabled(false);
             emailPreference.setSummary(R.string.pref_email_unavailable);

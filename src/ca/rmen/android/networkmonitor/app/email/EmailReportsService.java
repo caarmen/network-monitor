@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.service;
+package ca.rmen.android.networkmonitor.app.email;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -57,6 +57,8 @@ import android.support.v4.app.NotificationCompat;
 import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailConfig;
+import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailSecurity;
 import ca.rmen.android.networkmonitor.app.export.CSVExport;
 import ca.rmen.android.networkmonitor.app.export.DBExport;
 import ca.rmen.android.networkmonitor.app.export.ExcelExport;
@@ -64,10 +66,6 @@ import ca.rmen.android.networkmonitor.app.export.FileExport;
 import ca.rmen.android.networkmonitor.app.export.HTMLExport;
 import ca.rmen.android.networkmonitor.app.export.SummaryExport;
 import ca.rmen.android.networkmonitor.app.export.kml.KMLExport;
-import ca.rmen.android.networkmonitor.app.prefs.EmailPreferencesActivity;
-import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
-import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.EmailPreferences;
-import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.EmailSecurity;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -90,13 +88,13 @@ public class EmailReportsService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Log.v(TAG, "onHandleIntent, intent = " + intent);
 
-        final EmailPreferences emailPreferences = NetMonPreferences.getInstance(this).getEmailPreferences();
-        if (emailPreferences.isValid()) {
-            Session mailSession = getMailSession(emailPreferences);
-            Message message = createMessage(mailSession, emailPreferences);
+        final EmailConfig emailConfig = EmailPreferences.getInstance(this).getEmailConfig();
+        if (emailConfig.isValid()) {
+            Session mailSession = getMailSession(emailConfig);
+            Message message = createMessage(mailSession, emailConfig);
             if (message != null) sendMail(mailSession, message);
         } else {
-            Log.w(TAG, "Cannot send mail with the current email settings: " + emailPreferences);
+            Log.w(TAG, "Cannot send mail with the current email settings: " + emailConfig);
         }
 
         // Schedule our next run
@@ -106,25 +104,25 @@ public class EmailReportsService extends IntentService {
     /**
      * @return an SMTP Session that we can open to send a message on.
      */
-    private static Session getMailSession(final EmailPreferences emailPreferences) {
-        Log.v(TAG, "getMailSession: emailPreferences = " + emailPreferences);
+    private static Session getMailSession(final EmailConfig emailConfig) {
+        Log.v(TAG, "getMailSession: emailConfig = " + emailConfig);
         // Set up properties for mail sending.
         Properties props = new Properties();
         String propertyPrefix, transportProtocol;
-        if (emailPreferences.security == EmailSecurity.SSL) {
+        if (emailConfig.security == EmailSecurity.SSL) {
             propertyPrefix = "mail.smtps.";
             transportProtocol = "smtps";
         } else {
             propertyPrefix = "mail.smtp.";
             transportProtocol = "smtp";
         }
-        props.put(propertyPrefix + "host", emailPreferences.server);
-        props.put(propertyPrefix + "port", String.valueOf(emailPreferences.port));
+        props.put(propertyPrefix + "host", emailConfig.server);
+        props.put(propertyPrefix + "port", String.valueOf(emailConfig.port));
         props.put(propertyPrefix + "auth", "true");
         props.put(propertyPrefix + "timeout", "15000");
         props.put(propertyPrefix + "connectiontimeout", "15000");
         props.put(propertyPrefix + "writetimeout", "15000");
-        if (emailPreferences.security == EmailSecurity.TLS) props.put("mail.smtp.starttls.enable", "true");
+        if (emailConfig.security == EmailSecurity.TLS) props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.debug", String.valueOf(BuildConfig.DEBUG));
         props.put("mail.transport.protocol", transportProtocol);
 
@@ -132,7 +130,7 @@ public class EmailReportsService extends IntentService {
         Session mailSession = Session.getInstance(props, new javax.mail.Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(emailPreferences.user, emailPreferences.password);
+                return new PasswordAuthentication(emailConfig.user, emailConfig.password);
             }
         });
         Log.v(TAG, "getMailSession, created session " + mailSession);
@@ -167,23 +165,23 @@ public class EmailReportsService extends IntentService {
     /**
      * @return a Message we can send using the given mailSession, or null if there was a problem creating the message.
      */
-    private Message createMessage(Session mailSession, EmailPreferences emailPreferences) {
-        Log.v(TAG, "createMessage: emailPreferences = " + emailPreferences);
+    private Message createMessage(Session mailSession, EmailConfig emailConfig) {
+        Log.v(TAG, "createMessage: emailConfig = " + emailConfig);
 
         try {
             MimeMessage message = new MimeMessage(mailSession);
             // Set the subject, from, and to fields.
             String subject = getString(R.string.export_subject_send_log);
             message.setSubject(MimeUtility.encodeText(subject, ENCODING, "Q"));
-            String from = getFromAddress(emailPreferences);
+            String from = getFromAddress(emailConfig);
             message.setFrom(new InternetAddress(from));
-            message.addRecipients(Message.RecipientType.TO, InternetAddress.parse(emailPreferences.recipients));
+            message.addRecipients(Message.RecipientType.TO, InternetAddress.parse(emailConfig.recipients));
 
             // Get the plain text of the mail body.
-            String messageText = getMessageBody(emailPreferences);
+            String messageText = getMessageBody(emailConfig);
 
             // Case 1: No file attachment, just send a plain text mail with the summary.
-            if (emailPreferences.reportFormats.isEmpty()) {
+            if (emailConfig.reportFormats.isEmpty()) {
                 message.setHeader("Content-Transfer-Encoding", "quoted-printable");
                 message.setText(messageText, ENCODING);
             }
@@ -197,7 +195,7 @@ public class EmailReportsService extends IntentService {
                 mp.addBodyPart(bp);
 
                 // Now add the file attachments.
-                for (String fileType : emailPreferences.reportFormats) {
+                for (String fileType : emailConfig.reportFormats) {
                     bp = createBodyPart(fileType);
                     mp.addBodyPart(bp);
                 }
@@ -218,18 +216,18 @@ public class EmailReportsService extends IntentService {
     /**
      * Construct the from address based on the user name and possibly the smtp server name.
      */
-    private static String getFromAddress(EmailPreferences emailPreferences) {
-        Log.v(TAG, "getFromAddress: emailPreferences = " + emailPreferences);
+    private static String getFromAddress(EmailConfig emailConfig) {
+        Log.v(TAG, "getFromAddress: emailConfig = " + emailConfig);
         // We try to guess the from address.
         final String from;
         // If the user name for the smtp server is an e-mail address, we just use that.
-        if (emailPreferences.user.indexOf("@") > 0) {
-            from = emailPreferences.user;
+        if (emailConfig.user.indexOf("@") > 0) {
+            from = emailConfig.user;
         }
         // Otherwise we use the user@server.  We try to strip any "smtp" part of the server domain.
         else {
-            String server = emailPreferences.server.replaceAll("smtp[^\\.]*\\.", "");
-            from = emailPreferences.user + "@" + server;
+            String server = emailConfig.server.replaceAll("smtp[^\\.]*\\.", "");
+            from = emailConfig.user + "@" + server;
         }
         Log.v(TAG, "getFromAddress: Sending mail from " + from);
         return from;
@@ -261,13 +259,13 @@ public class EmailReportsService extends IntentService {
     /**
      * @return the text of the mail that the recipient will receive.
      */
-    private String getMessageBody(EmailPreferences emailPreferences) {
-        Log.v(TAG, "getMessageBody, emailPreferences =" + emailPreferences);
+    private String getMessageBody(EmailConfig emailConfig) {
+        Log.v(TAG, "getMessageBody, emailConfig =" + emailConfig);
         String reportSummary = SummaryExport.getSummary(this);
         String dateRange = SummaryExport.getDataCollectionDateRange(this);
         String messageBody = getString(R.string.export_message_text, dateRange);
         // If we're attaching files, add a sentence to the mail saying so.
-        if (!emailPreferences.reportFormats.isEmpty()) messageBody += getString(R.string.export_message_text_file_attached);
+        if (!emailConfig.reportFormats.isEmpty()) messageBody += getString(R.string.export_message_text_file_attached);
         messageBody += reportSummary;
         Log.v(TAG, "getMessageBody, created message body " + messageBody);
         return messageBody;
@@ -281,7 +279,7 @@ public class EmailReportsService extends IntentService {
         PendingIntent pendingIntent = getPendingIntent(this);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
-        int emailInterval = NetMonPreferences.getInstance(this).getEmailReportInterval();
+        int emailInterval = EmailPreferences.getInstance(this).getEmailReportInterval();
         Log.v(TAG, "email interval = " + emailInterval);
         if (emailInterval > 0) alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + emailInterval, pendingIntent);
     }
@@ -293,7 +291,7 @@ public class EmailReportsService extends IntentService {
         Log.v(TAG, "success");
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID_FAILED_EMAIL);
-        NetMonPreferences.getInstance(this).setLastEmailSent(System.currentTimeMillis());
+        EmailPreferences.getInstance(this).setLastEmailSent(System.currentTimeMillis());
     }
 
     /**
@@ -318,7 +316,7 @@ public class EmailReportsService extends IntentService {
     /**
      * @return the PendingIntent which is used to plan this Service.
      */
-    static PendingIntent getPendingIntent(Context context) {
+    public static PendingIntent getPendingIntent(Context context) {
         Intent intent = new Intent(context.getApplicationContext(), EmailReportsService.class);
         PendingIntent pendingIntent = PendingIntent.getService(context.getApplicationContext(), PENDING_INTENT_REQUEST_CODE, intent,
                 PendingIntent.FLAG_CANCEL_CURRENT);

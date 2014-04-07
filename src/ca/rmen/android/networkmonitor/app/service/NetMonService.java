@@ -39,6 +39,8 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.app.email.EmailPreferences;
+import ca.rmen.android.networkmonitor.app.email.EmailReportsService;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.service.datasources.NetMonDataSources;
 import ca.rmen.android.networkmonitor.app.service.scheduler.Scheduler;
@@ -125,9 +127,9 @@ public class NetMonService extends Service {
     private void scheduleEmailReports() {
         Log.v(TAG, "scheduleEmailReports");
         mAlarmManager.cancel(EmailReportsService.getPendingIntent(this));
-        int emailInterval = NetMonPreferences.getInstance(this).getEmailReportInterval();
+        int emailInterval = EmailPreferences.getInstance(this).getEmailReportInterval();
         if (emailInterval > 0) {
-            long timeSinceLast = System.currentTimeMillis() - NetMonPreferences.getInstance(this).getLastEmailSent();
+            long timeSinceLast = System.currentTimeMillis() - EmailPreferences.getInstance(this).getLastEmailSent();
             long delayTillNext = emailInterval - timeSinceLast;
             if (delayTillNext < 0) delayTillNext = 0;
             Log.v(TAG, "scheduling in " + delayTillNext + " ms");
@@ -191,7 +193,7 @@ public class NetMonService extends Service {
                 mScheduler.setInterval(interval);
             } else if (NetMonPreferences.PREF_SCHEDULER.equals(key)) {
                 scheduleTests();
-            } else if (NetMonPreferences.PREF_EMAIL_INTERVAL.equals(key)) {
+            } else if (EmailPreferences.PREF_EMAIL_INTERVAL.equals(key)) {
                 scheduleEmailReports();
             }
         }

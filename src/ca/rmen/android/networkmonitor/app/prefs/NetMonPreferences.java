@@ -25,9 +25,7 @@ package ca.rmen.android.networkmonitor.app.prefs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -55,44 +53,6 @@ public class NetMonPreferences {
         SAVE_POWER, HIGH_ACCURACY
     };
 
-    public enum EmailSecurity {
-        NONE, SSL, TLS
-    };
-
-    public class EmailPreferences {
-        public final Set<String> reportFormats;
-        public final String server;
-        public final int port;
-        public final String user;
-        public final String password;
-        public final String recipients;
-        public final EmailSecurity security;
-
-        public EmailPreferences(Set<String> reportFormats, String server, int port, String user, String password, String recipients, EmailSecurity security) {
-            super();
-            this.reportFormats = reportFormats;
-            this.server = server;
-            this.port = port;
-            this.user = user;
-            this.password = password;
-            this.recipients = recipients;
-            this.security = security;
-        }
-
-        /**
-         * @return true if we have enough info to attempt to send a mail.
-         */
-        public boolean isValid() {
-            return !TextUtils.isEmpty(server) && port > 0 && !TextUtils.isEmpty(user) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(recipients);
-        }
-
-        @Override
-        public String toString() {
-            return EmailPreferences.class.getSimpleName() + " [reportFormats=" + reportFormats + ", server=" + server + ", port=" + port + ", user=" + user
-                    + ", password=******, recipients=" + recipients + ", security=" + security + "]";
-        }
-
-    }
 
     public static final String PREF_UPDATE_INTERVAL = "PREF_UPDATE_INTERVAL";
     public static final String PREF_UPDATE_INTERVAL_DEFAULT = "10000";
@@ -110,24 +70,12 @@ public class NetMonPreferences {
     public static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
     public static final String PREF_LOCATION_FETCHING_STRATEGY = "PREF_LOCATION_FETCHING_STRATEGY";
 
-    public static final String PREF_EMAIL_REPORTS = "PREF_EMAIL_REPORTS";
-    public static final String PREF_EMAIL_INTERVAL = "PREF_EMAIL_INTERVAL";
-    public static final String PREF_EMAIL_REPORT_FORMATS = "PREF_EMAIL_REPORT_FORMATS";
-    public static final String PREF_EMAIL_SERVER = "PREF_EMAIL_SERVER";
-    public static final String PREF_EMAIL_PORT = "PREF_EMAIL_PORT";
-    public static final String PREF_EMAIL_SECURITY = "PREF_EMAIL_SECURITY";
-    public static final String PREF_EMAIL_USER = "PREF_EMAIL_USER";
-    public static final String PREF_EMAIL_PASSWORD = "PREF_EMAIL_PASSWORD";
-    public static final String PREF_EMAIL_RECIPIENTS = "PREF_EMAIL_RECIPIENTS";
-
     private static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
     private static final String PREF_SCHEDULER_DEFAULT = ExecutorServiceScheduler.class.getSimpleName();
     private static final String PREF_SELECTED_COLUMNS = "PREF_SELECTED_COLUMNS";
     private static final String PREF_SORT_COLUMN_NAME_DEFAULT = NetMonColumns.TIMESTAMP;
     private static final String PREF_SORT_ORDER_DEFAULT = SortOrder.DESC.name();
     private static final String PREF_FILTER_PREFIX = "PREF_FILTERED_VALUES_";
-    private static final String PREF_EMAIL_PORT_DEFAULT = "587";
-    private static final String PREF_LAST_EMAIL_SENT = "last_email_sent";
 
     private static NetMonPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
@@ -158,32 +106,6 @@ public class NetMonPreferences {
      */
     public int getWakeInterval() {
         return getIntPreference(NetMonPreferences.PREF_WAKE_INTERVAL, NetMonPreferences.PREF_WAKE_INTERVAL_DEFAULT);
-    }
-
-    /**
-     * @return the interval, in milliseconds, between e-mailing reports.
-     */
-    public int getEmailReportInterval() {
-        return getIntPreference(NetMonPreferences.PREF_EMAIL_INTERVAL, "0") * 60 * 1000;
-    }
-
-    /**
-     * @return set the interval, in milliseconds, between e-mailing reports.
-     */
-    public void setEmailReportInterval(int interval) {
-        Editor editor = mSharedPrefs.edit();
-        editor.putString(NetMonPreferences.PREF_EMAIL_INTERVAL, String.valueOf(interval));
-        editor.commit();
-    }
-
-    public void setLastEmailSent(long when) {
-        Editor editor = mSharedPrefs.edit();
-        editor.putLong(NetMonPreferences.PREF_LAST_EMAIL_SENT, when);
-        editor.commit();
-    }
-
-    public long getLastEmailSent() {
-        return mSharedPrefs.getLong(PREF_LAST_EMAIL_SENT, 0);
     }
 
     /**
@@ -336,17 +258,6 @@ public class NetMonPreferences {
     public LocationFetchingStrategy getLocationFetchingStrategy() {
         String value = mSharedPrefs.getString(PREF_LOCATION_FETCHING_STRATEGY, LocationFetchingStrategy.SAVE_POWER.name());
         return LocationFetchingStrategy.valueOf(value);
-    }
-
-    public EmailPreferences getEmailPreferences() {
-        Set<String> reportFormats = mSharedPrefs.getStringSet(PREF_EMAIL_REPORT_FORMATS, new HashSet<String>());
-        String server = mSharedPrefs.getString(PREF_EMAIL_SERVER, "");
-        int port = getIntPreference(PREF_EMAIL_PORT, PREF_EMAIL_PORT_DEFAULT);
-        String user = mSharedPrefs.getString(PREF_EMAIL_USER, "");
-        String password = mSharedPrefs.getString(PREF_EMAIL_PASSWORD, "");
-        String recipients = mSharedPrefs.getString(PREF_EMAIL_RECIPIENTS, "");
-        EmailSecurity security = EmailSecurity.valueOf(mSharedPrefs.getString(PREF_EMAIL_SECURITY, EmailSecurity.NONE.name()));
-        return new EmailPreferences(reportFormats, server, port, user, password, recipients, security);
     }
 
     private int getIntPreference(String key, String defaultValue) {

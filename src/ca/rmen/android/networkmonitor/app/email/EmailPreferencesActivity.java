@@ -22,7 +22,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.prefs;
+package ca.rmen.android.networkmonitor.app.email;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,8 @@ import android.text.TextUtils;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.EmailPreferences;
+import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailConfig;
+import ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity;
 
 public class EmailPreferencesActivity extends PreferenceActivity {
     private static final String TAG = Constants.TAG + EmailPreferencesActivity.class.getSimpleName();
@@ -55,14 +56,14 @@ public class EmailPreferencesActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.email_preferences, false);
         addPreferencesFromResource(R.xml.email_preferences);
-        updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_INTERVAL, R.string.pref_summary_email_report_interval);
-        updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_REPORT_FORMATS, R.string.pref_summary_email_report_formats);
-        updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_RECIPIENTS, R.string.pref_summary_email_recipients);
-        updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_SERVER, R.string.pref_summary_email_server);
-        updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_PORT, R.string.pref_summary_email_port);
-        updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_SECURITY, R.string.pref_summary_email_security);
-        updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_USER, R.string.pref_summary_email_user);
-        findPreference(NetMonPreferences.PREF_EMAIL_REPORT_FORMATS).setOnPreferenceChangeListener(mOnPreferenceChangeListener);
+        updatePreferenceSummary(EmailPreferences.PREF_EMAIL_INTERVAL, R.string.pref_summary_email_report_interval);
+        updatePreferenceSummary(EmailPreferences.PREF_EMAIL_REPORT_FORMATS, R.string.pref_summary_email_report_formats);
+        updatePreferenceSummary(EmailPreferences.PREF_EMAIL_RECIPIENTS, R.string.pref_summary_email_recipients);
+        updatePreferenceSummary(EmailPreferences.PREF_EMAIL_SERVER, R.string.pref_summary_email_server);
+        updatePreferenceSummary(EmailPreferences.PREF_EMAIL_PORT, R.string.pref_summary_email_port);
+        updatePreferenceSummary(EmailPreferences.PREF_EMAIL_SECURITY, R.string.pref_summary_email_security);
+        updatePreferenceSummary(EmailPreferences.PREF_EMAIL_USER, R.string.pref_summary_email_user);
+        findPreference(EmailPreferences.PREF_EMAIL_REPORT_FORMATS).setOnPreferenceChangeListener(mOnPreferenceChangeListener);
     }
 
     @Override
@@ -74,12 +75,12 @@ public class EmailPreferencesActivity extends PreferenceActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        int emailInterval = NetMonPreferences.getInstance(this).getEmailReportInterval();
+        int emailInterval = EmailPreferences.getInstance(this).getEmailReportInterval();
         // If the user enabled sending e-mails, make sure we have enough info.
         if (emailInterval > 0) {
-            EmailPreferences emailPreferences = NetMonPreferences.getInstance(this).getEmailPreferences();
-            if (!emailPreferences.isValid()) {
-                NetMonPreferences.getInstance(this).setEmailReportInterval(0);
+            EmailConfig emailConfig = EmailPreferences.getInstance(this).getEmailConfig();
+            if (!emailConfig.isValid()) {
+                EmailPreferences.getInstance(this).setEmailReportInterval(0);
                 // We can't show a dialog directly here because we're a PreferenceActivity.
                 // We use this convoluted hack to ask the PreferenceFragmentActivity to show the dialog for us.
                 Intent intent = new Intent(PreferenceFragmentActivity.ACTION_SHOW_INFO_DIALOG);
@@ -99,21 +100,21 @@ public class EmailPreferencesActivity extends PreferenceActivity {
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (NetMonPreferences.PREF_EMAIL_INTERVAL.equals(key)) {
-                updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_INTERVAL, R.string.pref_summary_email_report_interval);
+            if (EmailPreferences.PREF_EMAIL_INTERVAL.equals(key)) {
+                updatePreferenceSummary(EmailPreferences.PREF_EMAIL_INTERVAL, R.string.pref_summary_email_report_interval);
 
-            } else if (NetMonPreferences.PREF_EMAIL_RECIPIENTS.equals(key)) {
-                updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_RECIPIENTS, R.string.pref_summary_email_recipients);
-            } else if (NetMonPreferences.PREF_EMAIL_REPORT_FORMATS.equals(key)) {
-                updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_REPORT_FORMATS, R.string.pref_summary_email_report_formats);
-            } else if (NetMonPreferences.PREF_EMAIL_SERVER.equals(key)) {
-                updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_SERVER, R.string.pref_summary_email_server);
-            } else if (NetMonPreferences.PREF_EMAIL_PORT.equals(key)) {
-                updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_PORT, R.string.pref_summary_email_port);
-            } else if (NetMonPreferences.PREF_EMAIL_SECURITY.equals(key)) {
-                updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_SECURITY, R.string.pref_summary_email_security);
-            } else if (NetMonPreferences.PREF_EMAIL_USER.equals(key)) {
-                updatePreferenceSummary(NetMonPreferences.PREF_EMAIL_USER, R.string.pref_summary_email_user);
+            } else if (EmailPreferences.PREF_EMAIL_RECIPIENTS.equals(key)) {
+                updatePreferenceSummary(EmailPreferences.PREF_EMAIL_RECIPIENTS, R.string.pref_summary_email_recipients);
+            } else if (EmailPreferences.PREF_EMAIL_REPORT_FORMATS.equals(key)) {
+                updatePreferenceSummary(EmailPreferences.PREF_EMAIL_REPORT_FORMATS, R.string.pref_summary_email_report_formats);
+            } else if (EmailPreferences.PREF_EMAIL_SERVER.equals(key)) {
+                updatePreferenceSummary(EmailPreferences.PREF_EMAIL_SERVER, R.string.pref_summary_email_server);
+            } else if (EmailPreferences.PREF_EMAIL_PORT.equals(key)) {
+                updatePreferenceSummary(EmailPreferences.PREF_EMAIL_PORT, R.string.pref_summary_email_port);
+            } else if (EmailPreferences.PREF_EMAIL_SECURITY.equals(key)) {
+                updatePreferenceSummary(EmailPreferences.PREF_EMAIL_SECURITY, R.string.pref_summary_email_security);
+            } else if (EmailPreferences.PREF_EMAIL_USER.equals(key)) {
+                updatePreferenceSummary(EmailPreferences.PREF_EMAIL_USER, R.string.pref_summary_email_user);
             }
         }
     };
@@ -153,7 +154,7 @@ public class EmailPreferencesActivity extends PreferenceActivity {
 
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
-            if (NetMonPreferences.PREF_EMAIL_REPORT_FORMATS.equals(preference.getKey())) {
+            if (EmailPreferences.PREF_EMAIL_REPORT_FORMATS.equals(preference.getKey())) {
                 String valueStr = getSummary((MultiSelectListPreference) preference, (Set<String>) newValue);
                 String summary = getString(R.string.pref_summary_email_report_formats, valueStr);
                 preference.setSummary(summary);
