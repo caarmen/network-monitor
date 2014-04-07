@@ -4,6 +4,7 @@
     <!-- Email sending preferences -->
     <string name="pref_category_email_sending_settings">PRÉFÉRENCES DU COURRIEL</string>
     <string name="pref_category_email_server_settings">AUTHENTIFICATION DU SERVEUR SMTP</string>
+    <string name="pref_category_email_status">STATUT</string>
     <string name="pref_email_unavailable">Disponible sous Android 3.x et plus</string>
     <string name="pref_title_email_report_interval">Fréquence du rapport par courriel</string>
     <string name="pref_summary_email_report_interval">%s</string>
@@ -34,4 +35,6 @@
     <string name="pref_summary_email_user">%s</string>
     <string name="pref_hint_email_user">user@gmail.com</string>
     <string name="pref_title_email_password">Mot de passe</string>
+    <string name="pref_title_email_last_email_sent">Dernier e-mail envoyé</string>
+    <string name="pref_summary_email_last_email_sent">%s</string>
 </resources>

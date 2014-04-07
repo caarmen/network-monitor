@@ -86,8 +86,9 @@ public class EmailPreferences {
     public static final String PREF_EMAIL_PASSWORD = "PREF_EMAIL_PASSWORD";
     public static final String PREF_EMAIL_RECIPIENTS = "PREF_EMAIL_RECIPIENTS";
 
+    static final String PREF_EMAIL_LAST_EMAIL_SENT = "PREF_EMAIL_LAST_EMAIL_SENT";
+
     private static final String PREF_EMAIL_PORT_DEFAULT = "587";
-    private static final String PREF_LAST_EMAIL_SENT = "last_email_sent";
 
     private static EmailPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
@@ -121,12 +122,12 @@ public class EmailPreferences {
 
     public void setLastEmailSent(long when) {
         Editor editor = mSharedPrefs.edit();
-        editor.putLong(EmailPreferences.PREF_LAST_EMAIL_SENT, when);
+        editor.putLong(EmailPreferences.PREF_EMAIL_LAST_EMAIL_SENT, when);
         editor.commit();
     }
 
     public long getLastEmailSent() {
-        return mSharedPrefs.getLong(PREF_LAST_EMAIL_SENT, 0);
+        return mSharedPrefs.getLong(PREF_EMAIL_LAST_EMAIL_SENT, 0);
     }
 
     public EmailConfig getEmailConfig() {

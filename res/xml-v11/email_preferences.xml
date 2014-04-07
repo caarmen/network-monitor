@@ -68,5 +68,12 @@
             android:summary="@string/pref_summary_email_security"
             android:title="@string/pref_title_email_security" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_email_status" >
+        <Preference
+            android:defaultValue=""
+            android:icon="@drawable/ic_pref_show_log"
+            android:key="PREF_EMAIL_LAST_EMAIL_SENT"
+            android:title="@string/pref_title_email_last_email_sent" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

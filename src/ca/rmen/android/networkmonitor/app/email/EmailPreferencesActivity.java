@@ -40,19 +40,22 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailConfig;
 import ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity;
+import ca.rmen.android.networkmonitor.util.Log;
 
-public class EmailPreferencesActivity extends PreferenceActivity {
+public class EmailPreferencesActivity extends PreferenceActivity { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + EmailPreferencesActivity.class.getSimpleName();
 
 
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.email_preferences, false);
         addPreferencesFromResource(R.xml.email_preferences);
@@ -63,17 +66,20 @@ public class EmailPreferencesActivity extends PreferenceActivity {
         updatePreferenceSummary(EmailPreferences.PREF_EMAIL_PORT, R.string.pref_summary_email_port);
         updatePreferenceSummary(EmailPreferences.PREF_EMAIL_SECURITY, R.string.pref_summary_email_security);
         updatePreferenceSummary(EmailPreferences.PREF_EMAIL_USER, R.string.pref_summary_email_user);
+        updatePreferenceSummary(EmailPreferences.PREF_EMAIL_LAST_EMAIL_SENT, R.string.pref_summary_email_last_email_sent);
         findPreference(EmailPreferences.PREF_EMAIL_REPORT_FORMATS).setOnPreferenceChangeListener(mOnPreferenceChangeListener);
     }
 
     @Override
     protected void onStart() {
+        Log.v(TAG, "onStart");
         super.onStart();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
     }
 
     @Override
     protected void onPause() {
+        Log.v(TAG, "onPause");
         super.onPause();
         int emailInterval = EmailPreferences.getInstance(this).getEmailReportInterval();
         // If the user enabled sending e-mails, make sure we have enough info.
@@ -93,6 +99,7 @@ public class EmailPreferencesActivity extends PreferenceActivity {
 
     @Override
     protected void onStop() {
+        Log.v(TAG, "onStop");
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
         super.onStop();
     }
@@ -100,9 +107,9 @@ public class EmailPreferencesActivity extends PreferenceActivity {
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
             if (EmailPreferences.PREF_EMAIL_INTERVAL.equals(key)) {
                 updatePreferenceSummary(EmailPreferences.PREF_EMAIL_INTERVAL, R.string.pref_summary_email_report_interval);
-
             } else if (EmailPreferences.PREF_EMAIL_RECIPIENTS.equals(key)) {
                 updatePreferenceSummary(EmailPreferences.PREF_EMAIL_RECIPIENTS, R.string.pref_summary_email_recipients);
             } else if (EmailPreferences.PREF_EMAIL_REPORT_FORMATS.equals(key)) {
@@ -115,6 +122,8 @@ public class EmailPreferencesActivity extends PreferenceActivity {
                 updatePreferenceSummary(EmailPreferences.PREF_EMAIL_SECURITY, R.string.pref_summary_email_security);
             } else if (EmailPreferences.PREF_EMAIL_USER.equals(key)) {
                 updatePreferenceSummary(EmailPreferences.PREF_EMAIL_USER, R.string.pref_summary_email_user);
+            } else if (EmailPreferences.PREF_EMAIL_LAST_EMAIL_SENT.equals(key)) {
+                updatePreferenceSummary(EmailPreferences.PREF_EMAIL_LAST_EMAIL_SENT, R.string.pref_summary_email_last_email_sent);
             }
         }
     };
@@ -136,7 +145,13 @@ public class EmailPreferencesActivity extends PreferenceActivity {
         @SuppressWarnings("deprecation")
         Preference pref = getPreferenceManager().findPreference(key);
         CharSequence value;
-        if (pref instanceof ListPreference) value = ((ListPreference) pref).getEntry();
+        if (key.equals(EmailPreferences.PREF_EMAIL_LAST_EMAIL_SENT)) {
+            long lastEmailSent = EmailPreferences.getInstance(this).getLastEmailSent();
+            if (lastEmailSent > 0) value = DateUtils.formatDateTime(this, lastEmailSent, DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME
+                    | DateUtils.FORMAT_SHOW_YEAR);
+            else
+                value = getString(R.string.pref_value_email_report_interval_never);
+        } else if (pref instanceof ListPreference) value = ((ListPreference) pref).getEntry();
         else if (pref instanceof EditTextPreference) value = ((EditTextPreference) pref).getText();
         else if (pref instanceof MultiSelectListPreference) value = getSummary((MultiSelectListPreference) pref, ((MultiSelectListPreference) pref).getValues());
         else
@@ -154,6 +169,7 @@ public class EmailPreferencesActivity extends PreferenceActivity {
 
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
+            Log.v(TAG, "onPreferenceChange: preference = " + preference + ", newValue = " + newValue);
             if (EmailPreferences.PREF_EMAIL_REPORT_FORMATS.equals(preference.getKey())) {
                 String valueStr = getSummary((MultiSelectListPreference) preference, (Set<String>) newValue);
                 String summary = getString(R.string.pref_summary_email_report_formats, valueStr);
