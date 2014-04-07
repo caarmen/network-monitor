@@ -52,37 +52,4 @@
     <string name="pref_title_filter_record_count">Número de filas a visualizar</string>
     <string name="pref_value_filter_record_count_all">Todas</string>
 
-    <!-- Email sending preferences -->
-    <string name="pref_category_email_sending_settings">AJUSTES E-MAIL</string>
-    <string name="pref_category_email_server_settings">AUTENTICACIÓN DEL SERVIDOR SMTP</string>
-    <string name="pref_email_unavailable">Disponible enn Android 3.x y posteriores</string>
-    <string name="pref_title_email_report_interval">Frecuencia del informe por correo</string>
-    <string name="pref_summary_email_report_interval">%s</string>
-    <string name="pref_value_email_report_interval_never">Nunca</string>
-    <string name="pref_value_email_report_interval_1_minute">Cada minuto</string>
-    <string name="pref_value_email_report_interval_10_minutes">Cada 10 minutos</string>
-    <string name="pref_value_email_report_interval_1_hour">Cada hora</string>
-    <string name="pref_value_email_report_interval_2_hours">Cada dos horas</string>
-    <string name="pref_value_email_report_interval_6_hours">Cada 6 horas</string>
-    <string name="pref_value_email_report_interval_1_day">Una vez al día</string>
-    <string name="pref_title_email_recipients">Destinatarios de los informes</string>
-    <string name="pref_summary_email_recipients">%s</string>
-    <string name="pref_hint_email_recipients">user@domain.com</string>
-    <string name="pref_title_email_report_formats">Archivos adjuntos</string>
-    <string name="pref_summary_email_report_formats">%s</string>
-    <string name="pref_title_email_server">Nombre del servidor</string>
-    <string name="pref_summary_email_server">%s</string>
-    <string name="pref_hint_email_server">smtp.gmail.com</string>
-    <string name="pref_title_email_port">Puerto</string>
-    <string name="pref_summary_email_port">%s</string>
-    <string name="pref_hint_email_port">587</string>
-    <string name="pref_title_email_security">Tipo de seguridad</string>
-    <string name="pref_summary_email_security">%s</string>
-    <string name="pref_value_email_security_none">Nunguno</string>
-    <string name="pref_value_email_security_ssl">SSL</string>
-    <string name="pref_value_email_security_tls">TLS</string>
-    <string name="pref_title_email_user">Nombre de usuario</string>
-    <string name="pref_summary_email_user">%s</string>
-    <string name="pref_hint_email_user">user@gmail.com</string>
-    <string name="pref_title_email_password">Contraseña</string>
 </resources>
