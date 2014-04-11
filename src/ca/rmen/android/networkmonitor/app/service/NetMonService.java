@@ -24,7 +24,6 @@
  */
 package ca.rmen.android.networkmonitor.app.service;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.Service;
 import android.content.ContentValues;
@@ -35,12 +34,10 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.app.email.EmailPreferences;
-import ca.rmen.android.networkmonitor.app.email.EmailReportsService;
+import ca.rmen.android.networkmonitor.app.email.ReportEmailer;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.service.datasources.NetMonDataSources;
 import ca.rmen.android.networkmonitor.app.service.scheduler.Scheduler;
@@ -55,9 +52,9 @@ public class NetMonService extends Service {
 
 
     private PowerManager mPowerManager;
-    private AlarmManager mAlarmManager;
     private long mLastWakeUp = 0;
     private NetMonDataSources mDataSources;
+    private ReportEmailer mReportEmailer;
     private Scheduler mScheduler;
 
     @Override
@@ -70,7 +67,6 @@ public class NetMonService extends Service {
         Log.d(TAG, "onCreate Service is enabled: starting monitor loop");
 
         mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         // Show our ongoing notification
         Notification notification = NetMonNotification.createNotification(this);
@@ -80,10 +76,11 @@ public class NetMonService extends Service {
         mDataSources = new NetMonDataSources();
         mDataSources.onCreate(this);
 
+        mReportEmailer = new ReportEmailer(this);
+
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mSharedPreferenceListener);
 
         scheduleTests();
-        scheduleEmailReports();
     }
 
 
@@ -96,7 +93,6 @@ public class NetMonService extends Service {
     public void onDestroy() {
         Log.v(TAG, "onDestroy");
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mSharedPreferenceListener);
-        mAlarmManager.cancel(EmailReportsService.getPendingIntent(this));
         mDataSources.onDestroy();
         NetMonNotification.dismissNotification(this);
         mScheduler.onDestroy();
@@ -121,19 +117,6 @@ public class NetMonService extends Service {
             Log.e(TAG, "setScheduler Could not create scheduler " + schedulerClass + ": " + e.getMessage(), e);
         } catch (IllegalAccessException e) {
             Log.e(TAG, "setScheduler Could not create scheduler " + schedulerClass + ": " + e.getMessage(), e);
-        }
-    }
-
-    private void scheduleEmailReports() {
-        Log.v(TAG, "scheduleEmailReports");
-        mAlarmManager.cancel(EmailReportsService.getPendingIntent(this));
-        int emailInterval = EmailPreferences.getInstance(this).getEmailReportInterval();
-        if (emailInterval > 0) {
-            long timeSinceLast = System.currentTimeMillis() - EmailPreferences.getInstance(this).getLastEmailSent();
-            long delayTillNext = emailInterval - timeSinceLast;
-            if (delayTillNext < 0) delayTillNext = 0;
-            Log.v(TAG, "scheduling in " + delayTillNext + " ms");
-            mAlarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + delayTillNext, EmailReportsService.getPendingIntent(this));
         }
     }
 
@@ -166,6 +149,9 @@ public class NetMonService extends Service {
                 values.putAll(mDataSources.getContentValues());
                 getContentResolver().insert(NetMonColumns.CONTENT_URI, values);
 
+                // Send mail
+                mReportEmailer.send();
+
             } catch (Throwable t) {
                 Log.v(TAG, "Error in monitorLoop: " + t.getMessage(), t);
             } finally {
@@ -193,8 +179,6 @@ public class NetMonService extends Service {
                 mScheduler.setInterval(interval);
             } else if (NetMonPreferences.PREF_SCHEDULER.equals(key)) {
                 scheduleTests();
-            } else if (EmailPreferences.PREF_EMAIL_INTERVAL.equals(key)) {
-                scheduleEmailReports();
             }
         }
     };

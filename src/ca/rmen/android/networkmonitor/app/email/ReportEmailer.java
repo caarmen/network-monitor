@@ -44,14 +44,11 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
-import android.app.AlarmManager;
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 
 import ca.rmen.android.networkmonitor.BuildConfig;
@@ -72,33 +69,52 @@ import ca.rmen.android.networkmonitor.util.Log;
 /**
  * Sends a mail to a recipient or recipients, including (or not) some file attachments with exports of the log.
  */
-public class EmailReportsService extends IntentService {
+public class ReportEmailer {
 
-    private static final String TAG = Constants.TAG + EmailReportsService.class.getSimpleName();
+    private static final String TAG = Constants.TAG + ReportEmailer.class.getSimpleName();
     private static final String ENCODING = "UTF-8";
     private static final int PENDING_INTENT_REQUEST_CODE = 123;
     private static final int NOTIFICATION_ID_FAILED_EMAIL = 456;
+    private final Context mContext;
 
-    public EmailReportsService() {
-        super(TAG);
+    public ReportEmailer(Context context) {
         Log.v(TAG, "Constructor");
+        mContext = context.getApplicationContext();
     }
 
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        Log.v(TAG, "onHandleIntent, intent = " + intent);
-
-        final EmailConfig emailConfig = EmailPreferences.getInstance(this).getEmailConfig();
-        if (emailConfig.isValid()) {
-            Session mailSession = getMailSession(emailConfig);
-            Message message = createMessage(mailSession, emailConfig);
-            if (message != null) sendMail(mailSession, message);
+    /**
+     * Send the e-mail report.
+     */
+    public synchronized void send() {
+        Log.v(TAG, "send");
+        if (shouldSendMail()) {
+            final EmailConfig emailConfig = EmailPreferences.getInstance(mContext).getEmailConfig();
+            if (emailConfig.isValid()) {
+                Session mailSession = getMailSession(emailConfig);
+                Message message = createMessage(mailSession, emailConfig);
+                if (message != null) sendMail(mailSession, message);
+            } else {
+                Log.w(TAG, "Cannot send mail with the current email settings: " + emailConfig);
+            }
         } else {
-            Log.w(TAG, "Cannot send mail with the current email settings: " + emailConfig);
+            Log.v(TAG, "Won't send mail");
         }
+    }
 
-        // Schedule our next run
-        scheduleNext();
+    /**
+     * @return true if it has been longer than our report interval since we last successfully sent a mail.
+     */
+    private boolean shouldSendMail() {
+        Log.v(TAG, "shouldSendMail");
+        int reportInterval = EmailPreferences.getInstance(mContext).getEmailReportInterval();
+        if (reportInterval == 0) {
+            Log.v(TAG, "shouldSendMail: mails not enabled");
+            return false;
+        }
+        long lastEmailSent = EmailPreferences.getInstance(mContext).getLastEmailSent();
+        long now = System.currentTimeMillis();
+        Log.v(TAG, "shouldSendMail: sent mail " + (now - lastEmailSent) + " ms ago, vs report duration = " + reportInterval + " ms");
+        return now - lastEmailSent > reportInterval;
     }
 
     /**
@@ -171,7 +187,7 @@ public class EmailReportsService extends IntentService {
         try {
             MimeMessage message = new MimeMessage(mailSession);
             // Set the subject, from, and to fields.
-            String subject = getString(R.string.export_subject_send_log);
+            String subject = mContext.getString(R.string.export_subject_send_log);
             message.setSubject(MimeUtility.encodeText(subject, ENCODING, "Q"));
             String from = getFromAddress(emailConfig);
             message.setFrom(new InternetAddress(from));
@@ -239,14 +255,14 @@ public class EmailReportsService extends IntentService {
      */
     private BodyPart createBodyPart(String fileType) throws MessagingException, FileNotFoundException, UnsupportedEncodingException {
         Log.v(TAG, "createBodyPart: fileType = " + fileType);
-        // Get the FileExport instance which can export this file type.
+        // Get the FileExport instance which can export mContext file type.
         final FileExport fileExport;
-        if ("csv".equals(fileType)) fileExport = new CSVExport(this, null);
-        else if ("html".equals(fileType)) fileExport = new HTMLExport(this, true, null);
-        else if ("excel".equals(fileType)) fileExport = new ExcelExport(this, null);
-        else if ("kml".equals(fileType)) fileExport = new KMLExport(this, null, NetMonColumns.SOCKET_CONNECTION_TEST);
+        if ("csv".equals(fileType)) fileExport = new CSVExport(mContext, null);
+        else if ("html".equals(fileType)) fileExport = new HTMLExport(mContext, true, null);
+        else if ("excel".equals(fileType)) fileExport = new ExcelExport(mContext, null);
+        else if ("kml".equals(fileType)) fileExport = new KMLExport(mContext, null, NetMonColumns.SOCKET_CONNECTION_TEST);
         else
-            /*if ("db".equals(fileType)) */fileExport = new DBExport(this, null);
+            /*if ("db".equals(fileType)) */fileExport = new DBExport(mContext, null);
         BodyPart bp = new MimeBodyPart();
         File file = fileExport.export();
         DataSource dataSource = new FileDataSource(file);
@@ -261,27 +277,14 @@ public class EmailReportsService extends IntentService {
      */
     private String getMessageBody(EmailConfig emailConfig) {
         Log.v(TAG, "getMessageBody, emailConfig =" + emailConfig);
-        String reportSummary = SummaryExport.getSummary(this);
-        String dateRange = SummaryExport.getDataCollectionDateRange(this);
-        String messageBody = getString(R.string.export_message_text, dateRange);
+        String reportSummary = SummaryExport.getSummary(mContext);
+        String dateRange = SummaryExport.getDataCollectionDateRange(mContext);
+        String messageBody = mContext.getString(R.string.export_message_text, dateRange);
         // If we're attaching files, add a sentence to the mail saying so.
-        if (!emailConfig.reportFormats.isEmpty()) messageBody += getString(R.string.export_message_text_file_attached);
+        if (!emailConfig.reportFormats.isEmpty()) messageBody += mContext.getString(R.string.export_message_text_file_attached);
         messageBody += reportSummary;
         Log.v(TAG, "getMessageBody, created message body " + messageBody);
         return messageBody;
-    }
-
-    /**
-     * Plan the next e-mail sending.
-     */
-    private void scheduleNext() {
-        Log.v(TAG, "scheduleEmailReports");
-        PendingIntent pendingIntent = getPendingIntent(this);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.cancel(pendingIntent);
-        int emailInterval = EmailPreferences.getInstance(this).getEmailReportInterval();
-        Log.v(TAG, "email interval = " + emailInterval);
-        if (emailInterval > 0) alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + emailInterval, pendingIntent);
     }
 
     /**
@@ -289,9 +292,9 @@ public class EmailReportsService extends IntentService {
      */
     private void success() {
         Log.v(TAG, "success");
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID_FAILED_EMAIL);
-        EmailPreferences.getInstance(this).setLastEmailSent(System.currentTimeMillis());
+        EmailPreferences.getInstance(mContext).setLastEmailSent(System.currentTimeMillis());
     }
 
     /**
@@ -299,16 +302,16 @@ public class EmailReportsService extends IntentService {
      */
     private void failure() {
         Log.v(TAG, "failure");
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
         builder.setSmallIcon(R.drawable.ic_stat_warning);
         builder.setAutoCancel(true);
-        builder.setTicker(getString(R.string.warning_notification_ticker_email_failed));
-        builder.setContentTitle(getString(R.string.app_name));
-        builder.setContentText(getString(R.string.warning_notification_message_email_failed));
-        builder.setContentIntent(PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), EmailPreferencesActivity.class),
-                PendingIntent.FLAG_UPDATE_CURRENT));
+        builder.setTicker(mContext.getString(R.string.warning_notification_ticker_email_failed));
+        builder.setContentTitle(mContext.getString(R.string.app_name));
+        builder.setContentText(mContext.getString(R.string.warning_notification_message_email_failed));
+        builder.setContentIntent(PendingIntent
+                .getActivity(mContext, 0, new Intent(mContext, EmailPreferencesActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
         Notification notification = builder.build();
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(NOTIFICATION_ID_FAILED_EMAIL, notification);
 
     }
@@ -317,7 +320,7 @@ public class EmailReportsService extends IntentService {
      * @return the PendingIntent which is used to plan this Service.
      */
     public static PendingIntent getPendingIntent(Context context) {
-        Intent intent = new Intent(context.getApplicationContext(), EmailReportsService.class);
+        Intent intent = new Intent(context.getApplicationContext(), ReportEmailer.class);
         PendingIntent pendingIntent = PendingIntent.getService(context.getApplicationContext(), PENDING_INTENT_REQUEST_CODE, intent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
         return pendingIntent;
