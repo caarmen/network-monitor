@@ -17,6 +17,15 @@
             android:key="PREF_CELL_ID_FORMAT"
             android:summary="@string/pref_summary_cell_id_format"
             android:title="@string/pref_title_cell_id_format" />
+
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+            android:defaultValue="173.194.34.16"
+            android:hint="173.194.34.16"
+            android:icon="@drawable/ic_pref_server"
+            android:inputType="textEmailAddress"
+            android:key="PREF_TEST_SERVER"
+            android:summary="@string/pref_summary_test_server"
+            android:title="@string/pref_title_test_server" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_performance" >
         <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference

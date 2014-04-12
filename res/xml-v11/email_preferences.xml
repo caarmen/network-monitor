@@ -33,14 +33,14 @@
         <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
             android:defaultValue="smtp.gmail.com"
             android:hint="@string/pref_hint_email_server"
-            android:icon="@drawable/ic_pref_email_server"
+            android:icon="@drawable/ic_pref_server"
             android:key="PREF_EMAIL_SERVER"
             android:summary="@string/pref_summary_email_server"
             android:title="@string/pref_title_email_server" />
         <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
             android:defaultValue="587"
             android:hint="@string/pref_hint_email_port"
-            android:icon="@drawable/ic_pref_email_server"
+            android:icon="@drawable/ic_pref_server"
             android:key="PREF_EMAIL_PORT"
             android:summary="@string/pref_summary_email_port"
             android:title="@string/pref_title_email_port" />

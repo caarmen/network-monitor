@@ -38,11 +38,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceManager;
-import ca.rmen.android.networkmonitor.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
+import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Performs network connection tests and provides the results of each test.
@@ -55,8 +55,6 @@ class ConnectionTesterDataSource implements NetMonDataSource {
         PASS, FAIL, SLOW
     };
 
-    // private static final String HOST = "www.google.com";
-    private static final String HOST = "173.194.34.16";
     private static final int PORT = 80;
     private static final int DURATION_SLOW = 5000;
 
@@ -125,8 +123,9 @@ class ConnectionTesterDataSource implements NetMonDataSource {
             long before = System.currentTimeMillis();
             socket = new Socket();
             socket.setSoTimeout(mTimeout);
-            Log.d(TAG, "getSocketTestResult Resolving " + HOST);
-            InetSocketAddress remoteAddr = new InetSocketAddress(HOST, PORT);
+            String host = NetMonPreferences.getInstance(mContext).getTestServer();
+            Log.d(TAG, "getSocketTestResult Resolving " + host);
+            InetSocketAddress remoteAddr = new InetSocketAddress(host, PORT);
             InetAddress address = remoteAddr.getAddress();
             if (address == null) {
                 Log.d(TAG, "getSocketTestResult Could not resolve");
@@ -182,7 +181,8 @@ class ConnectionTesterDataSource implements NetMonDataSource {
         InputStream inputStream = null;
         try {
             long before = System.currentTimeMillis();
-            URL url = new URL("http", HOST, PORT, "/");
+            String host = NetMonPreferences.getInstance(mContext).getTestServer();
+            URL url = new URL("http", host, PORT, "/");
             URLConnection connection = url.openConnection();
             Log.v(TAG, "Opened connection");
             connection.setConnectTimeout(mTimeout);

@@ -54,6 +54,7 @@ public class NetMonPreferences {
     };
 
 
+    public static final String PREF_TEST_SERVER = "PREF_TEST_SERVER";
     public static final String PREF_UPDATE_INTERVAL = "PREF_UPDATE_INTERVAL";
     public static final String PREF_UPDATE_INTERVAL_DEFAULT = "10000";
     public static final String PREF_SERVICE_ENABLED = "PREF_SERVICE_ENABLED";
@@ -70,6 +71,7 @@ public class NetMonPreferences {
     public static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
     public static final String PREF_LOCATION_FETCHING_STRATEGY = "PREF_LOCATION_FETCHING_STRATEGY";
 
+    private static final String PREF_TEST_SERVER_DEFAULT = "173.194.34.16";
     private static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
     private static final String PREF_SCHEDULER_DEFAULT = ExecutorServiceScheduler.class.getSimpleName();
     private static final String PREF_SELECTED_COLUMNS = "PREF_SELECTED_COLUMNS";
@@ -91,6 +93,13 @@ public class NetMonPreferences {
     private NetMonPreferences(Context context) {
         mContext = context;
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    /**
+     * @return The server we try to reach to test connectivity.
+     */
+    public String getTestServer() {
+        return mSharedPrefs.getString(NetMonPreferences.PREF_TEST_SERVER, NetMonPreferences.PREF_TEST_SERVER_DEFAULT);
     }
 
     /**

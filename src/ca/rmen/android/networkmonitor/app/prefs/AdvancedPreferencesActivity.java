@@ -30,11 +30,14 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
@@ -53,10 +56,13 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.adv_preferences, false);
         addPreferencesFromResource(R.xml.adv_preferences);
-        updateListPreferenceSummary(NetMonPreferences.PREF_CELL_ID_FORMAT, R.string.pref_summary_cell_id_format);
-        updateListPreferenceSummary(NetMonPreferences.PREF_WAKE_INTERVAL, R.string.pref_summary_wake_interval);
-        updateListPreferenceSummary(NetMonPreferences.PREF_SCHEDULER, R.string.pref_summary_scheduler);
-        updateListPreferenceSummary(NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY, R.string.pref_summary_location_fetching_strategy);
+        updatePreferenceSummary(NetMonPreferences.PREF_CELL_ID_FORMAT, R.string.pref_summary_cell_id_format);
+        updatePreferenceSummary(NetMonPreferences.PREF_WAKE_INTERVAL, R.string.pref_summary_wake_interval);
+        updatePreferenceSummary(NetMonPreferences.PREF_SCHEDULER, R.string.pref_summary_scheduler);
+        updatePreferenceSummary(NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY, R.string.pref_summary_location_fetching_strategy);
+        updatePreferenceSummary(NetMonPreferences.PREF_TEST_SERVER, R.string.pref_summary_test_server);
+        Preference testServerPreference = getPreferenceManager().findPreference(NetMonPreferences.PREF_TEST_SERVER);
+        testServerPreference.setOnPreferenceChangeListener(mOnPreferenceChangeListener);
         Preference importPreference = getPreferenceManager().findPreference(PREF_IMPORT);
         importPreference.setOnPreferenceClickListener(mOnPreferenceClickListener);
         Preference emailPreference = findPreference(EmailPreferences.PREF_EMAIL_REPORTS);
@@ -81,14 +87,16 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (NetMonPreferences.PREF_CELL_ID_FORMAT.equals(key)) {
-                updateListPreferenceSummary(NetMonPreferences.PREF_CELL_ID_FORMAT, R.string.pref_summary_cell_id_format);
+            if (NetMonPreferences.PREF_TEST_SERVER.equals(key)) {
+                updatePreferenceSummary(NetMonPreferences.PREF_TEST_SERVER, R.string.pref_summary_test_server);
+            } else if (NetMonPreferences.PREF_CELL_ID_FORMAT.equals(key)) {
+                updatePreferenceSummary(NetMonPreferences.PREF_CELL_ID_FORMAT, R.string.pref_summary_cell_id_format);
             } else if (NetMonPreferences.PREF_WAKE_INTERVAL.equals(key)) {
-                updateListPreferenceSummary(NetMonPreferences.PREF_WAKE_INTERVAL, R.string.pref_summary_wake_interval);
+                updatePreferenceSummary(NetMonPreferences.PREF_WAKE_INTERVAL, R.string.pref_summary_wake_interval);
             } else if (NetMonPreferences.PREF_SCHEDULER.equals(key)) {
-                updateListPreferenceSummary(NetMonPreferences.PREF_SCHEDULER, R.string.pref_summary_scheduler);
+                updatePreferenceSummary(NetMonPreferences.PREF_SCHEDULER, R.string.pref_summary_scheduler);
             } else if (NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY.equals(key)) {
-                updateListPreferenceSummary(NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY, R.string.pref_summary_location_fetching_strategy);
+                updatePreferenceSummary(NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY, R.string.pref_summary_location_fetching_strategy);
                 if (NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getLocationFetchingStrategy() == LocationFetchingStrategy.HIGH_ACCURACY) {
                     Intent intent = new Intent(PreferenceFragmentActivity.ACTION_CHECK_LOCATION_SETTINGS);
                     startActivity(intent);
@@ -97,11 +105,15 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
         }
     };
 
-    private void updateListPreferenceSummary(CharSequence key, int summaryResId) {
+    private void updatePreferenceSummary(CharSequence key, int summaryResId) {
         @SuppressWarnings("deprecation")
-        ListPreference pref = (ListPreference) getPreferenceManager().findPreference(key);
-        CharSequence entry = pref.getEntry();
-        String summary = getString(summaryResId, entry);
+        Preference pref = getPreferenceManager().findPreference(key);
+        CharSequence value;
+        if (pref instanceof ListPreference) value = ((ListPreference) pref).getEntry();
+        else if (pref instanceof EditTextPreference) value = ((EditTextPreference) pref).getText();
+        else
+            return;
+        String summary = getString(summaryResId, value);
         pref.setSummary(summary);
     }
 
@@ -117,6 +129,20 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
                 startActivityForResult(Intent.createChooser(importIntent, getResources().getText(R.string.pref_summary_import)), ACTIVITY_REQUEST_CODE_IMPORT);
             }
             return false;
+        }
+    };
+
+    private final OnPreferenceChangeListener mOnPreferenceChangeListener = new OnPreferenceChangeListener() {
+
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+            // Ignore the value if it is empty.
+            if (NetMonPreferences.PREF_TEST_SERVER.equals(preference.getKey())) {
+                String newValueStr = (String) newValue;
+                if (TextUtils.isEmpty(newValueStr)) return false;
+                return true;
+            }
+            return true;
         }
     };
 
