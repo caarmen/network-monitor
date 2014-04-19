@@ -27,10 +27,12 @@ package ca.rmen.android.networkmonitor.app.log;
 import java.io.File;
 import java.io.IOException;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -168,6 +170,7 @@ public class LogActivity extends FragmentActivity implements DialogButtonListene
                 return null;
             }
 
+            @SuppressLint("SetJavaScriptEnabled")
             @Override
             protected void onPostExecute(File result) {
                 Log.v(TAG, "loadHTMLFile:onPostExecute, result=" + result);
@@ -181,10 +184,26 @@ public class LogActivity extends FragmentActivity implements DialogButtonListene
                 }
                 // Load the exported HTML file into the WebView.
                 mWebView = (WebView) findViewById(R.id.web_view);
+                // Save our current horizontal scroll position so we can keep our 
+                // horizontal position after reloading the page.
+                final int oldScrollX = mWebView.getScrollX();
                 mWebView.getSettings().setUseWideViewPort(true);
                 mWebView.getSettings().setBuiltInZoomControls(true);
+                mWebView.getSettings().setJavaScriptEnabled(true);
                 mWebView.loadUrl("file://" + result.getAbsolutePath());
                 mWebView.setWebViewClient(new WebViewClient() {
+
+                    @Override
+                    public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                        super.onPageStarted(view, url, favicon);
+                        Log.v(TAG, "onPageStarted");
+                        // Javascript hack to scroll back to our old X position.
+                        // http://stackoverflow.com/questions/6855715/maintain-webview-content-scroll-position-on-orientation-change
+                        if (oldScrollX > 0) {
+                            String jsScrollX = "javascript:window:scrollTo(" + oldScrollX + " / window.devicePixelRatio,0);";
+                            view.loadUrl(jsScrollX);
+                        }
+                    }
 
                     @Override
                     public void onPageFinished(WebView view, String url) {
