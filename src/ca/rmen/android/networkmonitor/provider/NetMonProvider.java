@@ -208,7 +208,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
      */
     @Override
     public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations) throws OperationApplicationException {
-        Log.v(TAG, "applyBatch: " + operations);
+        Log.v(TAG, "applyBatch: " + operations.size());
         Set<Uri> urisToNotify = new HashSet<Uri>();
         for (ContentProviderOperation operation : operations)
             urisToNotify.add(operation.getUri());
