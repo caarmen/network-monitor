@@ -18,6 +18,8 @@
     <string name="extra_info">Info adicional</string>
     <string name="wifi_ssid">SSID WiFi</string>
     <string name="wifi_bssid">BSSID WiFi</string>
+    <string name="wifi_frequency">Frecuencia WiFi</string>
+    <string name="wifi_channel">Canal WiFi</string>
     <string name="wifi_signal_strength">Fuerza de la señal WiFi (0-4)</string>
     <string name="wifi_rssi">Fuerza de la señal WiFi (RSSI)</string>
     <string name="sim_operator">Operador de la tarjeta SIM</string>
