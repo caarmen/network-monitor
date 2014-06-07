@@ -20,6 +20,8 @@
         <item>extra_info</item>
         <item>wifi_ssid</item>
         <item>wifi_bssid</item>
+        <item>wifi_frequency</item>
+        <item>wifi_channel</item>
         <item>wifi_signal_strength</item>
         <item>wifi_rssi</item>
         <item>sim_operator</item>
@@ -58,6 +60,8 @@
         <item>network_type</item>
         <item>wifi_ssid</item>
         <item>wifi_bssid</item>
+        <item>wifi_frequency</item>
+        <item>wifi_channel</item>
         <item>wifi_signal_strength</item>
         <item>wifi_rssi</item>
     </string-array>
@@ -178,6 +182,8 @@
         <item>extra_info</item>
         <item>wifi_ssid</item>
         <item>wifi_bssid</item>
+        <item>wifi_frequency</item>
+        <item>wifi_channel</item>
         <item>wifi_signal_strength</item>
         <item>wifi_rssi</item>
         <item>sim_operator</item>

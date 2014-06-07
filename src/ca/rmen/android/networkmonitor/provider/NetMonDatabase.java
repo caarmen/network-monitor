@@ -44,7 +44,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
     public static final String DATABASE_NAME = "networkmonitor.db";
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
 
     // @formatter:off
     private static final String SQL_CREATE_TABLE_NETWORKMONITOR = "CREATE TABLE IF NOT EXISTS "
@@ -67,6 +67,8 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.EXTRA_INFO + " TEXT, "
             + NetMonColumns.WIFI_SSID + " TEXT, "
             + NetMonColumns.WIFI_BSSID + " TEXT, "
+            + NetMonColumns.WIFI_FREQUENCY+ " INTEGER, "
+            + NetMonColumns.WIFI_CHANNEL+ " INTEGER, "
             + NetMonColumns.WIFI_SIGNAL_STRENGTH + " INTEGER, "
             + NetMonColumns.WIFI_RSSI + " INTEGER, "
             + NetMonColumns.SIM_OPERATOR + " TEXT, "
@@ -159,6 +161,12 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V11_BATTERY_LEVEL = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
             + NetMonColumns.BATTERY_LEVEL + " INTEGER";
 
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V12_WIFI_FREQUENCY = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.WIFI_FREQUENCY + " INTEGER";
+
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V12_WIFI_CHANNEL = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.WIFI_CHANNEL + " INTEGER";
+
     private static final String SQL_CREATE_VIEW_CONNECTION_TEST_STATS = "CREATE VIEW " + ConnectionTestStatsColumns.VIEW_NAME + " AS "
             + buildConnectionTestQuery();
 
@@ -218,6 +226,11 @@ public class NetMonDatabase extends SQLiteOpenHelper {
 
         if (oldVersion < 11) {
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V11_BATTERY_LEVEL);
+        }
+
+        if (oldVersion < 12) {
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V12_WIFI_FREQUENCY);
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V12_WIFI_CHANNEL);
         }
     }
 
