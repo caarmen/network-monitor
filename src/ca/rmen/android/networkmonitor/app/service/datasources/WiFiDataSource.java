@@ -89,6 +89,7 @@ class WiFiDataSource implements NetMonDataSource {
                     int channel = CHANNEL_FREQUENCIES.get(scanResult.frequency);
                     result.put(NetMonColumns.WIFI_FREQUENCY, scanResult.frequency);
                     result.put(NetMonColumns.WIFI_CHANNEL, channel);
+                    break;
                 }
             }
         }
