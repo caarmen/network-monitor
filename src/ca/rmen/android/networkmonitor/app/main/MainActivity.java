@@ -55,24 +55,6 @@ public class MainActivity extends PreferenceActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        int playServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (playServicesAvailable != ConnectionResult.SUCCESS) {
-            Dialog errorDialog = null;
-
-            if (GooglePlayServicesUtil.isUserRecoverableError(playServicesAvailable)) {
-                errorDialog = GooglePlayServicesUtil.getErrorDialog(playServicesAvailable, this, 1);
-            }
-            if (errorDialog != null) {
-                errorDialog.show();
-            } else {
-                Toast.makeText(this, "Google Play Services must be installed", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
@@ -99,6 +81,19 @@ public class MainActivity extends PreferenceActivity {
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (NetMonPreferences.PREF_SERVICE_ENABLED.equals(key)) {
                 if (sharedPreferences.getBoolean(NetMonPreferences.PREF_SERVICE_ENABLED, NetMonPreferences.PREF_SERVICE_ENABLED_DEFAULT)) {
+                    int playServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable(MainActivity.this);
+                    if (playServicesAvailable != ConnectionResult.SUCCESS) {
+                        Dialog errorDialog = null;
+
+                        if (GooglePlayServicesUtil.isUserRecoverableError(playServicesAvailable)) {
+                            errorDialog = GooglePlayServicesUtil.getErrorDialog(playServicesAvailable, MainActivity.this, 1);
+                        }
+                        if (errorDialog != null) {
+                            errorDialog.show();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Google Play Services must be installed", Toast.LENGTH_LONG).show();
+                        }
+                    }
                     startService(new Intent(MainActivity.this, NetMonService.class));
                 }
             } else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
