@@ -23,8 +23,11 @@
  */
 package ca.rmen.android.networkmonitor.app.speedtest;
 
+import java.io.File;
+
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
@@ -33,18 +36,22 @@ import android.text.TextUtils;
  */
 public class SpeedTestPreferences {
 
+    public static final String FILE = "speedtest";
+    private final Context mContext;
 
     public static class SpeedTestUploadConfig {
         final String server;
         final int port;
         final String user;
         final String password;
+        final File file;
 
-        public SpeedTestUploadConfig(String server, int port, String user, String password) {
+        public SpeedTestUploadConfig(String server, int port, String user, String password, File file) {
             this.server = server;
             this.port = port;
             this.user = user;
             this.password = password;
+            this.file = file;
         }
 
         /**
@@ -63,9 +70,11 @@ public class SpeedTestPreferences {
 
     public static class SpeedTestDownloadConfig {
         final String url;
+        final File file;
 
-        public SpeedTestDownloadConfig(String url) {
+        public SpeedTestDownloadConfig(String url, File file) {
             this.url = url;
+            this.file = file;
         }
 
         /**
@@ -101,7 +110,8 @@ public class SpeedTestPreferences {
     }
 
     private SpeedTestPreferences(Context context) {
-        mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        mContext = context.getApplicationContext();
+        mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
     }
 
     public boolean isEnabled() {
@@ -112,17 +122,30 @@ public class SpeedTestPreferences {
         mSharedPrefs.edit().putBoolean(PREF_SPEED_TEST_ENABLED, enabled).commit();
     }
 
+    private File getFile() {
+        if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+            File cacheDir = mContext.getExternalCacheDir();
+            if (cacheDir.exists()) {
+                return new File(cacheDir, FILE);
+            }
+        }
+        File cacheDir = mContext.getCacheDir();
+        return new File(cacheDir, FILE);
+    }
+
     public SpeedTestUploadConfig getUploadConfig() {
         String server = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_SERVER, "");
         int port = getIntPreference(PREF_SPEED_TEST_UPLOAD_PORT, PREF_SPEED_TEST_DEFAULT_UPLOAD_PORT);
         String user = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_USER, "");
         String password = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_PASSWORD, "");
-        return new SpeedTestUploadConfig(server, port, user, password);
+        File file = getFile();
+        return new SpeedTestUploadConfig(server, port, user, password, file);
     }
 
     public SpeedTestDownloadConfig getDownloadConfig() {
         String url = mSharedPrefs.getString(PREF_SPEED_TEST_DOWNLOAD_URL, "");
-        return new SpeedTestDownloadConfig(url);
+        File file = getFile();
+        return new SpeedTestDownloadConfig(url, file);
     }
 
     private int getIntPreference(String key, String defaultValue) {

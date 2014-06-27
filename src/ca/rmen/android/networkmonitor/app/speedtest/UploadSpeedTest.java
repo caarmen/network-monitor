@@ -23,7 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.speedtest;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,8 +43,9 @@ public class UploadSpeedTest {
     private static final String TAG = Constants.TAG + UploadSpeedTest.class.getSimpleName();
 
 
-    public static SpeedTestResult upload(File file, SpeedTestPreferences.SpeedTestUploadConfig uploadConfig) {
+    public static SpeedTestResult upload(SpeedTestPreferences.SpeedTestUploadConfig uploadConfig) {
         Log.v(TAG, "upload " + uploadConfig);
+        if (!uploadConfig.file.exists()) return new SpeedTestResult(0, 0, SpeedTestStatus.INVALID_FILE);
         FTPClient ftp = new FTPClient();
         InputStream is = null;
         try {
@@ -60,8 +60,8 @@ public class UploadSpeedTest {
                 return new SpeedTestResult(0, 0, SpeedTestStatus.AUTH_FAILURE);
             }
             long before = System.currentTimeMillis();
-            is = new FileInputStream(file);
-            if (!ftp.storeFile(file.getName(), is)) {
+            is = new FileInputStream(uploadConfig.file);
+            if (!ftp.storeFile(uploadConfig.file.getName(), is)) {
                 ftp.disconnect();
                 return new SpeedTestResult(0, 0, SpeedTestStatus.FAILURE);
             }
@@ -69,7 +69,7 @@ public class UploadSpeedTest {
             long after = System.currentTimeMillis();
             ftp.logout();
             ftp.disconnect();
-            return new SpeedTestResult((int) file.length(), after - before, SpeedTestStatus.SUCCESS);
+            return new SpeedTestResult((int) uploadConfig.file.length(), after - before, SpeedTestStatus.SUCCESS);
         } catch (SocketException e) {
             Log.e(TAG, "upload " + e.getMessage(), e);
             return new SpeedTestResult(0, 0, SpeedTestStatus.FAILURE);

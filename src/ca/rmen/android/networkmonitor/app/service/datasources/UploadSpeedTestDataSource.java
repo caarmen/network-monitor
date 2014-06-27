@@ -23,8 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.service.datasources;
 
-import java.io.File;
-
 import android.content.ContentValues;
 import android.content.Context;
 
@@ -58,12 +56,11 @@ class UploadSpeedTestDataSource implements NetMonDataSource {
     public ContentValues getContentValues() {
         Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues();
-        File file = new File("/mnt/sdcard/test.txt");//TODO use the downloaded file
 
         if (!mPreferences.isEnabled()) return values;
         SpeedTestUploadConfig uploadConfig = mPreferences.getUploadConfig();
         if (!uploadConfig.isValid()) return values;
-        SpeedTestResult result = UploadSpeedTest.upload(file, uploadConfig);
+        SpeedTestResult result = UploadSpeedTest.upload(uploadConfig);
         if (result.status == SpeedTestStatus.SUCCESS) values.put(NetMonColumns.UPLOAD_SPEED, result.getSpeedMbps());
         return values;
     }

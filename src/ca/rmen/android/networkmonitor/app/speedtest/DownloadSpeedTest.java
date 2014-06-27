@@ -23,8 +23,10 @@
  */
 package ca.rmen.android.networkmonitor.app.speedtest;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -56,11 +58,13 @@ public class DownloadSpeedTest {
 
         SpeedTestStatus status = SpeedTestStatus.UNKNOWN;
         InputStream inputStream = null;
+        OutputStream outputStream = null;
         int totalRead = 0;
         long before = System.currentTimeMillis();
         try {
             URLConnection connection = url.openConnection();
             Log.v(TAG, "Opened connection");
+            outputStream = new FileOutputStream(config.file);
             connection.setConnectTimeout(TIMEOUT);
             connection.setReadTimeout(TIMEOUT);
             connection.addRequestProperty("Cache-Control", "no-cache");
@@ -71,6 +75,7 @@ public class DownloadSpeedTest {
             int read = 0;
             do {
                 read = inputStream.read(buffer);
+                if (read > 0) outputStream.write(buffer, 0, read);
                 totalRead += read;
 
             } while (read > 0);
@@ -85,6 +90,13 @@ public class DownloadSpeedTest {
             if (inputStream != null) {
                 try {
                     inputStream.close();
+                } catch (IOException e) {
+                    Log.w(TAG, "download: Could not close stream", e);
+                }
+            }
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
                 } catch (IOException e) {
                     Log.w(TAG, "download: Could not close stream", e);
                 }
