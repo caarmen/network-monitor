@@ -30,6 +30,8 @@
     <string name="pref_category_performance">PERFORMANCE</string>
     <string name="pref_title_select_fields">Fields to monitor</string>
     <string name="pref_summary_select_fields">Select a set of fields for the log display and export.</string>
+    <string name="pref_title_speed_test">Speed test</string>
+    <string name="pref_summary_speed_test">Settings to test download or upload speed.</string>
     <string name="pref_title_wake_interval">Prevent sleep</string>
     <string name="pref_summary_wake_interval">Wake up the phone periodically to make sure the data connection stays on (drains battery): %s</string>
     <string name="pref_title_scheduler">Polling interval</string>

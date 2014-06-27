@@ -44,7 +44,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
     public static final String DATABASE_NAME = "networkmonitor.db";
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 13;
 
     // @formatter:off
     private static final String SQL_CREATE_TABLE_NETWORKMONITOR = "CREATE TABLE IF NOT EXISTS "
@@ -97,7 +97,9 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.NETWORK_INTERFACE+ " TEXT, "
             + NetMonColumns.IPV4_ADDRESS+ " TEXT,"
             + NetMonColumns.IPV6_ADDRESS+ " TEXT,"
-            + NetMonColumns.BATTERY_LEVEL+ " INTEGER"
+            + NetMonColumns.BATTERY_LEVEL+ " INTEGER, "
+            + NetMonColumns.DOWNLOAD_SPEED+ " REAL, "
+            + NetMonColumns.UPLOAD_SPEED+ " REAL"
             + " );";
     // @formatter:on
 
@@ -167,6 +169,12 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V12_WIFI_CHANNEL = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
             + NetMonColumns.WIFI_CHANNEL + " INTEGER";
 
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V13_DOWNLOAD_SPEED = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.DOWNLOAD_SPEED + " REAL";
+
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V13_UPLOAD_SPEED = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.UPLOAD_SPEED + " REAL";
+
     private static final String SQL_CREATE_VIEW_CONNECTION_TEST_STATS = "CREATE VIEW " + ConnectionTestStatsColumns.VIEW_NAME + " AS "
             + buildConnectionTestQuery();
 
@@ -231,6 +239,11 @@ public class NetMonDatabase extends SQLiteOpenHelper {
         if (oldVersion < 12) {
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V12_WIFI_FREQUENCY);
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V12_WIFI_CHANNEL);
+        }
+
+        if (oldVersion < 13) {
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V13_DOWNLOAD_SPEED);
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V13_UPLOAD_SPEED);
         }
     }
 

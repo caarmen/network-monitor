@@ -53,6 +53,8 @@ public class NetMonDataSources {
         SIMDataSource.class,
         WiFiDataSource.class,
         NetworkInterfaceDataSource.class,
+        DownloadSpeedTestDataSource.class,
+        UploadSpeedTestDataSource.class
     };
     // @formatter:on
 

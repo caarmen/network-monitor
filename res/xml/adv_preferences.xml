@@ -8,6 +8,12 @@
             android:title="@string/pref_title_select_fields" >
             <intent android:action="ca.rmen.android.networkmonitor.app.prefs.SelectFieldsActivity" />
         </Preference>
+        <Preference
+            android:icon="@drawable/ic_pref_speed_test"
+            android:summary="@string/pref_summary_speed_test"
+            android:title="@string/pref_title_speed_test" >
+            <intent android:action="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferencesActivity" />
+        </Preference>
 
         <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
             android:defaultValue="decimal"
@@ -58,7 +64,7 @@
             android:icon="@drawable/ic_pref_email"
             android:key="PREF_EMAIL_REPORTS"
             android:title="@string/pref_title_email" >
-            <intent android:action="ca.rmen.android.networkmonitor.app.prefs.EmailPreferencesActivity" />
+            <intent android:action="ca.rmen.android.networkmonitor.app.email.EmailPreferencesActivity" />
         </Preference>
         <Preference
             android:icon="@drawable/ic_pref_import"

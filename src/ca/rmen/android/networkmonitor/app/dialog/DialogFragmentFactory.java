@@ -30,6 +30,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.ChoiceDialogFragment.DialogItemListener;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -46,6 +47,7 @@ public class DialogFragmentFactory extends DialogFragment {
     static final String EXTRA_TITLE = "title";
     static final String EXTRA_MESSAGE = "message";
     static final String EXTRA_ACTION_ID = "action_id";
+    static final String EXTRA_ICON_ID = "icon_id";
     static final String EXTRA_EXTRAS = "extras";
     static final String EXTRA_PROGRESS_DIALOG_STYLE = "progress_dialog_style";
     static final String EXTRA_SELECTED_ITEM = "selected_item";
@@ -59,6 +61,21 @@ public class DialogFragmentFactory extends DialogFragment {
         Bundle arguments = new Bundle(3);
         arguments.putString(EXTRA_TITLE, title);
         arguments.putString(EXTRA_MESSAGE, message);
+        InfoDialogFragment result = new InfoDialogFragment();
+        result.setArguments(arguments);
+        result.show(activity.getSupportFragmentManager(), InfoDialogFragment.class.getSimpleName());
+        return result;
+    }
+
+    /**
+     * @return a visible warning dialog fragment with the given title and message, and just one OK button.
+     */
+    public static InfoDialogFragment showWarningDialog(FragmentActivity activity, String title, String message) {
+        Log.v(TAG, "showInfoDialog");
+        Bundle arguments = new Bundle(3);
+        arguments.putString(EXTRA_TITLE, title);
+        arguments.putString(EXTRA_MESSAGE, message);
+        arguments.putInt(EXTRA_ICON_ID, R.drawable.ic_alert);
         InfoDialogFragment result = new InfoDialogFragment();
         result.setArguments(arguments);
         result.show(activity.getSupportFragmentManager(), InfoDialogFragment.class.getSimpleName());

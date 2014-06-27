@@ -1,0 +1,51 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="preferenceScreen" >
+
+    <PreferenceCategory android:title="@string/pref_category_speed_test_settings" >
+        <org.jraf.android.backport.switchwidget.SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_pref_enable_service"
+            android:key="PREF_SPEED_TEST_ENABLED"
+            android:summary="@string/pref_summary_speed_test_enabled"
+            android:title="@string/pref_title_speed_test_enabled" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_speed_test_download_settings" >
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+            android:defaultValue="@string/pref_value_speed_test_default_download_url"
+            android:icon="@drawable/ic_pref_url"
+            android:key="PREF_SPEED_TEST_DOWNLOAD_URL"
+            android:summary="@string/pref_summary_speed_test_download_url"
+            android:title="@string/pref_title_speed_test_download_url" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_speed_test_upload_settings" >
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+            android:defaultValue=""
+            android:hint="@string/pref_hint_speed_test_upload_server"
+            android:icon="@drawable/ic_pref_server"
+            android:key="PREF_SPEED_TEST_UPLOAD_SERVER"
+            android:summary="@string/pref_summary_speed_test_upload_server"
+            android:title="@string/pref_title_speed_test_upload_server" />
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+            android:defaultValue="@string/pref_value_speed_test_default_upload_port"
+            android:hint="@string/pref_value_speed_test_default_upload_port"
+            android:icon="@drawable/ic_pref_server"
+            android:key="PREF_SPEED_TEST_UPLOAD_PORT"
+            android:summary="@string/pref_summary_speed_test_upload_port"
+            android:title="@string/pref_title_speed_test_upload_port" />
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+            android:defaultValue=""
+            android:hint="@string/pref_hint_email_user"
+            android:icon="@drawable/ic_pref_email_user"
+            android:inputType="textEmailAddress"
+            android:key="PREF_SPEED_TEST_UPLOAD_USER"
+            android:summary="@string/pref_summary_speed_test_upload_user"
+            android:title="@string/pref_title_speed_test_upload_user" />
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+            android:defaultValue=""
+            android:icon="@drawable/ic_pref_email_password"
+            android:inputType="textPassword"
+            android:key="PREF_SPEED_TEST_UPLOAD_PASSWORD"
+            android:title="@string/pref_title_speed_test_upload_password" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

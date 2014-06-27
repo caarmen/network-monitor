@@ -64,6 +64,8 @@ public class InfoDialogFragment extends DialogFragment { // NO_UCD (use default)
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         Bundle arguments = getArguments();
         final int actionId = arguments.getInt(DialogFragmentFactory.EXTRA_ACTION_ID);
+        final int iconId = arguments.getInt(DialogFragmentFactory.EXTRA_ICON_ID);
+        if (iconId > 0) builder.setIcon(iconId);
         final Bundle extras = arguments.getBundle(DialogFragmentFactory.EXTRA_EXTRAS);
         OnClickListener neutralListener = null;
         builder.setTitle(arguments.getString(DialogFragmentFactory.EXTRA_TITLE)).setMessage(arguments.getString(DialogFragmentFactory.EXTRA_MESSAGE));

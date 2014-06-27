@@ -51,6 +51,8 @@
         <item>ipv4_address</item>
         <item>ipv6_address</item>
         <item>battery_level</item>
+        <item>download_speed</item>
+        <item>upload_speed</item>
     </string-array>
 
     <string-array name="db_columns_profile_wifi">

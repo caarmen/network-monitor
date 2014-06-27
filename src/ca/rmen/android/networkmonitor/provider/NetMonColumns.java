@@ -86,6 +86,8 @@ public class NetMonColumns implements BaseColumns {
     public static final String IPV4_ADDRESS = "ipv4_address";
     public static final String IPV6_ADDRESS = "ipv6_address";
     public static final String BATTERY_LEVEL = "battery_level";
+    public static final String DOWNLOAD_SPEED = "download_speed";
+    public static final String UPLOAD_SPEED = "upload_speed";
 
 
     /**

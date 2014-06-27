@@ -49,5 +49,7 @@
     <string name="ipv4_address">IPv4 Address</string>
     <string name="ipv6_address">IPv6 Address</string>
     <string name="battery_level">Battery Level</string>
+    <string name="download_speed">Upload Speed (Mbps)</string>
+    <string name="upload_speed">Upload Speed (Mbps)</string>
 
 </resources>

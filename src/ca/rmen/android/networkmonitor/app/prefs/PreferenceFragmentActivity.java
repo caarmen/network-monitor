@@ -55,9 +55,10 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
     public static final String ACTION_IMPORT = PreferenceFragmentActivity.class.getPackage().getName() + "_import";
     public static final String ACTION_CHECK_LOCATION_SETTINGS = PreferenceFragmentActivity.class.getPackage().getName() + "_check_location_settings";
     public static final String ACTION_SHOW_INFO_DIALOG = PreferenceFragmentActivity.class.getPackage().getName() + "_show_info_dialog";
+    public static final String ACTION_SHOW_WARNING_DIALOG = PreferenceFragmentActivity.class.getPackage().getName() + "_show_warning_dialog";
     public static final String EXTRA_IMPORT_URI = PreferenceFragmentActivity.class.getPackage().getName() + "_db_url";
-    public static final String EXTRA_INFO_DIALOG_TITLE = PreferenceFragmentActivity.class.getPackage().getName() + "_dialog_title";
-    public static final String EXTRA_INFO_DIALOG_MESSAGE = PreferenceFragmentActivity.class.getPackage().getName() + "_dialog_message";
+    public static final String EXTRA_DIALOG_TITLE = PreferenceFragmentActivity.class.getPackage().getName() + "_dialog_title";
+    public static final String EXTRA_DIALOG_MESSAGE = PreferenceFragmentActivity.class.getPackage().getName() + "_dialog_message";
 
     private static final String TAG = Constants.TAG + PreferenceFragmentActivity.class.getSimpleName();
     private static final String PROGRESS_DIALOG_FRAGMENT_TAG = "progress_dialog_fragment_tag";
@@ -81,8 +82,11 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
         } else if (ACTION_CHECK_LOCATION_SETTINGS.equals(action)) {
             checkLocationSettings();
         } else if (ACTION_SHOW_INFO_DIALOG.equals(action)) {
-            DialogFragmentFactory.showInfoDialog(this, getIntent().getExtras().getString(EXTRA_INFO_DIALOG_TITLE),
-                    getIntent().getExtras().getString(EXTRA_INFO_DIALOG_MESSAGE));
+            DialogFragmentFactory.showInfoDialog(this, getIntent().getExtras().getString(EXTRA_DIALOG_TITLE),
+                    getIntent().getExtras().getString(EXTRA_DIALOG_MESSAGE));
+        } else if (ACTION_SHOW_WARNING_DIALOG.equals(action)) {
+            DialogFragmentFactory.showWarningDialog(this, getIntent().getExtras().getString(EXTRA_DIALOG_TITLE),
+                    getIntent().getExtras().getString(EXTRA_DIALOG_MESSAGE));
         } else {
             Log.w(TAG, "Activity created without a known action.  Action=" + action);
             finish();

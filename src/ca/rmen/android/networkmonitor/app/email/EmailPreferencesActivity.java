@@ -90,8 +90,8 @@ public class EmailPreferencesActivity extends PreferenceActivity { // NO_UCD (us
                 // We can't show a dialog directly here because we're a PreferenceActivity.
                 // We use this convoluted hack to ask the PreferenceFragmentActivity to show the dialog for us.
                 Intent intent = new Intent(PreferenceFragmentActivity.ACTION_SHOW_INFO_DIALOG);
-                intent.putExtra(PreferenceFragmentActivity.EXTRA_INFO_DIALOG_TITLE, getString(R.string.missing_email_settings_info_dialog_title));
-                intent.putExtra(PreferenceFragmentActivity.EXTRA_INFO_DIALOG_MESSAGE, getString(R.string.missing_email_settings_info_dialog_message));
+                intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_TITLE, getString(R.string.missing_email_settings_info_dialog_title));
+                intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_MESSAGE, getString(R.string.missing_email_settings_info_dialog_message));
                 startActivity(intent);
             }
         }

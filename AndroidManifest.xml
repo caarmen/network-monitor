@@ -100,7 +100,23 @@
             android:label="@string/pref_title_email"
             android:parentActivityName="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity" >
             <intent-filter>
-                <action android:name="ca.rmen.android.networkmonitor.app.prefs.EmailPreferencesActivity" />
+                <action android:name="ca.rmen.android.networkmonitor.app.email.EmailPreferencesActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity" />
+        </activity>
+        <activity
+            android:name="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferencesActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:label="@string/pref_title_speed_test"
+            android:parentActivityName="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity" >
+            <intent-filter>
+                <action android:name="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferencesActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -164,6 +180,11 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="ca.rmen.android.networkmonitor.app.prefs_show_info_dialog" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="ca.rmen.android.networkmonitor.app.prefs_show_warning_dialog" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
