@@ -32,12 +32,14 @@ public class SpeedTestResult {
         SUCCESS, INVALID_FILE, FAILURE, AUTH_FAILURE, UNKNOWN
     }
 
-    public final long bytes;
+    public final long totalBytes;
+    public final long fileBytes;
     public final long transferTime;
     public final SpeedTestStatus status;
 
-    public SpeedTestResult(long bytes, long transferTime, SpeedTestStatus status) {
-        this.bytes = bytes;
+    public SpeedTestResult(long totalBytes, long fileBytes, long transferTime, SpeedTestStatus status) {
+        this.totalBytes = totalBytes;
+        this.fileBytes = fileBytes;
         this.transferTime = transferTime;
         this.status = status;
     }
@@ -46,8 +48,9 @@ public class SpeedTestResult {
      * @return the transfer speed in megabits per second.
      */
     public float getSpeedMbps() {
+        long bytesTransferred = totalBytes > 0 ? totalBytes : fileBytes;
         float seconds = (float) transferTime / 1000;
-        long bits = bytes * 8;
+        long bits = bytesTransferred * 8;
         float megabits = (float) bits / 1000000;
         return megabits / seconds;
     }
@@ -59,7 +62,8 @@ public class SpeedTestResult {
      */
     void write(SharedPreferences prefs, String keyPrefix) {
         Editor editor = prefs.edit();
-        editor.putLong(keyPrefix + "_BYTES", bytes);
+        editor.putLong(keyPrefix + "_TOTAL_BYTES", totalBytes);
+        editor.putLong(keyPrefix + "_FILE_BYTES", fileBytes);
         editor.putLong(keyPrefix + "_TRANSFER_TIME", transferTime);
         editor.putInt(keyPrefix + "_STATUS", status.ordinal());
         editor.commit();
@@ -70,15 +74,17 @@ public class SpeedTestResult {
      * @return a speed test result which was stored in the shared preferences.
      */
     static SpeedTestResult read(SharedPreferences prefs, String keyPrefix) {
-        long bytes = prefs.getLong(keyPrefix + "_BYTES", 0);
+        long totalBytes = prefs.getLong(keyPrefix + "_TOTAL_BYTES", 0);
+        long fileBytes = prefs.getLong(keyPrefix + "_FILE_BYTES", 0);
         long transferTime = prefs.getLong(keyPrefix + "_TRANSFER_TIME", 0);
         int statusInt = prefs.getInt(keyPrefix + "_STATUS", SpeedTestStatus.UNKNOWN.ordinal());
-        return new SpeedTestResult(bytes, transferTime, SpeedTestStatus.values()[statusInt]);
+        return new SpeedTestResult(totalBytes, fileBytes, transferTime, SpeedTestStatus.values()[statusInt]);
     }
 
     @Override
     public String toString() {
-        return SpeedTestResult.class.getSimpleName() + "[bytes=" + bytes + ", transferTime=" + transferTime + ", status=" + status + "]";
+        return SpeedTestResult.class.getSimpleName() + "[totalBytes=" + totalBytes + ", fileBytes=" + fileBytes + ", transferTime=" + transferTime
+                + ", status=" + status + "]";
     }
 
 

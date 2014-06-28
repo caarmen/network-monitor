@@ -31,6 +31,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import android.net.TrafficStats;
+
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -52,7 +54,7 @@ public class SpeedTestDownload {
             url = new URL(config.url);
         } catch (MalformedURLException e) {
             Log.e(TAG, "download: incorrect url " + config.url, e);
-            return new SpeedTestResult(0, 0, SpeedTestStatus.INVALID_FILE);
+            return new SpeedTestResult(0, 0, 0, SpeedTestStatus.INVALID_FILE);
         }
 
         SpeedTestStatus status = SpeedTestStatus.UNKNOWN;
@@ -60,6 +62,7 @@ public class SpeedTestDownload {
         OutputStream outputStream = null;
         long totalRead = 0;
         long before = System.currentTimeMillis();
+        long rxBytesBefore = TrafficStats.getTotalRxBytes();
         try {
             URLConnection connection = url.openConnection();
             Log.v(TAG, "Opened connection");
@@ -80,13 +83,14 @@ public class SpeedTestDownload {
             } while (read > 0);
             if (totalRead > 0) status = SpeedTestStatus.SUCCESS;
             long after = System.currentTimeMillis();
-            SpeedTestResult result = new SpeedTestResult(totalRead, after - before, status);
+            long rxBytesAfter = TrafficStats.getTotalRxBytes();
+            SpeedTestResult result = new SpeedTestResult(rxBytesAfter - rxBytesBefore, totalRead, after - before, status);
             Log.v(TAG, "success: " + result);
             return result;
         } catch (Throwable t) {
             Log.d(TAG, "download: Caught an exception", t);
             long after = System.currentTimeMillis();
-            return new SpeedTestResult(totalRead, after - before, SpeedTestStatus.FAILURE);
+            return new SpeedTestResult(0, totalRead, after - before, SpeedTestStatus.FAILURE);
         } finally {
             if (inputStream != null) {
                 try {

@@ -163,7 +163,7 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
 
     private void updateDownloadUrlPreferenceSummary() {
         SpeedTestResult result = mSpeedTestPrefs.getLastDownloadResult();
-        String size = result.status == SpeedTestStatus.SUCCESS ? String.format("%.3f", (float) result.bytes / 1000000) : "?";
+        String size = result.status == SpeedTestStatus.SUCCESS ? String.format("%.3f", (float) result.fileBytes / 1000000) : "?";
         String url = mSpeedTestPrefs.getDownloadConfig().url;
         String summary = getString(R.string.pref_summary_speed_test_download_url, url, size);
         @SuppressWarnings("deprecation")

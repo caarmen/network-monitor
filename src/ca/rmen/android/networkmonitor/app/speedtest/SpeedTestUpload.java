@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketException;
 
+import android.net.TrafficStats;
+
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 
@@ -45,7 +47,7 @@ public class SpeedTestUpload {
 
     public static SpeedTestResult upload(SpeedTestUploadConfig uploadConfig) {
         Log.v(TAG, "upload " + uploadConfig);
-        if (!uploadConfig.file.exists()) return new SpeedTestResult(0, 0, SpeedTestStatus.INVALID_FILE);
+        if (!uploadConfig.file.exists()) return new SpeedTestResult(0, 0, 0, SpeedTestStatus.INVALID_FILE);
         FTPClient ftp = new FTPClient();
         InputStream is = null;
         try {
@@ -53,29 +55,31 @@ public class SpeedTestUpload {
             int reply = ftp.getReplyCode();
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftp.disconnect();
-                return new SpeedTestResult(0, 0, SpeedTestStatus.FAILURE);
+                return new SpeedTestResult(0, 0, 0, SpeedTestStatus.FAILURE);
             }
             if (!ftp.login(uploadConfig.user, uploadConfig.password)) {
                 ftp.disconnect();
-                return new SpeedTestResult(0, 0, SpeedTestStatus.AUTH_FAILURE);
+                return new SpeedTestResult(0, 0, 0, SpeedTestStatus.AUTH_FAILURE);
             }
             long before = System.currentTimeMillis();
+            long txBytesBefore = TrafficStats.getTotalTxBytes();
             is = new FileInputStream(uploadConfig.file);
             if (!ftp.storeFile(uploadConfig.file.getName(), is)) {
                 ftp.disconnect();
-                return new SpeedTestResult(0, 0, SpeedTestStatus.FAILURE);
+                return new SpeedTestResult(0, 0, 0, SpeedTestStatus.FAILURE);
             }
 
             long after = System.currentTimeMillis();
+            long txBytesAfter = TrafficStats.getTotalTxBytes();
             ftp.logout();
             ftp.disconnect();
-            return new SpeedTestResult(uploadConfig.file.length(), after - before, SpeedTestStatus.SUCCESS);
+            return new SpeedTestResult(txBytesAfter - txBytesBefore, uploadConfig.file.length(), after - before, SpeedTestStatus.SUCCESS);
         } catch (SocketException e) {
             Log.e(TAG, "upload " + e.getMessage(), e);
-            return new SpeedTestResult(0, 0, SpeedTestStatus.FAILURE);
+            return new SpeedTestResult(0, 0, 0, SpeedTestStatus.FAILURE);
         } catch (IOException e) {
             Log.e(TAG, "upload " + e.getMessage(), e);
-            return new SpeedTestResult(0, 0, SpeedTestStatus.FAILURE);
+            return new SpeedTestResult(0, 0, 0, SpeedTestStatus.FAILURE);
         } finally {
             if (is != null) {
                 try {
