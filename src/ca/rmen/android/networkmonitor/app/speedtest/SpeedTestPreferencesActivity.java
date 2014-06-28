@@ -38,7 +38,6 @@ import android.preference.PreferenceManager;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity;
-import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences.SpeedTestDownloadConfig;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -146,7 +145,7 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
 
             @Override
             protected SpeedTestResult doInBackground(Void... params) {
-                return DownloadSpeedTest.download(config);
+                return SpeedTestDownload.download(config);
             }
 
             @Override

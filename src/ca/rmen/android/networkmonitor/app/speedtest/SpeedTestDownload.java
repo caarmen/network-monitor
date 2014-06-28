@@ -32,7 +32,6 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences.SpeedTestDownloadConfig;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -40,8 +39,8 @@ import ca.rmen.android.networkmonitor.util.Log;
 /**
  * Downloads a file and calculates the download speed.
  */
-public class DownloadSpeedTest {
-    private static final String TAG = Constants.TAG + DownloadSpeedTest.class.getSimpleName();
+public class SpeedTestDownload {
+    private static final String TAG = Constants.TAG + SpeedTestDownload.class.getSimpleName();
 
     // The maximum connection and read timeout 
     private static final int TIMEOUT = 5000;

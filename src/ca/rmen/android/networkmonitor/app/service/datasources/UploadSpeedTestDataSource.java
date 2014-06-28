@@ -28,10 +28,10 @@ import android.content.Context;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
-import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences.SpeedTestUploadConfig;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
-import ca.rmen.android.networkmonitor.app.speedtest.UploadSpeedTest;
+import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestUploadConfig;
+import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestUpload;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -60,7 +60,7 @@ class UploadSpeedTestDataSource implements NetMonDataSource {
         if (!mPreferences.isEnabled()) return values;
         SpeedTestUploadConfig uploadConfig = mPreferences.getUploadConfig();
         if (!uploadConfig.isValid()) return values;
-        SpeedTestResult result = UploadSpeedTest.upload(uploadConfig);
+        SpeedTestResult result = SpeedTestUpload.upload(uploadConfig);
         if (result.status == SpeedTestStatus.SUCCESS) values.put(NetMonColumns.UPLOAD_SPEED, result.getSpeedMbps());
         return values;
     }

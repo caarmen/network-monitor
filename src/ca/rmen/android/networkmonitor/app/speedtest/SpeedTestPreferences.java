@@ -29,7 +29,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 
 /**
  * Convenience methods for getting/setting shared preferences related to the speed test.
@@ -39,57 +38,6 @@ public class SpeedTestPreferences {
     public static final String FILE = "speedtest";
     private final Context mContext;
 
-    public static class SpeedTestUploadConfig {
-        final String server;
-        final int port;
-        final String user;
-        final String password;
-        final File file;
-
-        public SpeedTestUploadConfig(String server, int port, String user, String password, File file) {
-            this.server = server;
-            this.port = port;
-            this.user = user;
-            this.password = password;
-            this.file = file;
-        }
-
-        /**
-         * @return true if we have enough info to attempt to upload a file.
-         */
-        public boolean isValid() {
-            return !TextUtils.isEmpty(server) && port > 0 && !TextUtils.isEmpty(user) && !TextUtils.isEmpty(password);
-        }
-
-        @Override
-        public String toString() {
-            return SpeedTestUploadConfig.class.getSimpleName() + " [server=" + server + ", port=" + port + ", user=" + user + ", password=" + password + "]";
-        }
-
-    }
-
-    public static class SpeedTestDownloadConfig {
-        final String url;
-        final File file;
-
-        public SpeedTestDownloadConfig(String url, File file) {
-            this.url = url;
-            this.file = file;
-        }
-
-        /**
-         * @return true if we have enough info to attempt to download a file.
-         */
-        public boolean isValid() {
-            return !TextUtils.isEmpty(url);
-        }
-
-        @Override
-        public String toString() {
-            return SpeedTestDownloadConfig.class.getSimpleName() + "[url=" + url + "]";
-        }
-    }
-
     static final String PREF_SPEED_TEST_ENABLED = "PREF_SPEED_TEST_ENABLED";
     static final String PREF_SPEED_TEST_DOWNLOAD_URL = "PREF_SPEED_TEST_DOWNLOAD_URL";
     static final String PREF_SPEED_TEST_UPLOAD_SERVER = "PREF_SPEED_TEST_UPLOAD_SERVER";
@@ -97,7 +45,7 @@ public class SpeedTestPreferences {
     static final String PREF_SPEED_TEST_UPLOAD_USER = "PREF_SPEED_TEST_UPLOAD_USER";
     static final String PREF_SPEED_TEST_UPLOAD_PASSWORD = "PREF_SPEED_TEST_UPLOAD_PASSWORD";
 
-    private static final String PREF_SPEED_TEST_DEFAULT_UPLOAD_PORT = "21";
+    private static final int PREF_SPEED_TEST_DEFAULT_UPLOAD_PORT = 21;
 
     private static SpeedTestPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
@@ -135,7 +83,7 @@ public class SpeedTestPreferences {
 
     public SpeedTestUploadConfig getUploadConfig() {
         String server = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_SERVER, "");
-        int port = getIntPreference(PREF_SPEED_TEST_UPLOAD_PORT, PREF_SPEED_TEST_DEFAULT_UPLOAD_PORT);
+        int port = mSharedPrefs.getInt(PREF_SPEED_TEST_UPLOAD_PORT, PREF_SPEED_TEST_DEFAULT_UPLOAD_PORT);
         String user = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_USER, "");
         String password = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_PASSWORD, "");
         File file = getFile();
@@ -148,10 +96,5 @@ public class SpeedTestPreferences {
         return new SpeedTestDownloadConfig(url, file);
     }
 
-    private int getIntPreference(String key, String defaultValue) {
-        String valueStr = mSharedPrefs.getString(key, defaultValue);
-        int valueInt = Integer.valueOf(valueStr);
-        return valueInt;
-    }
 
 }

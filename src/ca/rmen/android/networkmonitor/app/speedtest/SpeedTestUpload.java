@@ -39,11 +39,11 @@ import ca.rmen.android.networkmonitor.util.Log;
 /**
  * Uploads a file and calculates the upload speed.
  */
-public class UploadSpeedTest {
-    private static final String TAG = Constants.TAG + UploadSpeedTest.class.getSimpleName();
+public class SpeedTestUpload {
+    private static final String TAG = Constants.TAG + SpeedTestUpload.class.getSimpleName();
 
 
-    public static SpeedTestResult upload(SpeedTestPreferences.SpeedTestUploadConfig uploadConfig) {
+    public static SpeedTestResult upload(SpeedTestUploadConfig uploadConfig) {
         Log.v(TAG, "upload " + uploadConfig);
         if (!uploadConfig.file.exists()) return new SpeedTestResult(0, 0, SpeedTestStatus.INVALID_FILE);
         FTPClient ftp = new FTPClient();
