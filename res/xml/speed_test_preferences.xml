@@ -6,7 +6,6 @@
             android:defaultValue="false"
             android:icon="@drawable/ic_pref_enable_service"
             android:key="PREF_SPEED_TEST_ENABLED"
-            android:summary="@string/pref_summary_speed_test_enabled"
             android:title="@string/pref_title_speed_test_enabled" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_speed_test_download_settings" >

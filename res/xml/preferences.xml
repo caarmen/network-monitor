@@ -6,7 +6,6 @@
             android:defaultValue="false"
             android:icon="@drawable/ic_pref_enable_service"
             android:key="PREF_SERVICE_ENABLED"
-            android:summary="@string/pref_summary_service_enabled"
             android:title="@string/pref_title_service_enabled" />
 
         <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference

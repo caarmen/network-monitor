@@ -3,15 +3,14 @@
 
     <!-- Speed test preferences -->
     <string name="pref_category_speed_test_settings">SPEED TEST SETTINGS</string>
-    <string name="pref_summary_speed_test_enabled">Enable or disable the speed test</string>
     <string name="pref_title_speed_test_enabled">Enable speed test</string>
     <!-- Download speed test preferences -->
-    <string name="pref_category_speed_test_download_settings">DOWNLOAD TEST</string>
+    <string name="pref_category_speed_test_download_settings">DOWNLOAD TEST (HTTP)</string>
     <string name="pref_title_speed_test_download_url">URL of the file to download</string>
-    <string name="pref_summary_speed_test_download_url">%1$s \n(%2$s Mb) Larger file = better accuracy (and more network traffic usage)</string>
+    <string name="pref_summary_speed_test_download_url">%1$s\n(%2$s Mb)\nLarger file = better accuracy (and more network traffic usage)</string>
     <string name="pref_value_speed_test_default_download_url">http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</string>
     <!-- Upload speed test preferences -->
-    <string name="pref_category_speed_test_upload_settings">UPLOAD TEST</string>
+    <string name="pref_category_speed_test_upload_settings">UPLOAD TEST (FTP)</string>
     <string name="pref_title_speed_test_upload_server">Server name</string>
     <string name="pref_summary_speed_test_upload_server">%s</string>
     <string name="pref_hint_speed_test_upload_server">ftp.yourdomain.com</string>

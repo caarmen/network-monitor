@@ -7,7 +7,6 @@
     <string name="pref_category_other">OTHER</string>
     <string name="pref_title_update_interval">Test frequency</string>
     <string name="pref_summary_update_interval">%s</string>
-    <string name="pref_summary_service_enabled">Enable or disable the service</string>
     <string name="pref_title_service_enabled">Enable service</string>
     <string name="pref_title_show_log_file">View log file</string>
     <string name="pref_title_advanced">Advanced options</string>
