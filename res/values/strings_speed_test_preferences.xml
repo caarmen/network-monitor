@@ -19,6 +19,7 @@
     <string name="pref_value_speed_test_default_upload_port">21</string>
     <string name="pref_title_speed_test_upload_user">Username</string>
     <string name="pref_summary_speed_test_upload_user">%s</string>
+    <string name="pref_hint_speed_test_upload_user">username</string>
     <string name="pref_title_speed_test_upload_password">Password</string>
     <string name="pref_title_speed_test_upload_path">Path</string>
     <string name="pref_summary_speed_test_upload_path">%s</string>

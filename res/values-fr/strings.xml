@@ -58,8 +58,17 @@
 
     <!-- Strings about sending emails -->
 	<string name="missing_email_settings_info_dialog_title">Informations manquantes</string>
-	<string name="missing_email_settings_info_dialog_message">Impossible d\'envoyer des courriels, parce qu\'au moins des champs n\'a pas été rempli. La fréquence de l\'envoi des rapports a été mis à \'jamais\'"</string>
+	<string name="missing_email_settings_info_dialog_message">Impossible d\'envoyer des courriels, parce qu\'au moins un des champs n\'a pas été rempli. La fréquence de l\'envoi des rapports a été mis à \'jamais\'"</string>
 	<string name="warning_notification_ticker_email_failed">Erreur de l\'envoi du rapport</string>
 	<string name="warning_notification_message_email_failed">Impossible d\'envoyer le rapport.</string>
+
+	<!-- Speed test strings -->
+    <string name="speed_test_warning_title">Attention !</string>
+    <string name="speed_test_warning_message">Activer le test de vitesse va engendrer beaucoup de trafic réseau (et une consommation de la batterie).  Ne pas l\'activer si vous avez un quota de trafic réseau !</string>
+	<string name="speed_test_missing_info_dialog_title">Informations manquantes</string>
+	<string name="speed_test_missing_info_dialog_message">Le test de vitesse ne peut être activé parce que le champ URL est vide.</string>
+	<string name="speed_test_disabled">Désactivé</string>
+	<string name="speed_test_good_enough">Très bien !</string>
+	<string name="speed_test_play_store">J\'en veux +&#8230;</string>
 
 </resources>

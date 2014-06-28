@@ -33,7 +33,7 @@
             android:title="@string/pref_title_speed_test_upload_port" />
         <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
             android:defaultValue=""
-            android:hint="@string/pref_hint_email_user"
+            android:hint="@string/pref_hint_speed_test_upload_user"
             android:icon="@drawable/ic_pref_email_user"
             android:inputType="textEmailAddress"
             android:key="PREF_SPEED_TEST_UPLOAD_USER"
