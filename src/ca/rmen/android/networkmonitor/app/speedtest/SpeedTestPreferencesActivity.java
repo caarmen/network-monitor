@@ -168,24 +168,31 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
         SpeedTestResult result = mSpeedTestPrefs.getLastDownloadResult();
         String size = result.status == SpeedTestStatus.SUCCESS ? String.format("%.3f", (float) result.fileBytes / 1000000) : "?";
         String url = mSpeedTestPrefs.getDownloadConfig().url;
+        url = ellipsize(url, 30);
         String summary = getString(R.string.pref_summary_speed_test_download_url, url, size);
         @SuppressWarnings("deprecation")
         Preference pref = getPreferenceManager().findPreference(SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL);
         pref.setSummary(summary);
     }
 
+    private static String ellipsize(String text, int maxLength) {
+        if (text.length() <= maxLength) return text;
+        String beginning = text.substring(0, maxLength / 2);
+        String end = text.substring(text.length() - maxLength / 2);
+        return beginning + "\u2026" + end;
+    }
+
     private void download() {
         final SpeedTestDownloadConfig config = mSpeedTestPrefs.getDownloadConfig();
         new AsyncTask<Void, Void, Void>() {
-            Preference mPref;
 
 
             @Override
             @SuppressWarnings("deprecation")
             protected void onPreExecute() {
-                mPref = getPreferenceManager().findPreference(SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL);
+                Preference pref = getPreferenceManager().findPreference(SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL);
                 String summary = getString(R.string.pref_summary_speed_test_download_url, config.url, "?");
-                mPref.setSummary(summary);
+                pref.setSummary(summary);
             }
 
             @Override
