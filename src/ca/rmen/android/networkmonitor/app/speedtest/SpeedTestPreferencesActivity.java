@@ -44,6 +44,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + SpeedTestPreferencesActivity.class.getSimpleName();
 
+    private SpeedTestPreferences mPrefs;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -52,7 +53,11 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.speed_test_preferences, false);
         addPreferencesFromResource(R.xml.speed_test_preferences);
-        updateDownloadUrlPreferenceSummary();
+        mPrefs = SpeedTestPreferences.getInstance(this);
+        SpeedTestResult result = mPrefs.getLastDownloadResult();
+        if (result.status != SpeedTestStatus.SUCCESS) download();
+        else
+            updateDownloadUrlPreferenceSummary();
         updatePreferenceSummary(SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_SERVER, R.string.pref_summary_speed_test_upload_server);
         updatePreferenceSummary(SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_PORT, R.string.pref_summary_speed_test_upload_port);
         updatePreferenceSummary(SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_USER, R.string.pref_summary_speed_test_upload_user);
@@ -76,13 +81,12 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
         Log.v(TAG, "onStop");
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
         super.onStop();
-        SpeedTestPreferences prefs = SpeedTestPreferences.getInstance(this);
-        boolean speedTestEnabled = prefs.isEnabled();
+        boolean speedTestEnabled = mPrefs.isEnabled();
         // If the user enabled the speed test, make sure we have enough info.
         if (speedTestEnabled) {
-            SpeedTestDownloadConfig downloadConfig = prefs.getDownloadConfig();
+            SpeedTestDownloadConfig downloadConfig = mPrefs.getDownloadConfig();
             if (!downloadConfig.isValid()) {
-                prefs.setEnabled(false);
+                mPrefs.setEnabled(false);
                 Intent intent = new Intent(PreferenceFragmentActivity.ACTION_SHOW_INFO_DIALOG);
                 intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_TITLE, getString(R.string.speed_test_missing_info_dialog_title));
                 intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_MESSAGE, getString(R.string.speed_test_missing_info_dialog_message));
@@ -106,7 +110,7 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
                 }
 
             } else if (SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL.equals(key)) {
-                updateDownloadUrlPreferenceSummary();
+                download();
             } else if (SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_SERVER.equals(key)) {
                 updatePreferenceSummary(SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_SERVER, R.string.pref_summary_speed_test_upload_server);
             } else if (SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_PORT.equals(key)) {
@@ -130,8 +134,18 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
     }
 
     private void updateDownloadUrlPreferenceSummary() {
-        final SpeedTestDownloadConfig config = SpeedTestPreferences.getInstance(this).getDownloadConfig();
-        new AsyncTask<Void, Void, SpeedTestResult>() {
+        SpeedTestResult result = mPrefs.getLastDownloadResult();
+        String size = result.status == SpeedTestStatus.SUCCESS ? String.format("%.3f", (float) result.bytes / 1000000) : "?";
+        String url = mPrefs.getDownloadConfig().url;
+        String summary = getString(R.string.pref_summary_speed_test_download_url, url, size);
+        @SuppressWarnings("deprecation")
+        Preference pref = getPreferenceManager().findPreference(SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL);
+        pref.setSummary(summary);
+    }
+
+    private void download() {
+        final SpeedTestDownloadConfig config = mPrefs.getDownloadConfig();
+        new AsyncTask<Void, Void, Void>() {
             Preference mPref;
 
 
@@ -139,21 +153,20 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
             @SuppressWarnings("deprecation")
             protected void onPreExecute() {
                 mPref = getPreferenceManager().findPreference(SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL);
-                String summary = getString(R.string.pref_summary_speed_test_download_url, config, "?");
+                String summary = getString(R.string.pref_summary_speed_test_download_url, config.url, "?");
                 mPref.setSummary(summary);
             }
 
             @Override
-            protected SpeedTestResult doInBackground(Void... params) {
-                return SpeedTestDownload.download(config);
+            protected Void doInBackground(Void... params) {
+                SpeedTestResult result = SpeedTestDownload.download(config);
+                mPrefs.setLastDownloadResult(result);
+                return null;
             }
 
             @Override
-            protected void onPostExecute(SpeedTestResult result) {
-                Log.v(TAG, "Download result: " + result);
-                String size = result.status == SpeedTestStatus.SUCCESS ? String.format("%.3f", (float) result.bytes / (1000 * 1000)) : "?";
-                String summary = getString(R.string.pref_summary_speed_test_download_url, config.url, size);
-                mPref.setSummary(summary);
+            protected void onPostExecute(Void result) {
+                updateDownloadUrlPreferenceSummary();
             }
 
         }.execute();

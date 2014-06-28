@@ -69,7 +69,7 @@ public class SpeedTestUpload {
             long after = System.currentTimeMillis();
             ftp.logout();
             ftp.disconnect();
-            return new SpeedTestResult((int) uploadConfig.file.length(), after - before, SpeedTestStatus.SUCCESS);
+            return new SpeedTestResult(uploadConfig.file.length(), after - before, SpeedTestStatus.SUCCESS);
         } catch (SocketException e) {
             Log.e(TAG, "upload " + e.getMessage(), e);
             return new SpeedTestResult(0, 0, SpeedTestStatus.FAILURE);

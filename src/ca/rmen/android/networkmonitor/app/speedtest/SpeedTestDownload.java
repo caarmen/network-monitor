@@ -58,7 +58,7 @@ public class SpeedTestDownload {
         SpeedTestStatus status = SpeedTestStatus.UNKNOWN;
         InputStream inputStream = null;
         OutputStream outputStream = null;
-        int totalRead = 0;
+        long totalRead = 0;
         long before = System.currentTimeMillis();
         try {
             URLConnection connection = url.openConnection();
@@ -80,7 +80,9 @@ public class SpeedTestDownload {
             } while (read > 0);
             if (totalRead > 0) status = SpeedTestStatus.SUCCESS;
             long after = System.currentTimeMillis();
-            return new SpeedTestResult(totalRead, after - before, status);
+            SpeedTestResult result = new SpeedTestResult(totalRead, after - before, status);
+            Log.v(TAG, "success: " + result);
+            return result;
         } catch (Throwable t) {
             Log.d(TAG, "download: Caught an exception", t);
             long after = System.currentTimeMillis();

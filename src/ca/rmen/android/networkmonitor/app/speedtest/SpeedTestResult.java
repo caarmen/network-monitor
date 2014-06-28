@@ -23,21 +23,28 @@
  */
 package ca.rmen.android.networkmonitor.app.speedtest;
 
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+
+
 public class SpeedTestResult {
     public enum SpeedTestStatus {
         SUCCESS, INVALID_FILE, FAILURE, AUTH_FAILURE, UNKNOWN
     }
 
-    public final int bytes;
+    public final long bytes;
     public final long transferTime;
     public final SpeedTestStatus status;
 
-    public SpeedTestResult(int bytes, long transferTime, SpeedTestStatus status) {
+    public SpeedTestResult(long bytes, long transferTime, SpeedTestStatus status) {
         this.bytes = bytes;
         this.transferTime = transferTime;
         this.status = status;
     }
 
+    /**
+     * @return the transfer speed in megabits per second.
+     */
     public float getSpeedMbps() {
         float seconds = (float) transferTime / 1000;
         long bits = bytes * 8;
@@ -45,9 +52,34 @@ public class SpeedTestResult {
         return megabits / seconds;
     }
 
+    /**
+     * Persist this speed test result to the shared preferences.
+     * 
+     * @param keyPrefix the first part of the key names of each field to persist.
+     */
+    void write(SharedPreferences prefs, String keyPrefix) {
+        Editor editor = prefs.edit();
+        editor.putLong(keyPrefix + "_BYTES", bytes);
+        editor.putLong(keyPrefix + "_TRANSFER_TIME", transferTime);
+        editor.putInt(keyPrefix + "_STATUS", status.ordinal());
+        editor.commit();
+    }
+
+    /**
+     * @param keyPrefix the first part of the key names of each persisted field.
+     * @return a speed test result which was stored in the shared preferences.
+     */
+    static SpeedTestResult read(SharedPreferences prefs, String keyPrefix) {
+        long bytes = prefs.getLong(keyPrefix + "_BYTES", 0);
+        long transferTime = prefs.getLong(keyPrefix + "_TRANSFER_TIME", 0);
+        int statusInt = prefs.getInt(keyPrefix + "_STATUS", SpeedTestStatus.UNKNOWN.ordinal());
+        return new SpeedTestResult(bytes, transferTime, SpeedTestStatus.values()[statusInt]);
+    }
+
     @Override
     public String toString() {
         return SpeedTestResult.class.getSimpleName() + "[bytes=" + bytes + ", transferTime=" + transferTime + ", status=" + status + "]";
     }
+
 
 }
