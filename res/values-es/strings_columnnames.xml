@@ -49,5 +49,7 @@
     <string name="ipv4_address">Dirección IPv4</string>
     <string name="ipv6_address">Dirección IPv6</string>
     <string name="battery_level">Nivel de la batería</string>
+    <string name="download_speed">Velocidad de descarga (Mbps)</string>
+    <string name="upload_speed">Velocidad de subida (Mbps)</string>
 
 </resources>

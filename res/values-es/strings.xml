@@ -62,4 +62,13 @@
 	<string name="warning_notification_ticker_email_failed">Error del envío del informe</string>
 	<string name="warning_notification_message_email_failed">Imposible enviar el informe.</string>
 
+	<!-- Speed test strings -->
+    <string name="speed_test_warning_title">¡Aviso!</string>
+    <string name="speed_test_warning_message">Activar la prueba de velocidad acarreará un aumento importante en el tráfico de la red (y consumo de batería). ¡No lo actives si tienes una cuota de tráfico de red!</string>
+	<string name="speed_test_missing_info_dialog_title">Falta información</string>
+	<string name="speed_test_missing_info_dialog_message">La prueba de velocidad no se puede activar porque el campo URL está vacío.</string>
+	<string name="speed_test_disabled">Deshabilitado</string>
+	<string name="speed_test_good_enough">¡Suficiente para mi!</string>
+	<string name="speed_test_play_store">Quiero más&#8230;</string>
+
 </resources>

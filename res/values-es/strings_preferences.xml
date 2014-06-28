@@ -28,6 +28,8 @@
     <string name="pref_category_performance">RENDIMIENTO</string>
     <string name="pref_title_select_fields">Campos</string>
     <string name="pref_summary_select_fields">Escoger los campos fijados en el fichero log y los ficheros exportados.</string>
+    <string name="pref_title_speed_test">Prueba de velocidad</string>
+    <string name="pref_summary_speed_test">Ajustes para la prueba de velocidad de bajada y subida.</string>
     <string name="pref_title_wake_interval">Evitar el modo de suspensión</string>
     <string name="pref_summary_wake_interval">Despertar el móvil periódicamente para mantener la conexión de datos activa (consume batería): %s</string>
     <string name="pref_title_scheduler">Precisión del inervalo entre pruebas</string>
