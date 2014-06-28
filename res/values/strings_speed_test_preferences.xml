@@ -22,5 +22,8 @@
     <string name="pref_title_speed_test_upload_password">Password</string>
     <string name="pref_title_speed_test_upload_path">Path</string>
     <string name="pref_summary_speed_test_upload_path">%s</string>
+    <!-- About the speed test -->
+    <string name="pref_category_speed_test_about">ABOUT</string>
+    <string name="pref_title_speed_test_about">About the speed test</string>
 
 </resources>

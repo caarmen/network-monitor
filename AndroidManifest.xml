@@ -126,6 +126,22 @@
                 android:value="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity" />
         </activity>
         <activity
+            android:name="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestAboutActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:label="@string/pref_title_speed_test_about"
+            android:parentActivityName="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferencesActivity" >
+            <intent-filter>
+                <action android:name="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestAboutActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferencesActivity" />
+        </activity>
+        <activity
             android:name="ca.rmen.android.networkmonitor.app.prefs.SelectFieldsActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"

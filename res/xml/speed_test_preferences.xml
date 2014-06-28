@@ -51,5 +51,13 @@
             android:key="PREF_SPEED_TEST_UPLOAD_PATH"
             android:title="@string/pref_title_speed_test_upload_path" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_speed_test_about" >
+        <Preference
+            android:icon="@drawable/ic_pref_question"
+            android:key="PREF_ABOUT"
+            android:title="@string/pref_title_speed_test_about" >
+            <intent android:action="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestAboutActivity" />
+        </Preference>
+    </PreferenceCategory>
 
 </PreferenceScreen>

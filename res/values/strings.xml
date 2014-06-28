@@ -68,6 +68,8 @@
 	<string name="speed_test_missing_info_dialog_title">Missing information</string>
 	<string name="speed_test_missing_info_dialog_message">The speed test cannot be enabled because not enough speed test settings have been filled in.</string>
 	<string name="speed_test_disabled">Disabled</string>
+	<string name="speed_test_good_enough">Good enough!</string>
+	<string name="speed_test_play_store">I want more&#8230;</string>
 
     <string name="unknown">N/A</string>
 
