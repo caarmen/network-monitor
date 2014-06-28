@@ -98,8 +98,8 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.IPV4_ADDRESS+ " TEXT,"
             + NetMonColumns.IPV6_ADDRESS+ " TEXT,"
             + NetMonColumns.BATTERY_LEVEL+ " INTEGER, "
-            + NetMonColumns.DOWNLOAD_SPEED+ " REAL, "
-            + NetMonColumns.UPLOAD_SPEED+ " REAL"
+            + NetMonColumns.DOWNLOAD_SPEED+ " TEXT, "
+            + NetMonColumns.UPLOAD_SPEED+ " TEXt"
             + " );";
     // @formatter:on
 
@@ -170,10 +170,10 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.WIFI_CHANNEL + " INTEGER";
 
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V13_DOWNLOAD_SPEED = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
-            + NetMonColumns.DOWNLOAD_SPEED + " REAL";
+            + NetMonColumns.DOWNLOAD_SPEED + " TEXT";
 
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V13_UPLOAD_SPEED = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
-            + NetMonColumns.UPLOAD_SPEED + " REAL";
+            + NetMonColumns.UPLOAD_SPEED + " TEXT";
 
     private static final String SQL_CREATE_VIEW_CONNECTION_TEST_STATS = "CREATE VIEW " + ConnectionTestStatsColumns.VIEW_NAME + " AS "
             + buildConnectionTestQuery();

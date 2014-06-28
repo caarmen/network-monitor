@@ -24,9 +24,6 @@
  */
 package ca.rmen.android.networkmonitor.app.speedtest;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -40,10 +37,8 @@ import android.preference.PreferenceManager;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
-import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.FileUtil;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -108,8 +103,6 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
             Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
             if (SpeedTestPreferences.PREF_SPEED_TEST_ENABLED.equals(key)) {
                 if (sharedPreferences.getBoolean(key, false)) {
-                    mSpeedTestPrefs.setHasBeenEnabled();
-                    addSelectedColumns();
                     // We can't show a dialog directly here because we're a PreferenceActivity.
                     // We use this convoluted hack to ask the PreferenceFragmentActivity to show the dialog for us.
                     Intent intent = new Intent(PreferenceFragmentActivity.ACTION_SHOW_WARNING_DIALOG);
@@ -132,25 +125,6 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
             }
         }
     };
-
-    /**
-     * Make sure the speed test columns are in the list of selected columns.
-     */
-    private void addSelectedColumns() {
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                NetMonPreferences prefs = NetMonPreferences.getInstance(SpeedTestPreferencesActivity.this);
-                List<String> selectedColumns = new ArrayList<String>(prefs.getSelectedColumns());
-                if (!selectedColumns.contains(NetMonColumns.UPLOAD_SPEED)) selectedColumns.add(NetMonColumns.UPLOAD_SPEED);
-                if (!selectedColumns.contains(NetMonColumns.DOWNLOAD_SPEED)) selectedColumns.add(NetMonColumns.DOWNLOAD_SPEED);
-                prefs.setSelectedColumns(selectedColumns);
-                return null;
-            }
-        }.execute();
-
-    }
 
     private void updatePreferenceSummary(CharSequence key, int summaryResId) {
         @SuppressWarnings("deprecation")

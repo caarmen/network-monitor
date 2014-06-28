@@ -80,11 +80,6 @@ public class SpeedTestPreferences {
         mSharedPrefs.edit().putBoolean(PREF_SPEED_TEST_ENABLED, enabled).commit();
     }
 
-    void setHasBeenEnabled() {
-        Log.v(TAG, "setHasBeenEnabled");
-        mSharedPrefs.edit().putBoolean(PREF_HAS_BEEN_ENABLED, true).commit();
-    }
-
     public boolean hasBeenEnabled() {
         return mSharedPrefs.getBoolean(PREF_HAS_BEEN_ENABLED, false);
     }

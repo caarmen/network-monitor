@@ -27,6 +27,7 @@ import android.content.ContentValues;
 import android.content.Context;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestDownload;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestDownloadConfig;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
@@ -42,11 +43,13 @@ class DownloadSpeedTestDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + DownloadSpeedTestDataSource.class.getSimpleName();
 
     private SpeedTestPreferences mPreferences;
+    private String mDisabledValue;
 
     @Override
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
         mPreferences = SpeedTestPreferences.getInstance(context);
+        mDisabledValue = context.getString(R.string.speed_test_disabled);
     }
 
     @Override
@@ -57,12 +60,15 @@ class DownloadSpeedTestDataSource implements NetMonDataSource {
         Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues();
 
-        if (!mPreferences.isEnabled()) return values;
-        SpeedTestDownloadConfig downloadConfig = mPreferences.getDownloadConfig();
-        if (!downloadConfig.isValid()) return values;
-        SpeedTestResult result = SpeedTestDownload.download(downloadConfig);
-        mPreferences.setLastDownloadResult(result);
-        if (result.status == SpeedTestStatus.SUCCESS) values.put(NetMonColumns.DOWNLOAD_SPEED, result.getSpeedMbps());
+        if (mPreferences.isEnabled()) {
+            SpeedTestDownloadConfig downloadConfig = mPreferences.getDownloadConfig();
+            if (!downloadConfig.isValid()) return values;
+            SpeedTestResult result = SpeedTestDownload.download(downloadConfig);
+            mPreferences.setLastDownloadResult(result);
+            if (result.status == SpeedTestStatus.SUCCESS) values.put(NetMonColumns.DOWNLOAD_SPEED, String.format("%.3f", result.getSpeedMbps()));
+        } else {
+            values.put(NetMonColumns.DOWNLOAD_SPEED, mDisabledValue);
+        }
         return values;
     }
 }

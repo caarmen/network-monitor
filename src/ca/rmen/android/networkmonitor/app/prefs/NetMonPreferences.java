@@ -190,7 +190,7 @@ public class NetMonPreferences {
     public List<String> getSelectedColumns() {
         String selectedColumnsString = mSharedPrefs.getString(NetMonPreferences.PREF_SELECTED_COLUMNS, null);
         final String[] selectedColumns;
-        if (TextUtils.isEmpty(selectedColumnsString)) selectedColumns = mContext.getResources().getStringArray(R.array.db_columns_profile_default);
+        if (TextUtils.isEmpty(selectedColumnsString)) selectedColumns = NetMonColumns.getColumnNames(mContext);
         else
             selectedColumns = selectedColumnsString.split(",");
         return Arrays.asList(selectedColumns);

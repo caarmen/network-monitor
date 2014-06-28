@@ -27,11 +27,12 @@ import android.content.ContentValues;
 import android.content.Context;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
-import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestUploadConfig;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestUpload;
+import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestUploadConfig;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -42,11 +43,13 @@ class UploadSpeedTestDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + UploadSpeedTestDataSource.class.getSimpleName();
 
     private SpeedTestPreferences mPreferences;
+    private String mDisabledValue;
 
     @Override
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
         mPreferences = SpeedTestPreferences.getInstance(context);
+        mDisabledValue = context.getString(R.string.speed_test_disabled);
     }
 
     @Override
@@ -57,11 +60,14 @@ class UploadSpeedTestDataSource implements NetMonDataSource {
         Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues();
 
-        if (!mPreferences.isEnabled()) return values;
-        SpeedTestUploadConfig uploadConfig = mPreferences.getUploadConfig();
-        if (!uploadConfig.isValid()) return values;
-        SpeedTestResult result = SpeedTestUpload.upload(uploadConfig);
-        if (result.status == SpeedTestStatus.SUCCESS) values.put(NetMonColumns.UPLOAD_SPEED, result.getSpeedMbps());
+        if (mPreferences.isEnabled()) {
+            SpeedTestUploadConfig uploadConfig = mPreferences.getUploadConfig();
+            if (!uploadConfig.isValid()) return values;
+            SpeedTestResult result = SpeedTestUpload.upload(uploadConfig);
+            if (result.status == SpeedTestStatus.SUCCESS) values.put(NetMonColumns.UPLOAD_SPEED, String.format("%.3f", result.getSpeedMbps()));
+        } else {
+            values.put(NetMonColumns.UPLOAD_SPEED, mDisabledValue);
+        }
         return values;
     }
 }
