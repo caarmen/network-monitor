@@ -46,6 +46,11 @@
             android:inputType="textPassword"
             android:key="PREF_SPEED_TEST_UPLOAD_PASSWORD"
             android:title="@string/pref_title_speed_test_upload_password" />
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+            android:defaultValue="/"
+            android:icon="@drawable/ic_pref_folder"
+            android:key="PREF_SPEED_TEST_UPLOAD_PATH"
+            android:title="@string/pref_title_speed_test_upload_path" />
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -32,13 +32,15 @@ public class SpeedTestUploadConfig {
     final int port;
     final String user;
     final String password;
+    final String path;
     final File file;
 
-    public SpeedTestUploadConfig(String server, int port, String user, String password, File file) {
+    public SpeedTestUploadConfig(String server, int port, String user, String password, String path, File file) {
         this.server = server;
         this.port = port;
         this.user = user;
         this.password = password;
+        this.path = path;
         this.file = file;
     }
 
@@ -51,7 +53,8 @@ public class SpeedTestUploadConfig {
 
     @Override
     public String toString() {
-        return SpeedTestUploadConfig.class.getSimpleName() + " [server=" + server + ", port=" + port + ", user=" + user + ", file=" + file + "]";
+        return SpeedTestUploadConfig.class.getSimpleName() + " [server=" + server + ", port=" + port + ", user=" + user + ", path=" + path + ", file=" + file
+                + "]";
     }
 
 }

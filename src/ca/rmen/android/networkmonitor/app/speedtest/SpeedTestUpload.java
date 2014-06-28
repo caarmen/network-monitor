@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.net.SocketException;
 
 import android.net.TrafficStats;
+import android.text.TextUtils;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
@@ -60,6 +61,10 @@ public class SpeedTestUpload {
             if (!ftp.login(uploadConfig.user, uploadConfig.password)) {
                 ftp.disconnect();
                 return new SpeedTestResult(0, 0, 0, SpeedTestStatus.AUTH_FAILURE);
+            }
+            if (!TextUtils.isEmpty(uploadConfig.path) && !ftp.changeWorkingDirectory(uploadConfig.path)) {
+                Log.v(TAG, "Upload: could not change path to " + uploadConfig.path);
+                return new SpeedTestResult(0, 0, 0, SpeedTestStatus.INVALID_FILE);
             }
             long before = System.currentTimeMillis();
             long txBytesBefore = TrafficStats.getTotalTxBytes();

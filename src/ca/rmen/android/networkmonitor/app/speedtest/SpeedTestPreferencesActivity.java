@@ -67,6 +67,7 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
         updatePreferenceSummary(SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_SERVER, R.string.pref_summary_speed_test_upload_server);
         updatePreferenceSummary(SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_PORT, R.string.pref_summary_speed_test_upload_port);
         updatePreferenceSummary(SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_USER, R.string.pref_summary_speed_test_upload_user);
+        updatePreferenceSummary(SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_PATH, R.string.pref_summary_speed_test_upload_path);
     }
 
     @Override
@@ -126,6 +127,8 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
                 updatePreferenceSummary(SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_PORT, R.string.pref_summary_speed_test_upload_port);
             } else if (SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_USER.equals(key)) {
                 updatePreferenceSummary(SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_USER, R.string.pref_summary_speed_test_upload_user);
+            } else if (SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_PATH.equals(key)) {
+                updatePreferenceSummary(SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_PATH, R.string.pref_summary_speed_test_upload_path);
             }
         }
     };
