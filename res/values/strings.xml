@@ -70,6 +70,7 @@
 	<string name="speed_test_disabled">Disabled</string>
 	<string name="speed_test_good_enough">Good enough!</string>
 	<string name="speed_test_play_store">I want more&#8230;</string>
+	<string name="speed_test_about_file">file:///android_asset/speed_test_about.html</string>
 
     <string name="unknown">N/A</string>
 

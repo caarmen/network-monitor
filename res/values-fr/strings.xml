@@ -70,5 +70,6 @@
 	<string name="speed_test_disabled">Désactivé</string>
 	<string name="speed_test_good_enough">Très bien !</string>
 	<string name="speed_test_play_store">J\'en veux +&#8230;</string>
+	<string name="speed_test_about_file">file:///android_asset/speed_test_about-fr.html</string>
 
 </resources>

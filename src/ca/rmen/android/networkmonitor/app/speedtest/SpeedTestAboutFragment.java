@@ -44,10 +44,10 @@ public class SpeedTestAboutFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_speed_test_about, container, false);
-        WebView wvCredits = (WebView) rootView.findViewById(R.id.webview);
-        wvCredits.setBackgroundColor(0);
-        wvCredits.getSettings().setDefaultFontSize(14);
-        wvCredits.loadUrl("file:///android_asset/speed_test_about.html");
+        WebView wv = (WebView) rootView.findViewById(R.id.webview);
+        wv.setBackgroundColor(0);
+        wv.getSettings().setDefaultFontSize(14);
+        wv.loadUrl(getString(R.string.speed_test_about_file));
         return rootView;
     }
 
