@@ -39,6 +39,7 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
+import ca.rmen.android.networkmonitor.util.FileUtil;
 import ca.rmen.android.networkmonitor.util.Log;
 
 public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD (use default)
@@ -110,6 +111,7 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
                 }
 
             } else if (SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL.equals(key)) {
+                FileUtil.clearCache(SpeedTestPreferencesActivity.this);
                 download();
             } else if (SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_SERVER.equals(key)) {
                 updatePreferenceSummary(SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_SERVER, R.string.pref_summary_speed_test_upload_server);

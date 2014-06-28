@@ -51,7 +51,7 @@ public class SpeedTestUploadConfig {
 
     @Override
     public String toString() {
-        return SpeedTestUploadConfig.class.getSimpleName() + " [server=" + server + ", port=" + port + ", user=" + user + ", password=" + password + "]";
+        return SpeedTestUploadConfig.class.getSimpleName() + " [server=" + server + ", port=" + port + ", user=" + user + ", file=" + file + "]";
     }
 
 }

@@ -27,8 +27,9 @@ import java.io.File;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Environment;
 import android.preference.PreferenceManager;
+
+import ca.rmen.android.networkmonitor.util.FileUtil;
 
 /**
  * Convenience methods for getting/setting shared preferences related to the speed test.
@@ -71,29 +72,18 @@ public class SpeedTestPreferences {
         mSharedPrefs.edit().putBoolean(PREF_SPEED_TEST_ENABLED, enabled).commit();
     }
 
-    private File getFile() {
-        if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
-            File cacheDir = mContext.getExternalCacheDir();
-            if (cacheDir.exists()) {
-                return new File(cacheDir, FILE);
-            }
-        }
-        File cacheDir = mContext.getCacheDir();
-        return new File(cacheDir, FILE);
-    }
-
     public SpeedTestUploadConfig getUploadConfig() {
         String server = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_SERVER, "");
         int port = getIntPreference(PREF_SPEED_TEST_UPLOAD_PORT, PREF_SPEED_TEST_DEFAULT_UPLOAD_PORT);
         String user = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_USER, "");
         String password = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_PASSWORD, "");
-        File file = getFile();
+        File file = FileUtil.getCacheFile(mContext, FILE);
         return new SpeedTestUploadConfig(server, port, user, password, file);
     }
 
     public SpeedTestDownloadConfig getDownloadConfig() {
         String url = mSharedPrefs.getString(PREF_SPEED_TEST_DOWNLOAD_URL, "");
-        File file = getFile();
+        File file = FileUtil.getCacheFile(mContext, FILE);
         return new SpeedTestDownloadConfig(url, file);
     }
 
