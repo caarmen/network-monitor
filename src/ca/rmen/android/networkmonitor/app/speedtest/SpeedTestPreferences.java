@@ -29,15 +29,19 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.util.FileUtil;
+import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Convenience methods for getting/setting shared preferences related to the speed test.
  */
 public class SpeedTestPreferences {
 
-    public static final String FILE = "speedtest";
+    private static final String TAG = Constants.TAG + SpeedTestPreferences.class.getSimpleName();
+    private static final String FILE = "speedtest";
     private final Context mContext;
+
 
     static final String PREF_SPEED_TEST_ENABLED = "PREF_SPEED_TEST_ENABLED";
     static final String PREF_SPEED_TEST_DOWNLOAD_URL = "PREF_SPEED_TEST_DOWNLOAD_URL";
@@ -46,6 +50,7 @@ public class SpeedTestPreferences {
     static final String PREF_SPEED_TEST_UPLOAD_USER = "PREF_SPEED_TEST_UPLOAD_USER";
     static final String PREF_SPEED_TEST_UPLOAD_PASSWORD = "PREF_SPEED_TEST_UPLOAD_PASSWORD";
     private static final String PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT = "PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT";
+    private static final String PREF_HAS_BEEN_ENABLED = "PREF_HAS_BEEN_ENABLED";
 
     private static final String PREF_SPEED_TEST_DEFAULT_UPLOAD_PORT = "21";
 
@@ -69,7 +74,17 @@ public class SpeedTestPreferences {
     }
 
     void setEnabled(boolean enabled) {
+        Log.v(TAG, "setEnabled " + enabled);
         mSharedPrefs.edit().putBoolean(PREF_SPEED_TEST_ENABLED, enabled).commit();
+    }
+
+    void setHasBeenEnabled() {
+        Log.v(TAG, "setHasBeenEnabled");
+        mSharedPrefs.edit().putBoolean(PREF_HAS_BEEN_ENABLED, true).commit();
+    }
+
+    public boolean hasBeenEnabled() {
+        return mSharedPrefs.getBoolean(PREF_HAS_BEEN_ENABLED, false);
     }
 
     public SpeedTestUploadConfig getUploadConfig() {
@@ -87,11 +102,12 @@ public class SpeedTestPreferences {
         return new SpeedTestDownloadConfig(url, file);
     }
 
-    SpeedTestResult getLastDownloadResult() {
+    public SpeedTestResult getLastDownloadResult() {
         return SpeedTestResult.read(mSharedPrefs, PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT);
     }
 
     public void setLastDownloadResult(SpeedTestResult result) {
+        Log.v(TAG, "setLastDownloadResult " + result);
         result.write(mSharedPrefs, PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT);
     }
 

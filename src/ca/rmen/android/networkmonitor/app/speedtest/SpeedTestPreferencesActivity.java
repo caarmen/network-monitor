@@ -24,6 +24,9 @@
  */
 package ca.rmen.android.networkmonitor.app.speedtest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -37,15 +40,17 @@ import android.preference.PreferenceManager;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
+import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.FileUtil;
 import ca.rmen.android.networkmonitor.util.Log;
 
 public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + SpeedTestPreferencesActivity.class.getSimpleName();
 
-    private SpeedTestPreferences mPrefs;
+    private SpeedTestPreferences mSpeedTestPrefs;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -54,8 +59,8 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.speed_test_preferences, false);
         addPreferencesFromResource(R.xml.speed_test_preferences);
-        mPrefs = SpeedTestPreferences.getInstance(this);
-        SpeedTestResult result = mPrefs.getLastDownloadResult();
+        mSpeedTestPrefs = SpeedTestPreferences.getInstance(this);
+        SpeedTestResult result = mSpeedTestPrefs.getLastDownloadResult();
         if (result.status != SpeedTestStatus.SUCCESS) download();
         else
             updateDownloadUrlPreferenceSummary();
@@ -82,12 +87,12 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
         Log.v(TAG, "onStop");
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
         super.onStop();
-        boolean speedTestEnabled = mPrefs.isEnabled();
+        boolean speedTestEnabled = mSpeedTestPrefs.isEnabled();
         // If the user enabled the speed test, make sure we have enough info.
         if (speedTestEnabled) {
-            SpeedTestDownloadConfig downloadConfig = mPrefs.getDownloadConfig();
+            SpeedTestDownloadConfig downloadConfig = mSpeedTestPrefs.getDownloadConfig();
             if (!downloadConfig.isValid()) {
-                mPrefs.setEnabled(false);
+                mSpeedTestPrefs.setEnabled(false);
                 Intent intent = new Intent(PreferenceFragmentActivity.ACTION_SHOW_INFO_DIALOG);
                 intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_TITLE, getString(R.string.speed_test_missing_info_dialog_title));
                 intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_MESSAGE, getString(R.string.speed_test_missing_info_dialog_message));
@@ -102,6 +107,8 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
             Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
             if (SpeedTestPreferences.PREF_SPEED_TEST_ENABLED.equals(key)) {
                 if (sharedPreferences.getBoolean(key, false)) {
+                    mSpeedTestPrefs.setHasBeenEnabled();
+                    addSelectedColumns();
                     // We can't show a dialog directly here because we're a PreferenceActivity.
                     // We use this convoluted hack to ask the PreferenceFragmentActivity to show the dialog for us.
                     Intent intent = new Intent(PreferenceFragmentActivity.ACTION_SHOW_WARNING_DIALOG);
@@ -123,6 +130,25 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
         }
     };
 
+    /**
+     * Make sure the speed test columns are in the list of selected columns.
+     */
+    private void addSelectedColumns() {
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                NetMonPreferences prefs = NetMonPreferences.getInstance(SpeedTestPreferencesActivity.this);
+                List<String> selectedColumns = new ArrayList<String>(prefs.getSelectedColumns());
+                if (!selectedColumns.contains(NetMonColumns.UPLOAD_SPEED)) selectedColumns.add(NetMonColumns.UPLOAD_SPEED);
+                if (!selectedColumns.contains(NetMonColumns.DOWNLOAD_SPEED)) selectedColumns.add(NetMonColumns.DOWNLOAD_SPEED);
+                prefs.setSelectedColumns(selectedColumns);
+                return null;
+            }
+        }.execute();
+
+    }
+
     private void updatePreferenceSummary(CharSequence key, int summaryResId) {
         @SuppressWarnings("deprecation")
         Preference pref = getPreferenceManager().findPreference(key);
@@ -136,9 +162,9 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
     }
 
     private void updateDownloadUrlPreferenceSummary() {
-        SpeedTestResult result = mPrefs.getLastDownloadResult();
+        SpeedTestResult result = mSpeedTestPrefs.getLastDownloadResult();
         String size = result.status == SpeedTestStatus.SUCCESS ? String.format("%.3f", (float) result.bytes / 1000000) : "?";
-        String url = mPrefs.getDownloadConfig().url;
+        String url = mSpeedTestPrefs.getDownloadConfig().url;
         String summary = getString(R.string.pref_summary_speed_test_download_url, url, size);
         @SuppressWarnings("deprecation")
         Preference pref = getPreferenceManager().findPreference(SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL);
@@ -146,7 +172,7 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
     }
 
     private void download() {
-        final SpeedTestDownloadConfig config = mPrefs.getDownloadConfig();
+        final SpeedTestDownloadConfig config = mSpeedTestPrefs.getDownloadConfig();
         new AsyncTask<Void, Void, Void>() {
             Preference mPref;
 
@@ -162,7 +188,7 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
             @Override
             protected Void doInBackground(Void... params) {
                 SpeedTestResult result = SpeedTestDownload.download(config);
-                mPrefs.setLastDownloadResult(result);
+                mSpeedTestPrefs.setLastDownloadResult(result);
                 return null;
             }
 

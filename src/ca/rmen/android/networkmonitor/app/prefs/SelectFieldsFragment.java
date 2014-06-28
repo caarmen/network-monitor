@@ -23,9 +23,11 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
@@ -33,6 +35,7 @@ import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 
 public class SelectFieldsFragment extends ListFragment {
@@ -46,7 +49,7 @@ public class SelectFieldsFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
         Activity activity = getActivity();
         // Build the list of choices for the user.  Look up the friendly label of each column name, and pre-select the one the user chose last time.
-        final String[] columnLabels = NetMonColumns.getColumnLabels(activity);
+        String[] columnLabels = getColumnLabelsToDisplay(activity);
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(activity, android.R.layout.simple_list_item_multiple_choice, columnLabels);
         setListAdapter(adapter);
         ListView lv = getListView();
@@ -65,6 +68,27 @@ public class SelectFieldsFragment extends ListFragment {
         super.onListItemClick(l, v, position, id);
         Activity activity = getActivity();
         if (activity instanceof SelectFieldsFragmentListener) ((SelectFieldsFragmentListener) activity).onListItemClick(l, v, position, id);
+    }
+
+    /**
+     * @return the list of columns which should be visible to the user.
+     */
+    private static String[] getColumnLabelsToDisplay(Context context) {
+        final String[] alllColumnNames = NetMonColumns.getColumnNames(context);
+        List<String> columnLabelsToDisplay = new ArrayList<String>();
+        for (String columnName : alllColumnNames) {
+            String columnLabel = NetMonColumns.getColumnLabel(context, columnName);
+            // Special case for speed test: We don't want to show the speed test columns
+            // unless the user has activated the speed test at least once.
+            if (NetMonColumns.DOWNLOAD_SPEED.equals(columnName) || NetMonColumns.UPLOAD_SPEED.equals(columnName)) {
+                if (SpeedTestPreferences.getInstance(context).hasBeenEnabled()) columnLabelsToDisplay.add(columnLabel);
+            } else {
+                columnLabelsToDisplay.add(columnLabel);
+            }
+        }
+        String[] result = new String[columnLabelsToDisplay.size()];
+        columnLabelsToDisplay.toArray(result);
+        return result;
     }
 
 
