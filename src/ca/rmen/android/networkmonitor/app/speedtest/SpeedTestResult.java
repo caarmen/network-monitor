@@ -39,7 +39,10 @@ public class SpeedTestResult {
     }
 
     public float getSpeedMbps() {
-        return bytes * 8000 / transferTime;
+        float seconds = (float) transferTime / 1000;
+        long bits = bytes * 8;
+        float megabits = (float) bits / 1000000;
+        return megabits / seconds;
     }
 
     @Override
