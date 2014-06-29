@@ -77,7 +77,7 @@ public class EmailPreferences {
     }
 
     public static final String PREF_EMAIL_REPORTS = "PREF_EMAIL_REPORTS";
-    public static final String PREF_EMAIL_INTERVAL = "PREF_EMAIL_INTERVAL";
+    static final String PREF_EMAIL_INTERVAL = "PREF_EMAIL_INTERVAL";
     static final String PREF_EMAIL_REPORT_FORMATS = "PREF_EMAIL_REPORT_FORMATS";
     static final String PREF_EMAIL_SERVER = "PREF_EMAIL_SERVER";
     static final String PREF_EMAIL_PORT = "PREF_EMAIL_PORT";
@@ -92,7 +92,7 @@ public class EmailPreferences {
     private static EmailPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
 
-    public static synchronized EmailPreferences getInstance(Context context) {
+    static synchronized EmailPreferences getInstance(Context context) {
         if (INSTANCE == null) {
             INSTANCE = new EmailPreferences(context);
         }

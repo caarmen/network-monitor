@@ -32,6 +32,7 @@ import android.webkit.WebView;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -43,6 +44,7 @@ public class SpeedTestAboutFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.v(TAG, "onCreateView");
         View rootView = inflater.inflate(R.layout.fragment_speed_test_about, container, false);
         WebView wv = (WebView) rootView.findViewById(R.id.webview);
         wv.setBackgroundColor(0);

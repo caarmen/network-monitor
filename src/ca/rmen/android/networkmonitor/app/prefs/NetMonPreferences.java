@@ -54,7 +54,7 @@ public class NetMonPreferences {
     };
 
 
-    public static final String PREF_TEST_SERVER = "PREF_TEST_SERVER";
+    static final String PREF_TEST_SERVER = "PREF_TEST_SERVER";
     public static final String PREF_UPDATE_INTERVAL = "PREF_UPDATE_INTERVAL";
     public static final String PREF_UPDATE_INTERVAL_DEFAULT = "10000";
     public static final String PREF_SERVICE_ENABLED = "PREF_SERVICE_ENABLED";

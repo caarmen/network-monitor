@@ -73,7 +73,6 @@ public class ReportEmailer {
 
     private static final String TAG = Constants.TAG + ReportEmailer.class.getSimpleName();
     private static final String ENCODING = "UTF-8";
-    private static final int PENDING_INTENT_REQUEST_CODE = 123;
     private static final int NOTIFICATION_ID_FAILED_EMAIL = 456;
     private final Context mContext;
 
@@ -314,16 +313,6 @@ public class ReportEmailer {
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(NOTIFICATION_ID_FAILED_EMAIL, notification);
 
-    }
-
-    /**
-     * @return the PendingIntent which is used to plan this Service.
-     */
-    public static PendingIntent getPendingIntent(Context context) {
-        Intent intent = new Intent(context.getApplicationContext(), ReportEmailer.class);
-        PendingIntent pendingIntent = PendingIntent.getService(context.getApplicationContext(), PENDING_INTENT_REQUEST_CODE, intent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
-        return pendingIntent;
     }
 
 }

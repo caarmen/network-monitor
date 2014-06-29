@@ -171,6 +171,7 @@ public class EmailPreferencesActivity extends PreferenceActivity { // NO_UCD (us
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             Log.v(TAG, "onPreferenceChange: preference = " + preference + ", newValue = " + newValue);
             if (EmailPreferences.PREF_EMAIL_REPORT_FORMATS.equals(preference.getKey())) {
+                @SuppressWarnings("unchecked")
                 String valueStr = getSummary((MultiSelectListPreference) preference, (Set<String>) newValue);
                 String summary = getString(R.string.pref_summary_email_report_formats, valueStr);
                 preference.setSummary(summary);
