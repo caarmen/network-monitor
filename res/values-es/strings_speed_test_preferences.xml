@@ -8,7 +8,6 @@
     <string name="pref_category_speed_test_download_settings">PRUEBA DE BAJADA (HTTP)</string>
     <string name="pref_title_speed_test_download_url">URL del fichero a descargar</string>
     <string name="pref_summary_speed_test_download_url">%1$s\n(%2$s Mb)\nArchivo más grande = mayor precisión (y más tráfico de red)</string>
-    <string name="pref_value_speed_test_default_download_url">https://github.com/caarmen/network-monitor/releases/download/netmon-1.12.2/netmon-1.12.2.apk</string>
     <!-- Upload speed test preferences -->
     <string name="pref_category_speed_test_upload_settings">PRUEBA DE SUBIDA (FTP)</string>
     <string name="pref_title_speed_test_upload_server">Nom del servidor</string>

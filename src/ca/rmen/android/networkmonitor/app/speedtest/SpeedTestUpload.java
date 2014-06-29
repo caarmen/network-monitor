@@ -31,9 +31,11 @@ import java.net.SocketException;
 import android.net.TrafficStats;
 import android.text.TextUtils;
 
+import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 
+import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -50,6 +52,10 @@ public class SpeedTestUpload {
         Log.v(TAG, "upload " + uploadConfig);
         if (!uploadConfig.file.exists()) return new SpeedTestResult(0, 0, 0, SpeedTestStatus.INVALID_FILE);
         FTPClient ftp = new FTPClient();
+        if (BuildConfig.DEBUG) {
+            PrintCommandListener printCommandListener = new PrintCommandListener(System.out);
+            ftp.addProtocolCommandListener(printCommandListener);
+        }
         InputStream is = null;
         try {
             ftp.connect(uploadConfig.server, uploadConfig.port);
@@ -71,6 +77,9 @@ public class SpeedTestUpload {
             is = new FileInputStream(uploadConfig.file);
             if (!ftp.storeFile(uploadConfig.file.getName(), is)) {
                 ftp.disconnect();
+                Log.v(TAG,
+                        "Upload: could not store file to " + uploadConfig.path + ". Error code: " + ftp.getReplyCode() + ", error string: "
+                                + ftp.getReplyString());
                 return new SpeedTestResult(0, 0, 0, SpeedTestStatus.FAILURE);
             }
 
