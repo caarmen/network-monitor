@@ -23,18 +23,18 @@
  */
 package ca.rmen.android.networkmonitor.app.speedtest;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.util.Log;
 
-public class SpeedTestAboutActivity extends Activity { // NO_UCD (use default)
+public class SpeedTestAboutActivity extends FragmentActivity { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + SpeedTestAboutActivity.class.getSimpleName();
 
     @Override
@@ -44,7 +44,7 @@ public class SpeedTestAboutActivity extends Activity { // NO_UCD (use default)
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction().add(R.id.container, new SpeedTestAboutFragment()).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.container, new SpeedTestAboutFragment()).commit();
         }
     }
 
