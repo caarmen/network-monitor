@@ -35,6 +35,15 @@ public class SpeedTestUploadConfig {
     final String path;
     final File file;
 
+    /**
+     * @param server the hostname or IP address of the FTP server
+     * @param port the port of the FTP server
+     * @param user the username
+     * @param password the password
+     * @param path the path on the FTP server where we will put the file
+     * @param file the file we will upload
+     * 
+     */
     public SpeedTestUploadConfig(String server, int port, String user, String password, String path, File file) {
         this.server = server;
         this.port = port;

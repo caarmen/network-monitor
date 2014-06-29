@@ -50,28 +50,36 @@ public class SpeedTestUpload {
 
     public static SpeedTestResult upload(SpeedTestUploadConfig uploadConfig) {
         Log.v(TAG, "upload " + uploadConfig);
+        // Make sure we have a file to upload
         if (!uploadConfig.file.exists()) return new SpeedTestResult(0, 0, 0, SpeedTestStatus.INVALID_FILE);
+
         FTPClient ftp = new FTPClient();
+        // For debugging, we'll log all the ftp commands
         if (BuildConfig.DEBUG) {
             PrintCommandListener printCommandListener = new PrintCommandListener(System.out);
             ftp.addProtocolCommandListener(printCommandListener);
         }
         InputStream is = null;
         try {
+            // Open a connection to the FTP server
             ftp.connect(uploadConfig.server, uploadConfig.port);
             int reply = ftp.getReplyCode();
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftp.disconnect();
                 return new SpeedTestResult(0, 0, 0, SpeedTestStatus.FAILURE);
             }
+            // Login to the FTP server
             if (!ftp.login(uploadConfig.user, uploadConfig.password)) {
                 ftp.disconnect();
                 return new SpeedTestResult(0, 0, 0, SpeedTestStatus.AUTH_FAILURE);
             }
+            // Try to change directories
             if (!TextUtils.isEmpty(uploadConfig.path) && !ftp.changeWorkingDirectory(uploadConfig.path)) {
                 Log.v(TAG, "Upload: could not change path to " + uploadConfig.path);
                 return new SpeedTestResult(0, 0, 0, SpeedTestStatus.INVALID_FILE);
             }
+
+            // Upload the file
             long before = System.currentTimeMillis();
             long txBytesBefore = TrafficStats.getTotalTxBytes();
             is = new FileInputStream(uploadConfig.file);
@@ -83,6 +91,7 @@ public class SpeedTestUpload {
                 return new SpeedTestResult(0, 0, 0, SpeedTestStatus.FAILURE);
             }
 
+            // Calculate stats
             long after = System.currentTimeMillis();
             long txBytesAfter = TrafficStats.getTotalTxBytes();
             ftp.logout();
@@ -102,7 +111,6 @@ public class SpeedTestUpload {
                     Log.e(TAG, "upload " + e.getMessage(), e);
                 }
             }
-
         }
     }
 }

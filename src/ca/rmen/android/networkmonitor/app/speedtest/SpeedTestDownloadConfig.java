@@ -31,6 +31,10 @@ public class SpeedTestDownloadConfig {
     final String url;
     final File file;
 
+    /**
+     * @param url the url of the file to download
+     * @param file where we will save the downloaded file.
+     */
     public SpeedTestDownloadConfig(String url, File file) {
         this.url = url;
         this.file = file;

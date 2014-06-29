@@ -30,7 +30,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
@@ -42,6 +41,9 @@ import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestSta
 import ca.rmen.android.networkmonitor.util.FileUtil;
 import ca.rmen.android.networkmonitor.util.Log;
 
+/**
+ * Preferences for the speed test.
+ */
 public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + SpeedTestPreferencesActivity.class.getSimpleName();
 
@@ -73,12 +75,6 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
     }
 
     @Override
-    protected void onPause() {
-        Log.v(TAG, "onPause");
-        super.onPause();
-    }
-
-    @Override
     protected void onStop() {
         Log.v(TAG, "onStop");
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
@@ -101,6 +97,7 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
+            // Show a warning when the user enables the speed test.
             if (SpeedTestPreferences.PREF_SPEED_TEST_ENABLED.equals(key)) {
                 if (sharedPreferences.getBoolean(key, false)) {
                     // We can't show a dialog directly here because we're a PreferenceActivity.
@@ -111,7 +108,10 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
                     startActivity(intent);
                 }
 
-            } else if (SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL.equals(key)) {
+            }
+            // If the user changed the download url, delete the previously downloaded file
+            // and download the new one.
+            else if (SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL.equals(key)) {
                 FileUtil.clearCache(SpeedTestPreferencesActivity.this);
                 download();
             } else if (SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_SERVER.equals(key)) {
@@ -129,15 +129,17 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
     private void updatePreferenceSummary(CharSequence key, int summaryResId) {
         @SuppressWarnings("deprecation")
         Preference pref = getPreferenceManager().findPreference(key);
-        CharSequence value;
-        if (pref instanceof ListPreference) value = ((ListPreference) pref).getEntry();
-        else if (pref instanceof EditTextPreference) value = ((EditTextPreference) pref).getText();
-        else
+        if (pref instanceof EditTextPreference) {
+            CharSequence value = ((EditTextPreference) pref).getText();
+            String summary = getString(summaryResId, value);
+            pref.setSummary(summary);
+        } else
             return;
-        String summary = getString(summaryResId, value);
-        pref.setSummary(summary);
     }
 
+    /**
+     * Update the summary of the url preference, to include the size of the file we last retrieved.
+     */
     private void updateDownloadUrlPreferenceSummary() {
         SpeedTestResult result = mSpeedTestPrefs.getLastDownloadResult();
         String size = result.status == SpeedTestStatus.SUCCESS ? String.format("%.3f", (float) result.fileBytes / 1000000) : "?";
@@ -156,6 +158,10 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
         return beginning + "\u2026" + end;
     }
 
+    /**
+     * Download the file to use for the speed test.
+     * We save the downlaod result so we can update the summary of the url preference to include the file size.
+     */
     private void download() {
         final SpeedTestDownloadConfig config = mSpeedTestPrefs.getDownloadConfig();
         new AsyncTask<Void, Void, Void>() {

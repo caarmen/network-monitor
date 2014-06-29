@@ -37,6 +37,12 @@ public class SpeedTestResult {
     public final long transferTime;
     public final SpeedTestStatus status;
 
+    /**
+     * @param totalBytes the total bytes transferred (either received or sent) during the time the file was being transferred.
+     * @param fileBytes the size of the file which was transferred
+     * @param transferTime the time in milliseconds it took to transfer the file
+     * @param status the result of the file transfer
+     */
     public SpeedTestResult(long totalBytes, long fileBytes, long transferTime, SpeedTestStatus status) {
         this.totalBytes = totalBytes;
         this.fileBytes = fileBytes;

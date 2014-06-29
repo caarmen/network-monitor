@@ -51,7 +51,6 @@ public class SpeedTestPreferences {
     static final String PREF_SPEED_TEST_UPLOAD_PASSWORD = "PREF_SPEED_TEST_UPLOAD_PASSWORD";
     static final String PREF_SPEED_TEST_UPLOAD_PATH = "PREF_SPEED_TEST_UPLOAD_PATH";
     private static final String PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT = "PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT";
-    private static final String PREF_HAS_BEEN_ENABLED = "PREF_HAS_BEEN_ENABLED";
 
     private static final String PREF_SPEED_TEST_DEFAULT_UPLOAD_PORT = "21";
     private static final String PREF_SPEED_TEST_DEFAULT_UPLOAD_PATH = "/";
@@ -78,10 +77,6 @@ public class SpeedTestPreferences {
     void setEnabled(boolean enabled) {
         Log.v(TAG, "setEnabled " + enabled);
         mSharedPrefs.edit().putBoolean(PREF_SPEED_TEST_ENABLED, enabled).commit();
-    }
-
-    public boolean hasBeenEnabled() {
-        return mSharedPrefs.getBoolean(PREF_HAS_BEEN_ENABLED, false);
     }
 
     public SpeedTestUploadConfig getUploadConfig() {
