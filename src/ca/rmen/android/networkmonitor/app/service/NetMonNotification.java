@@ -47,7 +47,7 @@ public class NetMonNotification {
     private static final String ACTION_DISABLE = PREFIX + "ACTION_DISABLE";
     private static final int NOTIFICATION_ID_FAILED_EMAIL = 456;
     private static final int NOTIFICATION_ID_FAILED_TEST = 567;
-    static final int ONGOING_NOTIFICATION_ID = 1;
+    static final int NOTIFICATION_ID_ONGOING = 1;
 
     /**
      * A notification which has the following functionalities:
@@ -73,11 +73,13 @@ public class NetMonNotification {
         return notification;
     }
 
-    static void dismissOngoingNotification(Context context) {
+    static void dismissNotifications(Context context) {
         Log.v(TAG, "dismissNotification");
         context.unregisterReceiver(sDisableBroadcastReceiver);
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(ONGOING_NOTIFICATION_ID);
+        notificationManager.cancel(NOTIFICATION_ID_ONGOING);
+        notificationManager.cancel(NOTIFICATION_ID_FAILED_EMAIL);
+        notificationManager.cancel(NOTIFICATION_ID_FAILED_TEST);
     }
 
     public static void showEmailFailureNotification(Context context) {

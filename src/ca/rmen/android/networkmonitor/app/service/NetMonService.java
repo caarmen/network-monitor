@@ -70,7 +70,7 @@ public class NetMonService extends Service {
 
         // Show our ongoing notification
         Notification notification = NetMonNotification.createOngoingNotification(this);
-        startForeground(NetMonNotification.ONGOING_NOTIFICATION_ID, notification);
+        startForeground(NetMonNotification.NOTIFICATION_ID_ONGOING, notification);
 
         // Prepare our data sources
         mDataSources = new NetMonDataSources();
@@ -94,7 +94,7 @@ public class NetMonService extends Service {
         Log.v(TAG, "onDestroy");
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mSharedPreferenceListener);
         mDataSources.onDestroy();
-        NetMonNotification.dismissOngoingNotification(this);
+        NetMonNotification.dismissNotifications(this);
         mScheduler.onDestroy();
         super.onDestroy();
     }
