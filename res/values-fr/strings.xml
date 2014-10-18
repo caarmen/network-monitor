@@ -64,7 +64,7 @@
 
 	<!-- Strings for the notification about a failed test -->
 	<string name="warning_notification_ticker_test_failed">Test de connexion echoué.</string>
-	<string name="warning_notification_message_test_failed">Il y a un problème avec la connexion de données.</string>
+	<string name="warning_notification_message_test_failed">Problème avec la connexion de données.</string>
 
 	<!-- Speed test strings -->
     <string name="speed_test_warning_title">Attention !</string>
