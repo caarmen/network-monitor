@@ -24,12 +24,18 @@
 package ca.rmen.android.networkmonitor.util;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.os.Build;
+import android.provider.Settings;
+import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import ca.rmen.android.networkmonitor.util.Log;
 
 public class TelephonyUtil {
     private static final String TAG = TelephonyUtil.class.getSimpleName();
@@ -38,7 +44,7 @@ public class TelephonyUtil {
 
     /**
      * Returns a TelephonyManager int constant as a string. For example, for {@link TelephonyManager#DATA_CONNECTED}, this returns the string "CONNECTED".
-     * 
+     *
      * @param fieldPrefix the prefix of the TelephonyManager field name. For example, for {@link TelephonyManager#DATA_CONNECTED}, this should be "DATA"
      * @param excludePrefix in most cases this can be null. However, in the case of {@link TelephonyManager#DATA_CONNECTED}, we need to set exclude prefix to
      *            "DATA_ACTIVITY" to make sure we don't return OUT, as DATA_ACTIVITY_OUT has the same value as DATA_CONNECTED.
@@ -84,5 +90,59 @@ public class TelephonyUtil {
         String mcc = mccMnc.substring(0, 3);
         String mnc = mccMnc.substring(3);
         return new String[] { mcc, mnc };
+    }
+
+    /**
+     * @return true if the device is in airplane mode
+     */
+    public static boolean isAirplaneModeOn(Context context) {
+        if (Build.VERSION.SDK_INT < 17) return isAirplaneModeOnDeprecated(context);
+        else
+            return isAirplaneModeOnApi17(context);
+    }
+
+    private static boolean isAirplaneModeOnDeprecated(Context context) {
+        try {
+            @SuppressWarnings("deprecation")
+            int isAirplaneModeOnDeprecated = Settings.System.getInt(context.getContentResolver(), Settings.System.AIRPLANE_MODE_ON);
+            return isAirplaneModeOnDeprecated == 1;
+        } catch (SettingNotFoundException e) {
+            // Verbose warning instead of error, because we don't want this polluting the logs.
+            Log.v(TAG, "Could not determine if we're in airplane mode", e);
+            return false;
+        }
+    }
+
+    @TargetApi(17)
+    private static boolean isAirplaneModeOnApi17(Context context) {
+        try {
+            int isAirplaneModeOn = Settings.Global.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON);
+            return isAirplaneModeOn == 1;
+        } catch (SettingNotFoundException e) {
+            // Verbose warning instead of error, because we don't want this polluting the logs.
+            Log.v(TAG, "Could not determine if we're in airplane mode in API level 17+", e);
+            return false;
+        }
+
+    }
+
+    /**
+     * @return true if mobile data is enabled (regardless of whether or not mobile data is being used).
+     */
+    public static boolean isMobileDataEnabled(Context context) {
+        // http://stackoverflow.com/questions/12806709/android-how-to-tell-if-mobile-network-data-is-enabled-or-disabled-even-when
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        try {
+            Class<?> cmClass = Class.forName(cm.getClass().getName());
+            Method method = cmClass.getDeclaredMethod("getMobileDataEnabled");
+            method.setAccessible(true); // Make the method callable
+            // get the setting for "mobile data"
+            boolean mobileDataEnabled = (Boolean) method.invoke(cm);
+            return mobileDataEnabled;
+        } catch (Exception e) {
+            // Verbose warning instead of error, because we don't want this polluting the logs.
+            Log.v(TAG, "Could not determine if we have mobile data enabled", e);
+            return true;
+        }
     }
 }

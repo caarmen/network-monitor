@@ -37,12 +37,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
+import ca.rmen.android.networkmonitor.util.TelephonyUtil;
 
 /**
  * Performs network connection tests and provides the results of each test.
@@ -58,7 +61,7 @@ class ConnectionTesterDataSource implements NetMonDataSource {
     private static final int PORT = 80;
     private static final int DURATION_SLOW = 5000;
 
-    // The maximum connection and read timeout for a connection test, in ms.  We may actually set a lower timeout if the user has set the app to test very frequently (ex: every 10 seconds). 
+    // The maximum connection and read timeout for a connection test, in ms.  We may actually set a lower timeout if the user has set the app to test very frequently (ex: every 10 seconds).
     private static final int MAX_TIMEOUT_PER_TEST = 15000;
 
     private static final String HTTP_GET = "GET / HTTP/1.1\r\n\r\n";
@@ -101,17 +104,22 @@ class ConnectionTesterDataSource implements NetMonDataSource {
     public ContentValues getContentValues() {
         Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues(2);
-        values.put(NetMonColumns.SOCKET_CONNECTION_TEST, getSocketTestResult().name());
-        values.put(NetMonColumns.HTTP_CONNECTION_TEST, getHttpTestResult().name());
+        NetworkTestResult socketTestResult = getSocketTestResult();
+        NetworkTestResult httpTestResult = getHttpTestResult();
+        values.put(NetMonColumns.SOCKET_CONNECTION_TEST, socketTestResult.name());
+        values.put(NetMonColumns.HTTP_CONNECTION_TEST, httpTestResult.name());
+        if ((socketTestResult == NetworkTestResult.FAIL || httpTestResult == NetworkTestResult.FAIL) && shouldHaveDataConnection()) {
+            Log.v(TAG, "A connection test failed even though we expect to have a data connection");
+        }
         return values;
     }
 
     /**
      * Try to open a connection to an HTTP server, and execute a simple GET request. If we can read a response to the GET request, we consider that the network
      * is up. This test uses a basic socket connection.
-     * 
+     *
      * @return
-     * 
+     *
      * @return {@link NetworkTestResult#PASS} if we were able to read a response to a GET request quickly, {@link NetworkTestResult#FAIL} if any error occurred
      *         trying to execute the GET, or {@link NetworkTestResult#SLOW} if we were able to read a response, but it took too long.
      */
@@ -170,9 +178,9 @@ class ConnectionTesterDataSource implements NetMonDataSource {
     /**
      * Try to open a connection to an HTTP server, and execute a simple GET request. If we can read a response to the GET request, we consider that the network
      * is up. This test uses an HttpURLConnection.
-     * 
+     *
      * @return
-     * 
+     *
      * @return {@link NetworkTestResult#PASS} if we were able to read a response to a GET request quickly, {@link NetworkTestResult#FAIL} if any error occurred
      *         trying to execute the GET, or {@link NetworkTestResult#SLOW} if we were able to read a response, but it took too long.
      */
@@ -219,7 +227,7 @@ class ConnectionTesterDataSource implements NetMonDataSource {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             // Issue #20: We should respect the testing interval.  We shouldn't wait for more than this interval for
-            // the connection tests to timeout.  
+            // the connection tests to timeout.
             if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
                 String valueStr = sharedPreferences.getString(key, NetMonPreferences.PREF_UPDATE_INTERVAL_DEFAULT);
                 int updateInterval = Integer.valueOf(valueStr);
@@ -228,4 +236,23 @@ class ConnectionTesterDataSource implements NetMonDataSource {
             }
         }
     };
+
+    /**
+     * @return true if we should have an internet connection
+     */
+    private boolean shouldHaveDataConnection() {
+        // If we're connected to a WiFi access point, we should have an internet connection.
+        WifiManager wifiMgr = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo connectionInfo = wifiMgr.getConnectionInfo();
+        if (connectionInfo != null && connectionInfo.getNetworkId() > -1) return true;
+
+        // If we're in airplane mode, we can't have an Internet connection.
+        if (TelephonyUtil.isAirplaneModeOn(mContext)) return false;
+
+        // We're not on WiFi, and we're not in airplane mode.
+        // Assume we should have Internet access if mobile data is enabled.
+        return TelephonyUtil.isMobileDataEnabled(mContext);
+    }
+
+
 }
