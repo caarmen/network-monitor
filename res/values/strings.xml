@@ -62,6 +62,10 @@
 	<string name="warning_notification_ticker_email_failed">Error sending report</string>
 	<string name="warning_notification_message_email_failed">Could not send the report.</string>
 	
+	<!-- Strings for the notification about a failed test -->
+	<string name="warning_notification_ticker_test_failed">Network test failed</string>
+	<string name="warning_notification_message_test_failed">There is a problem with the data connection.</string>
+	
 	<!-- Speed test strings -->
     <string name="speed_test_warning_title">Warning!</string>
     <string name="speed_test_warning_message">Enabling the speed test will result in significant network traffic (and battery drain).  Don\'t enable it if you have a quota for network traffic!</string>

@@ -62,6 +62,10 @@
 	<string name="warning_notification_ticker_email_failed">Erreur de l\'envoi du rapport</string>
 	<string name="warning_notification_message_email_failed">Impossible d\'envoyer le rapport.</string>
 
+	<!-- Strings for the notification about a failed test -->
+	<string name="warning_notification_ticker_test_failed">Test de connexion echoué.</string>
+	<string name="warning_notification_message_test_failed">Il y a un problème avec la connexion de données.</string>
+
 	<!-- Speed test strings -->
     <string name="speed_test_warning_title">Attention !</string>
     <string name="speed_test_warning_message">Activer le test de vitesse va engendrer beaucoup de trafic réseau (et une consommation de la batterie).  Ne pas l\'activer si vous avez un quota de trafic réseau !</string>

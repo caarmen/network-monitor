@@ -43,6 +43,7 @@ import android.preference.PreferenceManager;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
+import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 import ca.rmen.android.networkmonitor.util.TelephonyUtil;
@@ -110,6 +111,9 @@ class ConnectionTesterDataSource implements NetMonDataSource {
         values.put(NetMonColumns.HTTP_CONNECTION_TEST, httpTestResult.name());
         if ((socketTestResult == NetworkTestResult.FAIL || httpTestResult == NetworkTestResult.FAIL) && shouldHaveDataConnection()) {
             Log.v(TAG, "A connection test failed even though we expect to have a data connection");
+            NetMonNotification.showFailedTestNotification(mContext);
+        } else {
+            NetMonNotification.dismissFailedTestNotification(mContext);
         }
         return values;
     }

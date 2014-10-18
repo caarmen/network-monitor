@@ -46,6 +46,7 @@ public class NetMonNotification {
     private static final String PREFIX = NetMonService.class.getName() + ".";
     private static final String ACTION_DISABLE = PREFIX + "ACTION_DISABLE";
     private static final int NOTIFICATION_ID_FAILED_EMAIL = 456;
+    private static final int NOTIFICATION_ID_FAILED_TEST = 567;
     static final int ONGOING_NOTIFICATION_ID = 1;
 
     /**
@@ -76,7 +77,7 @@ public class NetMonNotification {
         Log.v(TAG, "dismissNotification");
         context.unregisterReceiver(sDisableBroadcastReceiver);
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(NetMonNotification.ONGOING_NOTIFICATION_ID);
+        notificationManager.cancel(ONGOING_NOTIFICATION_ID);
     }
 
     public static void showEmailFailureNotification(Context context) {
@@ -89,12 +90,30 @@ public class NetMonNotification {
         builder.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, EmailPreferencesActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
         Notification notification = builder.build();
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(NetMonNotification.NOTIFICATION_ID_FAILED_EMAIL, notification);
+        notificationManager.notify(NOTIFICATION_ID_FAILED_EMAIL, notification);
     }
 
     public static void dismissEmailFailureNotification(Context context) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(NetMonNotification.NOTIFICATION_ID_FAILED_EMAIL);
+        notificationManager.cancel(NOTIFICATION_ID_FAILED_EMAIL);
+    }
+
+    public static void showFailedTestNotification(Context context) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        builder.setSmallIcon(R.drawable.ic_stat_warning);
+        builder.setAutoCancel(true);
+        builder.setTicker(context.getString(R.string.warning_notification_ticker_test_failed));
+        builder.setContentTitle(context.getString(R.string.app_name));
+        builder.setContentText(context.getString(R.string.warning_notification_message_test_failed));
+        builder.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, LogActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
+        Notification notification = builder.build();
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(NOTIFICATION_ID_FAILED_TEST, notification);
+    }
+
+    public static void dismissFailedTestNotification(Context context) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(NOTIFICATION_ID_FAILED_TEST);
     }
 
     /**

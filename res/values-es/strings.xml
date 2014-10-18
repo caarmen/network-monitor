@@ -62,6 +62,10 @@
 	<string name="warning_notification_ticker_email_failed">Error del envío del informe</string>
 	<string name="warning_notification_message_email_failed">Imposible enviar el informe.</string>
 
+	<!-- Strings for the notification about a failed test -->
+	<string name="warning_notification_ticker_test_failed">La prueba de conexión falló.</string>
+	<string name="warning_notification_message_test_failed">Hay un problema con la conexión de datos.</string>
+
 	<!-- Speed test strings -->
     <string name="speed_test_warning_title">¡Aviso!</string>
     <string name="speed_test_warning_message">Activar la prueba de velocidad acarreará un aumento importante en el tráfico de la red (y consumo de batería). ¡No lo actives si tienes una cuota de tráfico de red!</string>
