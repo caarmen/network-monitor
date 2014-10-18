@@ -81,16 +81,8 @@ public class NetMonNotification {
     }
 
     public static void showEmailFailureNotification(Context context) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        builder.setSmallIcon(R.drawable.ic_stat_warning);
-        builder.setAutoCancel(true);
-        builder.setTicker(context.getString(R.string.warning_notification_ticker_email_failed));
-        builder.setContentTitle(context.getString(R.string.app_name));
-        builder.setContentText(context.getString(R.string.warning_notification_message_email_failed));
-        builder.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, EmailPreferencesActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
-        Notification notification = builder.build();
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(NOTIFICATION_ID_FAILED_EMAIL, notification);
+        showNotification(context, NOTIFICATION_ID_FAILED_EMAIL, R.string.warning_notification_ticker_email_failed,
+                R.string.warning_notification_message_email_failed, EmailPreferencesActivity.class);
     }
 
     public static void dismissEmailFailureNotification(Context context) {
@@ -99,21 +91,34 @@ public class NetMonNotification {
     }
 
     public static void showFailedTestNotification(Context context) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        builder.setSmallIcon(R.drawable.ic_stat_warning);
-        builder.setAutoCancel(true);
-        builder.setTicker(context.getString(R.string.warning_notification_ticker_test_failed));
-        builder.setContentTitle(context.getString(R.string.app_name));
-        builder.setContentText(context.getString(R.string.warning_notification_message_test_failed));
-        builder.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, LogActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
-        Notification notification = builder.build();
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(NOTIFICATION_ID_FAILED_TEST, notification);
+        showNotification(context, NOTIFICATION_ID_FAILED_TEST, R.string.warning_notification_ticker_test_failed,
+                R.string.warning_notification_message_test_failed, LogActivity.class);
     }
 
     public static void dismissFailedTestNotification(Context context) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID_FAILED_TEST);
+    }
+
+    /**
+     * Shows a notification with the given ticker text and content text. The icon is a warning icon, and the notification title is the app name. Tapping on the
+     * notification opens the given activity.
+     */
+    private static void showNotification(Context context, int notificationId, int tickerTextId, int contentTextId, Class<?> activityClass) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        builder.setSmallIcon(R.drawable.ic_stat_warning);
+        builder.setAutoCancel(true);
+        builder.setTicker(context.getString(tickerTextId));
+        builder.setContentTitle(context.getString(R.string.app_name));
+        builder.setContentText(context.getString(contentTextId));
+        builder.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, activityClass), PendingIntent.FLAG_UPDATE_CURRENT));
+        Notification notification = builder.build();
+        notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+        notification.ledARGB = 0xFFffff00;
+        notification.ledOnMS = 300;
+        notification.ledOffMS = 2000;
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(notificationId, notification);
     }
 
     /**
