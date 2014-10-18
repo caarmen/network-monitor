@@ -44,12 +44,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
 
 import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
@@ -63,6 +58,7 @@ import ca.rmen.android.networkmonitor.app.export.FileExport;
 import ca.rmen.android.networkmonitor.app.export.HTMLExport;
 import ca.rmen.android.networkmonitor.app.export.SummaryExport;
 import ca.rmen.android.networkmonitor.app.export.kml.KMLExport;
+import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -73,7 +69,6 @@ public class ReportEmailer {
 
     private static final String TAG = Constants.TAG + ReportEmailer.class.getSimpleName();
     private static final String ENCODING = "UTF-8";
-    private static final int NOTIFICATION_ID_FAILED_EMAIL = 456;
     private final Context mContext;
 
     public ReportEmailer(Context context) {
@@ -163,10 +158,13 @@ public class ReportEmailer {
             transport.connect();
             transport.sendMessage(message, message.getAllRecipients());
             Log.v(TAG, "sent message");
-            success();
+            // The mail was sent file.  Dismiss the e-mail error notification if it's showing.
+            NetMonNotification.dismissEmailFailureNotification(mContext);
+            EmailPreferences.getInstance(mContext).setLastEmailSent(System.currentTimeMillis());
         } catch (MessagingException e) {
             Log.e(TAG, "Could not send mail " + e.getMessage(), e);
-            failure();
+            // There was an error sending the mail. Show an error notification.
+            NetMonNotification.showEmailFailureNotification(mContext);
         } finally {
             try {
                 if (transport != null) transport.close();
@@ -284,35 +282,6 @@ public class ReportEmailer {
         messageBody += reportSummary;
         Log.v(TAG, "getMessageBody, created message body " + messageBody);
         return messageBody;
-    }
-
-    /**
-     * We sent the mail fine. Clear any error notification.
-     */
-    private void success() {
-        Log.v(TAG, "success");
-        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(NOTIFICATION_ID_FAILED_EMAIL);
-        EmailPreferences.getInstance(mContext).setLastEmailSent(System.currentTimeMillis());
-    }
-
-    /**
-     * There was a problem sending the mail. Show an error notification.
-     */
-    private void failure() {
-        Log.v(TAG, "failure");
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
-        builder.setSmallIcon(R.drawable.ic_stat_warning);
-        builder.setAutoCancel(true);
-        builder.setTicker(mContext.getString(R.string.warning_notification_ticker_email_failed));
-        builder.setContentTitle(mContext.getString(R.string.app_name));
-        builder.setContentText(mContext.getString(R.string.warning_notification_message_email_failed));
-        builder.setContentIntent(PendingIntent
-                .getActivity(mContext, 0, new Intent(mContext, EmailPreferencesActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
-        Notification notification = builder.build();
-        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(NOTIFICATION_ID_FAILED_EMAIL, notification);
-
     }
 
 }

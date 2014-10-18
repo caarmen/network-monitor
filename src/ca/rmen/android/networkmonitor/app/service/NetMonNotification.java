@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2014 Benoit 'BoD' Lubek (BoD@JRAF.org) 
+ * Copyright (C) 2014 Benoit 'BoD' Lubek (BoD@JRAF.org)
  * Copyright (C) 2014 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,27 +32,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.app.NotificationCompat;
-import ca.rmen.android.networkmonitor.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.email.EmailPreferencesActivity;
 import ca.rmen.android.networkmonitor.app.log.LogActivity;
 import ca.rmen.android.networkmonitor.app.main.MainActivity;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
+import ca.rmen.android.networkmonitor.util.Log;
 
-/**
- * A notification which has the following functionalities:
- * 1) Tapping on the notification opens the app in the main activity
- * 2) Tapping on the stop button of the notification stops the service
- * 3) Tapping on the logs button of the notification opens the log activity
- */
-class NetMonNotification {
+public class NetMonNotification {
     private static final String TAG = Constants.TAG + NetMonNotification.class.getSimpleName();
     private static final String PREFIX = NetMonService.class.getName() + ".";
     private static final String ACTION_DISABLE = PREFIX + "ACTION_DISABLE";
-    static final int NOTIFICATION_ID = 1;
+    private static final int NOTIFICATION_ID_FAILED_EMAIL = 456;
+    static final int ONGOING_NOTIFICATION_ID = 1;
 
-    static Notification createNotification(Context context) {
+    /**
+     * A notification which has the following functionalities:
+     * 1) Tapping on the notification opens the app in the main activity
+     * 2) Tapping on the stop button of the notification stops the service
+     * 3) Tapping on the logs button of the notification opens the log activity
+     */
+    static Notification createOngoingNotification(Context context) {
         Log.v(TAG, "createNotification");
         context.registerReceiver(sDisableBroadcastReceiver, new IntentFilter(ACTION_DISABLE));
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
@@ -70,11 +72,29 @@ class NetMonNotification {
         return notification;
     }
 
-    static void dismissNotification(Context context) {
+    static void dismissOngoingNotification(Context context) {
         Log.v(TAG, "dismissNotification");
         context.unregisterReceiver(sDisableBroadcastReceiver);
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(NOTIFICATION_ID);
+        notificationManager.cancel(NetMonNotification.ONGOING_NOTIFICATION_ID);
+    }
+
+    public static void showEmailFailureNotification(Context context) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        builder.setSmallIcon(R.drawable.ic_stat_warning);
+        builder.setAutoCancel(true);
+        builder.setTicker(context.getString(R.string.warning_notification_ticker_email_failed));
+        builder.setContentTitle(context.getString(R.string.app_name));
+        builder.setContentText(context.getString(R.string.warning_notification_message_email_failed));
+        builder.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, EmailPreferencesActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
+        Notification notification = builder.build();
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(NetMonNotification.NOTIFICATION_ID_FAILED_EMAIL, notification);
+    }
+
+    public static void dismissEmailFailureNotification(Context context) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(NetMonNotification.NOTIFICATION_ID_FAILED_EMAIL);
     }
 
     /**

@@ -69,8 +69,8 @@ public class NetMonService extends Service {
         mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
         // Show our ongoing notification
-        Notification notification = NetMonNotification.createNotification(this);
-        startForeground(NetMonNotification.NOTIFICATION_ID, notification);
+        Notification notification = NetMonNotification.createOngoingNotification(this);
+        startForeground(NetMonNotification.ONGOING_NOTIFICATION_ID, notification);
 
         // Prepare our data sources
         mDataSources = new NetMonDataSources();
@@ -94,7 +94,7 @@ public class NetMonService extends Service {
         Log.v(TAG, "onDestroy");
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mSharedPreferenceListener);
         mDataSources.onDestroy();
-        NetMonNotification.dismissNotification(this);
+        NetMonNotification.dismissOngoingNotification(this);
         mScheduler.onDestroy();
         super.onDestroy();
     }
