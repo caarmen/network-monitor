@@ -75,7 +75,7 @@ class DeviceLocationDataSource implements NetMonDataSource {
     public void onDestroy() {
         Log.v(TAG, "onDestroy");
         mLocationClient.disconnect();
-        mDeviceLocationDataSourceImpl.onDestroy();
+        if (mDeviceLocationDataSourceImpl != null) mDeviceLocationDataSourceImpl.onDestroy();
     }
 
     /**

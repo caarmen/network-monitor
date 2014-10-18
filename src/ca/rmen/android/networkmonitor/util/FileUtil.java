@@ -40,7 +40,7 @@ public class FileUtil {
     public static File getCacheFile(Context context, String file) {
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             File cacheDir = context.getExternalCacheDir();
-            if (cacheDir.mkdirs() || cacheDir.isDirectory()) {
+            if (cacheDir != null && (cacheDir.mkdirs() || cacheDir.isDirectory())) {
                 return new File(cacheDir, file);
             }
         }
@@ -55,7 +55,7 @@ public class FileUtil {
         Log.v(TAG, "clearCache");
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             File cacheDir = context.getExternalCacheDir();
-            if (cacheDir.isDirectory()) deleteDirContents(cacheDir);
+            if (cacheDir != null && cacheDir.isDirectory()) deleteDirContents(cacheDir);
         }
         File cacheDir = context.getCacheDir();
         deleteDirContents(cacheDir);
