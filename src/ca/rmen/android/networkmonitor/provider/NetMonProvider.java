@@ -217,24 +217,20 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
         db.beginTransaction();
         try {
             int batchSize = 100;
-            ArrayList<ContentProviderResult> resultArr = new ArrayList<ContentProviderResult>();
+            int operationsProcessed = 0;
+            ContentProviderResult[] result = new ContentProviderResult[operations.size()];
             while (!operations.isEmpty()) {
-                ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
-                for (int i = 0; i < batchSize && !operations.isEmpty(); i++) {
+                ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>(batchSize);
+                for (int i = 0; i < batchSize && !operations.isEmpty(); i++)
                     batch.add(operations.remove(0));
-                }
                 Log.v(TAG, "applyBatch of " + batch.size() + " operations");
                 ContentProviderResult[] batchResult = super.applyBatch(batch);
-                if (batchResult != null) {
-                    for (ContentProviderResult element : batchResult)
-                        resultArr.add(element);
-                }
+                System.arraycopy(batchResult, 0, result, operationsProcessed, batchResult.length);
+                operationsProcessed += batch.size();
             }
             db.setTransactionSuccessful();
             for (Uri uri : urisToNotify)
                 getContext().getContentResolver().notifyChange(uri, null);
-            ContentProviderResult[] result = new ContentProviderResult[resultArr.size()];
-            resultArr.toArray(result);
             return result;
         } finally {
             db.endTransaction();
