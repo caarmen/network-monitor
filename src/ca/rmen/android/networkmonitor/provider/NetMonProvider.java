@@ -203,7 +203,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     /**
      * Perform all operations in a single transaction and notify all relevant URIs at the end. The {@link MemberStatsColumns#CONTENT_URI} uri is always notified
      * for a successful transaction.
-     * 
+     *
      * @see android.content.ContentProvider#applyBatch(java.util.ArrayList)
      */
     @Override
@@ -216,10 +216,25 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
         SQLiteDatabase db = mNetworkMonitorDatabase.getWritableDatabase();
         db.beginTransaction();
         try {
-            ContentProviderResult[] result = super.applyBatch(operations);
+            int batchSize = 100;
+            ArrayList<ContentProviderResult> resultArr = new ArrayList<ContentProviderResult>();
+            while (!operations.isEmpty()) {
+                ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
+                for (int i = 0; i < batchSize && !operations.isEmpty(); i++) {
+                    batch.add(operations.remove(0));
+                }
+                Log.v(TAG, "applyBatch of " + batch.size() + " operations");
+                ContentProviderResult[] batchResult = super.applyBatch(batch);
+                if (batchResult != null) {
+                    for (ContentProviderResult element : batchResult)
+                        resultArr.add(element);
+                }
+            }
             db.setTransactionSuccessful();
             for (Uri uri : urisToNotify)
                 getContext().getContentResolver().notifyChange(uri, null);
+            ContentProviderResult[] result = new ContentProviderResult[resultArr.size()];
+            resultArr.toArray(result);
             return result;
         } finally {
             db.endTransaction();
@@ -268,7 +283,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
 
     /**
      * Log the query of the given cursor.
-     * 
+     *
      * @param cursor
      * @param selectionArgs
      */
