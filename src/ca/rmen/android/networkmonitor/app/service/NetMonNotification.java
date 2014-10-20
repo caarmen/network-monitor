@@ -31,6 +31,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
 import ca.rmen.android.networkmonitor.Constants;
@@ -113,9 +115,12 @@ public class NetMonNotification {
         builder.setTicker(context.getString(tickerTextId));
         builder.setContentTitle(context.getString(R.string.app_name));
         builder.setContentText(context.getString(contentTextId));
+        builder.setAutoCancel(false);
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        builder.setSound(uri);
         builder.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, activityClass), PendingIntent.FLAG_UPDATE_CURRENT));
         Notification notification = builder.build();
-        notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+        notification.flags |= Notification.FLAG_SHOW_LIGHTS | Notification.FLAG_ONLY_ALERT_ONCE;
         notification.ledARGB = 0xFFffff00;
         notification.ledOnMS = 300;
         notification.ledOffMS = 2000;
