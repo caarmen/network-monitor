@@ -72,6 +72,7 @@ public class NetMonPreferences {
     public static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
     public static final String PREF_LOCATION_FETCHING_STRATEGY = "PREF_LOCATION_FETCHING_STRATEGY";
     public static final String PREF_NOTIFICATION_RINGTONE = "PREF_NOTIFICATION_RINGTONE";
+    public static final String PREF_NOTIFICATION_ENABLED = "PREF_NOTIFICATION_ENABLED";
 
     private static final String PREF_TEST_SERVER_DEFAULT = "173.194.34.16";
     private static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
@@ -80,7 +81,6 @@ public class NetMonPreferences {
     private static final String PREF_SORT_COLUMN_NAME_DEFAULT = NetMonColumns.TIMESTAMP;
     private static final String PREF_SORT_ORDER_DEFAULT = SortOrder.DESC.name();
     private static final String PREF_FILTER_PREFIX = "PREF_FILTERED_VALUES_";
-    private static final String PREF_NOTIFICATION_ENABLED = "PREF_NOTIFICATION_ENABLED";
 
     private static NetMonPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
@@ -275,7 +275,7 @@ public class NetMonPreferences {
     /**
      * @return true if we should display a warning notification when a network test fails.
      */
-    public boolean showNotificationOnTestFailure() {
+    public boolean getShowNotificationOnTestFailure() {
         return mSharedPrefs.getBoolean(PREF_NOTIFICATION_ENABLED, false);
     }
 

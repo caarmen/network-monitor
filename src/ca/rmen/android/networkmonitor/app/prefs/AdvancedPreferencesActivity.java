@@ -46,6 +46,7 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.LocationFetchingStrategy;
+import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
 import ca.rmen.android.networkmonitor.util.Log;
 
 public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD (use default)
@@ -97,6 +98,9 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
                     Intent intent = new Intent(PreferenceFragmentActivity.ACTION_CHECK_LOCATION_SETTINGS);
                     startActivity(intent);
                 }
+            } else if (NetMonPreferences.PREF_NOTIFICATION_ENABLED.equals(key)) {
+                if (!NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getShowNotificationOnTestFailure())
+                    NetMonNotification.dismissFailedTestNotification(AdvancedPreferencesActivity.this);
             }
         }
     };

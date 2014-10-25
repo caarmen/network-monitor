@@ -95,7 +95,7 @@ public class NetMonNotification {
 
     public static void showFailedTestNotification(Context context) {
         // Only show this notification if the preference is set to enabled.
-        if (NetMonPreferences.getInstance(context).showNotificationOnTestFailure()) {
+        if (NetMonPreferences.getInstance(context).getShowNotificationOnTestFailure()) {
             showNotification(context, NOTIFICATION_ID_FAILED_TEST, R.string.warning_notification_ticker_test_failed,
                     R.string.warning_notification_message_test_failed, LogActivity.class);
         }
