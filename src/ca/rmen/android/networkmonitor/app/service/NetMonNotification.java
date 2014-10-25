@@ -31,7 +31,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
@@ -95,8 +94,11 @@ public class NetMonNotification {
     }
 
     public static void showFailedTestNotification(Context context) {
-        showNotification(context, NOTIFICATION_ID_FAILED_TEST, R.string.warning_notification_ticker_test_failed,
-                R.string.warning_notification_message_test_failed, LogActivity.class);
+        // Only show this notification if the preference is set to enabled.
+        if (NetMonPreferences.getInstance(context).showNotificationOnTestFailure()) {
+            showNotification(context, NOTIFICATION_ID_FAILED_TEST, R.string.warning_notification_ticker_test_failed,
+                    R.string.warning_notification_message_test_failed, LogActivity.class);
+        }
     }
 
     public static void dismissFailedTestNotification(Context context) {
@@ -116,7 +118,7 @@ public class NetMonNotification {
         builder.setContentTitle(context.getString(R.string.app_name));
         builder.setContentText(context.getString(contentTextId));
         builder.setAutoCancel(false);
-        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri uri = NetMonPreferences.getInstance(context).getNotificationSoundUri();
         builder.setSound(uri);
         builder.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, activityClass), PendingIntent.FLAG_UPDATE_CURRENT));
         Notification notification = builder.build();

@@ -59,6 +59,23 @@
             android:summary="@string/pref_summary_location_fetching_strategy"
             android:title="@string/pref_title_location_fetching_strategy" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_notifications" >
+        <org.jraf.android.backport.switchwidget.SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_pref_notification_enabled"
+            android:key="PREF_NOTIFICATION_ENABLED"
+            android:summary="@string/pref_summary_notification_enabled"
+            android:title="@string/pref_title_notification_enabled" />
+
+        <RingtonePreference
+            android:icon="@drawable/ic_pref_notification_ringtone"
+            android:key="PREF_NOTIFICATION_RINGTONE"
+            android:ringtoneType="notification"
+            android:showDefault="true"
+            android:showSilent="true"
+            android:summary="@string/pref_summary_notification_ringtone"
+            android:title="@string/pref_title_notification_ringtone" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_other" >
         <Preference
             android:icon="@drawable/ic_pref_email"

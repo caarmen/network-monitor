@@ -30,6 +30,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
@@ -70,6 +71,7 @@ public class NetMonPreferences {
     public static final String PREF_CELL_ID_FORMAT = "PREF_CELL_ID_FORMAT";
     public static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
     public static final String PREF_LOCATION_FETCHING_STRATEGY = "PREF_LOCATION_FETCHING_STRATEGY";
+    public static final String PREF_NOTIFICATION_RINGTONE = "PREF_NOTIFICATION_RINGTONE";
 
     private static final String PREF_TEST_SERVER_DEFAULT = "173.194.34.16";
     private static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
@@ -78,6 +80,7 @@ public class NetMonPreferences {
     private static final String PREF_SORT_COLUMN_NAME_DEFAULT = NetMonColumns.TIMESTAMP;
     private static final String PREF_SORT_ORDER_DEFAULT = SortOrder.DESC.name();
     private static final String PREF_FILTER_PREFIX = "PREF_FILTERED_VALUES_";
+    private static final String PREF_NOTIFICATION_ENABLED = "PREF_NOTIFICATION_ENABLED";
 
     private static NetMonPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
@@ -267,6 +270,22 @@ public class NetMonPreferences {
     public LocationFetchingStrategy getLocationFetchingStrategy() {
         String value = mSharedPrefs.getString(PREF_LOCATION_FETCHING_STRATEGY, LocationFetchingStrategy.SAVE_POWER.name());
         return LocationFetchingStrategy.valueOf(value);
+    }
+
+    /**
+     * @return true if we should display a warning notification when a network test fails.
+     */
+    public boolean showNotificationOnTestFailure() {
+        return mSharedPrefs.getBoolean(PREF_NOTIFICATION_ENABLED, false);
+    }
+
+    /**
+     * @return the Uri of the sound to play when a notification is created.
+     */
+    public Uri getNotificationSoundUri() {
+        String soundUriStr = mSharedPrefs.getString(PREF_NOTIFICATION_RINGTONE, null);
+        if (TextUtils.isEmpty(soundUriStr)) return null;
+        return Uri.parse(soundUriStr);
     }
 
     private int getIntPreference(String key, String defaultValue) {

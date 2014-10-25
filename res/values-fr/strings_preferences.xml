@@ -26,6 +26,7 @@
     <!-- Advanced preferences-->
     <string name="pref_category_report_content">CONTENU DU RAPPORT</string>
     <string name="pref_category_performance">PERFORMANCE</string>
+    <string name="pref_category_notifications">NOTIFICATIONS</string>
     <string name="pref_title_select_fields">Champs</string>
     <string name="pref_summary_select_fields">Sélectionner les champs pour l\'affichage du journal et l\'export.</string>
     <string name="pref_title_speed_test">Test de vitesse</string>
@@ -51,6 +52,11 @@
     <string name="pref_summary_import">Importer une base de données exportée depuis Network Monitor.</string>
     <string name="pref_title_email">Envoyer des rapports par courriel</string>
     <string name="pref_summary_email">Envoyer périodiquement un rapport en plusieurs formats, par courriel.</string>
+    <string name="pref_title_notification_enabled">Activer les notifications</string>
+    <string name="pref_summary_notification_enabled">Notifier lorsqu\'un test de réseau échoue.</string>
+    <string name="pref_title_notification_ringtone">Sonnerie de la notification</string>
+    <string name="pref_summary_notification_ringtone">%s</string>
+    <string name="pref_value_notification_ringtone_silent">Silencieux</string>
     <!--  Other preferences -->
     <string name="pref_title_filter_record_count">Nombre de lignes à afficher</string>
     <string name="pref_value_filter_record_count_all">Toutes</string>

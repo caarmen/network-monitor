@@ -33,7 +33,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -59,12 +58,10 @@ public class EmailPreferencesActivity extends PreferenceActivity { // NO_UCD (us
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.email_preferences, false);
         addPreferencesFromResource(R.xml.email_preferences);
-        updatePreferenceSummary(EmailPreferences.PREF_EMAIL_INTERVAL, R.string.pref_summary_email_report_interval);
         updatePreferenceSummary(EmailPreferences.PREF_EMAIL_REPORT_FORMATS, R.string.pref_summary_email_report_formats);
         updatePreferenceSummary(EmailPreferences.PREF_EMAIL_RECIPIENTS, R.string.pref_summary_email_recipients);
         updatePreferenceSummary(EmailPreferences.PREF_EMAIL_SERVER, R.string.pref_summary_email_server);
         updatePreferenceSummary(EmailPreferences.PREF_EMAIL_PORT, R.string.pref_summary_email_port);
-        updatePreferenceSummary(EmailPreferences.PREF_EMAIL_SECURITY, R.string.pref_summary_email_security);
         updatePreferenceSummary(EmailPreferences.PREF_EMAIL_USER, R.string.pref_summary_email_user);
         updatePreferenceSummary(EmailPreferences.PREF_EMAIL_LAST_EMAIL_SENT, R.string.pref_summary_email_last_email_sent);
         findPreference(EmailPreferences.PREF_EMAIL_REPORT_FORMATS).setOnPreferenceChangeListener(mOnPreferenceChangeListener);
@@ -108,9 +105,7 @@ public class EmailPreferencesActivity extends PreferenceActivity { // NO_UCD (us
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
-            if (EmailPreferences.PREF_EMAIL_INTERVAL.equals(key)) {
-                updatePreferenceSummary(EmailPreferences.PREF_EMAIL_INTERVAL, R.string.pref_summary_email_report_interval);
-            } else if (EmailPreferences.PREF_EMAIL_RECIPIENTS.equals(key)) {
+            if (EmailPreferences.PREF_EMAIL_RECIPIENTS.equals(key)) {
                 updatePreferenceSummary(EmailPreferences.PREF_EMAIL_RECIPIENTS, R.string.pref_summary_email_recipients);
             } else if (EmailPreferences.PREF_EMAIL_REPORT_FORMATS.equals(key)) {
                 updatePreferenceSummary(EmailPreferences.PREF_EMAIL_REPORT_FORMATS, R.string.pref_summary_email_report_formats);
@@ -118,8 +113,6 @@ public class EmailPreferencesActivity extends PreferenceActivity { // NO_UCD (us
                 updatePreferenceSummary(EmailPreferences.PREF_EMAIL_SERVER, R.string.pref_summary_email_server);
             } else if (EmailPreferences.PREF_EMAIL_PORT.equals(key)) {
                 updatePreferenceSummary(EmailPreferences.PREF_EMAIL_PORT, R.string.pref_summary_email_port);
-            } else if (EmailPreferences.PREF_EMAIL_SECURITY.equals(key)) {
-                updatePreferenceSummary(EmailPreferences.PREF_EMAIL_SECURITY, R.string.pref_summary_email_security);
             } else if (EmailPreferences.PREF_EMAIL_USER.equals(key)) {
                 updatePreferenceSummary(EmailPreferences.PREF_EMAIL_USER, R.string.pref_summary_email_user);
             } else if (EmailPreferences.PREF_EMAIL_LAST_EMAIL_SENT.equals(key)) {
@@ -151,8 +144,7 @@ public class EmailPreferencesActivity extends PreferenceActivity { // NO_UCD (us
                     | DateUtils.FORMAT_SHOW_YEAR);
             else
                 value = getString(R.string.pref_value_email_report_interval_never);
-        } else if (pref instanceof ListPreference) value = ((ListPreference) pref).getEntry();
-        else if (pref instanceof EditTextPreference) value = ((EditTextPreference) pref).getText();
+        } else if (pref instanceof EditTextPreference) value = ((EditTextPreference) pref).getText();
         else if (pref instanceof MultiSelectListPreference) value = getSummary((MultiSelectListPreference) pref, ((MultiSelectListPreference) pref).getValues());
         else
             return;

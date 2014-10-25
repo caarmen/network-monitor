@@ -29,7 +29,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
@@ -50,7 +49,6 @@ public class MainActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         addPreferencesFromResource(R.xml.preferences);
-        updateListPreferenceSummary(NetMonPreferences.PREF_UPDATE_INTERVAL, R.string.pref_summary_update_interval);
         if (NetMonPreferences.getInstance(this).isServiceEnabled()) startService(new Intent(MainActivity.this, NetMonService.class));
     }
 
@@ -96,18 +94,9 @@ public class MainActivity extends PreferenceActivity {
                     }
                     startService(new Intent(MainActivity.this, NetMonService.class));
                 }
-            } else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
-                updateListPreferenceSummary(NetMonPreferences.PREF_UPDATE_INTERVAL, R.string.pref_summary_update_interval);
             }
         }
     };
 
-    private void updateListPreferenceSummary(CharSequence key, int summaryResId) {
-        @SuppressWarnings("deprecation")
-        ListPreference pref = (ListPreference) getPreferenceManager().findPreference(key);
-        CharSequence entry = pref.getEntry();
-        String summary = getString(summaryResId, entry);
-        pref.setSummary(summary);
-    }
 
 }

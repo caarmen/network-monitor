@@ -28,15 +28,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.preference.RingtonePreference;
 import android.text.TextUtils;
 
 import ca.rmen.android.networkmonitor.Constants;
@@ -56,11 +59,8 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.adv_preferences, false);
         addPreferencesFromResource(R.xml.adv_preferences);
-        updatePreferenceSummary(NetMonPreferences.PREF_CELL_ID_FORMAT, R.string.pref_summary_cell_id_format);
-        updatePreferenceSummary(NetMonPreferences.PREF_WAKE_INTERVAL, R.string.pref_summary_wake_interval);
-        updatePreferenceSummary(NetMonPreferences.PREF_SCHEDULER, R.string.pref_summary_scheduler);
-        updatePreferenceSummary(NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY, R.string.pref_summary_location_fetching_strategy);
         updatePreferenceSummary(NetMonPreferences.PREF_TEST_SERVER, R.string.pref_summary_test_server);
+        updatePreferenceSummary(NetMonPreferences.PREF_NOTIFICATION_RINGTONE, R.string.pref_summary_notification_ringtone);
         Preference testServerPreference = getPreferenceManager().findPreference(NetMonPreferences.PREF_TEST_SERVER);
         testServerPreference.setOnPreferenceChangeListener(mOnPreferenceChangeListener);
         Preference importPreference = getPreferenceManager().findPreference(PREF_IMPORT);
@@ -87,16 +87,12 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
             if (NetMonPreferences.PREF_TEST_SERVER.equals(key)) {
-                updatePreferenceSummary(NetMonPreferences.PREF_TEST_SERVER, R.string.pref_summary_test_server);
-            } else if (NetMonPreferences.PREF_CELL_ID_FORMAT.equals(key)) {
-                updatePreferenceSummary(NetMonPreferences.PREF_CELL_ID_FORMAT, R.string.pref_summary_cell_id_format);
-            } else if (NetMonPreferences.PREF_WAKE_INTERVAL.equals(key)) {
-                updatePreferenceSummary(NetMonPreferences.PREF_WAKE_INTERVAL, R.string.pref_summary_wake_interval);
-            } else if (NetMonPreferences.PREF_SCHEDULER.equals(key)) {
-                updatePreferenceSummary(NetMonPreferences.PREF_SCHEDULER, R.string.pref_summary_scheduler);
+                updatePreferenceSummary(key, R.string.pref_summary_test_server);
+            } else if (NetMonPreferences.PREF_NOTIFICATION_RINGTONE.equals(key)) {
+                updatePreferenceSummary(key, R.string.pref_summary_notification_ringtone);
             } else if (NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY.equals(key)) {
-                updatePreferenceSummary(NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY, R.string.pref_summary_location_fetching_strategy);
                 if (NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getLocationFetchingStrategy() == LocationFetchingStrategy.HIGH_ACCURACY) {
                     Intent intent = new Intent(PreferenceFragmentActivity.ACTION_CHECK_LOCATION_SETTINGS);
                     startActivity(intent);
@@ -105,14 +101,23 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
         }
     };
 
-    private void updatePreferenceSummary(CharSequence key, int summaryResId) {
+    private void updatePreferenceSummary(String key, int summaryResId) {
         @SuppressWarnings("deprecation")
         Preference pref = getPreferenceManager().findPreference(key);
         CharSequence value;
-        if (pref instanceof ListPreference) value = ((ListPreference) pref).getEntry();
-        else if (pref instanceof EditTextPreference) value = ((EditTextPreference) pref).getText();
-        else
+        if (pref instanceof EditTextPreference) {
+            value = ((EditTextPreference) pref).getText();
+        } else if (pref instanceof RingtonePreference) {
+            Uri ringtoneUri = NetMonPreferences.getInstance(this).getNotificationSoundUri();
+            if (ringtoneUri == null) {
+                value = getString(R.string.pref_value_notification_ringtone_silent);
+            } else {
+                Ringtone ringtone = RingtoneManager.getRingtone(this, ringtoneUri);
+                value = ringtone.getTitle(this);
+            }
+        } else {
             return;
+        }
         String summary = getString(summaryResId, value);
         pref.setSummary(summary);
     }
@@ -158,6 +163,8 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
                 intent.putExtra(PreferenceFragmentActivity.EXTRA_IMPORT_URI, data.getData());
                 startActivity(intent);
             }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
