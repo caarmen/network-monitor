@@ -30,6 +30,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -286,6 +287,14 @@ public class NetMonPreferences {
         String soundUriStr = mSharedPrefs.getString(PREF_NOTIFICATION_RINGTONE, null);
         if (TextUtils.isEmpty(soundUriStr)) return null;
         return Uri.parse(soundUriStr);
+    }
+
+    /**
+     * Set the ringtone Uri to the default ringtone Uri.
+     */
+    public void setDefaultNotificationSoundUri() {
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        if (defaultSoundUri != null) mSharedPrefs.edit().putString(PREF_NOTIFICATION_RINGTONE, defaultSoundUri.toString()).commit();
     }
 
     private int getIntPreference(String key, String defaultValue) {
