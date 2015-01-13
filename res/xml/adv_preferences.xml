@@ -25,8 +25,8 @@
             android:title="@string/pref_title_cell_id_format" />
 
         <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
-            android:defaultValue="173.194.34.16"
-            android:hint="173.194.34.16"
+            android:defaultValue="173.194.45.41"
+            android:hint="173.194.45.41"
             android:icon="@drawable/ic_pref_server"
             android:inputType="textEmailAddress"
             android:key="PREF_TEST_SERVER"

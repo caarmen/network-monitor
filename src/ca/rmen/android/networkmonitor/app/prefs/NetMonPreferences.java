@@ -75,7 +75,7 @@ public class NetMonPreferences {
     public static final String PREF_NOTIFICATION_RINGTONE = "PREF_NOTIFICATION_RINGTONE";
     public static final String PREF_NOTIFICATION_ENABLED = "PREF_NOTIFICATION_ENABLED";
 
-    private static final String PREF_TEST_SERVER_DEFAULT = "173.194.34.16";
+    private static final String PREF_TEST_SERVER_DEFAULT = "173.194.45.41";
     private static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
     private static final String PREF_SCHEDULER_DEFAULT = ExecutorServiceScheduler.class.getSimpleName();
     private static final String PREF_SELECTED_COLUMNS = "PREF_SELECTED_COLUMNS";
