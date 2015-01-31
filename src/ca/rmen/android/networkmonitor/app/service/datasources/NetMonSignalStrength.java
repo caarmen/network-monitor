@@ -29,9 +29,9 @@ import java.lang.reflect.Method;
 import android.content.Context;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
-import ca.rmen.android.networkmonitor.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * The logic in this class comes from the Android source code. It is copied here because some of this logic is available only on API level 17+.
@@ -40,6 +40,7 @@ class NetMonSignalStrength {
     private static final String TAG = Constants.TAG + NetMonSignalStrength.class.getSimpleName();
 
 
+    static final int BER_UNKNOWN = -1;
     static final int SIGNAL_STRENGTH_NONE_OR_UNKNOWN = 0;
     //Use int max, as -1 is a valid value in signal strength
     private static final int INVALID = 0x7FFFFFFF;
@@ -214,7 +215,7 @@ class NetMonSignalStrength {
         Log.v(TAG, "getLteLevel " + signalStrength);
         // For now there's no other way besides reflection :( The getLteLevel() method
         // in the SignalStrength class access private fields.
-        // On some Samsung devices, getLteLevel() can actually return 4 (the highest signal strength) even if we're not on Lte.  
+        // On some Samsung devices, getLteLevel() can actually return 4 (the highest signal strength) even if we're not on Lte.
         // It seems that Samsung has reimplemented getLteLevel(). So we add an extra check to make sure we only use Lte level if we're on LTE.
 
         if (mTelephonyManager.getNetworkType() != TelephonyManager.NETWORK_TYPE_LTE) {
@@ -365,6 +366,7 @@ class NetMonSignalStrength {
         Log.v(TAG, "getEvdoAsuLevel=" + level);
         return level;
     }
+
 
 
 }

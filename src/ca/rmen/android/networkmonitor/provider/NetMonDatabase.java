@@ -44,7 +44,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
     public static final String DATABASE_NAME = "networkmonitor.db";
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 14;
 
     // @formatter:off
     private static final String SQL_CREATE_TABLE_NETWORKMONITOR = "CREATE TABLE IF NOT EXISTS "
@@ -84,6 +84,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.CELL_SIGNAL_STRENGTH + " INTEGER, "
             + NetMonColumns.CELL_SIGNAL_STRENGTH_DBM + " INTEGER, "
             + NetMonColumns.CELL_ASU_LEVEL + " INTEGER, "
+            + NetMonColumns.GSM_BER+ " INTEGER, "
             + NetMonColumns.CDMA_CELL_BASE_STATION_ID + " INTEGER, "
             + NetMonColumns.CDMA_CELL_LATITUDE + " INTEGER, "
             + NetMonColumns.CDMA_CELL_LONGITUDE + " INTEGER, "
@@ -175,6 +176,9 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V13_UPLOAD_SPEED = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
             + NetMonColumns.UPLOAD_SPEED + " TEXT";
 
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V14_GSM_BER = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.GSM_BER + " INTEGER";
+
     private static final String SQL_CREATE_VIEW_CONNECTION_TEST_STATS = "CREATE VIEW " + ConnectionTestStatsColumns.VIEW_NAME + " AS "
             + buildConnectionTestQuery();
 
@@ -245,6 +249,10 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V13_DOWNLOAD_SPEED);
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V13_UPLOAD_SPEED);
         }
+
+        if (oldVersion < 14) {
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V14_GSM_BER);
+        }
     }
 
     /**
@@ -267,25 +275,25 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             String selection) {
         // @formatter:off
         return "SELECT '" + type + "' as " + ConnectionTestStatsColumns.TYPE + ","
-            + id1Column + " as " + ConnectionTestStatsColumns.ID1 + ", "
-            + id2Column + " as " + ConnectionTestStatsColumns.ID2 + ", "
-            + id3Column + " as " + ConnectionTestStatsColumns.ID3 + ", "
-            + labelColumn + " as " + ConnectionTestStatsColumns.LABEL + ", "
-            + NetMonColumns.SOCKET_CONNECTION_TEST + " as " + ConnectionTestStatsColumns.TEST_RESULT + ", "
-            + "COUNT(" + NetMonColumns.SOCKET_CONNECTION_TEST +") as " + ConnectionTestStatsColumns.TEST_COUNT 
-            + " FROM " + NetMonColumns.TABLE_NAME
-            + " WHERE (" + selection + ") AND "
-            + "("
-            + ConnectionTestStatsColumns.ID1 + " NOT NULL OR "
-            + ConnectionTestStatsColumns.ID2 + " NOT NULL OR "
-            + ConnectionTestStatsColumns.ID3 + " NOT NULL "
-            + ")"
-            + " GROUP BY "
-            + ConnectionTestStatsColumns.ID1 + ","
-            + ConnectionTestStatsColumns.ID2 + ","
-            + ConnectionTestStatsColumns.ID3 + ","
-            + ConnectionTestStatsColumns.LABEL + ","
-            + ConnectionTestStatsColumns.TEST_RESULT;
+        + id1Column + " as " + ConnectionTestStatsColumns.ID1 + ", "
+        + id2Column + " as " + ConnectionTestStatsColumns.ID2 + ", "
+        + id3Column + " as " + ConnectionTestStatsColumns.ID3 + ", "
+        + labelColumn + " as " + ConnectionTestStatsColumns.LABEL + ", "
+        + NetMonColumns.SOCKET_CONNECTION_TEST + " as " + ConnectionTestStatsColumns.TEST_RESULT + ", "
+        + "COUNT(" + NetMonColumns.SOCKET_CONNECTION_TEST +") as " + ConnectionTestStatsColumns.TEST_COUNT
+        + " FROM " + NetMonColumns.TABLE_NAME
+        + " WHERE (" + selection + ") AND "
+        + "("
+        + ConnectionTestStatsColumns.ID1 + " NOT NULL OR "
+        + ConnectionTestStatsColumns.ID2 + " NOT NULL OR "
+        + ConnectionTestStatsColumns.ID3 + " NOT NULL "
+        + ")"
+        + " GROUP BY "
+        + ConnectionTestStatsColumns.ID1 + ","
+        + ConnectionTestStatsColumns.ID2 + ","
+        + ConnectionTestStatsColumns.ID3 + ","
+        + ConnectionTestStatsColumns.LABEL + ","
+        + ConnectionTestStatsColumns.TEST_RESULT;
         // @formatter:on
     }
 

@@ -29,10 +29,10 @@ import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
-import ca.rmen.android.networkmonitor.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
+import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Retrieves the cell signal strength in various units.
@@ -44,6 +44,7 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
     private int mLastSignalStrength;
     private int mLastSignalStrengthDbm;
     private int mLastAsuLevel;
+    private int mLastBer;
     private TelephonyManager mTelephonyManager;
 
     public CellSignalStrengthDataSource() {}
@@ -69,20 +70,24 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
     @Override
     public ContentValues getContentValues() {
         Log.v(TAG, "getContentValues");
-        ContentValues values = new ContentValues(3);
+        ContentValues values = new ContentValues(4);
         values.put(NetMonColumns.CELL_SIGNAL_STRENGTH, mLastSignalStrength);
         if (mLastSignalStrengthDbm != NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN)
             values.put(NetMonColumns.CELL_SIGNAL_STRENGTH_DBM, mLastSignalStrengthDbm);
         values.put(NetMonColumns.CELL_ASU_LEVEL, mLastAsuLevel);
+        //if (mLastBer >= 0 && mLastBer <= 7 || mLastBer == 99)
+        values.put(NetMonColumns.GSM_BER, mLastBer);
         return values;
     }
 
     private PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
         @Override
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+            Log.v(TAG, "onSignalStrengthsChanged: " + signalStrength);
             mLastSignalStrength = mNetMonSignalStrength.getLevel(signalStrength);
             mLastSignalStrengthDbm = mNetMonSignalStrength.getDbm(signalStrength);
             mLastAsuLevel = mNetMonSignalStrength.getAsuLevel(signalStrength);
+            mLastBer = signalStrength.getGsmBitErrorRate();
         }
 
         @Override
@@ -92,6 +97,7 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
                 mLastSignalStrength = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
                 mLastSignalStrengthDbm = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
                 mLastAsuLevel = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+                mLastBer = NetMonSignalStrength.BER_UNKNOWN;
             }
         }
     };
