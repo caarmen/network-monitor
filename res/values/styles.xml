@@ -1,7 +1,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="SwitchStyle" parent="@style/Widget.Holo.Light.CompoundButton.Switch">
-        <item name="thumb">@drawable/netmon_switch_inner_holo_light</item>
+        <item name="asb_thumb">@drawable/netmon_switch_inner_holo_light</item>
     </style>
 
     <style name="NetMonListViewSeparatorStyle" parent="@android:style/Widget.TextView">

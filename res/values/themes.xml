@@ -16,8 +16,8 @@
     <style name="AppTheme" parent="AppBaseTheme">
 
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-        <item name="switchPreferenceStyle">@style/Preference.SwitchPreference</item>
-        <item name="switchStyle">@style/SwitchStyle</item>
+        <item name="asb_switchPreferenceStyle">@style/Preference.SwitchPreference</item>
+        <item name="asb_switchStyle">@style/SwitchStyle</item>
         <!--
         Not sure why listChoiceIndicatorMultiple is only generated
         in themes_netmon.xml for v11.  We need it for 2.x too, for SelectFieldsFragment -->
