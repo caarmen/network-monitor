@@ -24,14 +24,22 @@
  */
 package ca.rmen.android.networkmonitor.app.service.datasources;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.telephony.CellInfo;
+import android.telephony.CellInfoLte;
+import android.telephony.CellSignalStrength;
+import android.telephony.CellSignalStrengthLte;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
-import ca.rmen.android.networkmonitor.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * The logic in this class comes from the Android source code. It is copied here because some of this logic is available only on API level 17+.
@@ -214,7 +222,7 @@ class NetMonSignalStrength {
         Log.v(TAG, "getLteLevel " + signalStrength);
         // For now there's no other way besides reflection :( The getLteLevel() method
         // in the SignalStrength class access private fields.
-        // On some Samsung devices, getLteLevel() can actually return 4 (the highest signal strength) even if we're not on Lte.  
+        // On some Samsung devices, getLteLevel() can actually return 4 (the highest signal strength) even if we're not on Lte.
         // It seems that Samsung has reimplemented getLteLevel(). So we add an extra check to make sure we only use Lte level if we're on LTE.
 
         if (mTelephonyManager.getNetworkType() != TelephonyManager.NETWORK_TYPE_LTE) {
@@ -276,6 +284,43 @@ class NetMonSignalStrength {
         }
         Log.v(TAG, "getAsuLevel=" + asuLevel);
         return asuLevel;
+    }
+
+    @TargetApi(17)
+    public int getLteRsrq(SignalStrength signalStrength) {
+        // Two hacky ways to attempt to get the rsrq
+        // First hacky way: reflection on the signalStrength object
+        try {
+            Method method = SignalStrength.class.getDeclaredMethod("getLteRsrq");
+            int rsrq = (Integer) method.invoke(signalStrength);
+            Log.v(TAG, "getLteRsrq: found " + rsrq + " using SignalStrength.getLteRsrq()");
+            if (rsrq < 0) return rsrq;
+        } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            Log.e(TAG, "getLteRsrq Could not get rsrq", e);
+        }
+        // Second hacky way: reflection on the CellInfo object.
+        List<CellInfo> cellInfos = mTelephonyManager.getAllCellInfo();
+        if (cellInfos != null) {
+            for (CellInfo cellInfo : cellInfos) {
+                if (cellInfo.isRegistered()) {
+                    if (cellInfo instanceof CellInfoLte) {
+                        CellSignalStrengthLte signalStrengthLte = ((CellInfoLte) cellInfo).getCellSignalStrength();
+                        try {
+                            Field fieldRsrq = CellSignalStrength.class.getDeclaredField("mRsrq");
+                            fieldRsrq.setAccessible(true);
+                            int rsrq = (Integer) fieldRsrq.get(signalStrengthLte);
+                            Log.v(TAG, "getLteRsrq: found " + rsrq + " using CellInfoLte.mRsrq");
+                            if (rsrq < 0) return rsrq;
+                        } catch (NoSuchFieldException | IllegalAccessException | IllegalArgumentException e) {
+                            Log.e(TAG, "getRsrq Could not get Rsrq", e);
+                        }
+                    }
+
+                }
+
+            }
+        }
+        return SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
     }
 
     /**

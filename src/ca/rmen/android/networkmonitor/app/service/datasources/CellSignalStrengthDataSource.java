@@ -25,14 +25,15 @@ package ca.rmen.android.networkmonitor.app.service.datasources;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.os.Build;
 import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
-import ca.rmen.android.networkmonitor.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
+import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Retrieves the cell signal strength in various units.
@@ -44,6 +45,7 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
     private int mLastSignalStrength;
     private int mLastSignalStrengthDbm;
     private int mLastAsuLevel;
+    private int mLastLteRsrq;
     private TelephonyManager mTelephonyManager;
 
     public CellSignalStrengthDataSource() {}
@@ -74,6 +76,7 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
         if (mLastSignalStrengthDbm != NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN)
             values.put(NetMonColumns.CELL_SIGNAL_STRENGTH_DBM, mLastSignalStrengthDbm);
         values.put(NetMonColumns.CELL_ASU_LEVEL, mLastAsuLevel);
+        if (mLastLteRsrq != NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN) values.put(NetMonColumns.LTE_RSRQ, mLastLteRsrq);
         return values;
     }
 
@@ -83,6 +86,7 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
             mLastSignalStrength = mNetMonSignalStrength.getLevel(signalStrength);
             mLastSignalStrengthDbm = mNetMonSignalStrength.getDbm(signalStrength);
             mLastAsuLevel = mNetMonSignalStrength.getAsuLevel(signalStrength);
+            if (Build.VERSION.SDK_INT >= 17) mLastLteRsrq = mNetMonSignalStrength.getLteRsrq(signalStrength);
         }
 
         @Override
@@ -92,6 +96,7 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
                 mLastSignalStrength = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
                 mLastSignalStrengthDbm = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
                 mLastAsuLevel = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+                mLastLteRsrq = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
             }
         }
     };
