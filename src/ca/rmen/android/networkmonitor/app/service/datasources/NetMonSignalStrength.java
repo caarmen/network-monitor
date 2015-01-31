@@ -24,9 +24,17 @@
  */
 package ca.rmen.android.networkmonitor.app.service.datasources;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.telephony.CellInfo;
+import android.telephony.CellInfoLte;
+import android.telephony.CellSignalStrength;
+import android.telephony.CellSignalStrengthLte;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 
@@ -40,7 +48,7 @@ class NetMonSignalStrength {
     private static final String TAG = Constants.TAG + NetMonSignalStrength.class.getSimpleName();
 
 
-    static final int BER_UNKNOWN = -1;
+    static final int UNKNOWN = -1;
     static final int SIGNAL_STRENGTH_NONE_OR_UNKNOWN = 0;
     //Use int max, as -1 is a valid value in signal strength
     private static final int INVALID = 0x7FFFFFFF;
@@ -277,6 +285,41 @@ class NetMonSignalStrength {
         }
         Log.v(TAG, "getAsuLevel=" + asuLevel);
         return asuLevel;
+    }
+
+    @TargetApi(17)
+    public int getLteRsrq(SignalStrength signalStrength) {
+        List<CellInfo> cellInfos = mTelephonyManager.getAllCellInfo();
+        // Two hacky ways to attempt to get the rsrq
+        // First hacky way: reflection on the signalStrength object
+        if (cellInfos == null) {
+            try {
+                Method method = SignalStrength.class.getDeclaredMethod("getLteRsrq");
+                return (Integer) method.invoke(signalStrength);
+            } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                Log.e(TAG, "getLteRsrq Could not ", e);
+            }
+        }
+        // Second hacky way: reflection on the CellInfo object.
+        else {
+            for (CellInfo cellInfo : cellInfos) {
+                if (cellInfo.isRegistered()) {
+                    if (cellInfo instanceof CellInfoLte) {
+                        CellSignalStrengthLte signalStrengthLte = ((CellInfoLte) cellInfo).getCellSignalStrength();
+                        try {
+                            Field fieldRsrq = CellSignalStrength.class.getDeclaredField("mRsrq");
+                            fieldRsrq.setAccessible(true);
+                            return (Integer) fieldRsrq.get(signalStrengthLte);
+                        } catch (NoSuchFieldException | IllegalAccessException | IllegalArgumentException e) {
+                            Log.e(TAG, "getRsrq Could not get Rsrq", e);
+                        }
+                    }
+
+                }
+
+            }
+        }
+        return -1;
     }
 
     /**

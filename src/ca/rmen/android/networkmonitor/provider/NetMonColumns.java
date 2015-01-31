@@ -73,6 +73,7 @@ public class NetMonColumns implements BaseColumns {
     public static final String CELL_SIGNAL_STRENGTH_DBM = "cell_signal_strength_dbm";
     public static final String CELL_ASU_LEVEL = "cell_asu_level";
     public static final String GSM_BER = "gsm_ber";
+    public static final String LTE_RSRQ = "lte_rsrq";
     public static final String CDMA_CELL_BASE_STATION_ID = "cdma_cell_base_station_id";
     public static final String CDMA_CELL_LATITUDE = "cdma_cell_latitude";
     public static final String CDMA_CELL_LONGITUDE = "cdma_cell_longitude";

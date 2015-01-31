@@ -37,6 +37,7 @@
         <item>cell_signal_strength_dbm</item>
         <item>cell_asu_level</item>
         <item>gsm_ber</item>
+        <item>lte_rsrq</item>
         <item>cdma_cell_base_station_id</item>
         <item>cdma_cell_latitude</item>
         <item>cdma_cell_longitude</item>
@@ -93,6 +94,7 @@
         <item>cell_signal_strength_dbm</item>
         <item>cell_asu_level</item>
         <item>gsm_ber</item>
+        <item>lte_rsrq</item>
         <item>gsm_full_cell_id</item>
         <item>gsm_rnc</item>
         <item>gsm_short_cell_id</item>
@@ -195,6 +197,7 @@
         <item>cell_signal_strength_dbm</item>
         <item>cell_asu_level</item>
         <item>gsm_ber</item>
+        <item>lte_rsrq</item>
         <item>cdma_cell_base_station_id</item>
         <item>cdma_cell_network_id</item>
         <item>cdma_cell_system_id</item>
