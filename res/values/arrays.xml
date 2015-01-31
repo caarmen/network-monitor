@@ -4,6 +4,7 @@
     <string-array name="empty_array"/>
     <!-- Update interval -->
     <string-array name="preferences_updateInterval_labels">
+        <item>@string/pref_value_interval_network_change</item>
         <item>@string/pref_value_interval_10_seconds</item>
         <item>@string/pref_value_interval_20_seconds</item>
         <item>@string/pref_value_interval_30_seconds</item>
@@ -16,6 +17,7 @@
         <item>@string/pref_value_interval_1_hour</item>
     </string-array>
     <string-array name="preferences_updateInterval_values">
+        <item>-1</item>
         <item>10000</item>
         <item>20000</item>
         <item>30000</item>

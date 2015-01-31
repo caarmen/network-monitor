@@ -80,6 +80,7 @@ class ConnectionTesterDataSource implements NetMonDataSource {
         mContext = context;
         PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(mPrefListener);
         int updateInterval = NetMonPreferences.getInstance(context).getUpdateInterval();
+        if (updateInterval == NetMonPreferences.PREF_UPDATE_ON_NETWORK_CHANGE) updateInterval = MAX_TIMEOUT_PER_TEST;
         setTimeout(updateInterval);
     }
 

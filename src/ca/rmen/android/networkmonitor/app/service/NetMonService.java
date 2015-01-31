@@ -176,7 +176,9 @@ public class NetMonService extends Service {
             // Reschedule our task if the user changed the interval
             else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
                 int interval = NetMonPreferences.getInstance(NetMonService.this).getUpdateInterval();
-                mScheduler.setInterval(interval);
+                if (interval == NetMonPreferences.PREF_UPDATE_ON_NETWORK_CHANGE) scheduleTests();
+                else
+                    mScheduler.setInterval(interval);
             } else if (NetMonPreferences.PREF_SCHEDULER.equals(key)) {
                 scheduleTests();
             }

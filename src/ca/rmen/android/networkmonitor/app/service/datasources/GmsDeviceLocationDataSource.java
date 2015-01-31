@@ -45,6 +45,7 @@ import com.google.android.gms.location.LocationRequest;
  */
 class GmsDeviceLocationDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + GmsDeviceLocationDataSource.class.getSimpleName();
+    private static final int MIN_POLLING_INTERVAL = 10000;
     private LocationClient mLocationClient;
     private Location mMostRecentLocation;
     private Context mContext;
@@ -110,6 +111,7 @@ class GmsDeviceLocationDataSource implements NetMonDataSource {
         if (locationFetchingStrategy == LocationFetchingStrategy.HIGH_ACCURACY) {
             request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             int pollingInterval = NetMonPreferences.getInstance(mContext).getUpdateInterval();
+            if (pollingInterval < MIN_POLLING_INTERVAL) pollingInterval = MIN_POLLING_INTERVAL;
             request.setFastestInterval(pollingInterval);
         } else {
             request.setPriority(LocationRequest.PRIORITY_LOW_POWER);

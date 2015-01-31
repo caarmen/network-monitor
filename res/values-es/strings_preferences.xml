@@ -11,6 +11,7 @@
     <string name="pref_title_advanced">Opciones avanzadas</string>
     <string name="pref_title_about">Acerca de</string>
     <string name="pref_value_interval_never">Nunca</string>
+    <string name="pref_value_interval_network_change">Cuando la red cambia</string>
     <string name="pref_value_interval_10_seconds">10 segundos</string>
     <string name="pref_value_interval_20_seconds">20 segundos</string>
     <string name="pref_value_interval_30_seconds">30 segundos</string>

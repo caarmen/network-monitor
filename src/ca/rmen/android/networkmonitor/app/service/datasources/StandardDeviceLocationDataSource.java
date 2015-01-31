@@ -46,6 +46,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  */
 class StandardDeviceLocationDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + StandardDeviceLocationDataSource.class.getSimpleName();
+    private static final int MIN_POLLING_INTERVAL = 10000;
     private LocationManager mLocationManager;
     private Location mMostRecentLocation;
     private Context mContext;
@@ -101,6 +102,7 @@ class StandardDeviceLocationDataSource implements NetMonDataSource {
         mLocationManager.removeUpdates(mLocationListener);
         if (locationFetchingStrategy == LocationFetchingStrategy.HIGH_ACCURACY) {
             int pollingFrequency = NetMonPreferences.getInstance(mContext).getUpdateInterval();
+            if (pollingFrequency < MIN_POLLING_INTERVAL) pollingFrequency = MIN_POLLING_INTERVAL;
             List<String> providers = mLocationManager.getProviders(true);
             for (String provider : providers) {
                 mLocationManager.requestLocationUpdates(provider, pollingFrequency, 0f, mLocationListener);

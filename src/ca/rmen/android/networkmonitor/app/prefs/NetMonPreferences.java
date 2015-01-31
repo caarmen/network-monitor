@@ -39,6 +39,7 @@ import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences.SortOrder;
 import ca.rmen.android.networkmonitor.app.service.scheduler.AlarmManagerScheduler;
 import ca.rmen.android.networkmonitor.app.service.scheduler.ExecutorServiceScheduler;
+import ca.rmen.android.networkmonitor.app.service.scheduler.NetworkChangeScheduler;
 import ca.rmen.android.networkmonitor.app.service.scheduler.Scheduler;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 
@@ -59,6 +60,7 @@ public class NetMonPreferences {
     static final String PREF_TEST_SERVER = "PREF_TEST_SERVER";
     public static final String PREF_UPDATE_INTERVAL = "PREF_UPDATE_INTERVAL";
     public static final String PREF_UPDATE_INTERVAL_DEFAULT = "10000";
+    public static final int PREF_UPDATE_ON_NETWORK_CHANGE = -1;
     public static final String PREF_SERVICE_ENABLED = "PREF_SERVICE_ENABLED";
     public static final boolean PREF_SERVICE_ENABLED_DEFAULT = false;
     public static final String PREF_SCHEDULER = "PREF_SCHEDULER";
@@ -182,6 +184,8 @@ public class NetMonPreferences {
      * @return the implementation of the {@link Scheduler} interface which schedules each logging of data.
      */
     public Class<?> getSchedulerClass() {
+        int updateInterval = getUpdateInterval();
+        if (updateInterval == PREF_UPDATE_ON_NETWORK_CHANGE) return NetworkChangeScheduler.class;
         String schedulerPref = mSharedPrefs.getString(NetMonPreferences.PREF_SCHEDULER, NetMonPreferences.PREF_SCHEDULER_DEFAULT);
         if (schedulerPref.equals(AlarmManagerScheduler.class.getSimpleName())) return AlarmManagerScheduler.class;
         else
