@@ -23,14 +23,13 @@
  */
 package ca.rmen.android.networkmonitor.app.service.scheduler;
 
-import java.util.List;
-
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.telephony.CellInfo;
-import android.telephony.CellLocation;
-import android.telephony.PhoneStateListener;
-import android.telephony.ServiceState;
-import android.telephony.TelephonyManager;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.os.Handler;
+import android.os.HandlerThread;
 
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -40,22 +39,26 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class NetworkChangeScheduler implements Scheduler {
 
     private static final String TAG = NetworkChangeScheduler.class.getSimpleName();
-    private TelephonyManager mTelephonyManager;
+    private Context mContext;
     private Runnable mRunnableImpl;
+    private HandlerThread mHandlerThread;
 
     @Override
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
+        mContext = context;
         // Register the broadcast receiver in a background thread
-        mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CELL_INFO | PhoneStateListener.LISTEN_CELL_LOCATION
-                | PhoneStateListener.LISTEN_DATA_CONNECTION_STATE | PhoneStateListener.LISTEN_SERVICE_STATE);
+        mHandlerThread = new HandlerThread(TAG);
+        mHandlerThread.start();
+        Handler handler = new Handler(mHandlerThread.getLooper());
+        mContext.registerReceiver(mBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION), null, handler);
     }
 
     @Override
     public void onDestroy() {
         Log.v(TAG, "onDestroy");
-        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+        mContext.unregisterReceiver(mBroadcastReceiver);
+        mHandlerThread.quit();
     }
 
     @Override
@@ -67,34 +70,12 @@ public class NetworkChangeScheduler implements Scheduler {
     @Override
     public void setInterval(int interval) {}
 
-    private PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 
 
         @Override
-        public void onCellInfoChanged(List<CellInfo> cellInfo) {
-            Log.v(TAG, "onCellInfoChanged: cellInfo " + cellInfo);
-            run();
-        }
-
-        @Override
-        public void onCellLocationChanged(CellLocation location) {
-            Log.v(TAG, "onCellLocationChanged: location " + location);
-            run();
-        }
-
-        @Override
-        public void onDataConnectionStateChanged(int state) {
-            Log.v(TAG, "onDataConnectionStateChanged: state = %d" + state);
-            run();
-        }
-
-        @Override
-        public void onServiceStateChanged(ServiceState serviceState) {
-            Log.v(TAG, "onServiceStateChanged: serviceState = " + serviceState);
-            run();
-        }
-
-        private void run() {
+        public void onReceive(Context context, Intent intent) {
+            Log.v(TAG, "onReceive: intent = " + intent);
             try {
                 Log.v(TAG, "Executing task");
                 mRunnableImpl.run();
