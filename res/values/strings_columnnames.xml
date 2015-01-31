@@ -36,6 +36,7 @@
     <string name="cell_signal_strength_dbm">Cell Signal Strength (dBm)</string>
     <string name="cell_asu_level">ASU Level</string>
     <string name="gsm_ber">GSM BER</string>
+    <string name="evdo_ecio">EVDO ECIO</string>
     <string name="lte_rsrq">LTE RSRQ</string>
     <string name="cdma_cell_base_station_id">CDMA Cell Base Station Id</string>
     <string name="cdma_cell_latitude">CDMA Cell Latitude</string>

@@ -46,6 +46,7 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
     private int mLastSignalStrengthDbm;
     private int mLastAsuLevel;
     private int mLastBer;
+    private int mLastEvdoEcio;
     private int mLastLteRsrq;
     private TelephonyManager mTelephonyManager;
 
@@ -79,7 +80,8 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
         values.put(NetMonColumns.CELL_ASU_LEVEL, mLastAsuLevel);
         //if (mLastBer >= 0 && mLastBer <= 7 || mLastBer == 99)
         values.put(NetMonColumns.GSM_BER, mLastBer);
-        values.put(NetMonColumns.LTE_RSRQ, mLastLteRsrq);
+        if (mLastLteRsrq <= 0) values.put(NetMonColumns.LTE_RSRQ, mLastLteRsrq);
+        values.put(NetMonColumns.EVDO_ECIO, mLastEvdoEcio);
         return values;
     }
 
@@ -91,6 +93,7 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
             mLastSignalStrengthDbm = mNetMonSignalStrength.getDbm(signalStrength);
             mLastAsuLevel = mNetMonSignalStrength.getAsuLevel(signalStrength);
             mLastBer = signalStrength.getGsmBitErrorRate();
+            mLastEvdoEcio = signalStrength.getEvdoEcio();
             if (Build.VERSION.SDK_INT >= 17) mLastLteRsrq = mNetMonSignalStrength.getLteRsrq(signalStrength);
         }
 
@@ -103,6 +106,7 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
                 mLastAsuLevel = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
                 mLastBer = NetMonSignalStrength.UNKNOWN;
                 mLastLteRsrq = NetMonSignalStrength.UNKNOWN;
+                mLastEvdoEcio = NetMonSignalStrength.UNKNOWN;
             }
         }
     };

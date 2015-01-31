@@ -86,6 +86,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.CELL_ASU_LEVEL + " INTEGER, "
             + NetMonColumns.GSM_BER+ " INTEGER, "
             + NetMonColumns.LTE_RSRQ + " INTEGER, "
+            + NetMonColumns.EVDO_ECIO + " INTEGER, "
             + NetMonColumns.CDMA_CELL_BASE_STATION_ID + " INTEGER, "
             + NetMonColumns.CDMA_CELL_LATITUDE + " INTEGER, "
             + NetMonColumns.CDMA_CELL_LONGITUDE + " INTEGER, "
@@ -183,6 +184,9 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V14_LTE_RSRQ = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
             + NetMonColumns.LTE_RSRQ + " INTEGER";
 
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V14_EVDO_ECIO = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.EVDO_ECIO + " INTEGER";
+
     private static final String SQL_CREATE_VIEW_CONNECTION_TEST_STATS = "CREATE VIEW " + ConnectionTestStatsColumns.VIEW_NAME + " AS "
             + buildConnectionTestQuery();
 
@@ -257,6 +261,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
         if (oldVersion < 14) {
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V14_GSM_BER);
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V14_LTE_RSRQ);
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V14_EVDO_ECIO);
         }
     }
 

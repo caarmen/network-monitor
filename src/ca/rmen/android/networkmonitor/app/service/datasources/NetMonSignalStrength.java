@@ -319,7 +319,7 @@ class NetMonSignalStrength {
 
             }
         }
-        return -1;
+        return UNKNOWN;
     }
 
     /**
