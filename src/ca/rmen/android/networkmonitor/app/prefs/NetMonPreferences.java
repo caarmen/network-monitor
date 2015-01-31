@@ -58,6 +58,7 @@ public class NetMonPreferences {
 
 
     static final String PREF_TEST_SERVER = "PREF_TEST_SERVER";
+    public static final int PREF_MIN_POLLING_INTERVAL = 10000;
     public static final String PREF_UPDATE_INTERVAL = "PREF_UPDATE_INTERVAL";
     public static final String PREF_UPDATE_INTERVAL_DEFAULT = "10000";
     public static final int PREF_UPDATE_ON_NETWORK_CHANGE = -1;

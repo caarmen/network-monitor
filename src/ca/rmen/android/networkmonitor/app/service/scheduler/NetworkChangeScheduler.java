@@ -31,6 +31,7 @@ import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.os.HandlerThread;
 
+import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -42,6 +43,7 @@ public class NetworkChangeScheduler implements Scheduler {
     private Context mContext;
     private Runnable mRunnableImpl;
     private HandlerThread mHandlerThread;
+    private long mLastPollTime;
 
     @Override
     public void onCreate(Context context) {
@@ -68,7 +70,10 @@ public class NetworkChangeScheduler implements Scheduler {
     }
 
     @Override
-    public void setInterval(int interval) {}
+    public void setInterval(int interval) {
+        // We ignore the interval.
+    }
+
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 
@@ -78,7 +83,11 @@ public class NetworkChangeScheduler implements Scheduler {
             Log.v(TAG, "onReceive: intent = " + intent);
             try {
                 Log.v(TAG, "Executing task");
-                mRunnableImpl.run();
+                long now = System.currentTimeMillis();
+                if (now - mLastPollTime > NetMonPreferences.PREF_MIN_POLLING_INTERVAL) {
+                    mRunnableImpl.run();
+                    mLastPollTime = System.currentTimeMillis();
+                }
             } catch (Throwable t) {
                 Log.v(TAG, "Error executing task: " + t.getMessage(), t);
             }
