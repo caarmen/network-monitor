@@ -122,6 +122,7 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
                 value = getString(R.string.pref_value_notification_ringtone_silent);
             } else {
                 Ringtone ringtone = RingtoneManager.getRingtone(this, ringtoneUri);
+                if (ringtone == null) return;
                 value = ringtone.getTitle(this);
             }
         } else {
