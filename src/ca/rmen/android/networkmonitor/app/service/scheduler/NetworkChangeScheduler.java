@@ -42,6 +42,7 @@ public class NetworkChangeScheduler implements Scheduler {
     private static final String TAG = NetworkChangeScheduler.class.getSimpleName();
     private Context mContext;
     private Runnable mRunnableImpl;
+    private Handler mHandler;
     private HandlerThread mHandlerThread;
     private long mLastPollTime;
 
@@ -52,8 +53,8 @@ public class NetworkChangeScheduler implements Scheduler {
         // Register the broadcast receiver in a background thread
         mHandlerThread = new HandlerThread(TAG);
         mHandlerThread.start();
-        Handler handler = new Handler(mHandlerThread.getLooper());
-        mContext.registerReceiver(mBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION), null, handler);
+        mHandler = new Handler(mHandlerThread.getLooper());
+        mContext.registerReceiver(mBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION), null, mHandler);
     }
 
     @Override
@@ -74,6 +75,33 @@ public class NetworkChangeScheduler implements Scheduler {
         // We ignore the interval.
     }
 
+    /**
+     * Prevent running our task too many times successively.
+     * If we've already run the task recently, schedule it
+     * to run in a few seconds. Otherwise just run it right now.
+     */
+    private Runnable mBufferedRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            Log.v(TAG, "mBufferedRunnable.run()");
+            long now = System.currentTimeMillis();
+            if (now - mLastPollTime > NetMonPreferences.PREF_MIN_POLLING_INTERVAL) {
+                Log.v(TAG, "Will run the task now");
+                try {
+                    mRunnableImpl.run();
+                    mLastPollTime = System.currentTimeMillis();
+                } catch (Throwable t) {
+                    Log.v(TAG, "Error executing task: " + t.getMessage(), t);
+                }
+            } else {
+                Log.v(TAG, "Ran the task too recently: will schedule it for later");
+                mHandler.removeCallbacksAndMessages(null);
+                mHandler.postDelayed(mBufferedRunnable, NetMonPreferences.PREF_MIN_POLLING_INTERVAL);
+            }
+        }
+
+    };
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 
@@ -81,16 +109,7 @@ public class NetworkChangeScheduler implements Scheduler {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.v(TAG, "onReceive: intent = " + intent);
-            try {
-                Log.v(TAG, "Executing task");
-                long now = System.currentTimeMillis();
-                if (now - mLastPollTime > NetMonPreferences.PREF_MIN_POLLING_INTERVAL) {
-                    mRunnableImpl.run();
-                    mLastPollTime = System.currentTimeMillis();
-                }
-            } catch (Throwable t) {
-                Log.v(TAG, "Error executing task: " + t.getMessage(), t);
-            }
+            mHandler.post(mBufferedRunnable);
         }
     };
 
