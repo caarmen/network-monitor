@@ -45,9 +45,9 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
     private int mLastSignalStrength;
     private int mLastSignalStrengthDbm;
     private int mLastAsuLevel;
-    private int mLastBer;
-    private int mLastEvdoEcio;
-    private int mLastLteRsrq;
+    private int mLastBer = NetMonSignalStrength.UNKNOWN;
+    private int mLastEvdoEcio = NetMonSignalStrength.UNKNOWN;
+    private int mLastLteRsrq = NetMonSignalStrength.UNKNOWN;
     private TelephonyManager mTelephonyManager;
 
     public CellSignalStrengthDataSource() {}
@@ -78,10 +78,11 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
         if (mLastSignalStrengthDbm != NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN)
             values.put(NetMonColumns.CELL_SIGNAL_STRENGTH_DBM, mLastSignalStrengthDbm);
         values.put(NetMonColumns.CELL_ASU_LEVEL, mLastAsuLevel);
-        //if (mLastBer >= 0 && mLastBer <= 7 || mLastBer == 99)
-        values.put(NetMonColumns.GSM_BER, mLastBer);
-        if (mLastLteRsrq <= 0) values.put(NetMonColumns.LTE_RSRQ, mLastLteRsrq);
-        values.put(NetMonColumns.EVDO_ECIO, mLastEvdoEcio);
+        if (mLastBer >= 0 && mLastBer <= 7 || mLastBer == 99) values.put(NetMonColumns.GSM_BER, mLastBer);
+        // Valid values from -3 to -19.5:
+        // http://www.sharetechnote.com/html/Handbook_LTE_RSRQ.html
+        if (mLastLteRsrq <= -3) values.put(NetMonColumns.LTE_RSRQ, mLastLteRsrq);
+        if (mLastEvdoEcio != NetMonSignalStrength.UNKNOWN) values.put(NetMonColumns.EVDO_ECIO, mLastEvdoEcio);
         return values;
     }
 
@@ -105,8 +106,8 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
                 mLastSignalStrengthDbm = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
                 mLastAsuLevel = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
                 mLastBer = NetMonSignalStrength.UNKNOWN;
-                mLastLteRsrq = NetMonSignalStrength.UNKNOWN;
                 mLastEvdoEcio = NetMonSignalStrength.UNKNOWN;
+                mLastLteRsrq = NetMonSignalStrength.UNKNOWN;
             }
         }
     };

@@ -48,7 +48,7 @@ class NetMonSignalStrength {
     private static final String TAG = Constants.TAG + NetMonSignalStrength.class.getSimpleName();
 
 
-    static final int UNKNOWN = -1;
+    static final int UNKNOWN = Integer.MAX_VALUE;
     static final int SIGNAL_STRENGTH_NONE_OR_UNKNOWN = 0;
     //Use int max, as -1 is a valid value in signal strength
     private static final int INVALID = 0x7FFFFFFF;
@@ -289,19 +289,19 @@ class NetMonSignalStrength {
 
     @TargetApi(17)
     public int getLteRsrq(SignalStrength signalStrength) {
-        List<CellInfo> cellInfos = mTelephonyManager.getAllCellInfo();
         // Two hacky ways to attempt to get the rsrq
         // First hacky way: reflection on the signalStrength object
-        if (cellInfos == null) {
-            try {
-                Method method = SignalStrength.class.getDeclaredMethod("getLteRsrq");
-                return (Integer) method.invoke(signalStrength);
-            } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                Log.e(TAG, "getLteRsrq Could not ", e);
-            }
+        try {
+            Method method = SignalStrength.class.getDeclaredMethod("getLteRsrq");
+            int rsrq = (Integer) method.invoke(signalStrength);
+            Log.v(TAG, "getLteRsrq: found " + rsrq + " using SignalStrength.getLteRsrq()");
+            if (rsrq < 0) return rsrq;
+        } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            Log.e(TAG, "getLteRsrq Could not get rsrq", e);
         }
         // Second hacky way: reflection on the CellInfo object.
-        else {
+        List<CellInfo> cellInfos = mTelephonyManager.getAllCellInfo();
+        if (cellInfos != null) {
             for (CellInfo cellInfo : cellInfos) {
                 if (cellInfo.isRegistered()) {
                     if (cellInfo instanceof CellInfoLte) {
@@ -309,7 +309,9 @@ class NetMonSignalStrength {
                         try {
                             Field fieldRsrq = CellSignalStrength.class.getDeclaredField("mRsrq");
                             fieldRsrq.setAccessible(true);
-                            return (Integer) fieldRsrq.get(signalStrengthLte);
+                            int rsrq = (Integer) fieldRsrq.get(signalStrengthLte);
+                            Log.v(TAG, "getLteRsrq: found " + rsrq + " using CellInfoLte.mRsrq");
+                            if (rsrq < 0) return rsrq;
                         } catch (NoSuchFieldException | IllegalAccessException | IllegalArgumentException e) {
                             Log.e(TAG, "getRsrq Could not get Rsrq", e);
                         }
@@ -319,7 +321,7 @@ class NetMonSignalStrength {
 
             }
         }
-        return UNKNOWN;
+        return SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
     }
 
     /**
