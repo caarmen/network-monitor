@@ -51,6 +51,8 @@
     <string name="pref_value_location_fetching_strategy_save_power">Économiser la batterie</string>
     <string name="pref_title_import">Importer</string>
     <string name="pref_summary_import">Importer une base de données exportée depuis Network Monitor.</string>
+    <string name="pref_title_compress">Compresser la base de données.</string>
+    <string name="pref_summary_compress">Réduire la taille de la base de données en fusionnant des lignes dupliquées.</string>
     <string name="pref_title_email">Envoyer des rapports par courriel</string>
     <string name="pref_summary_email">Envoyer périodiquement un rapport en plusieurs formats, par courriel.</string>
     <string name="pref_title_notification_enabled">Activer les notifications</string>
