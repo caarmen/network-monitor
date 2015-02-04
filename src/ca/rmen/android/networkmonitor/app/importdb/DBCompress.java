@@ -24,12 +24,19 @@
 package ca.rmen.android.networkmonitor.app.importdb;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.OperationApplicationException;
+import android.database.Cursor;
 import android.os.RemoteException;
+import android.provider.BaseColumns;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -43,6 +50,68 @@ public class DBCompress {
      */
     public static int compressDB(Context context) throws RemoteException, OperationApplicationException, IOException {
         Log.v(TAG, "compress DB");
-        return 0;
+        Cursor c = context.getContentResolver().query(NetMonColumns.CONTENT_URI, null, null, null, NetMonColumns.TIMESTAMP);
+        Map<Integer, String> previousRow = null;
+        List<Integer> rowIdsToDelete = new ArrayList<Integer>();
+        int idLastRow = 0;
+        int posLastNewRow = 0;
+        if (c != null) {
+            try {
+                int columnCount = c.getColumnCount();
+                // We will not include the _id and _timestamp fields when comparing rows.
+                int timestampIndex = c.getColumnIndex(NetMonColumns.TIMESTAMP);
+                int idIndex = c.getColumnIndex(BaseColumns._ID);
+                while (c.moveToNext()) {
+                    int position = c.getPosition();
+                    int id = c.getInt(idIndex);
+                    Map<Integer, String> currentRow = readRow(c, columnCount, timestampIndex, idIndex);
+                    if (previousRow != null) {
+                        boolean rowsAreEqual = previousRow.equals(currentRow);
+                        if (rowsAreEqual) {
+                            // If we've seen at least 3 consecutive identical rows,
+                            // delete the previous row.
+                            // Ex: if rows 21, 22, 23, and 24 are identical, we'll add
+                            // the ids of rows 22 and 23 to the list.
+                            if (position - posLastNewRow >= 2) {
+                                rowIdsToDelete.add(idLastRow);
+                            }
+                        } else {
+                            posLastNewRow = position;
+                        }
+                    }
+                    idLastRow = id;
+                    previousRow = currentRow;
+                }
+            } finally {
+                c.close();
+            }
+        }
+        Log.v(TAG, "compress DB: ids to delete: " + rowIdsToDelete);
+        String inClause = buildInClause(rowIdsToDelete.size());
+        String[] arg = new String[rowIdsToDelete.size()];
+        for (int i = 0; i < rowIdsToDelete.size(); i++)
+            arg[i] = String.valueOf(rowIdsToDelete.get(i));
+
+        return context.getContentResolver().delete(NetMonColumns.CONTENT_URI, BaseColumns._ID + " in (" + inClause + ")", arg);
+    }
+
+    private static final String buildInClause(int count) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < count - 1; i++)
+            result.append("?,");
+        result.append("?");
+        return result.toString();
+    }
+
+    /**
+     * @return a map of the row's values: the key is the column index, and the value the string representation of a cell.
+     */
+    private static Map<Integer, String> readRow(Cursor c, int columnCount, int timestampIndex, int idIndex) {
+        Map<Integer, String> result = new HashMap<Integer, String>();
+        for (int i = 0; i < columnCount; i++) {
+            if (i == timestampIndex || i == idIndex) continue;
+            result.put(i, c.getString(i));
+        }
+        return result;
     }
 }
