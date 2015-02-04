@@ -34,6 +34,7 @@ import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.os.RemoteException;
 import android.provider.BaseColumns;
+import android.text.TextUtils;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
@@ -87,20 +88,10 @@ public class DBCompress {
             }
         }
         Log.v(TAG, "compress DB: ids to delete: " + rowIdsToDelete);
-        String inClause = buildInClause(rowIdsToDelete.size());
-        String[] arg = new String[rowIdsToDelete.size()];
-        for (int i = 0; i < rowIdsToDelete.size(); i++)
-            arg[i] = String.valueOf(rowIdsToDelete.get(i));
+        String inClause = TextUtils.join(",", rowIdsToDelete);
+        String whereClause = BaseColumns._ID + " in (" + inClause + ")";
 
-        return context.getContentResolver().delete(NetMonColumns.CONTENT_URI, BaseColumns._ID + " in (" + inClause + ")", arg);
-    }
-
-    private static final String buildInClause(int count) {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < count - 1; i++)
-            result.append("?,");
-        result.append("?");
-        return result.toString();
+        return context.getContentResolver().delete(NetMonColumns.CONTENT_URI, whereClause, null);
     }
 
     /**
