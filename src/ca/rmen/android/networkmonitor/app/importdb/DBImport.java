@@ -81,15 +81,18 @@ public class DBImport {
         operations.add(ContentProviderOperation.newDelete(NetMonColumns.CONTENT_URI).build());
         Uri insertUri = new Uri.Builder().authority(NetMonProvider.AUTHORITY).appendPath(NetMonColumns.TABLE_NAME)
                 .appendQueryParameter(NetMonProvider.QUERY_NOTIFY, "false").build();
-        buildInsertOperations(dbImport, insertUri, NetMonColumns.TABLE_NAME, operations);
-        context.getContentResolver().applyBatch(NetMonProvider.AUTHORITY, operations);
+        buildInsertOperations(context, dbImport, insertUri, NetMonColumns.TABLE_NAME, operations);
         dbImport.close();
     }
 
     /**
      * Read all cells from the given table from the dbImport database, and add corresponding insert operations to the operations parameter.
+     * 
+     * @throws OperationApplicationException
+     * @throws RemoteException
      */
-    private static void buildInsertOperations(SQLiteDatabase dbImport, Uri uri, String table, ArrayList<ContentProviderOperation> operations) {
+    private static void buildInsertOperations(Context context, SQLiteDatabase dbImport, Uri uri, String table, ArrayList<ContentProviderOperation> operations)
+            throws RemoteException, OperationApplicationException {
         Log.v(TAG, "buildInsertOperations: uri = " + uri + ", table=" + table);
         Cursor c = dbImport.query(false, table, null, null, null, null, null, null, null);
         if (c != null) {
@@ -104,7 +107,12 @@ public class DBImport {
                             builder.withValue(columnName, value);
                         }
                         operations.add(builder.build());
+                        if (operations.size() >= 100) {
+                            context.getContentResolver().applyBatch(NetMonProvider.AUTHORITY, operations);
+                            operations.clear();
+                        }
                     } while (c.moveToNext());
+                    if (operations.size() > 0) context.getContentResolver().applyBatch(NetMonProvider.AUTHORITY, operations);
                 }
             } finally {
                 c.close();
