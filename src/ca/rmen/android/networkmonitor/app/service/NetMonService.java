@@ -104,15 +104,22 @@ public class NetMonService extends Service {
      */
     private void scheduleTests() {
         Log.v(TAG, "scheduleTests");
-        if (mScheduler != null) {
-            mScheduler.onDestroy();
-        }
-        Class<?> schedulerClass = NetMonPreferences.getInstance(this).getSchedulerClass();
+        NetMonPreferences prefs = NetMonPreferences.getInstance(this);
+        Class<?> schedulerClass = prefs.getSchedulerClass();
         Log.v(TAG, "Will use scheduler " + schedulerClass);
         try {
-            mScheduler = (Scheduler) schedulerClass.newInstance();
-            mScheduler.onCreate(this);
-            mScheduler.schedule(mTask, NetMonPreferences.getInstance(this).getUpdateInterval());
+            if (mScheduler == null || !mScheduler.getClass().getName().equals(schedulerClass.getName())) {
+                Log.v(TAG, "Creating new scheduler " + schedulerClass);
+                if (mScheduler != null) mScheduler.onDestroy();
+                mScheduler = (Scheduler) schedulerClass.newInstance();
+                mScheduler.onCreate(this);
+                mScheduler.schedule(mTask, prefs.getUpdateInterval());
+            } else {
+                Log.v(TAG, "Rescheduling scheduler " + mScheduler);
+                int interval = prefs.getUpdateInterval();
+                mScheduler.setInterval(interval);
+            }
+
         } catch (InstantiationException e) {
             Log.e(TAG, "setScheduler Could not create scheduler " + schedulerClass + ": " + e.getMessage(), e);
         } catch (IllegalAccessException e) {
@@ -174,12 +181,7 @@ public class NetMonService extends Service {
                 }
             }
             // Reschedule our task if the user changed the interval
-            else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
-                int interval = NetMonPreferences.getInstance(NetMonService.this).getUpdateInterval();
-                if (interval == NetMonPreferences.PREF_UPDATE_ON_NETWORK_CHANGE) scheduleTests();
-                else
-                    mScheduler.setInterval(interval);
-            } else if (NetMonPreferences.PREF_SCHEDULER.equals(key)) {
+            else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key) || NetMonPreferences.PREF_SCHEDULER.equals(key)) {
                 scheduleTests();
             }
         }
