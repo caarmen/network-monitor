@@ -34,7 +34,6 @@ import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.os.RemoteException;
 import android.provider.BaseColumns;
-import android.text.TextUtils;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
@@ -87,11 +86,23 @@ public class DBCompress {
                 c.close();
             }
         }
-        Log.v(TAG, "compress DB: ids to delete: " + rowIdsToDelete);
-        String inClause = TextUtils.join(",", rowIdsToDelete);
-        String whereClause = BaseColumns._ID + " in (" + inClause + ")";
+        int numRowsDeleted = 0;
+        int numRowsToDelete = rowIdsToDelete.size();
+        Log.v(TAG, "compress DB: " + numRowsToDelete + " rows to delete");
+        StringBuilder inClause = new StringBuilder();
+        for (int i = 0; i < numRowsToDelete; i++) {
+            inClause.append(rowIdsToDelete.get(i));
+            if (i % 100 == 0 || i == numRowsToDelete - 1) {
+                String whereClause = BaseColumns._ID + " in (" + inClause + ")";
+                numRowsDeleted += context.getContentResolver().delete(NetMonColumns.CONTENT_URI, whereClause, null);
+                Log.v(TAG, "compress DB: deleted " + numRowsDeleted + " rows");
+                inClause = new StringBuilder();
 
-        return context.getContentResolver().delete(NetMonColumns.CONTENT_URI, whereClause, null);
+            } else {
+                inClause.append(",");
+            }
+        }
+        return numRowsDeleted;
     }
 
     /**
