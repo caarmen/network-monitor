@@ -238,10 +238,11 @@ class ConnectionTesterDataSource implements NetMonDataSource {
             // Issue #20: We should respect the testing interval.  We shouldn't wait for more than this interval for
             // the connection tests to timeout.
             if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
-                String valueStr = sharedPreferences.getString(key, NetMonPreferences.PREF_UPDATE_INTERVAL_DEFAULT);
-                int updateInterval = Integer.valueOf(valueStr);
-                Log.v(TAG, "updateInterval changed to " + updateInterval);
-                setTimeout(updateInterval);
+                int updateInterval = NetMonPreferences.getInstance(mContext).getUpdateInterval();
+                if (updateInterval > 0) {
+                    Log.v(TAG, "updateInterval changed to " + updateInterval);
+                    setTimeout(updateInterval);
+                }
             }
         }
     };

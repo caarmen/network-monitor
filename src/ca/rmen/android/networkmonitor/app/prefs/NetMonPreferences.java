@@ -121,6 +121,14 @@ public class NetMonPreferences {
     }
 
     /**
+     * @return true if we're polling quickly
+     */
+    public boolean isFastPollingEnabled() {
+        int updateInterval = getUpdateInterval();
+        return updateInterval > 0 && updateInterval < NetMonPreferences.PREF_MIN_POLLING_INTERVAL;
+    }
+
+    /**
      * @return the interval, in milliseconds, between forced waking up the device (by turning the screen on). If not positive, we will never force wake up the
      *         device.
      */

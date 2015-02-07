@@ -98,7 +98,7 @@ public class MainActivity extends PreferenceActivity {
                     startService(new Intent(MainActivity.this, NetMonService.class));
                 }
             } else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
-                if (prefs.getUpdateInterval() < NetMonPreferences.PREF_MIN_POLLING_INTERVAL) {
+                if (prefs.isFastPollingEnabled()) {
                     prefs.setConnectionTestEnabled(false);
                     if (prefs.getDBRecordCount() < 0) prefs.setDBRecordCount(10000);
                     SpeedTestPreferences.getInstance(MainActivity.this).setEnabled(false);
