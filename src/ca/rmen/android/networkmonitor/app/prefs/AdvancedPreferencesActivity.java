@@ -31,6 +31,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -41,9 +42,11 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.db.DBPurge;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.LocationFetchingStrategy;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
@@ -52,7 +55,6 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + AdvancedPreferencesActivity.class.getSimpleName();
     private static final int ACTIVITY_REQUEST_CODE_IMPORT = 1;
-    private static final int ACTIVITY_REQUEST_CODE_COMPRESS = 2;
     private static final String PREF_IMPORT = "PREF_IMPORT";
     private static final String PREF_COMPRESS = "PREF_COMPRESS";
 
@@ -110,6 +112,20 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
             } else if (NetMonPreferences.PREF_NOTIFICATION_ENABLED.equals(key)) {
                 if (!NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getShowNotificationOnTestFailure())
                     NetMonNotification.dismissFailedTestNotification(AdvancedPreferencesActivity.this);
+            } else if (NetMonPreferences.PREF_DB_RECORD_COUNT.equals(key)) {
+                new AsyncTask<Void, Void, Integer>() {
+
+                    @Override
+                    protected Integer doInBackground(Void... params) {
+                        return DBPurge.purgeDB(AdvancedPreferencesActivity.this);
+                    }
+
+                    @Override
+                    protected void onPostExecute(Integer result) {
+                        if (result > 0)
+                            Toast.makeText(AdvancedPreferencesActivity.this, getString(R.string.compress_successful, result), Toast.LENGTH_LONG).show();
+                    }
+                }.execute();
             }
         }
     };

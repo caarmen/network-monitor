@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.importdb;
+package ca.rmen.android.networkmonitor.app.db;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -80,14 +80,14 @@ public class DBImport {
         ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
         operations.add(ContentProviderOperation.newDelete(NetMonColumns.CONTENT_URI).build());
         Uri insertUri = new Uri.Builder().authority(NetMonProvider.AUTHORITY).appendPath(NetMonColumns.TABLE_NAME)
-                .appendQueryParameter(NetMonProvider.QUERY_NOTIFY, "false").build();
+                .appendQueryParameter(NetMonProvider.QUERY_PARAMETER_NOTIFY, "false").build();
         buildInsertOperations(context, dbImport, insertUri, NetMonColumns.TABLE_NAME, operations);
         dbImport.close();
     }
 
     /**
      * Read all cells from the given table from the dbImport database, and add corresponding insert operations to the operations parameter.
-     * 
+     *
      * @throws OperationApplicationException
      * @throws RemoteException
      */

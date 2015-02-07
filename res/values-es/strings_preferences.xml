@@ -28,6 +28,7 @@
     <string name="pref_category_report_content">CONTENIDO DEL INFORME</string>
     <string name="pref_category_performance">RENDIMIENTO</string>
     <string name="pref_category_notifications">NOTIFICACIONES</string>
+    <string name="pref_category_database">BASE DE DATOS</string>
     <string name="pref_title_select_fields">Campos</string>
     <string name="pref_summary_select_fields">Escoger los campos fijados en el fichero log y los ficheros exportados.</string>
     <string name="pref_title_speed_test">Prueba de velocidad</string>
@@ -53,6 +54,8 @@
     <string name="pref_summary_import">Importar una base de datos exportada desde Network Monitor.</string>
     <string name="pref_title_compress">Comprimir la base de datos</string>
     <string name="pref_summary_compress">Reducir el tamaño de la base de datos fusionando linéas idénticas.</string>
+    <string name="pref_title_db_record_count">Limitar el tamaño de la base de datos</string>
+    <string name="pref_summary_db_record_count">Limitar el número de registros guardados en la base de datos: %s</string>
     <string name="pref_title_email">Enviar informes por correo</string>
     <string name="pref_summary_email">Enviar periódicamente un informe en varios formatos, por correo..</string>
     <string name="pref_title_notification_enabled">Activar las notificaciones</string>
@@ -62,6 +65,11 @@
     <string name="pref_value_notification_ringtone_silent">Silencio</string>
     <!--  Other preferences -->
     <string name="pref_title_filter_record_count">Número de filas a visualizar</string>
+    <string name="pref_value_filter_record_count_100">100 filas</string>
+    <string name="pref_value_filter_record_count_250">250 filas</string>
+    <string name="pref_value_filter_record_count_500">500 filas</string>
+    <string name="pref_value_filter_record_count_1000">1000 filas</string>
+    <string name="pref_value_filter_record_count_10000">10000 filas</string>
     <string name="pref_value_filter_record_count_all">Todas</string>
 
 </resources>

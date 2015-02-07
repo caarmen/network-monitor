@@ -39,12 +39,12 @@ import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.db.DBCompress;
+import ca.rmen.android.networkmonitor.app.db.DBImport;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.InfoDialogFragment.InfoDialogListener;
 import ca.rmen.android.networkmonitor.app.dialog.ProgressDialogFragment;
-import ca.rmen.android.networkmonitor.app.importdb.DBCompress;
-import ca.rmen.android.networkmonitor.app.importdb.DBImport;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**

@@ -37,6 +37,7 @@ import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.app.db.DBPurge;
 import ca.rmen.android.networkmonitor.app.email.ReportEmailer;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.service.datasources.NetMonDataSources;
@@ -155,6 +156,7 @@ public class NetMonService extends Service {
                 values.put(NetMonColumns.TIMESTAMP, System.currentTimeMillis());
                 values.putAll(mDataSources.getContentValues());
                 getContentResolver().insert(NetMonColumns.CONTENT_URI, values);
+                DBPurge.purgeDB(NetMonService.this);
 
                 // Send mail
                 mReportEmailer.send();
@@ -186,6 +188,5 @@ public class NetMonService extends Service {
             }
         }
     };
-
 
 }
