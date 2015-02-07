@@ -200,13 +200,19 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="ca.rmen.android.networkmonitor.app.dialog.TransparentDialogActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:theme="@style/NetMonNoDisplayTheme" >
             <intent-filter>
-                <action android:name="ca.rmen.android.networkmonitor.app.prefs_show_info_dialog" />
+                <action android:name="ca.rmen.android.networkmonitor.app.dialog_show_info_dialog" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
-                <action android:name="ca.rmen.android.networkmonitor.app.prefs_show_warning_dialog" />
+                <action android:name="ca.rmen.android.networkmonitor.app.dialog_show_warning_dialog" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

@@ -30,14 +30,10 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.Constants;
@@ -50,10 +46,9 @@ import ca.rmen.android.networkmonitor.app.db.export.FileExport;
 import ca.rmen.android.networkmonitor.app.db.export.HTMLExport;
 import ca.rmen.android.networkmonitor.app.db.export.SummaryExport;
 import ca.rmen.android.networkmonitor.app.db.export.kml.KMLExport;
-import ca.rmen.android.networkmonitor.app.dialog.ChoiceDialogFragment.DialogItemListener;
-import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
+import ca.rmen.android.networkmonitor.app.dialog.TransparentDialogActivity;
 import ca.rmen.android.networkmonitor.app.main.NetMonAsyncTask;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -61,18 +56,17 @@ import ca.rmen.android.networkmonitor.util.Log;
  * Provides actions on the network monitor log: sharing and clearing the log file.
  * This activity has a transparent theme. The only thing the user will see will be alert dialogs that this activity creates.
  */
-public class LogActionsActivity extends FragmentActivity implements DialogButtonListener, DialogItemListener, OnCancelListener, OnDismissListener { // NO_UCD (use default)
+public class LogActionsActivity extends TransparentDialogActivity { // NO_UCD (use default)
+    private static final String TAG = Constants.TAG + LogActionsActivity.class.getSimpleName();
+
     static final String ACTION_SHARE = LogActionsActivity.class.getPackage().getName() + "_share";
     static final String ACTION_CLEAR = LogActionsActivity.class.getPackage().getName() + "_clear";
 
-    private static final String TAG = Constants.TAG + LogActionsActivity.class.getSimpleName();
-    // True if the user interacted with a dialog other than to dismiss it.
-    // IE: they clicked "ok" or selected an item from the list.
-    private boolean mUserInput = false;
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        Log.v(TAG, "onCreate, bundle = " + bundle);
         String action = getIntent().getAction();
         if (ACTION_SHARE.equals(action)) {
             DialogFragmentFactory.showChoiceDialog(this, getString(R.string.export_choice_title), getResources().getStringArray(R.array.export_choices), -1,
@@ -168,7 +162,7 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
     @Override
     public void onOkClicked(int actionId, Bundle extras) {
         Log.v(TAG, "onOkClicked, actionId = " + actionId);
-        mUserInput = true;
+        super.onOkClicked(actionId, extras);
         // The user confirmed to clear the logs.
         if (actionId == R.id.action_clear) {
             Log.v(TAG, "Clicked ok to clear log");
@@ -191,7 +185,7 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
     @Override
     public void onItemSelected(int actionId, CharSequence[] choices, int which) {
         Log.v(TAG, "onItemSelected: actionId =  " + actionId + ", choices = " + Arrays.toString(choices) + ", which = " + which);
-        mUserInput = true;
+        super.onItemSelected(actionId, choices, which);
         // The user picked a file format to export.
         if (actionId == R.id.action_share) {
 
@@ -220,34 +214,4 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
         }
     }
 
-    @Override
-    public void onCancelClicked(int actionId, Bundle extras) {
-        Log.v(TAG, "onCancelClicked, actionId = " + actionId);
-        if (actionId == R.id.action_clear || actionId == R.id.action_share) dismiss();
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        Log.v(TAG, "onDismiss");
-        if (mUserInput) {
-            // Ignore, the dialog was dismissed because the user tapped ok on the dialog or selected an item from the list in the dialog.
-        } else {
-            dismiss();
-        }
-    }
-
-    /**
-     * Listener to finish this activity with a canceled result when the user presses back on a dialog.
-     */
-    @Override
-    public void onCancel(DialogInterface dialog) {
-        Log.v(TAG, "onCancel");
-        dismiss();
-    }
-
-    private void dismiss() {
-        Log.v(TAG, "dismiss");
-        setResult(RESULT_CANCELED);
-        finish();
-    }
 }
