@@ -33,16 +33,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.db.DBCompress;
-import ca.rmen.android.networkmonitor.app.db.DBImport;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.InfoDialogFragment.InfoDialogListener;
-import ca.rmen.android.networkmonitor.app.main.NetMonAsyncTask;
+import ca.rmen.android.networkmonitor.app.useractions.Clear;
+import ca.rmen.android.networkmonitor.app.useractions.Compress;
+import ca.rmen.android.networkmonitor.app.useractions.Import;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -53,6 +52,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class PreferenceFragmentActivity extends FragmentActivity implements DialogButtonListener, OnDismissListener, OnCancelListener, InfoDialogListener { // NO_UCD (use default)
     public static final String ACTION_IMPORT = PreferenceFragmentActivity.class.getPackage().getName() + "_import";
     public static final String ACTION_COMPRESS = PreferenceFragmentActivity.class.getPackage().getName() + "_compress";
+    public static final String ACTION_CLEAR_OLD = PreferenceFragmentActivity.class.getPackage().getName() + "_clear_old";
     public static final String ACTION_CHECK_LOCATION_SETTINGS = PreferenceFragmentActivity.class.getPackage().getName() + "_check_location_settings";
     public static final String ACTION_SHOW_INFO_DIALOG = PreferenceFragmentActivity.class.getPackage().getName() + "_show_info_dialog";
     public static final String ACTION_SHOW_WARNING_DIALOG = PreferenceFragmentActivity.class.getPackage().getName() + "_show_warning_dialog";
@@ -84,6 +84,8 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
         } else if (ACTION_COMPRESS.equals(action)) {
             DialogFragmentFactory.showConfirmDialog(this, getString(R.string.compress_confirm_title), getString(R.string.compress_confirm_message),
                     ID_ACTION_COMPRESS, getIntent().getExtras());
+        } else if (ACTION_CLEAR_OLD.equals(action)) {
+            Clear.clear(this, NetMonPreferences.getInstance(this).getDBRecordCount());
         } else if (ACTION_SHOW_INFO_DIALOG.equals(action)) {
             DialogFragmentFactory.showInfoDialog(this, getIntent().getExtras().getString(EXTRA_DIALOG_TITLE),
                     getIntent().getExtras().getString(EXTRA_DIALOG_MESSAGE));
@@ -103,31 +105,11 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
         // Import the database in a background thread.
         if (actionId == ID_ACTION_IMPORT) {
             final Uri uri = extras.getParcelable(EXTRA_IMPORT_URI);
-            DBImport dbImport = new DBImport(this, uri);
-            NetMonAsyncTask<Boolean> task = new NetMonAsyncTask<Boolean>(this, dbImport, null) {
-
-                @Override
-                protected void onPostExecute(Boolean result) {
-                    String toastText = result ? getString(R.string.import_successful, uri.getPath()) : getString(R.string.import_failed, uri.getPath());
-                    Toast.makeText(PreferenceFragmentActivity.this, toastText, Toast.LENGTH_SHORT).show();
-                    super.onPostExecute(result);
-                }
-            };
-            task.execute();
+            Import.importDb(this, uri);
         }
         // Compress the database in a background thread
         else if (actionId == ID_ACTION_COMPRESS) {
-            DBCompress dbCompress = new DBCompress(this);
-            NetMonAsyncTask<Integer> task = new NetMonAsyncTask<Integer>(this, dbCompress, null) {
-
-                @Override
-                protected void onPostExecute(Integer result) {
-                    String toastText = result >= 0 ? getString(R.string.compress_successful, result) : getString(R.string.compress_failed);
-                    Toast.makeText(PreferenceFragmentActivity.this, toastText, Toast.LENGTH_SHORT).show();
-                    super.onPostExecute(result);
-                }
-            };
-            task.execute();
+            Compress.compress(this);
         } else if (actionId == ID_ACTION_LOCATION_SETTINGS) {
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intent);

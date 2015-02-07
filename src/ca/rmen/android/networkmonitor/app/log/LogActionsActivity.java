@@ -24,37 +24,21 @@
  */
 package ca.rmen.android.networkmonitor.app.log;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Arrays;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.db.DBPurge;
-import ca.rmen.android.networkmonitor.app.db.export.CSVExport;
-import ca.rmen.android.networkmonitor.app.db.export.DBExport;
-import ca.rmen.android.networkmonitor.app.db.export.ExcelExport;
-import ca.rmen.android.networkmonitor.app.db.export.FileExport;
-import ca.rmen.android.networkmonitor.app.db.export.HTMLExport;
-import ca.rmen.android.networkmonitor.app.db.export.SummaryExport;
-import ca.rmen.android.networkmonitor.app.db.export.kml.KMLExport;
 import ca.rmen.android.networkmonitor.app.dialog.ChoiceDialogFragment.DialogItemListener;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
-import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
-import ca.rmen.android.networkmonitor.app.main.NetMonAsyncTask;
+import ca.rmen.android.networkmonitor.app.useractions.Clear;
+import ca.rmen.android.networkmonitor.app.useractions.Share;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -85,85 +69,6 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
         }
     }
 
-    /**
-     * Prompt a user for the field they want to export to KML, then do the export.
-     */
-    private void shareKml() {
-        Log.v(TAG, "shareKml");
-
-        PreferenceDialog.showKMLExportColumnChoiceDialog(this, new PreferenceDialog.PreferenceChoiceDialogListener() {
-
-            @Override
-            public void onPreferenceValueSelected(String value) {
-                try {
-                    KMLExport kmlExport = new KMLExport(LogActionsActivity.this, value);
-                    shareFile(kmlExport);
-                } catch (FileNotFoundException e) {
-                    Log.w(TAG, "Error sharing file: " + e.getMessage(), e);
-                }
-            }
-
-            @Override
-            public void onCancel() {
-                setResult(RESULT_CANCELED);
-                finish();
-            }
-        });
-    }
-
-    /**
-     * Run the given file export, then bring up the chooser intent to share the exported file.
-     */
-    private void shareFile(final FileExport fileExport) {
-        Log.v(TAG, "shareFile " + fileExport);
-
-        Bundle bundle = new Bundle(2);
-        bundle.putInt(NetMonAsyncTask.EXTRA_DIALOG_STYLE, fileExport != null ? ProgressDialog.STYLE_HORIZONTAL : ProgressDialog.STYLE_SPINNER);
-        bundle.putString(NetMonAsyncTask.EXTRA_DIALOG_MESSAGE, getString(R.string.export_progress_preparing_export));
-        new NetMonAsyncTask<File>(this, fileExport, bundle) {
-
-
-            @Override
-            protected File doInBackground(Void... params) {
-                File file = null;
-                if (fileExport != null) {
-                    if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) return null;
-                    file = super.doInBackground(params);
-                    if (file == null) return null;
-                }
-
-                String reportSummary = SummaryExport.getSummary(LogActionsActivity.this);
-                // Bring up the chooser to share the file.
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.export_subject_send_log));
-
-                String dateRange = SummaryExport.getDataCollectionDateRange(LogActionsActivity.this);
-
-                String messageBody = getString(R.string.export_message_text, dateRange);
-                if (file != null) {
-                    sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getAbsolutePath()));
-                    sendIntent.setType("message/rfc822");
-                    messageBody += getString(R.string.export_message_text_file_attached);
-                } else {
-                    sendIntent.setType("text/plain");
-                }
-                messageBody += reportSummary;
-                sendIntent.putExtra(Intent.EXTRA_TEXT, messageBody);
-
-                startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.action_share)));
-                return file;
-            }
-
-            @Override
-            protected void onPostExecute(File result) {
-                // Show a toast if we failed to export a file.
-                if (fileExport != null && result == null)
-                    Toast.makeText(LogActionsActivity.this, R.string.export_error_sdcard_unmounted, Toast.LENGTH_LONG).show();
-                super.onPostExecute(result);
-            }
-        }.execute();
-    }
 
     @Override
     public void onOkClicked(int actionId, Bundle extras) {
@@ -172,19 +77,7 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
         // The user confirmed to clear the logs.
         if (actionId == R.id.action_clear) {
             Log.v(TAG, "Clicked ok to clear log");
-            DBPurge dbPurge = new DBPurge(this, 0);
-            Bundle bundle = new Bundle(1);
-            bundle.putInt(NetMonAsyncTask.EXTRA_DIALOG_STYLE, ProgressDialog.STYLE_SPINNER);
-            new NetMonAsyncTask<Integer>(this, dbPurge, bundle) {
-
-                @Override
-                protected void onPostExecute(Integer result) {
-                    // Once the DB is deleted, reload the WebView.
-                    Toast.makeText(LogActionsActivity.this, R.string.success_logs_clear, Toast.LENGTH_LONG).show();
-                    setResult(RESULT_OK);
-                    super.onPostExecute(result);
-                }
-            }.execute();
+            Clear.clear(this, 0);
         }
     }
 
@@ -194,29 +87,9 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
         mUserInput = true;
         // The user picked a file format to export.
         if (actionId == R.id.action_share) {
-
             String[] exportChoices = getResources().getStringArray(R.array.export_choices);
-            FileExport fileExport = null;
-            try {
-                if (getString(R.string.export_choice_csv).equals(exportChoices[which])) {
-                    fileExport = new CSVExport(LogActionsActivity.this);
-                } else if (getString(R.string.export_choice_html).equals(exportChoices[which])) {
-                    fileExport = new HTMLExport(LogActionsActivity.this, true);
-                } else if (getString(R.string.export_choice_kml).equals(exportChoices[which])) {
-                    // The KML export requires a second dialog before we can share, so we return here.
-                    shareKml();
-                    return;
-                } else if (getString(R.string.export_choice_excel).equals(exportChoices[which])) {
-                    fileExport = new ExcelExport(LogActionsActivity.this);
-                } else if (getString(R.string.export_choice_db).equals(exportChoices[which])) {
-                    fileExport = new DBExport(LogActionsActivity.this);
-                } else {
-                    // Text summary only
-                }
-                shareFile(fileExport);
-            } catch (IOException e) {
-                Log.w(TAG, "Error sharing file: " + e.getMessage(), e);
-            }
+            String selectedShareFormat = exportChoices[which];
+            Share.share(this, selectedShareFormat);
         }
     }
 
