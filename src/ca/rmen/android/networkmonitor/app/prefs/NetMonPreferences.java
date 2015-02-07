@@ -72,7 +72,7 @@ public class NetMonPreferences {
     public static final String PREF_KML_EXPORT_COLUMN = "PREF_KML_EXPORT_COLUMN";
     public static final String PREF_FILTER_RECORD_COUNT = "PREF_FILTER_RECORD_COUNT";
     public static final String PREF_FILTER_RECORD_COUNT_DEFAULT = "100";
-    public static final String PREF_DB_RECORD_COUNT = "DB_RECORD_COUNT";
+    public static final String PREF_DB_RECORD_COUNT = "PREF_DB_RECORD_COUNT";
     public static final String PREF_DB_RECORD_COUNT_DEFAULT = "-1";
     public static final String PREF_CELL_ID_FORMAT = "PREF_CELL_ID_FORMAT";
     public static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
@@ -147,6 +147,13 @@ public class NetMonPreferences {
      */
     public int getFilterRecordCount() {
         return getIntPreference(NetMonPreferences.PREF_FILTER_RECORD_COUNT, NetMonPreferences.PREF_FILTER_RECORD_COUNT_DEFAULT);
+    }
+
+    /**
+     * @return the number of rows we should store in the database
+     */
+    public int getDBRecordCount() {
+        return getIntPreference(NetMonPreferences.PREF_DB_RECORD_COUNT, NetMonPreferences.PREF_DB_RECORD_COUNT_DEFAULT);
     }
 
     /**

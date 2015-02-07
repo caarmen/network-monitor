@@ -80,7 +80,7 @@ public class DBImport {
         ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
         operations.add(ContentProviderOperation.newDelete(NetMonColumns.CONTENT_URI).build());
         Uri insertUri = new Uri.Builder().authority(NetMonProvider.AUTHORITY).appendPath(NetMonColumns.TABLE_NAME)
-                .appendQueryParameter(NetMonProvider.QUERY_NOTIFY, "false").build();
+                .appendQueryParameter(NetMonProvider.QUERY_PARAMETER_NOTIFY, "false").build();
         buildInsertOperations(context, dbImport, insertUri, NetMonColumns.TABLE_NAME, operations);
         dbImport.close();
     }

@@ -58,8 +58,9 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     public static final String AUTHORITY = "ca.rmen.android.networkmonitor.provider";
     static final String CONTENT_URI_BASE = "content://" + AUTHORITY;
 
-    public static final String QUERY_NOTIFY = "QUERY_NOTIFY";
-    private static final String QUERY_GROUP_BY = "QUERY_GROUP_BY";
+    public static final String QUERY_PARAMETER_NOTIFY = "QUERY_PARAMETER_NOTIFY";
+    public static final String QUERY_PARAMETER_LIMIT = "QUERY_PARAMETER_LIMIT";
+    private static final String QUERY_PARAMETER_GROUP_BY = "QUERY_PARAMETER_GROUP_BY";
 
     private static final int URI_TYPE_NETWORKMONITOR = 0;
     private static final int URI_TYPE_NETWORKMONITOR_ID = 1;
@@ -104,7 +105,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
         final String table = uri.getLastPathSegment();
         final long rowId = mNetworkMonitorDatabase.getWritableDatabase().insert(table, null, values);
         String notify;
-        if (rowId != -1 && ((notify = uri.getQueryParameter(QUERY_NOTIFY)) == null || "true".equals(notify))) {
+        if (rowId != -1 && ((notify = uri.getQueryParameter(QUERY_PARAMETER_NOTIFY)) == null || "true".equals(notify))) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return uri.buildUpon().appendEncodedPath(String.valueOf(rowId)).build();
@@ -129,7 +130,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
             db.endTransaction();
         }
         String notify;
-        if (res != 0 && ((notify = uri.getQueryParameter(QUERY_NOTIFY)) == null || "true".equals(notify))) {
+        if (res != 0 && ((notify = uri.getQueryParameter(QUERY_PARAMETER_NOTIFY)) == null || "true".equals(notify))) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
 
@@ -142,7 +143,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
         final QueryParams queryParams = getQueryParams(uri, selection, false);
         final int res = mNetworkMonitorDatabase.getWritableDatabase().update(queryParams.table, values, queryParams.whereClause, selectionArgs);
         String notify;
-        if (res != 0 && ((notify = uri.getQueryParameter(QUERY_NOTIFY)) == null || "true".equals(notify))) {
+        if (res != 0 && ((notify = uri.getQueryParameter(QUERY_PARAMETER_NOTIFY)) == null || "true".equals(notify))) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return res;
@@ -154,7 +155,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
         final QueryParams queryParams = getQueryParams(uri, selection, false);
         final int res = mNetworkMonitorDatabase.getWritableDatabase().delete(queryParams.table, queryParams.whereClause, selectionArgs);
         String notify;
-        if (res != 0 && ((notify = uri.getQueryParameter(QUERY_NOTIFY)) == null || "true".equals(notify))) {
+        if (res != 0 && ((notify = uri.getQueryParameter(QUERY_PARAMETER_NOTIFY)) == null || "true".equals(notify))) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return res;
@@ -162,7 +163,8 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        final String groupBy = uri.getQueryParameter(QUERY_GROUP_BY);
+        final String groupBy = uri.getQueryParameter(QUERY_PARAMETER_GROUP_BY);
+        final String limit = uri.getQueryParameter(QUERY_PARAMETER_LIMIT);
         Log.d(TAG,
                 "query uri=" + uri + ", projection = " + Arrays.toString(projection) + ", selection=" + selection + ", selectionArgs = "
                         + Arrays.toString(selectionArgs) + ", sortOrder=" + sortOrder + ", groupBy=" + groupBy);
@@ -175,11 +177,11 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
 
                 final QueryParams queryParams = getQueryParams(uri, selection, true);
                 res = mNetworkMonitorDatabase.getReadableDatabase().query(queryParams.table, projection, queryParams.whereClause, selectionArgs, groupBy, null,
-                        sortOrder == null ? queryParams.orderBy : sortOrder);
+                        sortOrder == null ? queryParams.orderBy : sortOrder, limit);
                 break;
             case URI_TYPE_SUMMARY:
                 res = mNetworkMonitorDatabase.getReadableDatabase().query(ConnectionTestStatsColumns.VIEW_NAME, projection, selection, selectionArgs, groupBy,
-                        null, sortOrder);
+                        null, sortOrder, limit);
                 break;
             case URI_TYPE_UNIQUE_VALUES_ID:
                 String columnName = uri.getLastPathSegment();
@@ -190,7 +192,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
                 qb.setDistinct(true);
                 qb.setTables(NetMonColumns.TABLE_NAME);
                 qb.setProjectionMap(projectionMap);
-                res = qb.query(mNetworkMonitorDatabase.getReadableDatabase(), projection, selection, selectionArgs, columnName, null, sortOrder);
+                res = qb.query(mNetworkMonitorDatabase.getReadableDatabase(), projection, selection, selectionArgs, columnName, null, sortOrder, limit);
                 break;
             default:
                 return null;

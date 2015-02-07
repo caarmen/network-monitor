@@ -50,7 +50,7 @@ public class DBCompress {
      */
     public static int compressDB(Context context) throws RemoteException, OperationApplicationException, IOException {
         Log.v(TAG, "compress DB");
-        Cursor c = context.getContentResolver().query(NetMonColumns.CONTENT_URI, null, null, null, NetMonColumns.TIMESTAMP);
+        Cursor c = context.getContentResolver().query(NetMonColumns.CONTENT_URI, null, null, null, BaseColumns._ID);
         Map<Integer, String> previousRow = null;
         List<Integer> rowIdsToDelete = new ArrayList<Integer>();
         int idLastRow = 0;
