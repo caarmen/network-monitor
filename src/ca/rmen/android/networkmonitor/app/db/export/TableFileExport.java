@@ -92,7 +92,8 @@ abstract class TableFileExport extends FileExport {
         // Order and filter the results based on the user's preferences.
         SortPreferences sortPreferences = NetMonPreferences.getInstance(mContext).getSortPreferences();
         Selection selection = FilterPreferences.getSelectionClause(mContext);
-        Uri uri = NetMonColumns.CONTENT_URI.buildUpon().appendQueryParameter(NetMonProvider.QUERY_PARAMETER_LIMIT, String.valueOf(recordCount)).build();
+        Uri uri = NetMonColumns.CONTENT_URI;
+        if (recordCount > 0) uri = uri.buildUpon().appendQueryParameter(NetMonProvider.QUERY_PARAMETER_LIMIT, String.valueOf(recordCount)).build();
         Cursor c = mContext.getContentResolver().query(uri, usedColumnNames, selection.selectionString, selection.selectionArgs,
                 sortPreferences.getOrderByClause());
         if (c != null) {
