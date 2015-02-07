@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.export;
+package ca.rmen.android.networkmonitor.app.db.export;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,9 +32,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.content.Context;
-import ca.rmen.android.networkmonitor.util.Log;
 
+import ca.rmen.android.networkmonitor.util.Log;
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
 import ca.rmen.android.networkmonitor.provider.NetMonDatabase;
 
 /**
@@ -43,7 +44,7 @@ import ca.rmen.android.networkmonitor.provider.NetMonDatabase;
 public class DBExport extends FileExport {
     private static final String TAG = Constants.TAG + DBExport.class.getSimpleName();
 
-    public DBExport(Context context, ExportProgressListener listener) throws FileNotFoundException {
+    public DBExport(Context context, DBProcessProgressListener listener) throws FileNotFoundException {
         super(context, new File(context.getExternalFilesDir(null), NetMonDatabase.DATABASE_NAME), listener);
     }
 
@@ -61,7 +62,7 @@ public class DBExport extends FileExport {
                 os.write(buffer, 0, len);
                 bytesWritten += len;
                 // Notify the listener about the number of kb written.
-                if (mListener != null) mListener.onExportProgress(bytesWritten / 1000, fileSize / 1000);
+                if (mListener != null) mListener.onProgress(bytesWritten / 1000, fileSize / 1000);
             }
             is.close();
             os.close();

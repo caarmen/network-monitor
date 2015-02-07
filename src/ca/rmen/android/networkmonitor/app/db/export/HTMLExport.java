@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.export;
+package ca.rmen.android.networkmonitor.app.db.export;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,7 +33,8 @@ import android.content.Context;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.export.FormatterFactory.FormatterStyle;
+import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
+import ca.rmen.android.networkmonitor.app.db.export.FormatterFactory.FormatterStyle;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences.SortOrder;
@@ -52,7 +53,7 @@ public class HTMLExport extends TableFileExport {
     /**
      * @param external if true, the file will be exported to the sd card. Otherwise it will written to the app's internal storage.
      */
-    public HTMLExport(Context context, boolean external, FileExport.ExportProgressListener listener) throws FileNotFoundException, UnsupportedEncodingException {
+    public HTMLExport(Context context, boolean external, DBProcessProgressListener listener) throws FileNotFoundException, UnsupportedEncodingException {
         super(context, new File(external ? context.getExternalFilesDir(null) : context.getFilesDir(), HTML_FILE), FormatterStyle.XML, listener);
         mPrintWriter = new PrintWriter(mFile, "utf-8");
     }

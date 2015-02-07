@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.export;
+package ca.rmen.android.networkmonitor.app.db.export;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,7 +33,8 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.app.export.FormatterFactory.FormatterStyle;
+import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
+import ca.rmen.android.networkmonitor.app.db.export.FormatterFactory.FormatterStyle;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences.Selection;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
@@ -49,7 +50,7 @@ abstract class TableFileExport extends FileExport {
     private static final String TAG = Constants.TAG + TableFileExport.class.getSimpleName();
     private final FormatterStyle mFormatterStyle;
 
-    TableFileExport(Context context, File file, FormatterStyle formatterStyle, FileExport.ExportProgressListener listener) throws FileNotFoundException {
+    TableFileExport(Context context, File file, FormatterStyle formatterStyle, DBProcessProgressListener listener) throws FileNotFoundException {
         super(context, file, listener);
         mFormatterStyle = formatterStyle;
     }
@@ -110,7 +111,7 @@ abstract class TableFileExport extends FileExport {
                         cellValues[i] = formatter.format(c, i);
                     writeRow(c.getPosition(), cellValues);
                     // Notify the listener of our progress (progress is 1-based)
-                    if (mListener != null) mListener.onExportProgress(c.getPosition() + 1, rowsAvailable);
+                    if (mListener != null) mListener.onProgress(c.getPosition() + 1, rowsAvailable);
                 }
 
                 // Write the footer and clean up the file.

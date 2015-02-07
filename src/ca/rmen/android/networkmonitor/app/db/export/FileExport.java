@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.export;
+package ca.rmen.android.networkmonitor.app.db.export;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,6 +29,7 @@ import java.io.FileNotFoundException;
 import android.content.Context;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -38,16 +39,11 @@ public abstract class FileExport {
     private static final String TAG = Constants.TAG + FileExport.class.getSimpleName();
 
 
-    public interface ExportProgressListener {
-        void onExportProgress(int progress, int max);
-    }
-
-
     protected final Context mContext;
     protected final File mFile;
-    protected final ExportProgressListener mListener;
+    protected final DBProcessProgressListener mListener;
 
-    protected FileExport(Context context, File file, ExportProgressListener listener) throws FileNotFoundException {
+    protected FileExport(Context context, File file, DBProcessProgressListener listener) throws FileNotFoundException {
         Log.v(TAG, "FileExport: file " + file);
         mContext = context;
         mFile = file;

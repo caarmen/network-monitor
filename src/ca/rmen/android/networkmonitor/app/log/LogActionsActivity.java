@@ -44,18 +44,19 @@ import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
+import ca.rmen.android.networkmonitor.app.db.export.CSVExport;
+import ca.rmen.android.networkmonitor.app.db.export.DBExport;
+import ca.rmen.android.networkmonitor.app.db.export.ExcelExport;
+import ca.rmen.android.networkmonitor.app.db.export.FileExport;
+import ca.rmen.android.networkmonitor.app.db.export.HTMLExport;
+import ca.rmen.android.networkmonitor.app.db.export.SummaryExport;
+import ca.rmen.android.networkmonitor.app.db.export.kml.KMLExport;
 import ca.rmen.android.networkmonitor.app.dialog.ChoiceDialogFragment.DialogItemListener;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.dialog.ProgressDialogFragment;
-import ca.rmen.android.networkmonitor.app.export.CSVExport;
-import ca.rmen.android.networkmonitor.app.export.DBExport;
-import ca.rmen.android.networkmonitor.app.export.ExcelExport;
-import ca.rmen.android.networkmonitor.app.export.FileExport;
-import ca.rmen.android.networkmonitor.app.export.HTMLExport;
-import ca.rmen.android.networkmonitor.app.export.SummaryExport;
-import ca.rmen.android.networkmonitor.app.export.kml.KMLExport;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -179,10 +180,10 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
     }
 
 
-    private final FileExport.ExportProgressListener mExportProgressListener = new FileExport.ExportProgressListener() {
+    private final DBProcessProgressListener mExportProgressListener = new DBProcessProgressListener() {
 
         @Override
-        public void onExportProgress(final int progress, final int max) {
+        public void onProgress(final int progress, final int max) {
             Log.v(TAG, "onRowExported: " + progress + "/" + max);
             runOnUiThread(new Runnable() {
 

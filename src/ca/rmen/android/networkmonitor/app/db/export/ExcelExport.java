@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.export;
+package ca.rmen.android.networkmonitor.app.db.export;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,7 +46,8 @@ import android.content.Context;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.export.FormatterFactory.FormatterStyle;
+import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
+import ca.rmen.android.networkmonitor.app.db.export.FormatterFactory.FormatterStyle;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -67,7 +68,7 @@ public class ExcelExport extends TableFileExport {
     private int mRowCount;
     private int mColumnCount;
 
-    public ExcelExport(Context context, FileExport.ExportProgressListener listener) throws FileNotFoundException {
+    public ExcelExport(Context context, DBProcessProgressListener listener) throws FileNotFoundException {
         super(context, new File(context.getExternalFilesDir(null), EXCEL_FILE), FormatterStyle.DEFAULT, listener);
     }
 
