@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.importdb;
+package ca.rmen.android.networkmonitor.app.db;
 
 import java.io.IOException;
 import java.util.ArrayList;

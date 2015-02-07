@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.importdb;
+package ca.rmen.android.networkmonitor.app.db;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -87,7 +87,7 @@ public class DBImport {
 
     /**
      * Read all cells from the given table from the dbImport database, and add corresponding insert operations to the operations parameter.
-     * 
+     *
      * @throws OperationApplicationException
      * @throws RemoteException
      */
