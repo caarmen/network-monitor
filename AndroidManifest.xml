@@ -165,26 +165,20 @@
             android:label="@string/filter_columns_title">
         </activity>
         <activity
-            android:name="ca.rmen.android.networkmonitor.app.log.LogActionsActivity"
-            android:configChanges="orientation|screenSize"
-            android:exported="false"
-            android:theme="@style/NetMonNoDisplayTheme" >
-            <intent-filter>
-                <action android:name="ca.rmen.android.networkmonitor.app.log_share" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="ca.rmen.android.networkmonitor.app.log_clear" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name="ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:theme="@style/NetMonNoDisplayTheme" >
+            <intent-filter>
+                <action android:name="ca.rmen.android.networkmonitor.app.prefs_share" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="ca.rmen.android.networkmonitor.app.prefs_clear" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
             <intent-filter>
                 <action android:name="ca.rmen.android.networkmonitor.app.prefs_import" />
 

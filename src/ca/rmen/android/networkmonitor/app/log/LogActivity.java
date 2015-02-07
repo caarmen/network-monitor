@@ -56,6 +56,7 @@ import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.prefs.FilterColumnActivity;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
+import ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity;
 import ca.rmen.android.networkmonitor.app.prefs.SelectFieldsActivity;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences.SortOrder;
@@ -112,14 +113,14 @@ public class LogActivity extends FragmentActivity implements DialogButtonListene
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             case R.id.action_share:
-                Intent intentShare = new Intent(LogActionsActivity.ACTION_SHARE);
+                Intent intentShare = new Intent(PreferenceFragmentActivity.ACTION_SHARE);
                 startActivity(intentShare);
                 return true;
             case R.id.action_refresh:
                 loadHTMLFile();
                 return true;
             case R.id.action_clear:
-                Intent intentClear = new Intent(LogActionsActivity.ACTION_CLEAR);
+                Intent intentClear = new Intent(PreferenceFragmentActivity.ACTION_CLEAR);
                 startActivityForResult(intentClear, REQUEST_CODE_CLEAR);
                 return true;
             case R.id.action_select_fields:
