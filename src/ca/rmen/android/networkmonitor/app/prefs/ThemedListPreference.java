@@ -78,4 +78,15 @@ public class ThemedListPreference extends ListPreference {
         }
     }
 
+    @Override
+    public CharSequence getSummary() {
+        CharSequence summary = super.getSummary();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) return summary;
+        CharSequence entry = getEntry();
+        if (!TextUtils.isEmpty(summary) && !TextUtils.isEmpty(entry)) {
+            return String.valueOf(summary).replace("%s", entry);
+        }
+        return summary;
+    }
+
 }
