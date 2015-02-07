@@ -76,6 +76,10 @@
 	<string name="speed_test_play_store">I want more&#8230;</string>
 	<string name="speed_test_about_file">file:///android_asset/speed_test_about.html</string>
 
+	<!-- Polling frequency strings -->
+    <string name="warning_fast_polling_title">Warning!</string>
+    <string name="warning_fast_polling_message">You have selected a very fast polling frequency. Data tests have been disabled, and a maximum limit to the database size has been set. You can re-enable data tests by selecting a slower polling frequency, and going to the advanced options.</string>
+
     <string name="unknown">N/A</string>
 
 </resources>

@@ -74,6 +74,8 @@ public class NetMonPreferences {
     public static final String PREF_FILTER_RECORD_COUNT_DEFAULT = "100";
     public static final String PREF_DB_RECORD_COUNT = "PREF_DB_RECORD_COUNT";
     public static final String PREF_DB_RECORD_COUNT_DEFAULT = "-1";
+    public static final String PREF_ENABLE_CONNECTION_TEST = "PREF_ENABLE_CONNECTION_TEST";
+    public static final boolean PREF_ENABLE_CONNECTION_TEST_DEFAULT = true;
     public static final String PREF_CELL_ID_FORMAT = "PREF_CELL_ID_FORMAT";
     public static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
     public static final String PREF_LOCATION_FETCHING_STRATEGY = "PREF_LOCATION_FETCHING_STRATEGY";
@@ -156,11 +158,29 @@ public class NetMonPreferences {
         return getIntPreference(NetMonPreferences.PREF_DB_RECORD_COUNT, NetMonPreferences.PREF_DB_RECORD_COUNT_DEFAULT);
     }
 
+    public void setDBRecordCount(int recordCount) {
+        setIntPreference(NetMonPreferences.PREF_DB_RECORD_COUNT, recordCount);
+    }
+
     /**
      * @param filterRecordCount the number of rows we should display in the log view. This is only for display: we always export all rows.
      */
     public void setFilterRecordCount(int filterRecordCount) {
         mSharedPrefs.edit().putString(PREF_FILTER_RECORD_COUNT, String.valueOf(filterRecordCount)).commit();
+    }
+
+    /**
+     * @return true if we should do connection tests with each test.
+     */
+    public boolean isConnectionTestEnabled() {
+        return mSharedPrefs.getBoolean(NetMonPreferences.PREF_ENABLE_CONNECTION_TEST, NetMonPreferences.PREF_ENABLE_CONNECTION_TEST_DEFAULT);
+    }
+
+    /**
+     * Enable or disable the data connection tests.
+     */
+    public void setConnectionTestEnabled(boolean enabled) {
+        mSharedPrefs.edit().putBoolean(NetMonPreferences.PREF_ENABLE_CONNECTION_TEST, false).commit();
     }
 
     /**
@@ -315,6 +335,10 @@ public class NetMonPreferences {
         String valueStr = mSharedPrefs.getString(key, defaultValue);
         int valueInt = Integer.valueOf(valueStr);
         return valueInt;
+    }
+
+    private void setIntPreference(String key, int value) {
+        mSharedPrefs.edit().putString(key, String.valueOf(value)).commit();
     }
 
 }

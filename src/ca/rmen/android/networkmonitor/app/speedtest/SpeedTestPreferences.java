@@ -74,7 +74,7 @@ public class SpeedTestPreferences {
         return mSharedPrefs.getBoolean(PREF_SPEED_TEST_ENABLED, false);
     }
 
-    void setEnabled(boolean enabled) {
+    public void setEnabled(boolean enabled) {
         Log.v(TAG, "setEnabled " + enabled);
         mSharedPrefs.edit().putBoolean(PREF_SPEED_TEST_ENABLED, enabled).commit();
     }

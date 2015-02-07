@@ -106,6 +106,10 @@ class ConnectionTesterDataSource implements NetMonDataSource {
     public ContentValues getContentValues() {
         Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues(2);
+        if (!NetMonPreferences.getInstance(mContext).isConnectionTestEnabled()) {
+            Log.v(TAG, "Not doing data test");
+            return values;
+        }
         NetworkTestResult socketTestResult = getSocketTestResult();
         NetworkTestResult httpTestResult = getHttpTestResult();
         values.put(NetMonColumns.SOCKET_CONNECTION_TEST, socketTestResult.name());

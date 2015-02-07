@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -35,6 +36,7 @@ import android.view.ContextThemeWrapper;
 
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
+import ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -153,5 +155,19 @@ public class PreferenceDialog {
             }
         });
         dialog.show();
+    }
+
+    public static void showInfoDialog(Context context, String title, String message) {
+        Intent intent = new Intent(PreferenceFragmentActivity.ACTION_SHOW_INFO_DIALOG);
+        intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_TITLE, title);
+        intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_MESSAGE, message);
+        context.startActivity(intent);
+    }
+
+    public static void showWarningDialog(Context context, String title, String message) {
+        Intent intent = new Intent(PreferenceFragmentActivity.ACTION_SHOW_WARNING_DIALOG);
+        intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_TITLE, title);
+        intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_MESSAGE, message);
+        context.startActivity(intent);
     }
 }

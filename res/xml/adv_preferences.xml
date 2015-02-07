@@ -2,6 +2,12 @@
     android:key="preferenceScreen" >
 
     <PreferenceCategory android:title="@string/pref_category_report_content" >
+        <org.jraf.android.backport.switchwidget.SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_pref_enable_connection_test"
+            android:key="PREF_ENABLE_CONNECTION_TEST"
+            android:summary="@string/pref_summary_enable_connection_test"
+            android:title="@string/pref_title_enable_connection_test" />
         <Preference
             android:icon="@drawable/ic_pref_select_fields"
             android:summary="@string/pref_summary_select_fields"

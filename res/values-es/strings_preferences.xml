@@ -12,6 +12,8 @@
     <string name="pref_title_about">Acerca de</string>
     <string name="pref_value_interval_never">Nunca</string>
     <string name="pref_value_interval_network_change">Cuando la red cambia</string>
+    <string name="pref_value_interval_500_ms">½ segundo (pruebas de datos desactivadas)</string>
+    <string name="pref_value_interval_1_second">1 second (pruebas de datos desactivadas)</string>
     <string name="pref_value_interval_10_seconds">10 segundos</string>
     <string name="pref_value_interval_20_seconds">20 segundos</string>
     <string name="pref_value_interval_30_seconds">30 segundos</string>
@@ -29,6 +31,8 @@
     <string name="pref_category_performance">RENDIMIENTO</string>
     <string name="pref_category_notifications">NOTIFICACIONES</string>
     <string name="pref_category_database">BASE DE DATOS</string>
+    <string name="pref_title_enable_connection_test">Activar las pruebas de conexión</string>
+    <string name="pref_summary_enable_connection_test">Activar o desactivar las preubas de conexión (consume datos)</string>
     <string name="pref_title_select_fields">Campos</string>
     <string name="pref_summary_select_fields">Escoger los campos fijados en el fichero log y los ficheros exportados.</string>
     <string name="pref_title_speed_test">Prueba de velocidad</string>

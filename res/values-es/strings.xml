@@ -76,4 +76,8 @@
 	<string name="speed_test_play_store">Quiero más&#8230;</string>
 	<string name="speed_test_about_file">file:///android_asset/speed_test_about-es.html</string>
 
+	<!-- Polling frequency strings -->
+    <string name="warning_fast_polling_title">¡Aviso!</string>
+    <string name="warning_fast_polling_message">Has activado una frecuencia de pruebas muy rápida. Las pruebas de conexión han sido desactivadas, y el número de filas en la base de datos ha sido limitado.  Puedes reactivar las pruebas de conexión si escoges una frecuencia más lenta y abres los ajustes avanzados.</string>
+
 </resources>

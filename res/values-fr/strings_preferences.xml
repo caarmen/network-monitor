@@ -12,6 +12,8 @@
     <string name="pref_title_about">À propos</string>
     <string name="pref_value_interval_never">Jamais</string>
     <string name="pref_value_interval_network_change">Quand le réseau change</string>
+    <string name="pref_value_interval_500_ms">½ seconde (tests de données desactivées)</string>
+    <string name="pref_value_interval_1_second">1 seconde (tests de données desactivées)</string>
     <string name="pref_value_interval_10_seconds">10 secondes</string>
     <string name="pref_value_interval_20_seconds">20 secondes</string>
     <string name="pref_value_interval_30_seconds">30 secondes</string>
@@ -29,6 +31,8 @@
     <string name="pref_category_performance">PERFORMANCE</string>
     <string name="pref_category_notifications">NOTIFICATIONS</string>
     <string name="pref_category_database">BASE DE DONNÉES</string>
+    <string name="pref_title_enable_connection_test">Activer les tests de données</string>
+    <string name="pref_summary_enable_connection_test">Activer ou desactiver des tests de données</string>
     <string name="pref_title_select_fields">Champs</string>
     <string name="pref_summary_select_fields">Sélectionner les champs pour l\'affichage du journal et l\'export.</string>
     <string name="pref_title_speed_test">Test de vitesse</string>
