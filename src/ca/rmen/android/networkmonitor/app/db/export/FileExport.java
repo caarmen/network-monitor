@@ -30,12 +30,13 @@ import android.content.Context;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
+import ca.rmen.android.networkmonitor.app.db.DBTask;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Export the Network Monitor data from the DB to a file.
  */
-public abstract class FileExport {
+public abstract class FileExport implements DBTask<File> {
     private static final String TAG = Constants.TAG + FileExport.class.getSimpleName();
 
 
@@ -51,5 +52,6 @@ public abstract class FileExport {
     /**
      * @return the file if it was correctly exported, null otherwise.
      */
-    abstract public File export(DBProcessProgressListener listener);
+    @Override
+    abstract public File execute(DBProcessProgressListener listener);
 }

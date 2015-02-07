@@ -38,13 +38,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
 import ca.rmen.android.networkmonitor.app.db.export.CSVExport;
 import ca.rmen.android.networkmonitor.app.db.export.DBExport;
 import ca.rmen.android.networkmonitor.app.db.export.ExcelExport;
@@ -57,6 +55,7 @@ import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogBut
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.dialog.ProgressDialogFragment;
+import ca.rmen.android.networkmonitor.app.main.NetMonAsyncTask;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -120,24 +119,18 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
      */
     private void shareFile(final FileExport fileExport) {
         Log.v(TAG, "shareFile " + fileExport);
-        // Use a horizontal progress bar style if we can show progress of the export.
+
         String dialogMessage = getString(R.string.export_progress_preparing_export);
         int dialogStyle = fileExport != null ? ProgressDialog.STYLE_HORIZONTAL : ProgressDialog.STYLE_SPINNER;
-        DialogFragmentFactory.showProgressDialog(this, dialogMessage, dialogStyle, PROGRESS_DIALOG_TAG);
+        new NetMonAsyncTask<Void, Void, File>(this, fileExport, dialogStyle, dialogMessage) {
 
-        AsyncTask<Void, Void, File> asyncTask = new AsyncTask<Void, Void, File>() {
 
             @Override
             protected File doInBackground(Void... params) {
                 File file = null;
                 if (fileExport != null) {
                     if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) return null;
-                    try {
-                        // Export the file in the background.
-                        file = fileExport.export(mExportProgressListener);
-                    } catch (Throwable t) {
-                        Log.e(TAG, "Error exporting file " + fileExport + ": " + t.getMessage(), t);
-                    }
+                    file = super.doInBackground(params);
                     if (file == null) return null;
                 }
 
@@ -167,37 +160,12 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
             @Override
             protected void onPostExecute(File result) {
                 super.onPostExecute(result);
-                DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_TAG);
-                if (fragment != null) fragment.dismissAllowingStateLoss();
                 // Show a toast if we failed to export a file.
                 if (fileExport != null && result == null)
                     Toast.makeText(LogActionsActivity.this, R.string.export_error_sdcard_unmounted, Toast.LENGTH_LONG).show();
-                finish();
             }
-
-        };
-        asyncTask.execute();
+        }.execute();
     }
-
-
-    private final DBProcessProgressListener mExportProgressListener = new DBProcessProgressListener() {
-
-        @Override
-        public void onProgress(final int progress, final int max) {
-            Log.v(TAG, "onRowExported: " + progress + "/" + max);
-            runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-
-                    ProgressDialogFragment fragment = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_TAG);
-                    if (fragment != null) {
-                        fragment.setProgress(progress, max);
-                    }
-                }
-            });
-        }
-    };
 
     @Override
     public void onOkClicked(int actionId, Bundle extras) {

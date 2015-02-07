@@ -23,7 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -31,7 +30,6 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
@@ -41,11 +39,10 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.db.DBCompress;
 import ca.rmen.android.networkmonitor.app.db.DBImport;
-import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.InfoDialogFragment.InfoDialogListener;
-import ca.rmen.android.networkmonitor.app.dialog.ProgressDialogFragment;
+import ca.rmen.android.networkmonitor.app.main.NetMonAsyncTask;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -107,67 +104,27 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
         // Import the database in a background thread.
         if (actionId == ID_ACTION_IMPORT) {
             final Uri uri = extras.getParcelable(EXTRA_IMPORT_URI);
-            AsyncTask<Void, Void, Boolean> task = new AsyncTask<Void, Void, Boolean>() {
-
-                @Override
-                protected void onPreExecute() {
-                    DialogFragmentFactory.showProgressDialog(PreferenceFragmentActivity.this, getString(R.string.progress_dialog_message),
-                            ProgressDialog.STYLE_HORIZONTAL, PROGRESS_DIALOG_FRAGMENT_TAG);
-                }
-
-                @Override
-                protected Boolean doInBackground(Void... params) {
-                    try {
-                        Log.v(TAG, "Importing db from " + uri);
-                        DBImport.importDB(PreferenceFragmentActivity.this, uri, mProgressListener);
-                        return true;
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error importing db: " + e.getMessage(), e);
-                        return false;
-                    }
-                }
+            DBImport dbImport = new DBImport(this, uri);
+            NetMonAsyncTask<Void, Void, Boolean> task = new NetMonAsyncTask<Void, Void, Boolean>(this, dbImport) {
 
                 @Override
                 protected void onPostExecute(Boolean result) {
-                    ProgressDialogFragment dialogFragment = (ProgressDialogFragment) getSupportFragmentManager()
-                            .findFragmentByTag(PROGRESS_DIALOG_FRAGMENT_TAG);
-                    if (dialogFragment != null) dialogFragment.dismissAllowingStateLoss();
+                    super.onPostExecute(result);
                     String toastText = result ? getString(R.string.import_successful, uri.getPath()) : getString(R.string.import_failed, uri.getPath());
                     Toast.makeText(PreferenceFragmentActivity.this, toastText, Toast.LENGTH_SHORT).show();
-                    finish();
                 }
             };
             task.execute();
         }
         // Compress the database in a background thread
         else if (actionId == ID_ACTION_COMPRESS) {
-            AsyncTask<Void, Void, Integer> task = new AsyncTask<Void, Void, Integer>() {
-
-                @Override
-                protected void onPreExecute() {
-                    DialogFragmentFactory.showProgressDialog(PreferenceFragmentActivity.this, getString(R.string.progress_dialog_message),
-                            ProgressDialog.STYLE_HORIZONTAL, PROGRESS_DIALOG_FRAGMENT_TAG);
-                }
-
-                @Override
-                protected Integer doInBackground(Void... params) {
-                    try {
-                        Log.v(TAG, "Compressing db");
-                        return DBCompress.compressDB(PreferenceFragmentActivity.this, mProgressListener);
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error compressing db: " + e.getMessage(), e);
-                        return -1;
-                    }
-                }
+            DBCompress dbCompress = new DBCompress(this);
+            NetMonAsyncTask<Void, Void, Integer> task = new NetMonAsyncTask<Void, Void, Integer>(this, dbCompress) {
 
                 @Override
                 protected void onPostExecute(Integer result) {
-                    ProgressDialogFragment dialogFragment = (ProgressDialogFragment) getSupportFragmentManager()
-                            .findFragmentByTag(PROGRESS_DIALOG_FRAGMENT_TAG);
-                    if (dialogFragment != null) dialogFragment.dismissAllowingStateLoss();
                     String toastText = result >= 0 ? getString(R.string.compress_successful, result) : getString(R.string.compress_failed);
                     Toast.makeText(PreferenceFragmentActivity.this, toastText, Toast.LENGTH_SHORT).show();
-                    finish();
                 }
             };
             task.execute();
@@ -199,25 +156,6 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
             finish();
         }
     }
-
-    private final DBProcessProgressListener mProgressListener = new DBProcessProgressListener() {
-
-        @Override
-        public void onProgress(final int progress, final int max) {
-            Log.v(TAG, "onRowExported: " + progress + "/" + max);
-            runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-
-                    ProgressDialogFragment fragment = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_FRAGMENT_TAG);
-                    if (fragment != null) {
-                        fragment.setProgress(progress, max);
-                    }
-                }
-            });
-        }
-    };
 
     @Override
     public void onDismiss(DialogInterface dialog) {

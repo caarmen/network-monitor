@@ -49,7 +49,7 @@ public class DBExport extends FileExport {
     }
 
     @Override
-    public File export(DBProcessProgressListener listener) {
+    public File execute(DBProcessProgressListener listener) {
         File db = mContext.getDatabasePath(NetMonDatabase.DATABASE_NAME);
         try {
             InputStream is = new FileInputStream(db);

@@ -76,7 +76,7 @@ abstract class TableFileExport extends FileExport {
      * @return the file if it was correctly exported, null otherwise.
      */
     @Override
-    public File export(DBProcessProgressListener listener) {
+    public File execute(DBProcessProgressListener listener) {
         Log.v(TAG, "export");
         return export(0, listener);
     }

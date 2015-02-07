@@ -73,7 +73,7 @@ public class KMLExport extends FileExport {
      * @return the file if it was correctly exported, null otherwise.
      */
     @Override
-    public File export(DBProcessProgressListener listener) {
+    public File execute(DBProcessProgressListener listener) {
         Log.v(TAG, "export");
         Formatter formatter = FormatterFactory.getFormatter(FormatterStyle.XML, mContext);
         List<String> selectedColumns = new ArrayList<String>(NetMonPreferences.getInstance(mContext).getSelectedColumns());

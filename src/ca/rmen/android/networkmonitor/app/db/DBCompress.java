@@ -23,16 +23,13 @@
  */
 package ca.rmen.android.networkmonitor.app.db;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
-import android.content.OperationApplicationException;
 import android.database.Cursor;
-import android.os.RemoteException;
 import android.provider.BaseColumns;
 
 import ca.rmen.android.networkmonitor.Constants;
@@ -42,15 +39,22 @@ import ca.rmen.android.networkmonitor.util.Log;
 /**
  * Reduces groups of 3 or more consecutive rows with identical data (except the timestamp) into a single row.
  */
-public class DBCompress {
+public class DBCompress implements DBTask<Integer> {
     private static final String TAG = Constants.TAG + "/" + DBCompress.class.getSimpleName();
+
+    private final Context mContext;
+
+    public DBCompress(Context context) {
+        mContext = context;
+    }
 
     /**
      * @return the number of rows deleted from the database
      */
-    public static int compressDB(Context context, DBProcessProgressListener listener) throws RemoteException, OperationApplicationException, IOException {
+    @Override
+    public Integer execute(DBProcessProgressListener listener) {
         Log.v(TAG, "compress DB");
-        Cursor c = context.getContentResolver().query(NetMonColumns.CONTENT_URI, null, null, null, BaseColumns._ID);
+        Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, null, null, null, BaseColumns._ID);
         Map<Integer, String> previousRow = null;
         List<Integer> rowIdsToDelete = new ArrayList<Integer>();
         int idLastRow = 0;
@@ -96,7 +100,7 @@ public class DBCompress {
             inClause.append(rowIdsToDelete.get(i));
             if (i % 100 == 0 || i == numRowsToDelete - 1) {
                 String whereClause = BaseColumns._ID + " in (" + inClause + ")";
-                numRowsDeleted += context.getContentResolver().delete(NetMonColumns.CONTENT_URI, whereClause, null);
+                numRowsDeleted += mContext.getContentResolver().delete(NetMonColumns.CONTENT_URI, whereClause, null);
                 Log.v(TAG, "compress DB: deleted " + numRowsDeleted + " rows");
                 inClause = new StringBuilder();
 

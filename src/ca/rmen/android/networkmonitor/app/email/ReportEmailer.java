@@ -261,7 +261,7 @@ public class ReportEmailer {
         else
             /*if ("db".equals(fileType)) */fileExport = new DBExport(mContext);
         BodyPart bp = new MimeBodyPart();
-        File file = fileExport.export(null);
+        File file = fileExport.execute(null);
         DataSource dataSource = new FileDataSource(file);
         bp.setDataHandler(new DataHandler(dataSource));
         bp.setFileName(file.getName());
