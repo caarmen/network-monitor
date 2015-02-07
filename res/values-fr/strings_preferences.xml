@@ -28,6 +28,7 @@
     <string name="pref_category_report_content">CONTENU DU RAPPORT</string>
     <string name="pref_category_performance">PERFORMANCE</string>
     <string name="pref_category_notifications">NOTIFICATIONS</string>
+    <string name="pref_category_database">BASE DE DONNÉES</string>
     <string name="pref_title_select_fields">Champs</string>
     <string name="pref_summary_select_fields">Sélectionner les champs pour l\'affichage du journal et l\'export.</string>
     <string name="pref_title_speed_test">Test de vitesse</string>
@@ -53,6 +54,8 @@
     <string name="pref_summary_import">Importer une base de données exportée depuis Network Monitor.</string>
     <string name="pref_title_compress">Compresser la base de données.</string>
     <string name="pref_summary_compress">Réduire la taille de la base de données en fusionnant des lignes dupliquées.</string>
+    <string name="pref_title_db_record_count">Limiter la taille de la base de données</string>
+    <string name="pref_summary_db_record_count">Limiter le nombre de lignes en la base de données</string>
     <string name="pref_title_email">Envoyer des rapports par courriel</string>
     <string name="pref_summary_email">Envoyer périodiquement un rapport en plusieurs formats, par courriel.</string>
     <string name="pref_title_notification_enabled">Activer les notifications</string>

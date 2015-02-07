@@ -72,6 +72,8 @@ public class NetMonPreferences {
     public static final String PREF_KML_EXPORT_COLUMN = "PREF_KML_EXPORT_COLUMN";
     public static final String PREF_FILTER_RECORD_COUNT = "PREF_FILTER_RECORD_COUNT";
     public static final String PREF_FILTER_RECORD_COUNT_DEFAULT = "100";
+    public static final String PREF_DB_RECORD_COUNT = "DB_RECORD_COUNT";
+    public static final String PREF_DB_RECORD_COUNT_DEFAULT = "-1";
     public static final String PREF_CELL_ID_FORMAT = "PREF_CELL_ID_FORMAT";
     public static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
     public static final String PREF_LOCATION_FETCHING_STRATEGY = "PREF_LOCATION_FETCHING_STRATEGY";

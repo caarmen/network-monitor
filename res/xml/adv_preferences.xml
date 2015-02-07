@@ -76,13 +76,7 @@
             android:summary="@string/pref_summary_notification_ringtone"
             android:title="@string/pref_title_notification_ringtone" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_category_other" >
-        <Preference
-            android:icon="@drawable/ic_pref_email"
-            android:key="PREF_EMAIL_REPORTS"
-            android:title="@string/pref_title_email" >
-            <intent android:action="ca.rmen.android.networkmonitor.app.email.EmailPreferencesActivity" />
-        </Preference>
+    <PreferenceCategory android:title="@string/pref_category_database" >
         <Preference
             android:icon="@drawable/ic_pref_import"
             android:key="PREF_IMPORT"
@@ -94,6 +88,22 @@
             android:key="PREF_COMPRESS"
             android:summary="@string/pref_summary_compress"
             android:title="@string/pref_title_compress" >
+        </Preference>
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
+            android:defaultValue="-1"
+            android:entries="@array/preferences_filter_record_count_labels"
+            android:entryValues="@array/preferences_filter_record_count_values"
+            android:icon="@drawable/ic_pref_db_record_count"
+            android:key="PREF_DB_RECORD_COUNT"
+            android:summary="@string/pref_summary_db_record_count"
+            android:title="@string/pref_title_db_record_count" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_other" >
+        <Preference
+            android:icon="@drawable/ic_pref_email"
+            android:key="PREF_EMAIL_REPORTS"
+            android:title="@string/pref_title_email" >
+            <intent android:action="ca.rmen.android.networkmonitor.app.email.EmailPreferencesActivity" />
         </Preference>
     </PreferenceCategory>
 

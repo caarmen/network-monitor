@@ -29,6 +29,7 @@
     <string name="pref_category_report_content">REPORT CONTENT</string>
     <string name="pref_category_performance">PERFORMANCE</string>
     <string name="pref_category_notifications">NOTIFICATIONS</string>
+    <string name="pref_category_database">DATABASE</string>
     <string name="pref_title_select_fields">Fields to monitor</string>
     <string name="pref_summary_select_fields">Select a set of fields for the log display and export.</string>
     <string name="pref_title_speed_test">Speed test</string>
@@ -54,6 +55,8 @@
     <string name="pref_summary_import">Import another database which was exported from Network Monitor.</string>
     <string name="pref_title_compress">Compress the database</string>
     <string name="pref_summary_compress">Reduce the database size by merging duplicate rows.</string>
+    <string name="pref_title_db_record_count">Limit the database size</string>
+    <string name="pref_summary_db_record_count">Limit the number of rows saved in the database.</string>
     <string name="pref_title_email">Send yourself reports by e-mail</string>
     <string name="pref_summary_email">Periodically send yourself a report in one or several formats, by e-mail.</string>
     <string name="pref_title_notification_enabled">Enable notifications</string>
