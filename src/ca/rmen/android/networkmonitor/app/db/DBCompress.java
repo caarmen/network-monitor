@@ -48,7 +48,7 @@ public class DBCompress {
     /**
      * @return the number of rows deleted from the database
      */
-    public static int compressDB(Context context) throws RemoteException, OperationApplicationException, IOException {
+    public static int compressDB(Context context, DBProcessProgressListener listener) throws RemoteException, OperationApplicationException, IOException {
         Log.v(TAG, "compress DB");
         Cursor c = context.getContentResolver().query(NetMonColumns.CONTENT_URI, null, null, null, BaseColumns._ID);
         Map<Integer, String> previousRow = null;
@@ -57,6 +57,7 @@ public class DBCompress {
         int posLastNewRow = 0;
         if (c != null) {
             try {
+                int rowCount = c.getCount();
                 int columnCount = c.getColumnCount();
                 // We will not include the _id and _timestamp fields when comparing rows.
                 int timestampIndex = c.getColumnIndex(NetMonColumns.TIMESTAMP);
@@ -79,6 +80,7 @@ public class DBCompress {
                             posLastNewRow = position;
                         }
                     }
+                    if (listener != null) listener.onProgress(position, rowCount);
                     idLastRow = id;
                     previousRow = currentRow;
                 }

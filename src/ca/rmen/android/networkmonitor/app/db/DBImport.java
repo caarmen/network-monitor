@@ -55,16 +55,17 @@ public class DBImport {
     /**
      * Replace the database of our app with the contents of the database found at the given uri.
      */
-    public static void importDB(Context context, Uri uri) throws RemoteException, OperationApplicationException, IOException {
+    public static void importDB(Context context, Uri uri, DBProcessProgressListener listener) throws RemoteException, OperationApplicationException,
+    IOException {
         if (uri.getScheme().equals("file")) {
             File db = new File(uri.getEncodedPath());
-            importDB(context, db);
+            importDB(context, db, listener);
         } else {
             InputStream is = context.getContentResolver().openInputStream(uri);
             File tempDb = new File(context.getCacheDir(), "temp" + System.currentTimeMillis() + ".db");
             FileOutputStream os = new FileOutputStream(tempDb);
             if (IoUtil.copy(is, os) > 0) {
-                importDB(context, tempDb);
+                importDB(context, tempDb, listener);
                 tempDb.delete();
             }
         }
@@ -74,14 +75,15 @@ public class DBImport {
      * In a single database transaction, delete all the cells from the current database, read the data from the given importDb file, create a batch of
      * corresponding insert operations, and execute the inserts.
      */
-    private static void importDB(Context context, File importDb) throws RemoteException, OperationApplicationException, FileNotFoundException {
+    private static void importDB(Context context, File importDb, DBProcessProgressListener listener) throws RemoteException, OperationApplicationException,
+    FileNotFoundException {
         Log.v(TAG, "importDB from " + importDb);
         SQLiteDatabase dbImport = SQLiteDatabase.openDatabase(importDb.getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY);
         ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
         operations.add(ContentProviderOperation.newDelete(NetMonColumns.CONTENT_URI).build());
         Uri insertUri = new Uri.Builder().authority(NetMonProvider.AUTHORITY).appendPath(NetMonColumns.TABLE_NAME)
                 .appendQueryParameter(NetMonProvider.QUERY_PARAMETER_NOTIFY, "false").build();
-        buildInsertOperations(context, dbImport, insertUri, NetMonColumns.TABLE_NAME, operations);
+        buildInsertOperations(context, dbImport, insertUri, NetMonColumns.TABLE_NAME, operations, listener);
         dbImport.close();
     }
 
@@ -91,12 +93,13 @@ public class DBImport {
      * @throws OperationApplicationException
      * @throws RemoteException
      */
-    private static void buildInsertOperations(Context context, SQLiteDatabase dbImport, Uri uri, String table, ArrayList<ContentProviderOperation> operations)
-            throws RemoteException, OperationApplicationException {
+    private static void buildInsertOperations(Context context, SQLiteDatabase dbImport, Uri uri, String table, ArrayList<ContentProviderOperation> operations,
+            DBProcessProgressListener listener) throws RemoteException, OperationApplicationException {
         Log.v(TAG, "buildInsertOperations: uri = " + uri + ", table=" + table);
         Cursor c = dbImport.query(false, table, null, null, null, null, null, null, null);
         if (c != null) {
             try {
+                int count = c.getCount();
                 if (c.moveToFirst()) {
                     int columnCount = c.getColumnCount();
                     do {
@@ -110,6 +113,7 @@ public class DBImport {
                         if (operations.size() >= 100) {
                             context.getContentResolver().applyBatch(NetMonProvider.AUTHORITY, operations);
                             operations.clear();
+                            if (listener != null) listener.onProgress(c.getPosition(), count);
                         }
                     } while (c.moveToNext());
                     if (operations.size() > 0) context.getContentResolver().applyBatch(NetMonProvider.AUTHORITY, operations);

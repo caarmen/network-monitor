@@ -41,6 +41,7 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.db.DBCompress;
 import ca.rmen.android.networkmonitor.app.db.DBImport;
+import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.InfoDialogFragment.InfoDialogListener;
@@ -111,14 +112,14 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
                 @Override
                 protected void onPreExecute() {
                     DialogFragmentFactory.showProgressDialog(PreferenceFragmentActivity.this, getString(R.string.progress_dialog_message),
-                            ProgressDialog.STYLE_SPINNER, PROGRESS_DIALOG_FRAGMENT_TAG);
+                            ProgressDialog.STYLE_HORIZONTAL, PROGRESS_DIALOG_FRAGMENT_TAG);
                 }
 
                 @Override
                 protected Boolean doInBackground(Void... params) {
                     try {
                         Log.v(TAG, "Importing db from " + uri);
-                        DBImport.importDB(PreferenceFragmentActivity.this, uri);
+                        DBImport.importDB(PreferenceFragmentActivity.this, uri, mProgressListener);
                         return true;
                     } catch (Exception e) {
                         Log.e(TAG, "Error importing db: " + e.getMessage(), e);
@@ -145,14 +146,14 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
                 @Override
                 protected void onPreExecute() {
                     DialogFragmentFactory.showProgressDialog(PreferenceFragmentActivity.this, getString(R.string.progress_dialog_message),
-                            ProgressDialog.STYLE_SPINNER, PROGRESS_DIALOG_FRAGMENT_TAG);
+                            ProgressDialog.STYLE_HORIZONTAL, PROGRESS_DIALOG_FRAGMENT_TAG);
                 }
 
                 @Override
                 protected Integer doInBackground(Void... params) {
                     try {
                         Log.v(TAG, "Compressing db");
-                        return DBCompress.compressDB(PreferenceFragmentActivity.this);
+                        return DBCompress.compressDB(PreferenceFragmentActivity.this, mProgressListener);
                     } catch (Exception e) {
                         Log.e(TAG, "Error compressing db: " + e.getMessage(), e);
                         return -1;
@@ -198,6 +199,25 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
             finish();
         }
     }
+
+    private final DBProcessProgressListener mProgressListener = new DBProcessProgressListener() {
+
+        @Override
+        public void onProgress(final int progress, final int max) {
+            Log.v(TAG, "onRowExported: " + progress + "/" + max);
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+
+                    ProgressDialogFragment fragment = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_FRAGMENT_TAG);
+                    if (fragment != null) {
+                        fragment.setProgress(progress, max);
+                    }
+                }
+            });
+        }
+    };
 
     @Override
     public void onDismiss(DialogInterface dialog) {
