@@ -25,6 +25,7 @@ package ca.rmen.android.networkmonitor.app.main;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import ca.rmen.android.networkmonitor.Constants;
@@ -35,26 +36,25 @@ import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.ProgressDialogFragment;
 import ca.rmen.android.networkmonitor.util.Log;
 
-public abstract class NetMonAsyncTask<T, U, V> extends AsyncTask<T, U, V> {
+public abstract class NetMonAsyncTask<T> extends AsyncTask<Void, Void, T> {
     private static final String TAG = Constants.TAG + NetMonAsyncTask.class.getSimpleName();
 
+    public static final String EXTRA_DIALOG_STYLE = "extra_dialog_style";
+    public static final String EXTRA_DIALOG_MESSAGE = "extra_dialog_message";
     private static final String PROGRESS_DIALOG_FRAGMENT_TAG = "progress_dialog_fragment_tag";
 
     private final FragmentActivity mActivity;
-    private final DBTask<V> mTask;
+    private final DBTask<T> mTask;
     private final int mDialogStyle;
     private final String mDialogMessage;
 
 
-    public NetMonAsyncTask(FragmentActivity activity, DBTask<V> task) {
-        this(activity, task, ProgressDialog.STYLE_HORIZONTAL, activity.getString(R.string.progress_dialog_message));
-    }
-
-    public NetMonAsyncTask(FragmentActivity activity, DBTask<V> task, int dialogStyle, String dialogMessage) {
+    public NetMonAsyncTask(FragmentActivity activity, DBTask<T> task, Bundle args) {
         mActivity = activity;
         mTask = task;
-        mDialogStyle = dialogStyle;
-        mDialogMessage = dialogMessage;
+        if (args == null) args = new Bundle();
+        mDialogStyle = args.getInt(EXTRA_DIALOG_STYLE, ProgressDialog.STYLE_HORIZONTAL);
+        mDialogMessage = args.getString(EXTRA_DIALOG_MESSAGE, activity.getString(R.string.progress_dialog_message));
     }
 
     @Override
@@ -63,12 +63,12 @@ public abstract class NetMonAsyncTask<T, U, V> extends AsyncTask<T, U, V> {
     }
 
     @Override
-    protected V doInBackground(T... params) {
+    protected T doInBackground(Void... params) {
         return mTask.execute(mProgressListener);
     }
 
     @Override
-    protected void onPostExecute(V result) {
+    protected void onPostExecute(T result) {
         ProgressDialogFragment dialogFragment = (ProgressDialogFragment) mActivity.getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_FRAGMENT_TAG);
         if (dialogFragment != null) dialogFragment.dismissAllowingStateLoss();
         mActivity.finish();

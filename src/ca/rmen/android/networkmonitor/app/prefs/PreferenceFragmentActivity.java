@@ -61,7 +61,6 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
     public static final String EXTRA_DIALOG_MESSAGE = PreferenceFragmentActivity.class.getPackage().getName() + "_dialog_message";
 
     private static final String TAG = Constants.TAG + PreferenceFragmentActivity.class.getSimpleName();
-    private static final String PROGRESS_DIALOG_FRAGMENT_TAG = "progress_dialog_fragment_tag";
     private static final int ID_ACTION_IMPORT = 1;
     private static final int ID_ACTION_LOCATION_SETTINGS = 2;
     private static final int ID_ACTION_COMPRESS = 3;
@@ -105,13 +104,13 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
         if (actionId == ID_ACTION_IMPORT) {
             final Uri uri = extras.getParcelable(EXTRA_IMPORT_URI);
             DBImport dbImport = new DBImport(this, uri);
-            NetMonAsyncTask<Void, Void, Boolean> task = new NetMonAsyncTask<Void, Void, Boolean>(this, dbImport) {
+            NetMonAsyncTask<Boolean> task = new NetMonAsyncTask<Boolean>(this, dbImport, null) {
 
                 @Override
                 protected void onPostExecute(Boolean result) {
-                    super.onPostExecute(result);
                     String toastText = result ? getString(R.string.import_successful, uri.getPath()) : getString(R.string.import_failed, uri.getPath());
                     Toast.makeText(PreferenceFragmentActivity.this, toastText, Toast.LENGTH_SHORT).show();
+                    super.onPostExecute(result);
                 }
             };
             task.execute();
@@ -119,12 +118,13 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
         // Compress the database in a background thread
         else if (actionId == ID_ACTION_COMPRESS) {
             DBCompress dbCompress = new DBCompress(this);
-            NetMonAsyncTask<Void, Void, Integer> task = new NetMonAsyncTask<Void, Void, Integer>(this, dbCompress) {
+            NetMonAsyncTask<Integer> task = new NetMonAsyncTask<Integer>(this, dbCompress, null) {
 
                 @Override
                 protected void onPostExecute(Integer result) {
                     String toastText = result >= 0 ? getString(R.string.compress_successful, result) : getString(R.string.compress_failed);
                     Toast.makeText(PreferenceFragmentActivity.this, toastText, Toast.LENGTH_SHORT).show();
+                    super.onPostExecute(result);
                 }
             };
             task.execute();

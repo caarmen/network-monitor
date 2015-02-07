@@ -99,25 +99,25 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            final NetMonPreferences prefs = NetMonPreferences.getInstance(AdvancedPreferencesActivity.this);
             Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
             if (NetMonPreferences.PREF_TEST_SERVER.equals(key)) {
                 updatePreferenceSummary(key, R.string.pref_summary_test_server);
             } else if (NetMonPreferences.PREF_NOTIFICATION_RINGTONE.equals(key)) {
                 updatePreferenceSummary(key, R.string.pref_summary_notification_ringtone);
             } else if (NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY.equals(key)) {
-                if (NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getLocationFetchingStrategy() == LocationFetchingStrategy.HIGH_ACCURACY) {
+                if (prefs.getLocationFetchingStrategy() == LocationFetchingStrategy.HIGH_ACCURACY) {
                     Intent intent = new Intent(PreferenceFragmentActivity.ACTION_CHECK_LOCATION_SETTINGS);
                     startActivity(intent);
                 }
             } else if (NetMonPreferences.PREF_NOTIFICATION_ENABLED.equals(key)) {
-                if (!NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getShowNotificationOnTestFailure())
-                    NetMonNotification.dismissFailedTestNotification(AdvancedPreferencesActivity.this);
+                if (!prefs.getShowNotificationOnTestFailure()) NetMonNotification.dismissFailedTestNotification(AdvancedPreferencesActivity.this);
             } else if (NetMonPreferences.PREF_DB_RECORD_COUNT.equals(key)) {
                 new AsyncTask<Void, Void, Integer>() {
 
                     @Override
                     protected Integer doInBackground(Void... params) {
-                        return DBPurge.purgeDB(AdvancedPreferencesActivity.this);
+                        return new DBPurge(AdvancedPreferencesActivity.this, prefs.getDBRecordCount()).execute(null);
                     }
 
                     @Override

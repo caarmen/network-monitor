@@ -35,7 +35,6 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
@@ -43,6 +42,7 @@ import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.db.DBPurge;
 import ca.rmen.android.networkmonitor.app.db.export.CSVExport;
 import ca.rmen.android.networkmonitor.app.db.export.DBExport;
 import ca.rmen.android.networkmonitor.app.db.export.ExcelExport;
@@ -54,9 +54,7 @@ import ca.rmen.android.networkmonitor.app.dialog.ChoiceDialogFragment.DialogItem
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
-import ca.rmen.android.networkmonitor.app.dialog.ProgressDialogFragment;
 import ca.rmen.android.networkmonitor.app.main.NetMonAsyncTask;
-import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -68,7 +66,6 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
     static final String ACTION_CLEAR = LogActionsActivity.class.getPackage().getName() + "_clear";
 
     private static final String TAG = Constants.TAG + LogActionsActivity.class.getSimpleName();
-    private static final String PROGRESS_DIALOG_TAG = ProgressDialogFragment.class.getSimpleName();
     // True if the user interacted with a dialog other than to dismiss it.
     // IE: they clicked "ok" or selected an item from the list.
     private boolean mUserInput = false;
@@ -120,9 +117,10 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
     private void shareFile(final FileExport fileExport) {
         Log.v(TAG, "shareFile " + fileExport);
 
-        String dialogMessage = getString(R.string.export_progress_preparing_export);
-        int dialogStyle = fileExport != null ? ProgressDialog.STYLE_HORIZONTAL : ProgressDialog.STYLE_SPINNER;
-        new NetMonAsyncTask<Void, Void, File>(this, fileExport, dialogStyle, dialogMessage) {
+        Bundle bundle = new Bundle(2);
+        bundle.putInt(NetMonAsyncTask.EXTRA_DIALOG_STYLE, fileExport != null ? ProgressDialog.STYLE_HORIZONTAL : ProgressDialog.STYLE_SPINNER);
+        bundle.putString(NetMonAsyncTask.EXTRA_DIALOG_MESSAGE, getString(R.string.export_progress_preparing_export));
+        new NetMonAsyncTask<File>(this, fileExport, bundle) {
 
 
             @Override
@@ -159,10 +157,10 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
 
             @Override
             protected void onPostExecute(File result) {
-                super.onPostExecute(result);
                 // Show a toast if we failed to export a file.
                 if (fileExport != null && result == null)
                     Toast.makeText(LogActionsActivity.this, R.string.export_error_sdcard_unmounted, Toast.LENGTH_LONG).show();
+                super.onPostExecute(result);
             }
         }.execute();
     }
@@ -174,27 +172,19 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
         // The user confirmed to clear the logs.
         if (actionId == R.id.action_clear) {
             Log.v(TAG, "Clicked ok to clear log");
-            DialogFragmentFactory.showProgressDialog(LogActionsActivity.this, getString(R.string.progress_dialog_message), ProgressDialog.STYLE_SPINNER,
-                    PROGRESS_DIALOG_TAG);
-            AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
+            DBPurge dbPurge = new DBPurge(this, 0);
+            Bundle bundle = new Bundle(1);
+            bundle.putInt(NetMonAsyncTask.EXTRA_DIALOG_STYLE, ProgressDialog.STYLE_SPINNER);
+            new NetMonAsyncTask<Integer>(this, dbPurge, bundle) {
 
                 @Override
-                protected Void doInBackground(Void... params) {
-                    Log.v(TAG, "clear:doInBackground");
-                    getContentResolver().delete(NetMonColumns.CONTENT_URI, null, null);
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void result) {
+                protected void onPostExecute(Integer result) {
                     // Once the DB is deleted, reload the WebView.
-                    Log.v(TAG, "clear:onPostExecute");
                     Toast.makeText(LogActionsActivity.this, R.string.success_logs_clear, Toast.LENGTH_LONG).show();
                     setResult(RESULT_OK);
-                    finish();
+                    super.onPostExecute(result);
                 }
-            };
-            asyncTask.execute();
+            }.execute();
         }
     }
 
