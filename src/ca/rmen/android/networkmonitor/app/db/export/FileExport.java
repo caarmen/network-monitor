@@ -41,17 +41,15 @@ public abstract class FileExport {
 
     protected final Context mContext;
     protected final File mFile;
-    protected final DBProcessProgressListener mListener;
 
-    protected FileExport(Context context, File file, DBProcessProgressListener listener) throws FileNotFoundException {
+    protected FileExport(Context context, File file) throws FileNotFoundException {
         Log.v(TAG, "FileExport: file " + file);
         mContext = context;
         mFile = file;
-        mListener = listener;
     }
 
     /**
      * @return the file if it was correctly exported, null otherwise.
      */
-    abstract public File export();
+    abstract public File export(DBProcessProgressListener listener);
 }

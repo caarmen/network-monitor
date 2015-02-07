@@ -31,7 +31,6 @@ import java.io.PrintWriter;
 import android.content.Context;
 import android.text.TextUtils;
 
-import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
 import ca.rmen.android.networkmonitor.app.db.export.FormatterFactory.FormatterStyle;
 
 /**
@@ -41,8 +40,8 @@ public class CSVExport extends TableFileExport {
     private static final String CSV_FILE = "networkmonitor.csv";
     private PrintWriter mPrintWriter;
 
-    public CSVExport(Context context, DBProcessProgressListener listener) throws FileNotFoundException {
-        super(context, new File(context.getExternalFilesDir(null), CSV_FILE), FormatterStyle.DEFAULT, listener);
+    public CSVExport(Context context) throws FileNotFoundException {
+        super(context, new File(context.getExternalFilesDir(null), CSV_FILE), FormatterStyle.DEFAULT);
     }
 
     @Override

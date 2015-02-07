@@ -33,10 +33,10 @@ import java.io.OutputStream;
 
 import android.content.Context;
 
-import ca.rmen.android.networkmonitor.util.Log;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
 import ca.rmen.android.networkmonitor.provider.NetMonDatabase;
+import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Export the Network Monitor DB file.
@@ -44,12 +44,12 @@ import ca.rmen.android.networkmonitor.provider.NetMonDatabase;
 public class DBExport extends FileExport {
     private static final String TAG = Constants.TAG + DBExport.class.getSimpleName();
 
-    public DBExport(Context context, DBProcessProgressListener listener) throws FileNotFoundException {
-        super(context, new File(context.getExternalFilesDir(null), NetMonDatabase.DATABASE_NAME), listener);
+    public DBExport(Context context) throws FileNotFoundException {
+        super(context, new File(context.getExternalFilesDir(null), NetMonDatabase.DATABASE_NAME));
     }
 
     @Override
-    public File export() {
+    public File export(DBProcessProgressListener listener) {
         File db = mContext.getDatabasePath(NetMonDatabase.DATABASE_NAME);
         try {
             InputStream is = new FileInputStream(db);
@@ -62,7 +62,7 @@ public class DBExport extends FileExport {
                 os.write(buffer, 0, len);
                 bytesWritten += len;
                 // Notify the listener about the number of kb written.
-                if (mListener != null) mListener.onProgress(bytesWritten / 1000, fileSize / 1000);
+                if (listener != null) listener.onProgress(bytesWritten / 1000, fileSize / 1000);
             }
             is.close();
             os.close();

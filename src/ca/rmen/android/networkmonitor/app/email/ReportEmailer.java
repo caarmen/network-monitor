@@ -254,14 +254,14 @@ public class ReportEmailer {
         Log.v(TAG, "createBodyPart: fileType = " + fileType);
         // Get the FileExport instance which can export mContext file type.
         final FileExport fileExport;
-        if ("csv".equals(fileType)) fileExport = new CSVExport(mContext, null);
-        else if ("html".equals(fileType)) fileExport = new HTMLExport(mContext, true, null);
-        else if ("excel".equals(fileType)) fileExport = new ExcelExport(mContext, null);
-        else if ("kml".equals(fileType)) fileExport = new KMLExport(mContext, null, NetMonColumns.SOCKET_CONNECTION_TEST);
+        if ("csv".equals(fileType)) fileExport = new CSVExport(mContext);
+        else if ("html".equals(fileType)) fileExport = new HTMLExport(mContext, true);
+        else if ("excel".equals(fileType)) fileExport = new ExcelExport(mContext);
+        else if ("kml".equals(fileType)) fileExport = new KMLExport(mContext, NetMonColumns.SOCKET_CONNECTION_TEST);
         else
-            /*if ("db".equals(fileType)) */fileExport = new DBExport(mContext, null);
+            /*if ("db".equals(fileType)) */fileExport = new DBExport(mContext);
         BodyPart bp = new MimeBodyPart();
-        File file = fileExport.export();
+        File file = fileExport.export(null);
         DataSource dataSource = new FileDataSource(file);
         bp.setDataHandler(new DataHandler(dataSource));
         bp.setFileName(file.getName());

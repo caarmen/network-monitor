@@ -46,7 +46,6 @@ import android.content.Context;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
 import ca.rmen.android.networkmonitor.app.db.export.FormatterFactory.FormatterStyle;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -68,8 +67,8 @@ public class ExcelExport extends TableFileExport {
     private int mRowCount;
     private int mColumnCount;
 
-    public ExcelExport(Context context, DBProcessProgressListener listener) throws FileNotFoundException {
-        super(context, new File(context.getExternalFilesDir(null), EXCEL_FILE), FormatterStyle.DEFAULT, listener);
+    public ExcelExport(Context context) throws FileNotFoundException {
+        super(context, new File(context.getExternalFilesDir(null), EXCEL_FILE), FormatterStyle.DEFAULT);
     }
 
     @Override
@@ -146,15 +145,15 @@ public class ExcelExport extends TableFileExport {
         Log.v(TAG, "columnWidth: " + columnWidth);
 
         // The width of the column is the number of characters multiplied by 256.
-        // From the Excel documentation, the width of a column is an: 
+        // From the Excel documentation, the width of a column is an:
 
-        // "integer that specifies the column width in units of 1/256th of a character width. 
-        // Character width is defined as the maximum digit width of the numbers 0, 1, 2, ... 9 
+        // "integer that specifies the column width in units of 1/256th of a character width.
+        // Character width is defined as the maximum digit width of the numbers 0, 1, 2, ... 9
         // as rendered in the Normal style's font."
 
         // Some of our letters may be wider than the digits 0-9. So we may need to overestimate
         // the width we need by a bit. Adding a padding of 4 characters seems to be ok
-        // for this app.  
+        // for this app.
         CellView columnView = mSheet.getColumnView(col);
         columnView.setSize((columnWidth + 4) * 256);
         mSheet.setColumnView(col, columnView);

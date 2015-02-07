@@ -33,7 +33,6 @@ import android.content.Context;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
 import ca.rmen.android.networkmonitor.app.db.export.FormatterFactory.FormatterStyle;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences;
@@ -53,8 +52,8 @@ public class HTMLExport extends TableFileExport {
     /**
      * @param external if true, the file will be exported to the sd card. Otherwise it will written to the app's internal storage.
      */
-    public HTMLExport(Context context, boolean external, DBProcessProgressListener listener) throws FileNotFoundException, UnsupportedEncodingException {
-        super(context, new File(external ? context.getExternalFilesDir(null) : context.getFilesDir(), HTML_FILE), FormatterStyle.XML, listener);
+    public HTMLExport(Context context, boolean external) throws FileNotFoundException, UnsupportedEncodingException {
+        super(context, new File(external ? context.getExternalFilesDir(null) : context.getFilesDir(), HTML_FILE), FormatterStyle.XML);
         mPrintWriter = new PrintWriter(mFile, "utf-8");
     }
 

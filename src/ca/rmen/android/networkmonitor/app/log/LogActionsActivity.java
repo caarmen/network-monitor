@@ -100,7 +100,7 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
             @Override
             public void onPreferenceValueSelected(String value) {
                 try {
-                    KMLExport kmlExport = new KMLExport(LogActionsActivity.this, mExportProgressListener, value);
+                    KMLExport kmlExport = new KMLExport(LogActionsActivity.this, value);
                     shareFile(kmlExport);
                 } catch (FileNotFoundException e) {
                     Log.w(TAG, "Error sharing file: " + e.getMessage(), e);
@@ -134,7 +134,7 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
                     if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) return null;
                     try {
                         // Export the file in the background.
-                        file = fileExport.export();
+                        file = fileExport.export(mExportProgressListener);
                     } catch (Throwable t) {
                         Log.e(TAG, "Error exporting file " + fileExport + ": " + t.getMessage(), t);
                     }
@@ -241,17 +241,17 @@ public class LogActionsActivity extends FragmentActivity implements DialogButton
             FileExport fileExport = null;
             try {
                 if (getString(R.string.export_choice_csv).equals(exportChoices[which])) {
-                    fileExport = new CSVExport(LogActionsActivity.this, mExportProgressListener);
+                    fileExport = new CSVExport(LogActionsActivity.this);
                 } else if (getString(R.string.export_choice_html).equals(exportChoices[which])) {
-                    fileExport = new HTMLExport(LogActionsActivity.this, true, mExportProgressListener);
+                    fileExport = new HTMLExport(LogActionsActivity.this, true);
                 } else if (getString(R.string.export_choice_kml).equals(exportChoices[which])) {
                     // The KML export requires a second dialog before we can share, so we return here.
                     shareKml();
                     return;
                 } else if (getString(R.string.export_choice_excel).equals(exportChoices[which])) {
-                    fileExport = new ExcelExport(LogActionsActivity.this, mExportProgressListener);
+                    fileExport = new ExcelExport(LogActionsActivity.this);
                 } else if (getString(R.string.export_choice_db).equals(exportChoices[which])) {
-                    fileExport = new DBExport(LogActionsActivity.this, mExportProgressListener);
+                    fileExport = new DBExport(LogActionsActivity.this);
                 } else {
                     // Text summary only
                 }

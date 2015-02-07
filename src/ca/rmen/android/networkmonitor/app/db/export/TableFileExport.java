@@ -50,8 +50,8 @@ abstract class TableFileExport extends FileExport {
     private static final String TAG = Constants.TAG + TableFileExport.class.getSimpleName();
     private final FormatterStyle mFormatterStyle;
 
-    TableFileExport(Context context, File file, FormatterStyle formatterStyle, DBProcessProgressListener listener) throws FileNotFoundException {
-        super(context, file, listener);
+    TableFileExport(Context context, File file, FormatterStyle formatterStyle) throws FileNotFoundException {
+        super(context, file);
         mFormatterStyle = formatterStyle;
     }
 
@@ -76,16 +76,16 @@ abstract class TableFileExport extends FileExport {
      * @return the file if it was correctly exported, null otherwise.
      */
     @Override
-    public File export() {
+    public File export(DBProcessProgressListener listener) {
         Log.v(TAG, "export");
-        return export(0);
+        return export(0, listener);
     }
 
     /**
      * @param recordCount export at most this number of records. If recordCount is 0 or less, all records will be exported.
      * @return the file if it was correctly exported, null otherwise.
      */
-    public File export(int recordCount) {
+    public File export(int recordCount, DBProcessProgressListener listener) {
         Log.v(TAG, "export " + (recordCount <= 0 ? "all" : recordCount) + " records");
         String[] usedColumnNames = (String[]) NetMonPreferences.getInstance(mContext).getSelectedColumns().toArray();
         Formatter formatter = FormatterFactory.getFormatter(mFormatterStyle, mContext);
@@ -111,7 +111,7 @@ abstract class TableFileExport extends FileExport {
                         cellValues[i] = formatter.format(c, i);
                     writeRow(c.getPosition(), cellValues);
                     // Notify the listener of our progress (progress is 1-based)
-                    if (mListener != null) mListener.onProgress(c.getPosition() + 1, rowsAvailable);
+                    if (listener != null) listener.onProgress(c.getPosition() + 1, rowsAvailable);
                 }
 
                 // Write the footer and clean up the file.

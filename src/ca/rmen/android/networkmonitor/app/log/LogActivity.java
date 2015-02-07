@@ -160,9 +160,9 @@ public class LogActivity extends FragmentActivity implements DialogButtonListene
                 Log.v(TAG, "loadHTMLFile:doInBackground");
                 try {
                     // Export the DB to the HTML file.
-                    HTMLExport htmlExport = new HTMLExport(LogActivity.this, false, null);
+                    HTMLExport htmlExport = new HTMLExport(LogActivity.this, false);
                     int recordCount = NetMonPreferences.getInstance(LogActivity.this).getFilterRecordCount();
-                    File file = htmlExport.export(recordCount);
+                    File file = htmlExport.export(recordCount, null);
                     return file;
                 } catch (IOException e) {
                     Log.e(TAG, "doInBackground Could not load data into html file: " + e.getMessage(), e);
@@ -184,7 +184,7 @@ public class LogActivity extends FragmentActivity implements DialogButtonListene
                 }
                 // Load the exported HTML file into the WebView.
                 mWebView = (WebView) findViewById(R.id.web_view);
-                // Save our current horizontal scroll position so we can keep our 
+                // Save our current horizontal scroll position so we can keep our
                 // horizontal position after reloading the page.
                 final int oldScrollX = mWebView.getScrollX();
                 mWebView.getSettings().setUseWideViewPort(true);
