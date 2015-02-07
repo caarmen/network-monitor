@@ -49,39 +49,56 @@ import ca.rmen.android.networkmonitor.util.Log;
  * Replace the contents of the current database with the contents of another database.
  * This is based on DBImport from the scrum chatter project.
  */
-public class DBImport {
+public class DBImport implements DBTask<Boolean> {
     private static final String TAG = Constants.TAG + "/" + DBImport.class.getSimpleName();
+
+    private final Context mContext;
+    private final Uri mUri;
+
+    public DBImport(Context context, Uri uri) {
+        mContext = context;
+        mUri = uri;
+    }
 
     /**
      * Replace the database of our app with the contents of the database found at the given uri.
+     *
+     * @return true if the DB import was successful.
      */
-    public static void importDB(Context context, Uri uri) throws RemoteException, OperationApplicationException, IOException {
-        if (uri.getScheme().equals("file")) {
-            File db = new File(uri.getEncodedPath());
-            importDB(context, db);
-        } else {
-            InputStream is = context.getContentResolver().openInputStream(uri);
-            File tempDb = new File(context.getCacheDir(), "temp" + System.currentTimeMillis() + ".db");
-            FileOutputStream os = new FileOutputStream(tempDb);
-            if (IoUtil.copy(is, os) > 0) {
-                importDB(context, tempDb);
-                tempDb.delete();
+    @Override
+    public Boolean execute(DBProcessProgressListener listener) {
+        try {
+            if (mUri.getScheme().equals("file")) {
+                File db = new File(mUri.getEncodedPath());
+                importDB(db, listener);
+            } else {
+                InputStream is = mContext.getContentResolver().openInputStream(mUri);
+                File tempDb = new File(mContext.getCacheDir(), "temp" + System.currentTimeMillis() + ".db");
+                FileOutputStream os = new FileOutputStream(tempDb);
+                if (IoUtil.copy(is, os) > 0) {
+                    importDB(tempDb, listener);
+                    tempDb.delete();
+                }
             }
+        } catch (RemoteException | OperationApplicationException | IOException e) {
+            Log.w(TAG, "Error importing the db: " + e.getMessage(), e);
+            return false;
         }
+        return true;
     }
 
     /**
      * In a single database transaction, delete all the cells from the current database, read the data from the given importDb file, create a batch of
      * corresponding insert operations, and execute the inserts.
      */
-    private static void importDB(Context context, File importDb) throws RemoteException, OperationApplicationException, FileNotFoundException {
+    private void importDB(File importDb, DBProcessProgressListener listener) throws RemoteException, OperationApplicationException, FileNotFoundException {
         Log.v(TAG, "importDB from " + importDb);
         SQLiteDatabase dbImport = SQLiteDatabase.openDatabase(importDb.getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY);
         ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
         operations.add(ContentProviderOperation.newDelete(NetMonColumns.CONTENT_URI).build());
         Uri insertUri = new Uri.Builder().authority(NetMonProvider.AUTHORITY).appendPath(NetMonColumns.TABLE_NAME)
                 .appendQueryParameter(NetMonProvider.QUERY_PARAMETER_NOTIFY, "false").build();
-        buildInsertOperations(context, dbImport, insertUri, NetMonColumns.TABLE_NAME, operations);
+        buildInsertOperations(dbImport, insertUri, NetMonColumns.TABLE_NAME, operations, listener);
         dbImport.close();
     }
 
@@ -91,12 +108,13 @@ public class DBImport {
      * @throws OperationApplicationException
      * @throws RemoteException
      */
-    private static void buildInsertOperations(Context context, SQLiteDatabase dbImport, Uri uri, String table, ArrayList<ContentProviderOperation> operations)
-            throws RemoteException, OperationApplicationException {
+    private void buildInsertOperations(SQLiteDatabase dbImport, Uri uri, String table, ArrayList<ContentProviderOperation> operations,
+            DBProcessProgressListener listener) throws RemoteException, OperationApplicationException {
         Log.v(TAG, "buildInsertOperations: uri = " + uri + ", table=" + table);
         Cursor c = dbImport.query(false, table, null, null, null, null, null, null, null);
         if (c != null) {
             try {
+                int count = c.getCount();
                 if (c.moveToFirst()) {
                     int columnCount = c.getColumnCount();
                     do {
@@ -108,11 +126,12 @@ public class DBImport {
                         }
                         operations.add(builder.build());
                         if (operations.size() >= 100) {
-                            context.getContentResolver().applyBatch(NetMonProvider.AUTHORITY, operations);
+                            mContext.getContentResolver().applyBatch(NetMonProvider.AUTHORITY, operations);
                             operations.clear();
+                            if (listener != null) listener.onProgress(c.getPosition(), count);
                         }
                     } while (c.moveToNext());
-                    if (operations.size() > 0) context.getContentResolver().applyBatch(NetMonProvider.AUTHORITY, operations);
+                    if (operations.size() > 0) mContext.getContentResolver().applyBatch(NetMonProvider.AUTHORITY, operations);
                 }
             } finally {
                 c.close();

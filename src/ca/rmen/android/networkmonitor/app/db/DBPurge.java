@@ -29,7 +29,6 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.provider.NetMonProvider;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -38,8 +37,19 @@ import ca.rmen.android.networkmonitor.util.Log;
  * Only keep the most recent X records: where X is determined by the
  * preference set by the user.
  */
-public class DBPurge {
+public class DBPurge implements DBTask<Integer> {
     private static final String TAG = Constants.TAG + "/" + DBPurge.class.getSimpleName();
+
+    private final Context mContext;
+    private final int mNumRowsToKeep;
+
+    /**
+     * This task will delete data from the database, keeping at most numRowsToKeep rows.
+     */
+    public DBPurge(Context context, int numRowsToKeep) {
+        mContext = context;
+        mNumRowsToKeep = numRowsToKeep;
+    }
 
     /**
      * Only keep the most recent X records: where X is determined by the
@@ -47,16 +57,22 @@ public class DBPurge {
      *
      * @return the number of deleted rows.
      */
-    public static int purgeDB(Context context) {
+    @Override
+    public Integer execute(DBProcessProgressListener listener) {
         Log.v(TAG, "purgeDB");
-        int recordCount = NetMonPreferences.getInstance(context).getDBRecordCount();
-        if (recordCount < 0) return 0;
 
+        if (mNumRowsToKeep == 0) {
+            return mContext.getContentResolver().delete(NetMonColumns.CONTENT_URI, null, null);
+        }
+
+        if (mNumRowsToKeep < 0) {
+            return 0;
+        }
         // Query the most recent X ids.
         // Then find the oldest id from this query.
-        Uri uri = NetMonColumns.CONTENT_URI.buildUpon().appendQueryParameter(NetMonProvider.QUERY_PARAMETER_LIMIT, String.valueOf(recordCount)).build();
+        Uri uri = NetMonColumns.CONTENT_URI.buildUpon().appendQueryParameter(NetMonProvider.QUERY_PARAMETER_LIMIT, String.valueOf(mNumRowsToKeep)).build();
         int oldestIdToKeep = -1;
-        Cursor cursor = context.getContentResolver().query(uri, new String[] { BaseColumns._ID }, null, null, BaseColumns._ID + " DESC");
+        Cursor cursor = mContext.getContentResolver().query(uri, new String[] { BaseColumns._ID }, null, null, BaseColumns._ID + " DESC");
         if (cursor != null) {
             try {
                 if (cursor.moveToLast()) {
@@ -68,7 +84,7 @@ public class DBPurge {
 
         if (oldestIdToKeep > 0) {
             Log.v(TAG, "Will delete rows before id=" + oldestIdToKeep);
-            int result = context.getContentResolver().delete(NetMonColumns.CONTENT_URI, BaseColumns._ID + " < ?",
+            int result = mContext.getContentResolver().delete(NetMonColumns.CONTENT_URI, BaseColumns._ID + " < ?",
                     new String[] { String.valueOf(oldestIdToKeep) });
             Log.v(TAG, "Deleted " + result + " rows");
             return result;

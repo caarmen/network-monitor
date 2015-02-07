@@ -23,7 +23,8 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
-import android.app.ProgressDialog;
+import java.util.Arrays;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -31,20 +32,20 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.db.DBCompress;
-import ca.rmen.android.networkmonitor.app.db.DBImport;
+import ca.rmen.android.networkmonitor.app.dialog.ChoiceDialogFragment.DialogItemListener;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.InfoDialogFragment.InfoDialogListener;
-import ca.rmen.android.networkmonitor.app.dialog.ProgressDialogFragment;
+import ca.rmen.android.networkmonitor.app.useractions.Clear;
+import ca.rmen.android.networkmonitor.app.useractions.Compress;
+import ca.rmen.android.networkmonitor.app.useractions.Import;
+import ca.rmen.android.networkmonitor.app.useractions.Share;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -52,9 +53,13 @@ import ca.rmen.android.networkmonitor.util.Log;
  * functions which require a FragmentActivity.
  * This activity has a transparent theme. The only thing the user will see will be alert dialogs that this activity creates.
  */
-public class PreferenceFragmentActivity extends FragmentActivity implements DialogButtonListener, OnDismissListener, OnCancelListener, InfoDialogListener { // NO_UCD (use default)
+public class PreferenceFragmentActivity extends FragmentActivity implements DialogItemListener, DialogButtonListener, OnDismissListener, OnCancelListener,
+        InfoDialogListener { // NO_UCD (use default)
+    public static final String ACTION_SHARE = PreferenceFragmentActivity.class.getPackage().getName() + "_share";
+    public static final String ACTION_CLEAR = PreferenceFragmentActivity.class.getPackage().getName() + "_clear";
     public static final String ACTION_IMPORT = PreferenceFragmentActivity.class.getPackage().getName() + "_import";
     public static final String ACTION_COMPRESS = PreferenceFragmentActivity.class.getPackage().getName() + "_compress";
+    public static final String ACTION_CLEAR_OLD = PreferenceFragmentActivity.class.getPackage().getName() + "_clear_old";
     public static final String ACTION_CHECK_LOCATION_SETTINGS = PreferenceFragmentActivity.class.getPackage().getName() + "_check_location_settings";
     public static final String ACTION_SHOW_INFO_DIALOG = PreferenceFragmentActivity.class.getPackage().getName() + "_show_info_dialog";
     public static final String ACTION_SHOW_WARNING_DIALOG = PreferenceFragmentActivity.class.getPackage().getName() + "_show_warning_dialog";
@@ -63,10 +68,11 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
     public static final String EXTRA_DIALOG_MESSAGE = PreferenceFragmentActivity.class.getPackage().getName() + "_dialog_message";
 
     private static final String TAG = Constants.TAG + PreferenceFragmentActivity.class.getSimpleName();
-    private static final String PROGRESS_DIALOG_FRAGMENT_TAG = "progress_dialog_fragment_tag";
-    private static final int ID_ACTION_IMPORT = 1;
-    private static final int ID_ACTION_LOCATION_SETTINGS = 2;
-    private static final int ID_ACTION_COMPRESS = 3;
+    private static final int ID_ACTION_SHARE = 1;
+    private static final int ID_ACTION_CLEAR = 2;
+    private static final int ID_ACTION_IMPORT = 3;
+    private static final int ID_ACTION_LOCATION_SETTINGS = 4;
+    private static final int ID_ACTION_COMPRESS = 5;
 
     // True if the user interacted with a dialog other than to dismiss it.
     // IE: they clicked "ok" or selected an item from the list.
@@ -77,7 +83,12 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
         Log.v(TAG, "onCreate, bundle = " + bundle);
         super.onCreate(bundle);
         String action = getIntent().getAction();
-        if (ACTION_IMPORT.equals(action)) {
+        if (ACTION_SHARE.equals(action)) {
+            DialogFragmentFactory.showChoiceDialog(this, getString(R.string.export_choice_title), getResources().getStringArray(R.array.export_choices), -1,
+                    ID_ACTION_SHARE);
+        } else if (ACTION_CLEAR.equals(action)) {
+            DialogFragmentFactory.showConfirmDialog(this, getString(R.string.action_clear), getString(R.string.confirm_logs_clear), ID_ACTION_CLEAR, null);
+        } else if (ACTION_IMPORT.equals(action)) {
             // Get the file the user selected, and show a dialog asking for confirmation to import the file.
             Uri importFile = getIntent().getExtras().getParcelable(EXTRA_IMPORT_URI);
             DialogFragmentFactory.showConfirmDialog(this, getString(R.string.import_confirm_title),
@@ -87,6 +98,8 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
         } else if (ACTION_COMPRESS.equals(action)) {
             DialogFragmentFactory.showConfirmDialog(this, getString(R.string.compress_confirm_title), getString(R.string.compress_confirm_message),
                     ID_ACTION_COMPRESS, getIntent().getExtras());
+        } else if (ACTION_CLEAR_OLD.equals(action)) {
+            Clear.clear(this, NetMonPreferences.getInstance(this).getDBRecordCount());
         } else if (ACTION_SHOW_INFO_DIALOG.equals(action)) {
             DialogFragmentFactory.showInfoDialog(this, getIntent().getExtras().getString(EXTRA_DIALOG_TITLE),
                     getIntent().getExtras().getString(EXTRA_DIALOG_MESSAGE));
@@ -100,76 +113,34 @@ public class PreferenceFragmentActivity extends FragmentActivity implements Dial
     }
 
     @Override
+    public void onItemSelected(int actionId, CharSequence[] choices, int which) {
+        Log.v(TAG, "onItemSelected: actionId =  " + actionId + ", choices = " + Arrays.toString(choices) + ", which = " + which);
+        mUserInput = true;
+        // The user picked a file format to export.
+        if (actionId == ID_ACTION_SHARE) {
+            String[] exportChoices = getResources().getStringArray(R.array.export_choices);
+            String selectedShareFormat = exportChoices[which];
+            Share.share(this, selectedShareFormat);
+        }
+    }
+
+    @Override
     public void onOkClicked(int actionId, Bundle extras) {
         Log.v(TAG, "onClicked, actionId=" + actionId + ", extras = " + extras);
         mUserInput = true;
+        // The user confirmed to clear the logs.
+        if (actionId == ID_ACTION_CLEAR) {
+            Log.v(TAG, "Clicked ok to clear log");
+            Clear.clear(this, 0);
+        }
         // Import the database in a background thread.
-        if (actionId == ID_ACTION_IMPORT) {
+        else if (actionId == ID_ACTION_IMPORT) {
             final Uri uri = extras.getParcelable(EXTRA_IMPORT_URI);
-            AsyncTask<Void, Void, Boolean> task = new AsyncTask<Void, Void, Boolean>() {
-
-                @Override
-                protected void onPreExecute() {
-                    DialogFragmentFactory.showProgressDialog(PreferenceFragmentActivity.this, getString(R.string.progress_dialog_message),
-                            ProgressDialog.STYLE_SPINNER, PROGRESS_DIALOG_FRAGMENT_TAG);
-                }
-
-                @Override
-                protected Boolean doInBackground(Void... params) {
-                    try {
-                        Log.v(TAG, "Importing db from " + uri);
-                        DBImport.importDB(PreferenceFragmentActivity.this, uri);
-                        return true;
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error importing db: " + e.getMessage(), e);
-                        return false;
-                    }
-                }
-
-                @Override
-                protected void onPostExecute(Boolean result) {
-                    ProgressDialogFragment dialogFragment = (ProgressDialogFragment) getSupportFragmentManager()
-                            .findFragmentByTag(PROGRESS_DIALOG_FRAGMENT_TAG);
-                    if (dialogFragment != null) dialogFragment.dismissAllowingStateLoss();
-                    String toastText = result ? getString(R.string.import_successful, uri.getPath()) : getString(R.string.import_failed, uri.getPath());
-                    Toast.makeText(PreferenceFragmentActivity.this, toastText, Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            };
-            task.execute();
+            Import.importDb(this, uri);
         }
         // Compress the database in a background thread
         else if (actionId == ID_ACTION_COMPRESS) {
-            AsyncTask<Void, Void, Integer> task = new AsyncTask<Void, Void, Integer>() {
-
-                @Override
-                protected void onPreExecute() {
-                    DialogFragmentFactory.showProgressDialog(PreferenceFragmentActivity.this, getString(R.string.progress_dialog_message),
-                            ProgressDialog.STYLE_SPINNER, PROGRESS_DIALOG_FRAGMENT_TAG);
-                }
-
-                @Override
-                protected Integer doInBackground(Void... params) {
-                    try {
-                        Log.v(TAG, "Compressing db");
-                        return DBCompress.compressDB(PreferenceFragmentActivity.this);
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error compressing db: " + e.getMessage(), e);
-                        return -1;
-                    }
-                }
-
-                @Override
-                protected void onPostExecute(Integer result) {
-                    ProgressDialogFragment dialogFragment = (ProgressDialogFragment) getSupportFragmentManager()
-                            .findFragmentByTag(PROGRESS_DIALOG_FRAGMENT_TAG);
-                    if (dialogFragment != null) dialogFragment.dismissAllowingStateLoss();
-                    String toastText = result >= 0 ? getString(R.string.compress_successful, result) : getString(R.string.compress_failed);
-                    Toast.makeText(PreferenceFragmentActivity.this, toastText, Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            };
-            task.execute();
+            Compress.compress(this);
         } else if (actionId == ID_ACTION_LOCATION_SETTINGS) {
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intent);

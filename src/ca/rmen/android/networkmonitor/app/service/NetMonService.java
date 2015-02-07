@@ -137,8 +137,9 @@ public class NetMonService extends Service {
             // Retrieve the log
             WakeLock wakeLock = null;
             try {
+                NetMonPreferences prefs = NetMonPreferences.getInstance(NetMonService.this);
                 // Periodically wake up the device to prevent the data connection from being cut.
-                long wakeInterval = NetMonPreferences.getInstance(NetMonService.this).getWakeInterval();
+                long wakeInterval = prefs.getWakeInterval();
                 long now = System.currentTimeMillis();
                 long timeSinceLastWake = now - mLastWakeUp;
                 Log.d(TAG, "wakeInterval = " + wakeInterval + ", lastWakeUp = " + mLastWakeUp + ", timeSinceLastWake = " + timeSinceLastWake);
@@ -156,7 +157,7 @@ public class NetMonService extends Service {
                 values.put(NetMonColumns.TIMESTAMP, System.currentTimeMillis());
                 values.putAll(mDataSources.getContentValues());
                 getContentResolver().insert(NetMonColumns.CONTENT_URI, values);
-                DBPurge.purgeDB(NetMonService.this);
+                new DBPurge(NetMonService.this, prefs.getDBRecordCount()).execute(null);
 
                 // Send mail
                 mReportEmailer.send();

@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.export.kml;
+package ca.rmen.android.networkmonitor.app.db.export.kml;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,10 +39,11 @@ import android.content.Context;
 import android.database.Cursor;
 
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.export.FileExport;
-import ca.rmen.android.networkmonitor.app.export.Formatter;
-import ca.rmen.android.networkmonitor.app.export.FormatterFactory;
-import ca.rmen.android.networkmonitor.app.export.FormatterFactory.FormatterStyle;
+import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
+import ca.rmen.android.networkmonitor.app.db.export.FileExport;
+import ca.rmen.android.networkmonitor.app.db.export.Formatter;
+import ca.rmen.android.networkmonitor.app.db.export.FormatterFactory;
+import ca.rmen.android.networkmonitor.app.db.export.FormatterFactory.FormatterStyle;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences.Selection;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
@@ -63,8 +64,8 @@ public class KMLExport extends FileExport {
     /**
      * @param placemarkNameColumn the column whose value will be exported to the KML placemark names.
      */
-    public KMLExport(Context context, FileExport.ExportProgressListener listener, String placemarkNameColumn) throws FileNotFoundException {
-        super(context, new File(context.getExternalFilesDir(null), KML_FILE_PREFIX + placemarkNameColumn + ".kml"), listener);
+    public KMLExport(Context context, String placemarkNameColumn) throws FileNotFoundException {
+        super(context, new File(context.getExternalFilesDir(null), KML_FILE_PREFIX + placemarkNameColumn + ".kml"));
         mPlacemarkNameColumn = placemarkNameColumn;
     }
 
@@ -72,7 +73,7 @@ public class KMLExport extends FileExport {
      * @return the file if it was correctly exported, null otherwise.
      */
     @Override
-    public File export() {
+    public File execute(DBProcessProgressListener listener) {
         Log.v(TAG, "export");
         Formatter formatter = FormatterFactory.getFormatter(FormatterStyle.XML, mContext);
         List<String> selectedColumns = new ArrayList<String>(NetMonPreferences.getInstance(mContext).getSelectedColumns());
@@ -126,7 +127,7 @@ public class KMLExport extends FileExport {
                     kmlWriter.writePlacemark(placemarkName, cellValues, c.getString(latitudeIndex), c.getString(longitudeIndex), timestamp);
 
                     // Notify the listener of our progress (progress is 1-based)
-                    if (mListener != null) mListener.onExportProgress(c.getPosition() + 1, rowCount);
+                    if (listener != null) listener.onProgress(c.getPosition() + 1, rowCount);
                 }
                 // Write the footer and clean up the file.
                 kmlWriter.writeFooter();

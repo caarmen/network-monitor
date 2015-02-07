@@ -50,12 +50,13 @@ import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.db.export.HTMLExport;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
-import ca.rmen.android.networkmonitor.app.export.HTMLExport;
 import ca.rmen.android.networkmonitor.app.prefs.FilterColumnActivity;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
+import ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity;
 import ca.rmen.android.networkmonitor.app.prefs.SelectFieldsActivity;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences.SortOrder;
@@ -112,14 +113,14 @@ public class LogActivity extends FragmentActivity implements DialogButtonListene
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             case R.id.action_share:
-                Intent intentShare = new Intent(LogActionsActivity.ACTION_SHARE);
+                Intent intentShare = new Intent(PreferenceFragmentActivity.ACTION_SHARE);
                 startActivity(intentShare);
                 return true;
             case R.id.action_refresh:
                 loadHTMLFile();
                 return true;
             case R.id.action_clear:
-                Intent intentClear = new Intent(LogActionsActivity.ACTION_CLEAR);
+                Intent intentClear = new Intent(PreferenceFragmentActivity.ACTION_CLEAR);
                 startActivityForResult(intentClear, REQUEST_CODE_CLEAR);
                 return true;
             case R.id.action_select_fields:
@@ -160,9 +161,9 @@ public class LogActivity extends FragmentActivity implements DialogButtonListene
                 Log.v(TAG, "loadHTMLFile:doInBackground");
                 try {
                     // Export the DB to the HTML file.
-                    HTMLExport htmlExport = new HTMLExport(LogActivity.this, false, null);
+                    HTMLExport htmlExport = new HTMLExport(LogActivity.this, false);
                     int recordCount = NetMonPreferences.getInstance(LogActivity.this).getFilterRecordCount();
-                    File file = htmlExport.export(recordCount);
+                    File file = htmlExport.export(recordCount, null);
                     return file;
                 } catch (IOException e) {
                     Log.e(TAG, "doInBackground Could not load data into html file: " + e.getMessage(), e);
@@ -184,7 +185,7 @@ public class LogActivity extends FragmentActivity implements DialogButtonListene
                 }
                 // Load the exported HTML file into the WebView.
                 mWebView = (WebView) findViewById(R.id.web_view);
-                // Save our current horizontal scroll position so we can keep our 
+                // Save our current horizontal scroll position so we can keep our
                 // horizontal position after reloading the page.
                 final int oldScrollX = mWebView.getScrollX();
                 mWebView.getSettings().setUseWideViewPort(true);

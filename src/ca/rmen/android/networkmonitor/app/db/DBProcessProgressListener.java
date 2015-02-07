@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2014 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2015 Benoit 'BoD' Lubek (BoD@JRAF.org) //TODO <- replace with *your* name/email
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,22 +21,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.export.kml;
+package ca.rmen.android.networkmonitor.app.db;
 
-import java.util.Map;
-
-/**
- * Returns the proper styling info (for now, just the icon color) for a KML placemark.
- */
-
-interface KMLStyle {
-    enum IconColor {
-        RED, YELLOW, GREEN
-    };
-
-    /**
-     * @return the icon color to use given the attributes for a given placemark
-     */
-    public IconColor getColor(Map<String, String> values);
-
+public interface DBProcessProgressListener {
+    void onProgress(int progress, int max);
 }

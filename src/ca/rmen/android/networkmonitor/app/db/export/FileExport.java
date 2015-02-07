@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.export;
+package ca.rmen.android.networkmonitor.app.db.export;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,33 +29,29 @@ import java.io.FileNotFoundException;
 import android.content.Context;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
+import ca.rmen.android.networkmonitor.app.db.DBTask;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Export the Network Monitor data from the DB to a file.
  */
-public abstract class FileExport {
+public abstract class FileExport implements DBTask<File> {
     private static final String TAG = Constants.TAG + FileExport.class.getSimpleName();
-
-
-    public interface ExportProgressListener {
-        void onExportProgress(int progress, int max);
-    }
 
 
     protected final Context mContext;
     protected final File mFile;
-    protected final ExportProgressListener mListener;
 
-    protected FileExport(Context context, File file, ExportProgressListener listener) throws FileNotFoundException {
+    protected FileExport(Context context, File file) throws FileNotFoundException {
         Log.v(TAG, "FileExport: file " + file);
         mContext = context;
         mFile = file;
-        mListener = listener;
     }
 
     /**
      * @return the file if it was correctly exported, null otherwise.
      */
-    abstract public File export();
+    @Override
+    abstract public File execute(DBProcessProgressListener listener);
 }

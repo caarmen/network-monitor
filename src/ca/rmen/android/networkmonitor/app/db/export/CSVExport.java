@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.export;
+package ca.rmen.android.networkmonitor.app.db.export;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,7 +31,7 @@ import java.io.PrintWriter;
 import android.content.Context;
 import android.text.TextUtils;
 
-import ca.rmen.android.networkmonitor.app.export.FormatterFactory.FormatterStyle;
+import ca.rmen.android.networkmonitor.app.db.export.FormatterFactory.FormatterStyle;
 
 /**
  * Export the Network Monitor data to a CSV file.
@@ -40,8 +40,8 @@ public class CSVExport extends TableFileExport {
     private static final String CSV_FILE = "networkmonitor.csv";
     private PrintWriter mPrintWriter;
 
-    public CSVExport(Context context, FileExport.ExportProgressListener listener) throws FileNotFoundException {
-        super(context, new File(context.getExternalFilesDir(null), CSV_FILE), FormatterStyle.DEFAULT, listener);
+    public CSVExport(Context context) throws FileNotFoundException {
+        super(context, new File(context.getExternalFilesDir(null), CSV_FILE), FormatterStyle.DEFAULT);
     }
 
     @Override

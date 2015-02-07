@@ -31,7 +31,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -42,11 +41,9 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.db.DBPurge;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.LocationFetchingStrategy;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
@@ -99,33 +96,22 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            final NetMonPreferences prefs = NetMonPreferences.getInstance(AdvancedPreferencesActivity.this);
             Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
             if (NetMonPreferences.PREF_TEST_SERVER.equals(key)) {
                 updatePreferenceSummary(key, R.string.pref_summary_test_server);
             } else if (NetMonPreferences.PREF_NOTIFICATION_RINGTONE.equals(key)) {
                 updatePreferenceSummary(key, R.string.pref_summary_notification_ringtone);
             } else if (NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY.equals(key)) {
-                if (NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getLocationFetchingStrategy() == LocationFetchingStrategy.HIGH_ACCURACY) {
+                if (prefs.getLocationFetchingStrategy() == LocationFetchingStrategy.HIGH_ACCURACY) {
                     Intent intent = new Intent(PreferenceFragmentActivity.ACTION_CHECK_LOCATION_SETTINGS);
                     startActivity(intent);
                 }
             } else if (NetMonPreferences.PREF_NOTIFICATION_ENABLED.equals(key)) {
-                if (!NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getShowNotificationOnTestFailure())
-                    NetMonNotification.dismissFailedTestNotification(AdvancedPreferencesActivity.this);
+                if (!prefs.getShowNotificationOnTestFailure()) NetMonNotification.dismissFailedTestNotification(AdvancedPreferencesActivity.this);
             } else if (NetMonPreferences.PREF_DB_RECORD_COUNT.equals(key)) {
-                new AsyncTask<Void, Void, Integer>() {
-
-                    @Override
-                    protected Integer doInBackground(Void... params) {
-                        return DBPurge.purgeDB(AdvancedPreferencesActivity.this);
-                    }
-
-                    @Override
-                    protected void onPostExecute(Integer result) {
-                        if (result > 0)
-                            Toast.makeText(AdvancedPreferencesActivity.this, getString(R.string.compress_successful, result), Toast.LENGTH_LONG).show();
-                    }
-                }.execute();
+                Intent intent = new Intent(PreferenceFragmentActivity.ACTION_CLEAR_OLD);
+                startActivity(intent);
             }
         }
     };
