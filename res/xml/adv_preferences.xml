@@ -89,6 +89,12 @@
             android:summary="@string/pref_summary_import"
             android:title="@string/pref_title_import" >
         </Preference>
+        <Preference
+            android:icon="@drawable/ic_pref_compress"
+            android:key="PREF_COMPRESS"
+            android:summary="@string/pref_summary_compress"
+            android:title="@string/pref_title_compress" >
+        </Preference>
     </PreferenceCategory>
 
 </PreferenceScreen>

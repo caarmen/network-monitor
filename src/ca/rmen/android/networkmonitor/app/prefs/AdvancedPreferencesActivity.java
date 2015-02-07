@@ -52,7 +52,9 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + AdvancedPreferencesActivity.class.getSimpleName();
     private static final int ACTIVITY_REQUEST_CODE_IMPORT = 1;
+    private static final int ACTIVITY_REQUEST_CODE_COMPRESS = 2;
     private static final String PREF_IMPORT = "PREF_IMPORT";
+    private static final String PREF_COMPRESS = "PREF_COMPRESS";
 
     @SuppressWarnings("deprecation")
     @Override
@@ -71,6 +73,8 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
         testServerPreference.setOnPreferenceChangeListener(mOnPreferenceChangeListener);
         Preference importPreference = getPreferenceManager().findPreference(PREF_IMPORT);
         importPreference.setOnPreferenceClickListener(mOnPreferenceClickListener);
+        Preference compressPreference = getPreferenceManager().findPreference(PREF_COMPRESS);
+        compressPreference.setOnPreferenceClickListener(mOnPreferenceClickListener);
         Preference emailPreference = findPreference(EmailPreferences.PREF_EMAIL_REPORTS);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             emailPreference.setEnabled(false);
@@ -142,6 +146,10 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
                 Intent importIntent = new Intent(Intent.ACTION_GET_CONTENT);
                 importIntent.setType("file/*");
                 startActivityForResult(Intent.createChooser(importIntent, getResources().getText(R.string.pref_summary_import)), ACTIVITY_REQUEST_CODE_IMPORT);
+            } else if (PREF_COMPRESS.equals(preference.getKey())) {
+                Intent intent = new Intent(PreferenceFragmentActivity.ACTION_COMPRESS);
+                startActivity(intent);
+
             }
             return false;
         }
