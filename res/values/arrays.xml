@@ -79,14 +79,6 @@
         <item>10000</item>
         <item>-1</item>
     </string-array>
-    <string-array name="preferences_enable_connection_test_labels">
-        <item>@string/pref_value_enable_connection_enabled</item>
-        <item>@string/pref_value_enable_connection_disabled</item>
-    </string-array>
-    <string-array name="preferences_enable_connection_test_values">
-        <item>enabled</item>
-        <item>disabled</item>
-    </string-array>
     <string-array name="preferences_cell_id_format_labels">
         <item>@string/pref_value_cell_id_format_decimal</item>
         <item>@string/pref_value_cell_id_format_hex</item>

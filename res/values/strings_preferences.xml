@@ -34,8 +34,6 @@
     <string name="pref_category_database">DATABASE</string>
     <string name="pref_title_enable_connection_test">Enable data connection tests</string>
     <string name="pref_summary_enable_connection_test">Enable or disable connection tests (uses data)</string>
-    <string name="pref_value_enable_connection_enabled">Enabled: Network Monitor will use data for each test</string>
-    <string name="pref_value_enable_connection_disabled">Disabled: Network Monitor will not test data</string>
     <string name="pref_title_select_fields">Fields to monitor</string>
     <string name="pref_summary_select_fields">Select a set of fields for the log display and export.</string>
     <string name="pref_title_speed_test">Speed test</string>

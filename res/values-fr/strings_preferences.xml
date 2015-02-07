@@ -33,8 +33,6 @@
     <string name="pref_category_database">BASE DE DONNÉES</string>
     <string name="pref_title_enable_connection_test">Activer les tests de données</string>
     <string name="pref_summary_enable_connection_test">Activer ou desactiver des tests de données</string>
-    <string name="pref_value_enable_connection_enabled">Activé: Network Monitor testera la connexion à chaque test</string>
-    <string name="pref_value_enable_connection_disabled">Désactivé: Network Monitor ne testera pas les données</string>
     <string name="pref_title_select_fields">Champs</string>
     <string name="pref_summary_select_fields">Sélectionner les champs pour l\'affichage du journal et l\'export.</string>
     <string name="pref_title_speed_test">Test de vitesse</string>
