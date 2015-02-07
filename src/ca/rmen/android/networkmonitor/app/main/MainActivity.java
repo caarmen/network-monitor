@@ -38,6 +38,7 @@ import org.jraf.android.backport.switchwidget.SwitchPreference;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.service.NetMonService;
+import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -77,6 +78,7 @@ public class MainActivity extends PreferenceActivity {
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            NetMonPreferences prefs = NetMonPreferences.getInstance(MainActivity.this);
             if (NetMonPreferences.PREF_SERVICE_ENABLED.equals(key)) {
                 if (sharedPreferences.getBoolean(NetMonPreferences.PREF_SERVICE_ENABLED, NetMonPreferences.PREF_SERVICE_ENABLED_DEFAULT)) {
                     int playServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable(MainActivity.this);
@@ -93,6 +95,12 @@ public class MainActivity extends PreferenceActivity {
                         }
                     }
                     startService(new Intent(MainActivity.this, NetMonService.class));
+                }
+            } else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
+                if (prefs.getUpdateInterval() < NetMonPreferences.PREF_MIN_POLLING_INTERVAL) {
+                    prefs.setConnectionTestEnabled(false);
+                    prefs.setDBRecordCount(10000);
+                    SpeedTestPreferences.getInstance(MainActivity.this).setEnabled(false);
                 }
             }
         }

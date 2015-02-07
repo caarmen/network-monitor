@@ -36,6 +36,7 @@ import android.preference.PreferenceManager;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
 import ca.rmen.android.networkmonitor.util.FileUtil;
@@ -57,6 +58,8 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
         PreferenceManager.setDefaultValues(this, R.xml.speed_test_preferences, false);
         addPreferencesFromResource(R.xml.speed_test_preferences);
         mSpeedTestPrefs = SpeedTestPreferences.getInstance(this);
+        Preference prefSpeedTestEnabled = findPreference(SpeedTestPreferences.PREF_SPEED_TEST_ENABLED);
+        if (NetMonPreferences.getInstance(this).getUpdateInterval() < NetMonPreferences.PREF_MIN_POLLING_INTERVAL) prefSpeedTestEnabled.setEnabled(false);
         SpeedTestResult result = mSpeedTestPrefs.getLastDownloadResult();
         if (result.status != SpeedTestStatus.SUCCESS) download();
         else

@@ -59,6 +59,7 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        NetMonPreferences prefs = NetMonPreferences.getInstance(this);
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         // The first time the user sees the notification preferences, we'll set the ringtone preference
         // to the default notification ringtone.
@@ -68,6 +69,8 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
         addPreferencesFromResource(R.xml.adv_preferences);
         updatePreferenceSummary(NetMonPreferences.PREF_TEST_SERVER, R.string.pref_summary_test_server);
         updatePreferenceSummary(NetMonPreferences.PREF_NOTIFICATION_RINGTONE, R.string.pref_summary_notification_ringtone);
+        Preference enableConnectionTest = getPreferenceManager().findPreference(NetMonPreferences.PREF_ENABLE_CONNECTION_TEST);
+        if (prefs.getUpdateInterval() < NetMonPreferences.PREF_MIN_POLLING_INTERVAL) enableConnectionTest.setEnabled(false);
         Preference testServerPreference = getPreferenceManager().findPreference(NetMonPreferences.PREF_TEST_SERVER);
         testServerPreference.setOnPreferenceChangeListener(mOnPreferenceChangeListener);
         Preference importPreference = getPreferenceManager().findPreference(PREF_IMPORT);

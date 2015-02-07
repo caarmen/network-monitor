@@ -202,9 +202,11 @@ public class SummaryExport {
                             add(testResults, lastTestResult.label, lastTestResult);
                             lastTestResult = createTestResult(connectionType, label, id1, id2, id3);
                         }
-                        if (resultType.equals(Constants.CONNECTION_TEST_PASS)) lastTestResult.setPassCount(resultCount);
-                        else if (resultType.equals(Constants.CONNECTION_TEST_FAIL)) lastTestResult.setFailCount(resultCount);
-                        else if (resultType.equals(Constants.CONNECTION_TEST_SLOW)) lastTestResult.setSlowCount(resultCount);
+                        if (!TextUtils.isEmpty(resultType)) {
+                            if (resultType.equals(Constants.CONNECTION_TEST_PASS)) lastTestResult.setPassCount(resultCount);
+                            else if (resultType.equals(Constants.CONNECTION_TEST_FAIL)) lastTestResult.setFailCount(resultCount);
+                            else if (resultType.equals(Constants.CONNECTION_TEST_SLOW)) lastTestResult.setSlowCount(resultCount);
+                        }
                         if (c.isLast()) add(testResults, lastTestResult.label, lastTestResult);
                     } while (c.moveToNext());
                 }
