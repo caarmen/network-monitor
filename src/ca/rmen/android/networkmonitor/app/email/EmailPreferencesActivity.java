@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -43,8 +42,8 @@ import android.text.format.DateUtils;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailConfig;
-import ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity;
 import ca.rmen.android.networkmonitor.util.Log;
 
 public class EmailPreferencesActivity extends PreferenceActivity { // NO_UCD (use default)
@@ -84,12 +83,8 @@ public class EmailPreferencesActivity extends PreferenceActivity { // NO_UCD (us
             EmailConfig emailConfig = EmailPreferences.getInstance(this).getEmailConfig();
             if (!emailConfig.isValid()) {
                 EmailPreferences.getInstance(this).setEmailReportInterval(0);
-                // We can't show a dialog directly here because we're a PreferenceActivity.
-                // We use this convoluted hack to ask the PreferenceFragmentActivity to show the dialog for us.
-                Intent intent = new Intent(PreferenceFragmentActivity.ACTION_SHOW_INFO_DIALOG);
-                intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_TITLE, getString(R.string.missing_email_settings_info_dialog_title));
-                intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_MESSAGE, getString(R.string.missing_email_settings_info_dialog_message));
-                startActivity(intent);
+                PreferenceDialog.showInfoDialog(this, getString(R.string.missing_email_settings_info_dialog_title),
+                        getString(R.string.missing_email_settings_info_dialog_message));
             }
         }
     }

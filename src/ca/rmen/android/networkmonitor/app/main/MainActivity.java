@@ -36,6 +36,7 @@ import android.widget.Toast;
 import org.jraf.android.backport.switchwidget.SwitchPreference;
 
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.service.NetMonService;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
@@ -99,8 +100,10 @@ public class MainActivity extends PreferenceActivity {
             } else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
                 if (prefs.getUpdateInterval() < NetMonPreferences.PREF_MIN_POLLING_INTERVAL) {
                     prefs.setConnectionTestEnabled(false);
-                    prefs.setDBRecordCount(10000);
+                    if (prefs.getDBRecordCount() < 0) prefs.setDBRecordCount(10000);
                     SpeedTestPreferences.getInstance(MainActivity.this).setEnabled(false);
+                    PreferenceDialog.showWarningDialog(MainActivity.this, getString(R.string.warning_fast_polling_title),
+                            getString(R.string.warning_fast_polling_message));
                 }
             }
         }

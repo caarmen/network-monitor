@@ -24,7 +24,6 @@
  */
 package ca.rmen.android.networkmonitor.app.speedtest;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
@@ -36,8 +35,8 @@ import android.preference.PreferenceManager;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
-import ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
 import ca.rmen.android.networkmonitor.util.FileUtil;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -88,10 +87,8 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
             SpeedTestDownloadConfig downloadConfig = mSpeedTestPrefs.getDownloadConfig();
             if (!downloadConfig.isValid()) {
                 mSpeedTestPrefs.setEnabled(false);
-                Intent intent = new Intent(PreferenceFragmentActivity.ACTION_SHOW_INFO_DIALOG);
-                intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_TITLE, getString(R.string.speed_test_missing_info_dialog_title));
-                intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_MESSAGE, getString(R.string.speed_test_missing_info_dialog_message));
-                startActivity(intent);
+                PreferenceDialog.showInfoDialog(this, getString(R.string.speed_test_missing_info_dialog_title),
+                        getString(R.string.speed_test_missing_info_dialog_message));
             }
         }
     }
@@ -103,12 +100,8 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
             // Show a warning when the user enables the speed test.
             if (SpeedTestPreferences.PREF_SPEED_TEST_ENABLED.equals(key)) {
                 if (sharedPreferences.getBoolean(key, false)) {
-                    // We can't show a dialog directly here because we're a PreferenceActivity.
-                    // We use this convoluted hack to ask the PreferenceFragmentActivity to show the dialog for us.
-                    Intent intent = new Intent(PreferenceFragmentActivity.ACTION_SHOW_WARNING_DIALOG);
-                    intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_TITLE, getString(R.string.speed_test_warning_title));
-                    intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_MESSAGE, getString(R.string.speed_test_warning_message));
-                    startActivity(intent);
+                    PreferenceDialog.showWarningDialog(SpeedTestPreferencesActivity.this, getString(R.string.speed_test_warning_title),
+                            getString(R.string.speed_test_warning_message));
                 }
 
             }
