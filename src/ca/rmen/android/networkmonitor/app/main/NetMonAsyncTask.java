@@ -27,6 +27,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
@@ -54,7 +55,8 @@ public abstract class NetMonAsyncTask<T> extends AsyncTask<Void, Void, T> {
         mTask = task;
         if (args == null) args = new Bundle();
         mDialogStyle = args.getInt(EXTRA_DIALOG_STYLE, ProgressDialog.STYLE_HORIZONTAL);
-        mDialogMessage = args.getString(EXTRA_DIALOG_MESSAGE, activity.getString(R.string.progress_dialog_message));
+        String dialogMessage = args.getString(EXTRA_DIALOG_MESSAGE);
+        mDialogMessage = TextUtils.isEmpty(dialogMessage) ? activity.getString(R.string.progress_dialog_message) : dialogMessage;
     }
 
     @Override
