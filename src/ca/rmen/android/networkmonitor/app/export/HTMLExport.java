@@ -67,6 +67,7 @@ public class HTMLExport extends TableFileExport {
 
         mPrintWriter.println("  <tr>");
         SortPreferences sortPreferences = NetMonPreferences.getInstance(mContext).getSortPreferences();
+        mPrintWriter.println("    <th><table><tr></tr></table></th>");
         for (String columnLabel : columnLabels) {
             String dbColumnName = NetMonColumns.getColumnName(mContext, columnLabel);
             String labelClass = "";
@@ -114,6 +115,7 @@ public class HTMLExport extends TableFileExport {
         if (rowNumber % 2 == 0) trClass = "even";
         mPrintWriter.println("  <tr class=\"" + trClass + "\">");
 
+        mPrintWriter.println("    <td>" + (rowNumber + 1) + "</td>");
         for (String cellValue : cellValues) {
             String tdClass = "";
             // Highlight PASS in green and FAIL in red.

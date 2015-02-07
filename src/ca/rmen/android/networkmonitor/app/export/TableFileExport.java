@@ -30,6 +30,7 @@ import java.util.Arrays;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.export.FormatterFactory.FormatterStyle;
@@ -38,6 +39,7 @@ import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences.Selection;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
+import ca.rmen.android.networkmonitor.provider.NetMonProvider;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -89,7 +91,8 @@ abstract class TableFileExport extends FileExport {
         // Order and filter the results based on the user's preferences.
         SortPreferences sortPreferences = NetMonPreferences.getInstance(mContext).getSortPreferences();
         Selection selection = FilterPreferences.getSelectionClause(mContext);
-        Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, usedColumnNames, selection.selectionString, selection.selectionArgs,
+        Uri uri = NetMonColumns.CONTENT_URI.buildUpon().appendQueryParameter(NetMonProvider.QUERY_PARAMETER_LIMIT, String.valueOf(recordCount)).build();
+        Cursor c = mContext.getContentResolver().query(uri, usedColumnNames, selection.selectionString, selection.selectionArgs,
                 sortPreferences.getOrderByClause());
         if (c != null) {
             try {
@@ -97,20 +100,17 @@ abstract class TableFileExport extends FileExport {
                     usedColumnNames[i] = NetMonColumns.getColumnLabel(mContext, usedColumnNames[i]);
                 Log.v(TAG, "Column names: " + Arrays.toString(usedColumnNames));
 
-                // Start writing to the file.
-                writeHeader(usedColumnNames);
-
                 // Write the table rows to the file.
                 int rowsAvailable = c.getCount();
-                // Check if we're supposed to limit the number of rows exported.
-                int rowsToExport = recordCount > 0 ? Math.min(recordCount, rowsAvailable) : rowsAvailable;
-                while (c.moveToNext() && c.getPosition() < rowsToExport) {
+                // Start writing to the file.
+                writeHeader(usedColumnNames);
+                while (c.moveToNext()) {
                     String[] cellValues = new String[c.getColumnCount()];
                     for (int i = 0; i < c.getColumnCount(); i++)
                         cellValues[i] = formatter.format(c, i);
                     writeRow(c.getPosition(), cellValues);
                     // Notify the listener of our progress (progress is 1-based)
-                    if (mListener != null) mListener.onExportProgress(c.getPosition() + 1, rowsToExport);
+                    if (mListener != null) mListener.onExportProgress(c.getPosition() + 1, rowsAvailable);
                 }
 
                 // Write the footer and clean up the file.
