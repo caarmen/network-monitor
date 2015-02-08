@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.db.export.kml;
+package ca.rmen.android.networkmonitor.app.dbops.backend.export.kml;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.db.export;
+package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,8 +33,8 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
-import ca.rmen.android.networkmonitor.app.db.export.FormatterFactory.FormatterStyle;
+import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
+import ca.rmen.android.networkmonitor.app.dbops.backend.export.FormatterFactory.FormatterStyle;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences.Selection;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
@@ -76,7 +76,7 @@ abstract class TableFileExport extends FileExport {
      * @return the file if it was correctly exported, null otherwise.
      */
     @Override
-    public File execute(DBProcessProgressListener listener) {
+    public File execute(ProgressListener listener) {
         Log.v(TAG, "export");
         return export(0, listener);
     }
@@ -85,7 +85,7 @@ abstract class TableFileExport extends FileExport {
      * @param recordCount export at most this number of records. If recordCount is 0 or less, all records will be exported.
      * @return the file if it was correctly exported, null otherwise.
      */
-    public File export(int recordCount, DBProcessProgressListener listener) {
+    public File export(int recordCount, ProgressListener listener) {
         Log.v(TAG, "export " + (recordCount <= 0 ? "all" : recordCount) + " records");
         String[] usedColumnNames = (String[]) NetMonPreferences.getInstance(mContext).getSelectedColumns().toArray();
         Formatter formatter = FormatterFactory.getFormatter(mFormatterStyle, mContext);

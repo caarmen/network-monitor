@@ -38,14 +38,14 @@ import android.support.v4.app.FragmentActivity;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Clear;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Compress;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Import;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 import ca.rmen.android.networkmonitor.app.dialog.ChoiceDialogFragment.DialogItemListener;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.InfoDialogFragment.InfoDialogListener;
-import ca.rmen.android.networkmonitor.app.useractions.Clear;
-import ca.rmen.android.networkmonitor.app.useractions.Compress;
-import ca.rmen.android.networkmonitor.app.useractions.Import;
-import ca.rmen.android.networkmonitor.app.useractions.Share;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -54,7 +54,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  * This activity has a transparent theme. The only thing the user will see will be alert dialogs that this activity creates.
  */
 public class PreferenceFragmentActivity extends FragmentActivity implements DialogItemListener, DialogButtonListener, OnDismissListener, OnCancelListener,
-        InfoDialogListener { // NO_UCD (use default)
+InfoDialogListener { // NO_UCD (use default)
     public static final String ACTION_SHARE = PreferenceFragmentActivity.class.getPackage().getName() + "_share";
     public static final String ACTION_CLEAR = PreferenceFragmentActivity.class.getPackage().getName() + "_clear";
     public static final String ACTION_IMPORT = PreferenceFragmentActivity.class.getPackage().getName() + "_import";

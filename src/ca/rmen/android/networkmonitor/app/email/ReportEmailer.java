@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2014 Benoit 'BoD' Lubek (BoD@JRAF.org) //TODO <- replace with *your* name/email
+ * Copyright (C) 2014 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,13 +49,13 @@ import android.content.Context;
 import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.db.export.CSVExport;
-import ca.rmen.android.networkmonitor.app.db.export.DBExport;
-import ca.rmen.android.networkmonitor.app.db.export.ExcelExport;
-import ca.rmen.android.networkmonitor.app.db.export.FileExport;
-import ca.rmen.android.networkmonitor.app.db.export.HTMLExport;
-import ca.rmen.android.networkmonitor.app.db.export.SummaryExport;
-import ca.rmen.android.networkmonitor.app.db.export.kml.KMLExport;
+import ca.rmen.android.networkmonitor.app.dbops.backend.export.CSVExport;
+import ca.rmen.android.networkmonitor.app.dbops.backend.export.DBExport;
+import ca.rmen.android.networkmonitor.app.dbops.backend.export.ExcelExport;
+import ca.rmen.android.networkmonitor.app.dbops.backend.export.FileExport;
+import ca.rmen.android.networkmonitor.app.dbops.backend.export.HTMLExport;
+import ca.rmen.android.networkmonitor.app.dbops.backend.export.SummaryExport;
+import ca.rmen.android.networkmonitor.app.dbops.backend.export.kml.KMLExport;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailConfig;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailSecurity;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;

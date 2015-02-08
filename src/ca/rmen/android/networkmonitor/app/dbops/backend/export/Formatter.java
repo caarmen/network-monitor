@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2013 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.db;
+package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
-public interface DBTask<T> {
-    T execute(DBProcessProgressListener listener);
+import android.database.Cursor;
+
+/**
+ * Formats recorded values for exporting
+ */
+public interface Formatter {
+
+    /**
+     * @return a non-null String representation of the value at the given column and current Cursor row.
+     */
+    public String format(Cursor c, int columnIndex);
 }

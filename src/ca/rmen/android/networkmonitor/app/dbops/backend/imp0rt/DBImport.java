@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.db;
+package ca.rmen.android.networkmonitor.app.dbops.backend.imp0rt;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,6 +40,8 @@ import android.net.Uri;
 import android.os.RemoteException;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
+import ca.rmen.android.networkmonitor.app.dbops.Task;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.provider.NetMonProvider;
 import ca.rmen.android.networkmonitor.util.IoUtil;
@@ -49,7 +51,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  * Replace the contents of the current database with the contents of another database.
  * This is based on DBImport from the scrum chatter project.
  */
-public class DBImport implements DBTask<Boolean> {
+public class DBImport implements Task<Boolean> {
     private static final String TAG = Constants.TAG + "/" + DBImport.class.getSimpleName();
 
     private final Context mContext;
@@ -66,7 +68,7 @@ public class DBImport implements DBTask<Boolean> {
      * @return true if the DB import was successful.
      */
     @Override
-    public Boolean execute(DBProcessProgressListener listener) {
+    public Boolean execute(ProgressListener listener) {
         try {
             if (mUri.getScheme().equals("file")) {
                 File db = new File(mUri.getEncodedPath());
@@ -91,7 +93,7 @@ public class DBImport implements DBTask<Boolean> {
      * In a single database transaction, delete all the cells from the current database, read the data from the given importDb file, create a batch of
      * corresponding insert operations, and execute the inserts.
      */
-    private void importDB(File importDb, DBProcessProgressListener listener) throws RemoteException, OperationApplicationException, FileNotFoundException {
+    private void importDB(File importDb, ProgressListener listener) throws RemoteException, OperationApplicationException, FileNotFoundException {
         Log.v(TAG, "importDB from " + importDb);
         SQLiteDatabase dbImport = SQLiteDatabase.openDatabase(importDb.getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY);
         ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
@@ -108,8 +110,8 @@ public class DBImport implements DBTask<Boolean> {
      * @throws OperationApplicationException
      * @throws RemoteException
      */
-    private void buildInsertOperations(SQLiteDatabase dbImport, Uri uri, String table, ArrayList<ContentProviderOperation> operations,
-            DBProcessProgressListener listener) throws RemoteException, OperationApplicationException {
+    private void buildInsertOperations(SQLiteDatabase dbImport, Uri uri, String table, ArrayList<ContentProviderOperation> operations, ProgressListener listener)
+            throws RemoteException, OperationApplicationException {
         Log.v(TAG, "buildInsertOperations: uri = " + uri + ", table=" + table);
         Cursor c = dbImport.query(false, table, null, null, null, null, null, null, null);
         if (c != null) {

@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2015 Benoit 'BoD' Lubek (BoD@JRAF.org) //TODO <- replace with *your* name/email
+ * Copyright (C) 2015 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.db;
+package ca.rmen.android.networkmonitor.app.dbops;
 
-public interface DBProcessProgressListener {
+import ca.rmen.android.networkmonitor.app.dbops.ui.DBOpAsyncTask;
+
+/**
+ * Implementations of {@link Task} should notify {@link ProgressListener} of their
+ * progress.
+ *
+ * This is currently used by the {@link DBOpAsyncTask} to execute the long task in
+ * the background while showing a progress dialog.
+ *
+ * If we find we need other long tasks not related to db operations, requiring a
+ * progress dialog, we may move this interface to another package.
+ */
+public interface ProgressListener {
     void onProgress(int progress, int max);
 }

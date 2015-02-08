@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.db.export;
+package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,7 +31,7 @@ import java.io.PrintWriter;
 import android.content.Context;
 import android.text.TextUtils;
 
-import ca.rmen.android.networkmonitor.app.db.export.FormatterFactory.FormatterStyle;
+import ca.rmen.android.networkmonitor.app.dbops.backend.export.FormatterFactory.FormatterStyle;
 
 /**
  * Export the Network Monitor data to a CSV file.
