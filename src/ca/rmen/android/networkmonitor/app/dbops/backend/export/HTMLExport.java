@@ -38,11 +38,13 @@ import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences.SortOrder;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
+import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Export the Network Monitor data to an HTML file. The HTML file includes CSS specified in the strings XML file.
  */
 public class HTMLExport extends TableFileExport {
+    private static final String TAG = Constants.TAG + TableFileExport.class.getSimpleName();
     private static final String SCHEME_NETMON = "netmon:";
     public static final String URL_SORT = SCHEME_NETMON + "//sort";
     public static final String URL_FILTER = SCHEME_NETMON + "//filter";
@@ -54,11 +56,16 @@ public class HTMLExport extends TableFileExport {
      */
     public HTMLExport(Context context, boolean external) throws FileNotFoundException, UnsupportedEncodingException {
         super(context, new File(external ? context.getExternalFilesDir(null) : context.getFilesDir(), HTML_FILE), FormatterStyle.XML);
-        mPrintWriter = new PrintWriter(mFile, "utf-8");
     }
 
     @Override
     void writeHeader(String[] columnLabels) {
+        try {
+            mPrintWriter = new PrintWriter(mFile, "utf-8");
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            Log.e(TAG, "writeHeader Could not initialize print writer", e);
+            return;
+        }
         mPrintWriter.println("<html>");
         mPrintWriter.println("  <head>");
         mPrintWriter.println(mContext.getString(R.string.css));
@@ -110,6 +117,7 @@ public class HTMLExport extends TableFileExport {
 
     @Override
     void writeRow(int rowNumber, String[] cellValues) {
+        if (mPrintWriter == null) return;
         // Alternating styles for odd and even rows.
         String trClass = "odd";
         if (rowNumber % 2 == 0) trClass = "even";
@@ -130,6 +138,7 @@ public class HTMLExport extends TableFileExport {
 
     @Override
     void writeFooter() {
+        if (mPrintWriter == null) return;
         mPrintWriter.println("</tbody></table>");
         mPrintWriter.println("</body></html>");
         mPrintWriter.flush();

@@ -31,6 +31,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -119,26 +120,39 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
         }
     };
 
-    private void updatePreferenceSummary(String key, int summaryResId) {
+    private void updatePreferenceSummary(final String key, final int summaryResId) {
         @SuppressWarnings("deprecation")
-        Preference pref = getPreferenceManager().findPreference(key);
-        CharSequence value;
-        if (pref instanceof EditTextPreference) {
-            value = ((EditTextPreference) pref).getText();
-        } else if (pref instanceof RingtonePreference) {
-            Uri ringtoneUri = NetMonPreferences.getInstance(this).getNotificationSoundUri();
-            if (ringtoneUri == null) {
-                value = getString(R.string.pref_value_notification_ringtone_silent);
-            } else {
-                Ringtone ringtone = RingtoneManager.getRingtone(this, ringtoneUri);
-                if (ringtone == null) return;
-                value = ringtone.getTitle(this);
+        final Preference pref = getPreferenceManager().findPreference(key);
+        // RingtoneManager.getRingtone() actually does some disk reads.
+        // Discovered this with StrictMode and monkey.
+        // Ugly code (async task) to make it easier to find real StrictMode violations...
+        new AsyncTask<Void, Void, CharSequence>() {
+
+            @Override
+            protected CharSequence doInBackground(Void... params) {
+                if (pref instanceof EditTextPreference) {
+                    return ((EditTextPreference) pref).getText();
+                } else if (pref instanceof RingtonePreference) {
+                    Uri ringtoneUri = NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getNotificationSoundUri();
+                    if (ringtoneUri == null) {
+                        return getString(R.string.pref_value_notification_ringtone_silent);
+                    } else {
+                        Ringtone ringtone = RingtoneManager.getRingtone(AdvancedPreferencesActivity.this, ringtoneUri);
+                        if (ringtone == null) return null;
+                        return ringtone.getTitle(AdvancedPreferencesActivity.this);
+                    }
+                }
+                return null;
             }
-        } else {
-            return;
-        }
-        String summary = getString(summaryResId, value);
-        pref.setSummary(summary);
+
+            @Override
+            protected void onPostExecute(CharSequence value) {
+                if (value == null) return;
+                String summary = getString(summaryResId, value);
+                pref.setSummary(summary);
+            }
+
+        }.execute();
     }
 
     private final OnPreferenceClickListener mOnPreferenceClickListener = new OnPreferenceClickListener() {
