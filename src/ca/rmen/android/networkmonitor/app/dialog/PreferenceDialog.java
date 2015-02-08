@@ -124,7 +124,7 @@ public class PreferenceDialog {
                             // Save our preference
                             @Override
                             protected Void doInBackground(Void... params) {
-                                sharedPrefs.edit().putString(preferenceName, selectedItemValue).commit();
+                                sharedPrefs.edit().putString(preferenceName, selectedItemValue).apply();
                                 return null;
                             }
 

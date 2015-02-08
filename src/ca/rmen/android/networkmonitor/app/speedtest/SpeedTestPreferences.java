@@ -76,7 +76,7 @@ public class SpeedTestPreferences {
 
     public void setEnabled(boolean enabled) {
         Log.v(TAG, "setEnabled " + enabled);
-        mSharedPrefs.edit().putBoolean(PREF_SPEED_TEST_ENABLED, enabled).commit();
+        mSharedPrefs.edit().putBoolean(PREF_SPEED_TEST_ENABLED, enabled).apply();
     }
 
     public SpeedTestUploadConfig getUploadConfig() {

@@ -116,13 +116,13 @@ public class EmailPreferences {
     public void setEmailReportInterval(int interval) {
         Editor editor = mSharedPrefs.edit();
         editor.putString(EmailPreferences.PREF_EMAIL_INTERVAL, String.valueOf(interval));
-        editor.commit();
+        editor.apply();
     }
 
     public void setLastEmailSent(long when) {
         Editor editor = mSharedPrefs.edit();
         editor.putLong(EmailPreferences.PREF_EMAIL_LAST_EMAIL_SENT, when);
-        editor.commit();
+        editor.apply();
     }
 
     public long getLastEmailSent() {

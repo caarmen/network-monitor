@@ -63,7 +63,7 @@ public class SpeedTestResult {
 
     /**
      * Persist this speed test result to the shared preferences.
-     * 
+     *
      * @param keyPrefix the first part of the key names of each field to persist.
      */
     void write(SharedPreferences prefs, String keyPrefix) {
@@ -72,7 +72,7 @@ public class SpeedTestResult {
         editor.putLong(keyPrefix + "_FILE_BYTES", fileBytes);
         editor.putLong(keyPrefix + "_TRANSFER_TIME", transferTime);
         editor.putInt(keyPrefix + "_STATUS", status.ordinal());
-        editor.commit();
+        editor.apply();
     }
 
     /**

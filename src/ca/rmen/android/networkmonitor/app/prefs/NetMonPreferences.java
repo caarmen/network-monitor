@@ -147,9 +147,7 @@ public class NetMonPreferences {
      * @param value true if we should collect and log data, false otherwise.
      */
     public void setServiceEnabled(boolean value) {
-        Editor editor = mSharedPrefs.edit();
-        editor.putBoolean(NetMonPreferences.PREF_SERVICE_ENABLED, value);
-        editor.commit();
+        setBooleanPreference(NetMonPreferences.PREF_SERVICE_ENABLED, value);
     }
 
     /**
@@ -171,13 +169,6 @@ public class NetMonPreferences {
     }
 
     /**
-     * @param filterRecordCount the number of rows we should display in the log view. This is only for display: we always export all rows.
-     */
-    public void setFilterRecordCount(int filterRecordCount) {
-        mSharedPrefs.edit().putString(PREF_FILTER_RECORD_COUNT, String.valueOf(filterRecordCount)).commit();
-    }
-
-    /**
      * @return true if we should do connection tests with each test.
      */
     public boolean isConnectionTestEnabled() {
@@ -188,7 +179,7 @@ public class NetMonPreferences {
      * Enable or disable the data connection tests.
      */
     public void setConnectionTestEnabled(boolean enabled) {
-        mSharedPrefs.edit().putBoolean(NetMonPreferences.PREF_ENABLE_CONNECTION_TEST, false).commit();
+        setBooleanPreference(NetMonPreferences.PREF_ENABLE_CONNECTION_TEST, false);
     }
 
     /**
@@ -207,15 +198,6 @@ public class NetMonPreferences {
      */
     public String getKMLExportColumn() {
         return mSharedPrefs.getString(NetMonPreferences.PREF_KML_EXPORT_COLUMN, NetMonColumns.SOCKET_CONNECTION_TEST);
-    }
-
-    /**
-     * @param value db column name which will be used for the placemark names in the KML export.
-     */
-    public void setKMLExportColumn(String value) {
-        Editor editor = mSharedPrefs.edit();
-        editor.putString(NetMonPreferences.PREF_KML_EXPORT_COLUMN, value);
-        editor.commit();
     }
 
     /**
@@ -247,7 +229,7 @@ public class NetMonPreferences {
      */
     public void setSelectedColumns(List<String> selectedColumns) {
         String selectedColumnsString = TextUtils.join(",", selectedColumns);
-        mSharedPrefs.edit().putString(NetMonPreferences.PREF_SELECTED_COLUMNS, selectedColumnsString).commit();
+        setStringPreference(NetMonPreferences.PREF_SELECTED_COLUMNS, selectedColumnsString);
     }
 
     /**
@@ -255,7 +237,7 @@ public class NetMonPreferences {
      */
     void setColumnFilterValues(String columnName, List<String> filteredValues) {
         String filteredValuesString = TextUtils.join(",", filteredValues);
-        mSharedPrefs.edit().putString(NetMonPreferences.PREF_FILTER_PREFIX + columnName, filteredValuesString).commit();
+        setStringPreference(NetMonPreferences.PREF_FILTER_PREFIX + columnName, filteredValuesString);
     }
 
     /**
@@ -275,7 +257,7 @@ public class NetMonPreferences {
         Editor editor = mSharedPrefs.edit();
         for (String filterableColumn : filterableColumns)
             editor.putString(PREF_FILTER_PREFIX + filterableColumn, null);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -304,7 +286,7 @@ public class NetMonPreferences {
         Editor editor = mSharedPrefs.edit();
         editor.putString(PREF_SORT_COLUMN_NAME, sortPreferences.sortColumnName);
         editor.putString(PREF_SORT_ORDER, sortPreferences.sortOrder.name());
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -336,7 +318,7 @@ public class NetMonPreferences {
      */
     public void setDefaultNotificationSoundUri() {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        if (defaultSoundUri != null) mSharedPrefs.edit().putString(PREF_NOTIFICATION_RINGTONE, defaultSoundUri.toString()).commit();
+        if (defaultSoundUri != null) setStringPreference(PREF_NOTIFICATION_RINGTONE, defaultSoundUri.toString());
     }
 
     private int getIntPreference(String key, String defaultValue) {
@@ -346,7 +328,15 @@ public class NetMonPreferences {
     }
 
     private void setIntPreference(String key, int value) {
-        mSharedPrefs.edit().putString(key, String.valueOf(value)).commit();
+        setStringPreference(key, String.valueOf(value));
+    }
+
+    private void setStringPreference(final String key, final String value) {
+        mSharedPrefs.edit().putString(key, value).apply();
+    }
+
+    private void setBooleanPreference(final String key, final Boolean value) {
+        mSharedPrefs.edit().putBoolean(key, value).apply();
     }
 
 }
