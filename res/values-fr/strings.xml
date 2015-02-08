@@ -31,7 +31,7 @@
     <string name="filter_columns_empty_value">Vide</string>
     <string name="filter_columns_hint">Selectionner les valeurs de \"%s\" à inclure dans le journal.  Si aucune valeur n\'est cochée, les données ne seront pas filtrées (toutes les valeurs apparaitront).</string>
 
-    <!--  Strings for warning about location settings -->
+    <!-- Strings for warning about location settings -->
     <string name="no_location_confirm_dialog_title">Localisation désactivée</string>
     <string name="no_location_confirm_dialog_message">La localisation est désactivée dans les préférences systèmes. Activer la localisation pour que Network Monitor puisse récupérer vos coordonées.</string>
 
@@ -57,26 +57,26 @@
     <string name="support_error">Impossible de créer le fichier. Vérifier que la carte SD soit présente.</string>
 
     <!-- Strings about sending emails -->
-	<string name="missing_email_settings_info_dialog_title">Informations manquantes</string>
-	<string name="missing_email_settings_info_dialog_message">Impossible d\'envoyer des courriels, parce qu\'au moins un des champs n\'a pas été rempli. La fréquence de l\'envoi des rapports a été mis à \'jamais\'"</string>
-	<string name="warning_notification_ticker_email_failed">Erreur de l\'envoi du rapport</string>
-	<string name="warning_notification_message_email_failed">Impossible d\'envoyer le rapport.</string>
+    <string name="missing_email_settings_info_dialog_title">Informations manquantes</string>
+    <string name="missing_email_settings_info_dialog_message">Impossible d\'envoyer des courriels, parce qu\'au moins un des champs n\'a pas été rempli. La fréquence de l\'envoi des rapports a été mis à \'jamais\'"</string>
+    <string name="warning_notification_ticker_email_failed">Erreur de l\'envoi du rapport</string>
+    <string name="warning_notification_message_email_failed">Impossible d\'envoyer le rapport.</string>
 
-	<!-- Strings for the notification about a failed test -->
-	<string name="warning_notification_ticker_test_failed">Test de connexion echoué.</string>
-	<string name="warning_notification_message_test_failed">Problème avec la connexion de données.</string>
+    <!-- Strings for the notification about a failed test -->
+    <string name="warning_notification_ticker_test_failed">Test de connexion echoué.</string>
+    <string name="warning_notification_message_test_failed">Problème avec la connexion de données.</string>
 
-	<!-- Speed test strings -->
+    <!-- Speed test strings -->
     <string name="speed_test_warning_title">Attention !</string>
     <string name="speed_test_warning_message">Activer le test de vitesse va engendrer beaucoup de trafic réseau (et une consommation de la batterie).  Ne pas l\'activer si vous avez un quota de trafic réseau !</string>
-	<string name="speed_test_missing_info_dialog_title">Informations manquantes</string>
-	<string name="speed_test_missing_info_dialog_message">Le test de vitesse ne peut être activé parce que le champ URL est vide.</string>
-	<string name="speed_test_disabled">Désactivé</string>
-	<string name="speed_test_good_enough">Très bien !</string>
-	<string name="speed_test_play_store">J\'en veux +&#8230;</string>
-	<string name="speed_test_about_file">file:///android_asset/speed_test_about-fr.html</string>
+    <string name="speed_test_missing_info_dialog_title">Informations manquantes</string>
+    <string name="speed_test_missing_info_dialog_message">Le test de vitesse ne peut être activé parce que le champ URL est vide.</string>
+    <string name="speed_test_disabled">Désactivé</string>
+    <string name="speed_test_good_enough">Très bien !</string>
+    <string name="speed_test_play_store">J\'en veux +&#8230;</string>
+    <string name="speed_test_about_file">file:///android_asset/speed_test_about-fr.html</string>
 
-	<!-- Polling frequency strings -->
+    <!-- Polling frequency strings -->
     <string name="warning_fast_polling_title">Attention !</string>
     <string name="warning_fast_polling_message">Vous avez choisi une fréquence de test très rapide. Les tests de connexion ont été desactivés, et le nombre de lignes dans la base de données est maintenant limité. Vous pouvez reactiver les tests de connexion si vous choisissez une frequence plus lente et vous ouvrez les options avancées.</string>
 

@@ -31,7 +31,7 @@
     <string name="filter_columns_empty_value">Vacío</string>
     <string name="filter_columns_hint">Seleccionar los valores de \"%s\" que deseas ver en el informe. Si ningún valor es seleccionado, los datos no se filtrarán (todos los valores aparecerán).</string>
 
-    <!--  Strings for warning about location settings -->
+    <!-- Strings for warning about location settings -->
     <string name="no_location_confirm_dialog_title">Ubicación desactivada</string>
     <string name="no_location_confirm_dialog_message">La ubicación está desactivada en los ajustes del sistema. Activar la ubicación para que Network Monitor pueda registrar las coordenadas del dispositivo.</string>
 
@@ -57,26 +57,26 @@
     <string name="support_error">Imposible crear el fichero log. Verifica que la tarjeta SD esté presente.</string>
 
     <!-- Strings about sending emails -->
-	<string name="missing_email_settings_info_dialog_title">Falta información</string>
-	<string name="missing_email_settings_info_dialog_message">Imposible enviar correos, porque hay campos no rellenados. La frecuencia de los correos ha sido reinicializado a \'Nunca\'"</string>
-	<string name="warning_notification_ticker_email_failed">Error del envío del informe</string>
-	<string name="warning_notification_message_email_failed">Imposible enviar el informe.</string>
+    <string name="missing_email_settings_info_dialog_title">Falta información</string>
+    <string name="missing_email_settings_info_dialog_message">Imposible enviar correos, porque hay campos no rellenados. La frecuencia de los correos ha sido reinicializado a \'Nunca\'"</string>
+    <string name="warning_notification_ticker_email_failed">Error del envío del informe</string>
+    <string name="warning_notification_message_email_failed">Imposible enviar el informe.</string>
 
-	<!-- Strings for the notification about a failed test -->
-	<string name="warning_notification_ticker_test_failed">La prueba de conexión falló.</string>
-	<string name="warning_notification_message_test_failed">Problema con la conexión de datos.</string>
+    <!-- Strings for the notification about a failed test -->
+    <string name="warning_notification_ticker_test_failed">La prueba de conexión falló.</string>
+    <string name="warning_notification_message_test_failed">Problema con la conexión de datos.</string>
 
-	<!-- Speed test strings -->
+    <!-- Speed test strings -->
     <string name="speed_test_warning_title">¡Aviso!</string>
     <string name="speed_test_warning_message">Activar la prueba de velocidad acarreará un aumento importante en el tráfico de la red (y consumo de batería). ¡No lo actives si tienes una cuota de tráfico de red!</string>
-	<string name="speed_test_missing_info_dialog_title">Falta información</string>
-	<string name="speed_test_missing_info_dialog_message">La prueba de velocidad no se puede activar porque el campo URL está vacío.</string>
-	<string name="speed_test_disabled">Deshabilitado</string>
-	<string name="speed_test_good_enough">¡Suficiente para mi!</string>
-	<string name="speed_test_play_store">Quiero más&#8230;</string>
-	<string name="speed_test_about_file">file:///android_asset/speed_test_about-es.html</string>
+    <string name="speed_test_missing_info_dialog_title">Falta información</string>
+    <string name="speed_test_missing_info_dialog_message">La prueba de velocidad no se puede activar porque el campo URL está vacío.</string>
+    <string name="speed_test_disabled">Deshabilitado</string>
+    <string name="speed_test_good_enough">¡Suficiente para mi!</string>
+    <string name="speed_test_play_store">Quiero más&#8230;</string>
+    <string name="speed_test_about_file">file:///android_asset/speed_test_about-es.html</string>
 
-	<!-- Polling frequency strings -->
+    <!-- Polling frequency strings -->
     <string name="warning_fast_polling_title">¡Aviso!</string>
     <string name="warning_fast_polling_message">Has activado una frecuencia de pruebas muy rápida. Las pruebas de conexión han sido desactivadas, y el número de filas en la base de datos ha sido limitado.  Puedes reactivar las pruebas de conexión si escoges una frecuencia más lenta y abres las opciones avanzadas.</string>
 
