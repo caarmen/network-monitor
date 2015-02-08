@@ -27,6 +27,7 @@ package ca.rmen.android.networkmonitor.app.service.datasources;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -206,6 +207,7 @@ class ConnectionTesterDataSource implements NetMonDataSource {
             connection.setReadTimeout(mTimeout);
             connection.addRequestProperty("Cache-Control", "no-cache");
             connection.setUseCaches(false);
+            if (connection instanceof HttpURLConnection) ((HttpURLConnection) connection).setInstanceFollowRedirects(false);
             Log.v(TAG, "Will open input stream");
             inputStream = connection.getInputStream();
             long after = System.currentTimeMillis();
