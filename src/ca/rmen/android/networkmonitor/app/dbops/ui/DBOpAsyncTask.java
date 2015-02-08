@@ -23,6 +23,8 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.ui;
 
+import java.util.Arrays;
+
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -55,6 +57,7 @@ public abstract class DBOpAsyncTask<T> extends AsyncTask<Void, Integer, T> {
     private final String mDialogMessage;
 
     public DBOpAsyncTask(FragmentActivity activity, Task<T> task, Bundle args) {
+        Log.v(TAG, "Constructor: activity = " + activity + ", task = " + task);
         mActivity = activity;
         mTask = task;
         if (args == null) args = new Bundle();
@@ -65,16 +68,19 @@ public abstract class DBOpAsyncTask<T> extends AsyncTask<Void, Integer, T> {
 
     @Override
     protected void onPreExecute() {
+        Log.v(TAG, "onPreExecute");
         DialogFragmentFactory.showProgressDialog(mActivity, mDialogMessage, mDialogStyle, PROGRESS_DIALOG_FRAGMENT_TAG);
     }
 
     @Override
     protected T doInBackground(Void... params) {
+        Log.v(TAG, "doInBackground");
         return mTask.execute(mProgressListener);
     }
 
     @Override
     protected void onProgressUpdate(Integer... values) {
+        Log.v(TAG, "onProgressUpdate: task  " + mTask + ", values = " + Arrays.toString(values));
         int progress = values[0];
         int max = values[1];
         ProgressDialogFragment fragment = (ProgressDialogFragment) mActivity.getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_FRAGMENT_TAG);
@@ -88,6 +94,7 @@ public abstract class DBOpAsyncTask<T> extends AsyncTask<Void, Integer, T> {
      */
     @Override
     protected void onPostExecute(T result) {
+        Log.v(TAG, "onPostExecute");
         ProgressDialogFragment dialogFragment = (ProgressDialogFragment) mActivity.getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_FRAGMENT_TAG);
         if (dialogFragment != null) dialogFragment.dismissAllowingStateLoss();
         mActivity.finish();

@@ -126,6 +126,7 @@ public class Share {
 
             @Override
             protected File doInBackground(Void... params) {
+                Log.v(TAG, "doInBackground");
                 File file = null;
                 if (fileExport != null) {
                     if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) return null;
@@ -158,6 +159,7 @@ public class Share {
 
             @Override
             protected void onPostExecute(File result) {
+                Log.v(TAG, "onPostExecute");
                 // Show a toast if we failed to export a file.
                 if (fileExport != null && result == null) Toast.makeText(activity, R.string.export_error_sdcard_unmounted, Toast.LENGTH_LONG).show();
                 super.onPostExecute(result);
