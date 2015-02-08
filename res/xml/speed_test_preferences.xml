@@ -29,6 +29,7 @@
             android:hint="@string/pref_value_speed_test_default_upload_port"
             android:icon="@drawable/ic_pref_server"
             android:key="PREF_SPEED_TEST_UPLOAD_PORT"
+            android:numeric="integer"
             android:summary="@string/pref_summary_speed_test_upload_port"
             android:title="@string/pref_title_speed_test_upload_port" />
         <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
