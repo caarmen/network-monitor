@@ -85,6 +85,10 @@ public class NetworkChangeScheduler implements Scheduler {
         @Override
         public void run() {
             Log.v(TAG, "mBufferedRunnable.run()");
+            // If we have bad luck, we might be created,
+            // and receive a broadcast before schedule was called
+            if (mRunnableImpl == null) return;
+
             long now = System.currentTimeMillis();
             if (now - mLastPollTime > NetMonPreferences.PREF_MIN_POLLING_INTERVAL) {
                 Log.v(TAG, "Will run the task now");
