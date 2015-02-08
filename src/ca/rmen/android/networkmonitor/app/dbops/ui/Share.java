@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.useractions;
+package ca.rmen.android.networkmonitor.app.dbops.ui;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,13 +38,13 @@ import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.db.export.CSVExport;
-import ca.rmen.android.networkmonitor.app.db.export.DBExport;
-import ca.rmen.android.networkmonitor.app.db.export.ExcelExport;
-import ca.rmen.android.networkmonitor.app.db.export.FileExport;
-import ca.rmen.android.networkmonitor.app.db.export.HTMLExport;
-import ca.rmen.android.networkmonitor.app.db.export.SummaryExport;
-import ca.rmen.android.networkmonitor.app.db.export.kml.KMLExport;
+import ca.rmen.android.networkmonitor.app.dbops.backend.export.CSVExport;
+import ca.rmen.android.networkmonitor.app.dbops.backend.export.DBExport;
+import ca.rmen.android.networkmonitor.app.dbops.backend.export.ExcelExport;
+import ca.rmen.android.networkmonitor.app.dbops.backend.export.FileExport;
+import ca.rmen.android.networkmonitor.app.dbops.backend.export.HTMLExport;
+import ca.rmen.android.networkmonitor.app.dbops.backend.export.SummaryExport;
+import ca.rmen.android.networkmonitor.app.dbops.backend.export.kml.KMLExport;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -119,9 +119,9 @@ public class Share {
         Log.v(TAG, "shareFile " + fileExport);
 
         Bundle bundle = new Bundle(2);
-        bundle.putInt(UserActionAsyncTask.EXTRA_DIALOG_STYLE, fileExport != null ? ProgressDialog.STYLE_HORIZONTAL : ProgressDialog.STYLE_SPINNER);
-        bundle.putString(UserActionAsyncTask.EXTRA_DIALOG_MESSAGE, activity.getString(R.string.export_progress_preparing_export));
-        new UserActionAsyncTask<File>(activity, fileExport, bundle) {
+        bundle.putInt(DBOpAsyncTask.EXTRA_DIALOG_STYLE, fileExport != null ? ProgressDialog.STYLE_HORIZONTAL : ProgressDialog.STYLE_SPINNER);
+        bundle.putString(DBOpAsyncTask.EXTRA_DIALOG_MESSAGE, activity.getString(R.string.export_progress_preparing_export));
+        new DBOpAsyncTask<File>(activity, fileExport, bundle) {
 
 
             @Override

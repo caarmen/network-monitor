@@ -21,31 +21,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.useractions;
+package ca.rmen.android.networkmonitor.app.dbops.ui;
 
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.db.DBCompress;
+import ca.rmen.android.networkmonitor.app.dbops.backend.imp0rt.DBImport;
 import ca.rmen.android.networkmonitor.util.Log;
 
-public class Compress {
-    private static final String TAG = Constants.TAG + Compress.class.getSimpleName();
-
+/**
+ *
+ */
+public class Import {
+    private static final String TAG = Constants.TAG + Import.class.getSimpleName();
 
     /**
-     * Compress the database. The progress will be shown in a progress dialog on the given activity.
+     * Import a database file.
+     *
+     * @param activity A progress dialog will appear on the activity during the import
+     * @param uri the location of the db to import
      */
-    public static void compress(final FragmentActivity activity) {
-        Log.v(TAG, "compress");
-        DBCompress dbCompress = new DBCompress(activity);
-        UserActionAsyncTask<Integer> task = new UserActionAsyncTask<Integer>(activity, dbCompress, null) {
+    public static void importDb(final FragmentActivity activity, final Uri uri) {
+        Log.v(TAG, "importDb: uri = " + uri);
+        DBImport dbImport = new DBImport(activity, uri);
+        DBOpAsyncTask<Boolean> task = new DBOpAsyncTask<Boolean>(activity, dbImport, null) {
 
             @Override
-            protected void onPostExecute(Integer result) {
-                String toastText = result >= 0 ? activity.getString(R.string.compress_successful, result) : activity.getString(R.string.compress_failed);
+            protected void onPostExecute(Boolean result) {
+                String toastText = result ? activity.getString(R.string.import_successful, uri.getPath()) : activity.getString(R.string.import_failed,
+                        uri.getPath());
                 Toast.makeText(activity, toastText, Toast.LENGTH_SHORT).show();
                 super.onPostExecute(result);
             }
@@ -53,5 +60,4 @@ public class Compress {
         task.execute();
 
     }
-
 }

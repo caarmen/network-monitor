@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2014 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2015 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,22 +21,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.db.export.kml;
+package ca.rmen.android.networkmonitor.app.dbops;
 
-import java.util.Map;
+import ca.rmen.android.networkmonitor.app.dbops.ui.DBOpAsyncTask;
 
 /**
- * Returns the proper styling info (for now, just the icon color) for a KML placemark.
+ * A blocking task. Currently this is implemented for db operations (import, export, ...).
+ * It is currently used by the {@link DBOpAsyncTask} to execute the long task in
+ * the background while showing a progress dialog.
+ *
+ * If we find we need other long tasks not related to db operations, requiring a
+ * progress dialog, we may move this interface to another package.
  */
-
-interface KMLStyle {
-    enum IconColor {
-        RED, YELLOW, GREEN
-    };
-
-    /**
-     * @return the icon color to use given the attributes for a given placemark
-     */
-    public IconColor getColor(Map<String, String> values);
-
+public interface Task<T> {
+    T execute(ProgressListener listener);
 }

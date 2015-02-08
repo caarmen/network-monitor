@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.db.export;
+package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,8 +29,8 @@ import java.io.FileNotFoundException;
 import android.content.Context;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.app.useractions.UserActionAsyncTask.ProgressListener;
-import ca.rmen.android.networkmonitor.app.useractions.UserActionAsyncTask.Task;
+import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
+import ca.rmen.android.networkmonitor.app.dbops.Task;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**

@@ -37,7 +37,7 @@ import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.app.db.DBPurge;
+import ca.rmen.android.networkmonitor.app.dbops.backend.clean.DBPurge;
 import ca.rmen.android.networkmonitor.app.email.ReportEmailer;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.service.datasources.NetMonDataSources;

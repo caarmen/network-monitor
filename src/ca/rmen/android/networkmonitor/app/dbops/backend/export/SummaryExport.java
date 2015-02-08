@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.db.export;
+package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
 import java.util.Map;
 import java.util.Set;

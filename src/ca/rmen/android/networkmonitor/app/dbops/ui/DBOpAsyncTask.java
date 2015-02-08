@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.useractions;
+package ca.rmen.android.networkmonitor.app.dbops.ui;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -31,15 +31,19 @@ import android.text.TextUtils;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
+import ca.rmen.android.networkmonitor.app.dbops.Task;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.ProgressDialogFragment;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Executes a task in the background, displaying a progress dialog on the given activity during the task's execution.
+ * Currently this is only used for operations on the db (import, export, clean...). If at some point we find
+ * that we need some async task for some other types of operations, this class can be moved to a different package.
  */
-public abstract class UserActionAsyncTask<T> extends AsyncTask<Void, Void, T> {
-    private static final String TAG = Constants.TAG + UserActionAsyncTask.class.getSimpleName();
+public abstract class DBOpAsyncTask<T> extends AsyncTask<Void, Integer, T> {
+    private static final String TAG = Constants.TAG + DBOpAsyncTask.class.getSimpleName();
 
     public static final String EXTRA_DIALOG_STYLE = "extra_dialog_style";
     public static final String EXTRA_DIALOG_MESSAGE = "extra_dialog_message";
@@ -50,19 +54,7 @@ public abstract class UserActionAsyncTask<T> extends AsyncTask<Void, Void, T> {
     private final int mDialogStyle;
     private final String mDialogMessage;
 
-
-    public interface ProgressListener {
-        void onProgress(int progress, int max);
-    }
-
-    /**
-     * The blocking task
-     */
-    public interface Task<T> {
-        T execute(ProgressListener listener);
-    }
-
-    public UserActionAsyncTask(FragmentActivity activity, Task<T> task, Bundle args) {
+    public DBOpAsyncTask(FragmentActivity activity, Task<T> task, Bundle args) {
         mActivity = activity;
         mTask = task;
         if (args == null) args = new Bundle();
@@ -82,6 +74,19 @@ public abstract class UserActionAsyncTask<T> extends AsyncTask<Void, Void, T> {
     }
 
     @Override
+    protected void onProgressUpdate(Integer... values) {
+        int progress = values[0];
+        int max = values[1];
+        ProgressDialogFragment fragment = (ProgressDialogFragment) mActivity.getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_FRAGMENT_TAG);
+        if (fragment != null) {
+            fragment.setProgress(progress, max);
+        }
+    }
+
+    /**
+     * Since this finishes the activity, superclasses should call to super at the end of their onPostExecute implementation.
+     */
+    @Override
     protected void onPostExecute(T result) {
         ProgressDialogFragment dialogFragment = (ProgressDialogFragment) mActivity.getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_FRAGMENT_TAG);
         if (dialogFragment != null) dialogFragment.dismissAllowingStateLoss();
@@ -93,18 +98,7 @@ public abstract class UserActionAsyncTask<T> extends AsyncTask<Void, Void, T> {
         @Override
         public void onProgress(final int progress, final int max) {
             Log.v(TAG, "onProgress: " + progress + "/" + max);
-            mActivity.runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-
-                    ProgressDialogFragment fragment = (ProgressDialogFragment) mActivity.getSupportFragmentManager().findFragmentByTag(
-                            PROGRESS_DIALOG_FRAGMENT_TAG);
-                    if (fragment != null) {
-                        fragment.setProgress(progress, max);
-                    }
-                }
-            });
+            publishProgress(new Integer[] { progress, max });
         }
     };
 

@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.db;
+package ca.rmen.android.networkmonitor.app.dbops.backend.imp0rt;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,8 +40,8 @@ import android.net.Uri;
 import android.os.RemoteException;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.app.useractions.UserActionAsyncTask.ProgressListener;
-import ca.rmen.android.networkmonitor.app.useractions.UserActionAsyncTask.Task;
+import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
+import ca.rmen.android.networkmonitor.app.dbops.Task;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.provider.NetMonProvider;
 import ca.rmen.android.networkmonitor.util.IoUtil;

@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.useractions;
+package ca.rmen.android.networkmonitor.app.dbops.ui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -31,7 +31,7 @@ import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.db.DBPurge;
+import ca.rmen.android.networkmonitor.app.dbops.backend.clean.DBPurge;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -43,7 +43,7 @@ public class Clear {
 
     /**
      * Deletes rows from the database, keeping only the given number of rows.
-     * 
+     *
      * @param activity a progress dialog will be displayed in this activity
      * @param numRowsToKeep delete all but the most recet numRowToKeep rows. 0 to delete all rows.
      */
@@ -51,8 +51,8 @@ public class Clear {
         Log.v(TAG, "clear, keeping " + numRowsToKeep + " records");
         DBPurge dbPurge = new DBPurge(activity, numRowsToKeep);
         Bundle bundle = new Bundle(1);
-        bundle.putInt(UserActionAsyncTask.EXTRA_DIALOG_STYLE, ProgressDialog.STYLE_SPINNER);
-        new UserActionAsyncTask<Integer>(activity, dbPurge, bundle) {
+        bundle.putInt(DBOpAsyncTask.EXTRA_DIALOG_STYLE, ProgressDialog.STYLE_SPINNER);
+        new DBOpAsyncTask<Integer>(activity, dbPurge, bundle) {
 
             @Override
             protected void onPostExecute(Integer result) {

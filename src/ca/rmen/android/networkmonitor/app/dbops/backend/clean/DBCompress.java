@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.db;
+package ca.rmen.android.networkmonitor.app.dbops.backend.clean;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,8 +33,8 @@ import android.database.Cursor;
 import android.provider.BaseColumns;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.app.useractions.UserActionAsyncTask.ProgressListener;
-import ca.rmen.android.networkmonitor.app.useractions.UserActionAsyncTask.Task;
+import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
+import ca.rmen.android.networkmonitor.app.dbops.Task;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 

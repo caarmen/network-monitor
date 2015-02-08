@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.db.export;
+package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,12 +33,12 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.app.db.export.FormatterFactory.FormatterStyle;
+import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
+import ca.rmen.android.networkmonitor.app.dbops.backend.export.FormatterFactory.FormatterStyle;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences.Selection;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences;
-import ca.rmen.android.networkmonitor.app.useractions.UserActionAsyncTask.ProgressListener;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.provider.NetMonProvider;
 import ca.rmen.android.networkmonitor.util.Log;
