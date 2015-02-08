@@ -13,7 +13,7 @@
     <string name="pref_value_interval_never">Nunca</string>
     <string name="pref_value_interval_network_change">Cuando la red cambia</string>
     <string name="pref_value_interval_500_ms">½ segundo (pruebas de datos desactivadas)</string>
-    <string name="pref_value_interval_1_second">1 second (pruebas de datos desactivadas)</string>
+    <string name="pref_value_interval_1_second">1 segundo (pruebas de datos desactivadas)</string>
     <string name="pref_value_interval_10_seconds">10 segundos</string>
     <string name="pref_value_interval_20_seconds">20 segundos</string>
     <string name="pref_value_interval_30_seconds">30 segundos</string>
