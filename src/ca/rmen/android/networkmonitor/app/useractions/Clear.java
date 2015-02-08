@@ -32,7 +32,6 @@ import android.widget.Toast;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.db.DBPurge;
-import ca.rmen.android.networkmonitor.app.main.NetMonAsyncTask;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -52,8 +51,8 @@ public class Clear {
         Log.v(TAG, "clear, keeping " + numRowsToKeep + " records");
         DBPurge dbPurge = new DBPurge(activity, numRowsToKeep);
         Bundle bundle = new Bundle(1);
-        bundle.putInt(NetMonAsyncTask.EXTRA_DIALOG_STYLE, ProgressDialog.STYLE_SPINNER);
-        new NetMonAsyncTask<Integer>(activity, dbPurge, bundle) {
+        bundle.putInt(UserActionAsyncTask.EXTRA_DIALOG_STYLE, ProgressDialog.STYLE_SPINNER);
+        new UserActionAsyncTask<Integer>(activity, dbPurge, bundle) {
 
             @Override
             protected void onPostExecute(Integer result) {

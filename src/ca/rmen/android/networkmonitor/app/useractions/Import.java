@@ -30,7 +30,6 @@ import android.widget.Toast;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.db.DBImport;
-import ca.rmen.android.networkmonitor.app.main.NetMonAsyncTask;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -48,7 +47,7 @@ public class Import {
     public static void importDb(final FragmentActivity activity, final Uri uri) {
         Log.v(TAG, "importDb: uri = " + uri);
         DBImport dbImport = new DBImport(activity, uri);
-        NetMonAsyncTask<Boolean> task = new NetMonAsyncTask<Boolean>(activity, dbImport, null) {
+        UserActionAsyncTask<Boolean> task = new UserActionAsyncTask<Boolean>(activity, dbImport, null) {
 
             @Override
             protected void onPostExecute(Boolean result) {

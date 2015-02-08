@@ -29,14 +29,14 @@ import java.io.FileNotFoundException;
 import android.content.Context;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
-import ca.rmen.android.networkmonitor.app.db.DBTask;
+import ca.rmen.android.networkmonitor.app.useractions.UserActionAsyncTask.ProgressListener;
+import ca.rmen.android.networkmonitor.app.useractions.UserActionAsyncTask.Task;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Export the Network Monitor data from the DB to a file.
  */
-public abstract class FileExport implements DBTask<File> {
+public abstract class FileExport implements Task<File> {
     private static final String TAG = Constants.TAG + FileExport.class.getSimpleName();
 
 
@@ -53,5 +53,5 @@ public abstract class FileExport implements DBTask<File> {
      * @return the file if it was correctly exported, null otherwise.
      */
     @Override
-    abstract public File execute(DBProcessProgressListener listener);
+    abstract public File execute(ProgressListener listener);
 }

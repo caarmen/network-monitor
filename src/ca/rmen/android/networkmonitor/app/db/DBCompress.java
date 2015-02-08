@@ -33,13 +33,15 @@ import android.database.Cursor;
 import android.provider.BaseColumns;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.app.useractions.UserActionAsyncTask.ProgressListener;
+import ca.rmen.android.networkmonitor.app.useractions.UserActionAsyncTask.Task;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Reduces groups of 3 or more consecutive rows with identical data (except the timestamp) into a single row.
  */
-public class DBCompress implements DBTask<Integer> {
+public class DBCompress implements Task<Integer> {
     private static final String TAG = Constants.TAG + "/" + DBCompress.class.getSimpleName();
 
     private final Context mContext;
@@ -52,7 +54,7 @@ public class DBCompress implements DBTask<Integer> {
      * @return the number of rows deleted from the database
      */
     @Override
-    public Integer execute(DBProcessProgressListener listener) {
+    public Integer execute(ProgressListener listener) {
         Log.v(TAG, "compress DB");
         Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, null, null, null, BaseColumns._ID);
         Map<Integer, String> previousRow = null;

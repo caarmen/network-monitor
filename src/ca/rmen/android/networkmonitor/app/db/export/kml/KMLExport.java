@@ -39,7 +39,6 @@ import android.content.Context;
 import android.database.Cursor;
 
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
 import ca.rmen.android.networkmonitor.app.db.export.FileExport;
 import ca.rmen.android.networkmonitor.app.db.export.Formatter;
 import ca.rmen.android.networkmonitor.app.db.export.FormatterFactory;
@@ -47,6 +46,7 @@ import ca.rmen.android.networkmonitor.app.db.export.FormatterFactory.FormatterSt
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences.Selection;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
+import ca.rmen.android.networkmonitor.app.useractions.UserActionAsyncTask.ProgressListener;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -73,7 +73,7 @@ public class KMLExport extends FileExport {
      * @return the file if it was correctly exported, null otherwise.
      */
     @Override
-    public File execute(DBProcessProgressListener listener) {
+    public File execute(ProgressListener listener) {
         Log.v(TAG, "export");
         Formatter formatter = FormatterFactory.getFormatter(FormatterStyle.XML, mContext);
         List<String> selectedColumns = new ArrayList<String>(NetMonPreferences.getInstance(mContext).getSelectedColumns());

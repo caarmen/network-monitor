@@ -46,7 +46,6 @@ import ca.rmen.android.networkmonitor.app.db.export.HTMLExport;
 import ca.rmen.android.networkmonitor.app.db.export.SummaryExport;
 import ca.rmen.android.networkmonitor.app.db.export.kml.KMLExport;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
-import ca.rmen.android.networkmonitor.app.main.NetMonAsyncTask;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -120,9 +119,9 @@ public class Share {
         Log.v(TAG, "shareFile " + fileExport);
 
         Bundle bundle = new Bundle(2);
-        bundle.putInt(NetMonAsyncTask.EXTRA_DIALOG_STYLE, fileExport != null ? ProgressDialog.STYLE_HORIZONTAL : ProgressDialog.STYLE_SPINNER);
-        bundle.putString(NetMonAsyncTask.EXTRA_DIALOG_MESSAGE, activity.getString(R.string.export_progress_preparing_export));
-        new NetMonAsyncTask<File>(activity, fileExport, bundle) {
+        bundle.putInt(UserActionAsyncTask.EXTRA_DIALOG_STYLE, fileExport != null ? ProgressDialog.STYLE_HORIZONTAL : ProgressDialog.STYLE_SPINNER);
+        bundle.putString(UserActionAsyncTask.EXTRA_DIALOG_MESSAGE, activity.getString(R.string.export_progress_preparing_export));
+        new UserActionAsyncTask<File>(activity, fileExport, bundle) {
 
 
             @Override

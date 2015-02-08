@@ -29,7 +29,6 @@ import android.widget.Toast;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.db.DBCompress;
-import ca.rmen.android.networkmonitor.app.main.NetMonAsyncTask;
 import ca.rmen.android.networkmonitor.util.Log;
 
 public class Compress {
@@ -42,7 +41,7 @@ public class Compress {
     public static void compress(final FragmentActivity activity) {
         Log.v(TAG, "compress");
         DBCompress dbCompress = new DBCompress(activity);
-        NetMonAsyncTask<Integer> task = new NetMonAsyncTask<Integer>(activity, dbCompress, null) {
+        UserActionAsyncTask<Integer> task = new UserActionAsyncTask<Integer>(activity, dbCompress, null) {
 
             @Override
             protected void onPostExecute(Integer result) {

@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.main;
+package ca.rmen.android.networkmonitor.app.useractions;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -31,26 +31,38 @@ import android.text.TextUtils;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
-import ca.rmen.android.networkmonitor.app.db.DBTask;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.ProgressDialogFragment;
 import ca.rmen.android.networkmonitor.util.Log;
 
-public abstract class NetMonAsyncTask<T> extends AsyncTask<Void, Void, T> {
-    private static final String TAG = Constants.TAG + NetMonAsyncTask.class.getSimpleName();
+/**
+ * Executes a task in the background, displaying a progress dialog on the given activity during the task's execution.
+ */
+public abstract class UserActionAsyncTask<T> extends AsyncTask<Void, Void, T> {
+    private static final String TAG = Constants.TAG + UserActionAsyncTask.class.getSimpleName();
 
     public static final String EXTRA_DIALOG_STYLE = "extra_dialog_style";
     public static final String EXTRA_DIALOG_MESSAGE = "extra_dialog_message";
     private static final String PROGRESS_DIALOG_FRAGMENT_TAG = "progress_dialog_fragment_tag";
 
     private final FragmentActivity mActivity;
-    private final DBTask<T> mTask;
+    private final Task<T> mTask;
     private final int mDialogStyle;
     private final String mDialogMessage;
 
 
-    public NetMonAsyncTask(FragmentActivity activity, DBTask<T> task, Bundle args) {
+    public interface ProgressListener {
+        void onProgress(int progress, int max);
+    }
+
+    /**
+     * The blocking task
+     */
+    public interface Task<T> {
+        T execute(ProgressListener listener);
+    }
+
+    public UserActionAsyncTask(FragmentActivity activity, Task<T> task, Bundle args) {
         mActivity = activity;
         mTask = task;
         if (args == null) args = new Bundle();
@@ -76,7 +88,7 @@ public abstract class NetMonAsyncTask<T> extends AsyncTask<Void, Void, T> {
         mActivity.finish();
     }
 
-    private final DBProcessProgressListener mProgressListener = new DBProcessProgressListener() {
+    private final ProgressListener mProgressListener = new ProgressListener() {
 
         @Override
         public void onProgress(final int progress, final int max) {

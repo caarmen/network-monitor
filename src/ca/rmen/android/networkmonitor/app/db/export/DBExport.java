@@ -34,7 +34,7 @@ import java.io.OutputStream;
 import android.content.Context;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.app.db.DBProcessProgressListener;
+import ca.rmen.android.networkmonitor.app.useractions.UserActionAsyncTask.ProgressListener;
 import ca.rmen.android.networkmonitor.provider.NetMonDatabase;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -49,7 +49,7 @@ public class DBExport extends FileExport {
     }
 
     @Override
-    public File execute(DBProcessProgressListener listener) {
+    public File execute(ProgressListener listener) {
         File db = mContext.getDatabasePath(NetMonDatabase.DATABASE_NAME);
         try {
             InputStream is = new FileInputStream(db);
