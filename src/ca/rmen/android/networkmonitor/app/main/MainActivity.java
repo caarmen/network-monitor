@@ -24,27 +24,34 @@
  */
 package ca.rmen.android.networkmonitor.app.main;
 
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.os.StrictMode.ThreadPolicy;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import org.jraf.android.backport.switchwidget.SwitchPreference;
 
+import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.service.NetMonService;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
+import ca.rmen.android.networkmonitor.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class MainActivity extends PreferenceActivity {
+    private static final String TAG = Constants.TAG + MainActivity.class.getSimpleName();
+
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +59,11 @@ public class MainActivity extends PreferenceActivity {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         addPreferencesFromResource(R.xml.preferences);
         if (NetMonPreferences.getInstance(this).isServiceEnabled()) startService(new Intent(MainActivity.this, NetMonService.class));
+        // Use strict mode for monkey tests. We can't enable strict mode for normal use
+        // because, when sharing (exporting), the mail app may read the attachment in
+        // the main thread.
+        if (ActivityManager.isUserAMonkey())
+            StrictMode.setThreadPolicy(new ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().penaltyLog().penaltyDeath().build());
     }
 
     @Override
@@ -74,6 +86,17 @@ public class MainActivity extends PreferenceActivity {
             boolean enabled = NetMonPreferences.getInstance(this).isServiceEnabled();
             ((SwitchPreference) findPreference(NetMonPreferences.PREF_SERVICE_ENABLED)).setChecked(enabled);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.v(TAG, "onBackPressed");
+        // Prevent the monkey from exiting the app, to maximize the time the monkey spends testing the app.
+        if (ActivityManager.isUserAMonkey()) {
+            Log.v(TAG, "Sorry, monkeys must stay in the cage");
+            return;
+        }
+        super.onBackPressed();
     }
 
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {

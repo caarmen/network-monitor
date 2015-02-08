@@ -23,6 +23,7 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend.clean;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -50,7 +51,11 @@ public class DBPurge implements Task<Integer> {
      */
     public DBPurge(Context context, int numRowsToKeep) {
         mContext = context;
-        mNumRowsToKeep = numRowsToKeep;
+        // For monkey tests we want to avoid clearing the whole log, otherwise the
+        // remaining tests will be uninteresting.
+        if (ActivityManager.isUserAMonkey()) mNumRowsToKeep = 500;
+        else
+            mNumRowsToKeep = numRowsToKeep;
     }
 
     /**
@@ -70,6 +75,7 @@ public class DBPurge implements Task<Integer> {
         if (mNumRowsToKeep < 0) {
             return 0;
         }
+
         // Query the most recent X ids.
         // Then find the oldest id from this query.
         Uri uri = NetMonColumns.CONTENT_URI.buildUpon().appendQueryParameter(NetMonProvider.QUERY_PARAMETER_LIMIT, String.valueOf(mNumRowsToKeep)).build();
