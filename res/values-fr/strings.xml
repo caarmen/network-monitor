@@ -78,6 +78,6 @@
 
 	<!-- Polling frequency strings -->
     <string name="warning_fast_polling_title">Attention !</string>
-    <string name="warning_fast_polling_message">Vous avez choisi une fréquence de test très rapide. Les tests de connexion ont été desactivés, et le nombre de lignes dans la base de données est maintenant limité. Vous pouvez reactiver les tests de connexion si vous choisissez une frequence plus lente et vous ouvrez les paramètres avancés.</string>
+    <string name="warning_fast_polling_message">Vous avez choisi une fréquence de test très rapide. Les tests de connexion ont été desactivés, et le nombre de lignes dans la base de données est maintenant limité. Vous pouvez reactiver les tests de connexion si vous choisissez une frequence plus lente et vous ouvrez les options avancées.</string>
 
 </resources>

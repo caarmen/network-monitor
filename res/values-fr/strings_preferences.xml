@@ -12,8 +12,8 @@
     <string name="pref_title_about">À propos</string>
     <string name="pref_value_interval_never">Jamais</string>
     <string name="pref_value_interval_network_change">Quand le réseau change</string>
-    <string name="pref_value_interval_500_ms">½ seconde (tests de données desactivées)</string>
-    <string name="pref_value_interval_1_second">1 seconde (tests de données desactivées)</string>
+    <string name="pref_value_interval_500_ms">½ seconde (tests de données desactivés)</string>
+    <string name="pref_value_interval_1_second">1 seconde (tests de données desactivés)</string>
     <string name="pref_value_interval_10_seconds">10 secondes</string>
     <string name="pref_value_interval_20_seconds">20 secondes</string>
     <string name="pref_value_interval_30_seconds">30 secondes</string>
