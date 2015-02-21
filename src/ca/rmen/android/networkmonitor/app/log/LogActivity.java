@@ -77,6 +77,7 @@ public class LogActivity extends FragmentActivity implements DialogButtonListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.log);
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) setDisplayHomeAsUpEnabled(true);
+        loadHTMLFile();
     }
 
     @Override
@@ -91,7 +92,6 @@ public class LogActivity extends FragmentActivity implements DialogButtonListene
     protected void onResume() {
         Log.v(TAG, "onResume");
         super.onResume();
-        loadHTMLFile();
         if (mDialog != null) mDialog.show();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
     }
