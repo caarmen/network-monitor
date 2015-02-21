@@ -43,7 +43,7 @@ import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
 public class SummaryExport {
-    private static final String TAG = SummaryExport.class.getSimpleName();
+    private static final String TAG = Constants.TAG + SummaryExport.class.getSimpleName();
 
     /**
      * Contains data for network tests common to all network types.
