@@ -260,7 +260,9 @@ public class LogActivity extends FragmentActivity implements DialogButtonListene
     public void onDestroy() {
         Log.v(TAG, "onDestroy");
         if (mWebView != null) {
-            ((ViewGroup) mWebView.getParent()).removeAllViews();
+            if (Build.VERSION.SDK_INT >= 11) mWebView.getSettings().setDisplayZoomControls(false);
+            mWebView.removeAllViews();
+            ((ViewGroup) mWebView.getParent()).removeView(mWebView);
             mWebView.destroy();
             mWebView = null;
         }
