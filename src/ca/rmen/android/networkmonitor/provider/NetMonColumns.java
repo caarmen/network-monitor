@@ -24,6 +24,9 @@
  */
 package ca.rmen.android.networkmonitor.provider;
 
+import java.util.Arrays;
+import java.util.List;
+
 import android.content.Context;
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -74,7 +77,7 @@ public class NetMonColumns implements BaseColumns {
     public static final String CELL_ASU_LEVEL = "cell_asu_level";
     public static final String GSM_BER = "gsm_ber";
     public static final String LTE_RSRQ = "lte_rsrq";
-    public static final String EVDO_ECIO = "evdo_ecio";
+    //public static final String EVDO_ECIO = "evdo_ecio";
     public static final String CDMA_CELL_BASE_STATION_ID = "cdma_cell_base_station_id";
     public static final String CDMA_CELL_LATITUDE = "cdma_cell_latitude";
     public static final String CDMA_CELL_LONGITUDE = "cdma_cell_longitude";
@@ -110,6 +113,22 @@ public class NetMonColumns implements BaseColumns {
             columnLabels[i] = getColumnLabel(context, columnNames[i]);
         }
         return columnLabels;
+    }
+
+    /**
+     * @return the list of columns which should be visible in the log view by default
+     *         (until the user explicitly changes the list of visible columns).
+     */
+    public static String[] getDefaultVisibleColumnNames(Context context) {
+        String[] columnNames = context.getResources().getStringArray(R.array.db_columns);
+        String[] hiddenColumnNames = context.getResources().getStringArray(R.array.db_columns_hide);
+        List<String> hiddenColumnNamesList = Arrays.asList(hiddenColumnNames);
+        String[] result = new String[columnNames.length - hiddenColumnNames.length];
+        int i = 0;
+        for (String columnName : columnNames) {
+            if (!hiddenColumnNamesList.contains(columnName)) result[i++] = columnName;
+        }
+        return result;
     }
 
     /**

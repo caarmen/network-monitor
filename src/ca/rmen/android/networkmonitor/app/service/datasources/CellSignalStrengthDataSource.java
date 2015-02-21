@@ -46,7 +46,7 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
     private int mLastSignalStrengthDbm;
     private int mLastAsuLevel;
     private int mLastBer = NetMonSignalStrength.UNKNOWN;
-    private int mLastEvdoEcio = NetMonSignalStrength.UNKNOWN;
+    //private int mLastEvdoEcio = NetMonSignalStrength.UNKNOWN;
     private int mLastLteRsrq = NetMonSignalStrength.UNKNOWN;
     private TelephonyManager mTelephonyManager;
 
@@ -73,7 +73,7 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
     @Override
     public ContentValues getContentValues() {
         Log.v(TAG, "getContentValues");
-        ContentValues values = new ContentValues(4);
+        ContentValues values = new ContentValues(5);
         values.put(NetMonColumns.CELL_SIGNAL_STRENGTH, mLastSignalStrength);
         if (mLastSignalStrengthDbm != NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN)
             values.put(NetMonColumns.CELL_SIGNAL_STRENGTH_DBM, mLastSignalStrengthDbm);
@@ -82,7 +82,7 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
         // Valid values from -3 to -19.5:
         // http://www.sharetechnote.com/html/Handbook_LTE_RSRQ.html
         if (mLastLteRsrq <= -3) values.put(NetMonColumns.LTE_RSRQ, mLastLteRsrq);
-        if (mLastEvdoEcio != NetMonSignalStrength.UNKNOWN) values.put(NetMonColumns.EVDO_ECIO, mLastEvdoEcio);
+        //if (mLastEcio != NetMonSignalStrength.UNKNOWN) values.put(NetMonColumns.EVDO_ECIO, mLastEvdoEcio);
         return values;
     }
 
@@ -94,7 +94,7 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
             mLastSignalStrengthDbm = mNetMonSignalStrength.getDbm(signalStrength);
             mLastAsuLevel = mNetMonSignalStrength.getAsuLevel(signalStrength);
             mLastBer = signalStrength.getGsmBitErrorRate();
-            mLastEvdoEcio = signalStrength.getEvdoEcio();
+            //mLastEvdoEcio = signalStrength.getEvdoEcio();
             if (Build.VERSION.SDK_INT >= 17) mLastLteRsrq = mNetMonSignalStrength.getLteRsrq(signalStrength);
         }
 
@@ -106,7 +106,7 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
                 mLastSignalStrengthDbm = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
                 mLastAsuLevel = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
                 mLastBer = NetMonSignalStrength.UNKNOWN;
-                mLastEvdoEcio = NetMonSignalStrength.UNKNOWN;
+                //mLastEvdoEcio = NetMonSignalStrength.UNKNOWN;
                 mLastLteRsrq = NetMonSignalStrength.UNKNOWN;
             }
         }
