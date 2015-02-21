@@ -218,7 +218,7 @@ public class NetMonPreferences {
     public List<String> getSelectedColumns() {
         String selectedColumnsString = mSharedPrefs.getString(NetMonPreferences.PREF_SELECTED_COLUMNS, null);
         final String[] selectedColumns;
-        if (TextUtils.isEmpty(selectedColumnsString)) selectedColumns = NetMonColumns.getColumnNames(mContext);
+        if (TextUtils.isEmpty(selectedColumnsString)) selectedColumns = NetMonColumns.getDefaultVisibleColumnNames(mContext);
         else
             selectedColumns = selectedColumnsString.split(",");
         return Arrays.asList(selectedColumns);

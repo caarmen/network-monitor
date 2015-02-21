@@ -36,6 +36,9 @@
         <item>cell_signal_strength</item>
         <item>cell_signal_strength_dbm</item>
         <item>cell_asu_level</item>
+        <item>gsm_ber</item>
+        <!--item>evdo_ecio</item-->
+        <item>lte_rsrq</item>
         <item>cdma_cell_base_station_id</item>
         <item>cdma_cell_latitude</item>
         <item>cdma_cell_longitude</item>
@@ -52,6 +55,11 @@
         <item>battery_level</item>
         <item>download_speed</item>
         <item>upload_speed</item>
+    </string-array>
+    <string-array name="db_columns_hide">
+        <item>gsm_ber</item>
+        <!--item>evdo_ecio</item-->
+        <item>lte_rsrq</item>
     </string-array>
     <string-array name="db_columns_profile_wifi">
         <item>timestamp</item>
@@ -192,6 +200,9 @@
         <item>cell_signal_strength</item>
         <item>cell_signal_strength_dbm</item>
         <item>cell_asu_level</item>
+        <item>gsm_ber</item>
+        <!--item>evdo_ecio</item-->
+        <item>lte_rsrq</item>
         <item>cdma_cell_base_station_id</item>
         <item>cdma_cell_network_id</item>
         <item>cdma_cell_system_id</item>
