@@ -84,6 +84,11 @@ public abstract class DBOpAsyncTask<T> extends AsyncTask<Void, Integer, T> {
         int progress = values[0];
         int max = values[1];
         ProgressDialogFragment fragment = (ProgressDialogFragment) mActivity.getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_FRAGMENT_TAG);
+        if (mActivity.isFinishing()) {
+            Log.v(TAG, "Activity " + mActivity + " finished when updating the dialog progress.  Monkey?");
+            if (fragment != null) fragment.dismiss();
+            return;
+        }
         if (fragment != null) {
             fragment.setProgress(progress, max);
         }
@@ -97,7 +102,11 @@ public abstract class DBOpAsyncTask<T> extends AsyncTask<Void, Integer, T> {
         Log.v(TAG, "onPostExecute");
         ProgressDialogFragment dialogFragment = (ProgressDialogFragment) mActivity.getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_FRAGMENT_TAG);
         if (dialogFragment != null) dialogFragment.dismissAllowingStateLoss();
-        mActivity.finish();
+        if (mActivity.isFinishing()) {
+            Log.v(TAG, "Activity " + mActivity + " finished before the task finished.  Monkey?");
+        } else {
+            mActivity.finish();
+        }
     }
 
     private final ProgressListener mProgressListener = new ProgressListener() {

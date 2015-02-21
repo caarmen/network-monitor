@@ -29,6 +29,7 @@ import java.io.IOException;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -65,6 +66,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class LogActivity extends FragmentActivity implements DialogButtonListener {
     private static final String TAG = Constants.TAG + LogActivity.class.getSimpleName();
     private WebView mWebView;
+    private Dialog mDialog;
     private static final int REQUEST_CODE_CLEAR = 1;
     private static final int REQUEST_CODE_SELECT_FIELDS = 2;
     private static final int REQUEST_CODE_FILTER_COLUMN = 3;
@@ -75,12 +77,12 @@ public class LogActivity extends FragmentActivity implements DialogButtonListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.log);
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) setDisplayHomeAsUpEnabled(true);
-        loadHTMLFile();
     }
 
     @Override
     protected void onPause() {
         Log.v(TAG, "onPause");
+        if (mDialog != null) mDialog.dismiss();
         super.onPause();
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
     }
@@ -89,6 +91,8 @@ public class LogActivity extends FragmentActivity implements DialogButtonListene
     protected void onResume() {
         Log.v(TAG, "onResume");
         super.onResume();
+        loadHTMLFile();
+        if (mDialog != null) mDialog.show();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
     }
 
@@ -128,10 +132,10 @@ public class LogActivity extends FragmentActivity implements DialogButtonListene
                 startActivityForResult(intentSelectFields, REQUEST_CODE_SELECT_FIELDS);
                 return true;
             case R.id.action_filter:
-                PreferenceDialog.showFilterRecordCountChoiceDialog(this, mPreferenceChoiceDialogListener);
+                mDialog = PreferenceDialog.showFilterRecordCountChoiceDialog(this, mPreferenceChoiceDialogListener);
                 return true;
             case R.id.action_cell_id_format:
-                PreferenceDialog.showCellIdFormatChoiceDialog(this, mPreferenceChoiceDialogListener);
+                mDialog = PreferenceDialog.showCellIdFormatChoiceDialog(this, mPreferenceChoiceDialogListener);
                 return true;
             case R.id.action_reset_filters:
                 DialogFragmentFactory.showConfirmDialog(this, getString(R.string.clear_filters_confirm_dialog_title),

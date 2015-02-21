@@ -23,6 +23,8 @@
  */
 package ca.rmen.android.networkmonitor.app.dialog;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -71,14 +73,20 @@ public class ChoiceDialogFragment extends DialogFragment { // NO_UCD (use defaul
         int selectedItem = arguments.getInt(DialogFragmentFactory.EXTRA_SELECTED_ITEM);
         final CharSequence[] choices = arguments.getCharSequenceArray(DialogFragmentFactory.EXTRA_CHOICES);
         OnClickListener listener = null;
+        final AtomicBoolean hasClicked = new AtomicBoolean(false);
         if (getActivity() instanceof DialogItemListener) {
             listener = new OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     FragmentActivity activity = getActivity();
-                    if (activity == null) Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
-                    else
+                    if (activity == null) {
+                        Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
+                    } else if (hasClicked.get()) {
+                        Log.w(TAG, "User already clicked once on this dialog! Monkey?");
+                    } else {
+                        hasClicked.set(true);
                         ((DialogItemListener) activity).onItemSelected(actionId, choices, which);
+                    }
                 }
             };
         }

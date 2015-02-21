@@ -168,6 +168,7 @@
             android:name="ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
+            android:launchMode="singleTop"
             android:theme="@style/NetMonNoDisplayTheme" >
             <intent-filter>
                 <action android:name="ca.rmen.android.networkmonitor.app.prefs_share" />

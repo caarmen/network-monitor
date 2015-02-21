@@ -82,7 +82,20 @@ InfoDialogListener { // NO_UCD (use default)
     protected void onCreate(Bundle bundle) {
         Log.v(TAG, "onCreate, bundle = " + bundle);
         super.onCreate(bundle);
-        String action = getIntent().getAction();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Log.v(TAG, "onNewIntent: intent = " + intent);
+        super.onNewIntent(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = getIntent();
+        Log.v(TAG, "onResume: intent =  " + intent);
+        String action = intent.getAction();
         if (ACTION_SHARE.equals(action)) {
             DialogFragmentFactory.showChoiceDialog(this, getString(R.string.export_choice_title), getResources().getStringArray(R.array.export_choices), -1,
                     ID_ACTION_SHARE);
@@ -90,26 +103,48 @@ InfoDialogListener { // NO_UCD (use default)
             DialogFragmentFactory.showConfirmDialog(this, getString(R.string.action_clear), getString(R.string.confirm_logs_clear), ID_ACTION_CLEAR, null);
         } else if (ACTION_IMPORT.equals(action)) {
             // Get the file the user selected, and show a dialog asking for confirmation to import the file.
-            Uri importFile = getIntent().getExtras().getParcelable(EXTRA_IMPORT_URI);
+            Uri importFile = intent.getExtras().getParcelable(EXTRA_IMPORT_URI);
             DialogFragmentFactory.showConfirmDialog(this, getString(R.string.import_confirm_title),
                     getString(R.string.import_confirm_message, importFile.getPath()), ID_ACTION_IMPORT, getIntent().getExtras());
         } else if (ACTION_CHECK_LOCATION_SETTINGS.equals(action)) {
             checkLocationSettings();
         } else if (ACTION_COMPRESS.equals(action)) {
             DialogFragmentFactory.showConfirmDialog(this, getString(R.string.compress_confirm_title), getString(R.string.compress_confirm_message),
-                    ID_ACTION_COMPRESS, getIntent().getExtras());
+                    ID_ACTION_COMPRESS, intent.getExtras());
         } else if (ACTION_CLEAR_OLD.equals(action)) {
             Clear.clear(this, NetMonPreferences.getInstance(this).getDBRecordCount());
         } else if (ACTION_SHOW_INFO_DIALOG.equals(action)) {
-            DialogFragmentFactory.showInfoDialog(this, getIntent().getExtras().getString(EXTRA_DIALOG_TITLE),
-                    getIntent().getExtras().getString(EXTRA_DIALOG_MESSAGE));
+            DialogFragmentFactory.showInfoDialog(this, intent.getExtras().getString(EXTRA_DIALOG_TITLE), intent.getExtras().getString(EXTRA_DIALOG_MESSAGE));
         } else if (ACTION_SHOW_WARNING_DIALOG.equals(action)) {
-            DialogFragmentFactory.showWarningDialog(this, getIntent().getExtras().getString(EXTRA_DIALOG_TITLE),
-                    getIntent().getExtras().getString(EXTRA_DIALOG_MESSAGE));
+            DialogFragmentFactory.showWarningDialog(this, intent.getExtras().getString(EXTRA_DIALOG_TITLE), intent.getExtras().getString(EXTRA_DIALOG_MESSAGE));
         } else {
             Log.w(TAG, "Activity created without a known action.  Action=" + action);
             finish();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.v(TAG, "onDestroy");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.v(TAG, "onPause");
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.v(TAG, "onStop");
+        super.onStop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.v(TAG, "onBackPressed");
+        super.onBackPressed();
     }
 
     @Override
@@ -126,8 +161,9 @@ InfoDialogListener { // NO_UCD (use default)
 
     @Override
     public void onOkClicked(int actionId, Bundle extras) {
-        Log.v(TAG, "onClicked, actionId=" + actionId + ", extras = " + extras);
+        Log.v(TAG, "onOkClicked, actionId=" + actionId + ", extras = " + extras);
         mUserInput = true;
+        if (isFinishing()) return;
         // The user confirmed to clear the logs.
         if (actionId == ID_ACTION_CLEAR) {
             Log.v(TAG, "Clicked ok to clear log");
@@ -150,7 +186,7 @@ InfoDialogListener { // NO_UCD (use default)
 
     @Override
     public void onCancelClicked(int actionId, Bundle extras) {
-        Log.v(TAG, "onClicked, actionId=" + actionId + ", extras = " + extras);
+        Log.v(TAG, "onCancelClicked, actionId=" + actionId + ", extras = " + extras);
         // If the user dismissed the dialog, let's close this transparent activity.
         dismiss();
     }
@@ -183,7 +219,7 @@ InfoDialogListener { // NO_UCD (use default)
     private void dismiss() {
         Log.v(TAG, "dismiss");
         setResult(RESULT_CANCELED);
-        finish();
+        if (!isFinishing()) finish();
     }
 
     @Override
