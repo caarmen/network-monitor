@@ -75,6 +75,7 @@ public class ConfirmDialogFragment extends DialogFragment { // NO_UCD (use defau
             positiveListener = new OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    Log.v(TAG, "onClick (positive button");
                     FragmentActivity activity = getActivity();
                     if (activity == null) Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
                     else
@@ -84,6 +85,7 @@ public class ConfirmDialogFragment extends DialogFragment { // NO_UCD (use defau
             negativeListener = new OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    Log.v(TAG, "onClick (negative button");
                     FragmentActivity activity = getActivity();
                     if (activity == null) Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
                     else
