@@ -60,7 +60,7 @@ public class SpeedTestPreferences {
 
     public static synchronized SpeedTestPreferences getInstance(Context context) {
         if (INSTANCE == null) {
-            INSTANCE = new SpeedTestPreferences(context);
+            INSTANCE = new SpeedTestPreferences(context.getApplicationContext());
         }
         return INSTANCE;
     }

@@ -96,7 +96,7 @@ public class NetMonPreferences {
 
     public static synchronized NetMonPreferences getInstance(Context context) {
         if (INSTANCE == null) {
-            INSTANCE = new NetMonPreferences(context);
+            INSTANCE = new NetMonPreferences(context.getApplicationContext());
         }
         return INSTANCE;
     }
