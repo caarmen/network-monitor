@@ -44,7 +44,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  */
 public class InfoDialogFragment extends DialogFragment { // NO_UCD (use default)
 
-    private static final String TAG = Constants.TAG + "/" + InfoDialogFragment.class.getSimpleName();
+    private static final String TAG = Constants.TAG + InfoDialogFragment.class.getSimpleName();
 
     public interface InfoDialogListener {
         public void onNeutralClicked(int actionId, Bundle extras);

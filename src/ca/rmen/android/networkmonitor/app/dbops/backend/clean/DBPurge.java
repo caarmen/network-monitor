@@ -41,7 +41,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  * preference set by the user.
  */
 public class DBPurge implements Task<Integer> {
-    private static final String TAG = Constants.TAG + "/" + DBPurge.class.getSimpleName();
+    private static final String TAG = Constants.TAG + DBPurge.class.getSimpleName();
 
     private final Context mContext;
     private final int mNumRowsToKeep;

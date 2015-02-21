@@ -52,7 +52,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  * This is based on DBImport from the scrum chatter project.
  */
 public class DBImport implements Task<Boolean> {
-    private static final String TAG = Constants.TAG + "/" + DBImport.class.getSimpleName();
+    private static final String TAG = Constants.TAG + DBImport.class.getSimpleName();
 
     private final Context mContext;
     private final Uri mUri;

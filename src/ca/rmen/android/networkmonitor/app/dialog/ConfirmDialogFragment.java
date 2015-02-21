@@ -41,7 +41,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  */
 public class ConfirmDialogFragment extends DialogFragment { // NO_UCD (use default)
 
-    private static final String TAG = Constants.TAG + "/" + ConfirmDialogFragment.class.getSimpleName();
+    private static final String TAG = Constants.TAG + ConfirmDialogFragment.class.getSimpleName();
 
     /**
      * An activity which contains a confirmation dialog fragment should implement this interface to be notified if the user clicks ok on the dialog.

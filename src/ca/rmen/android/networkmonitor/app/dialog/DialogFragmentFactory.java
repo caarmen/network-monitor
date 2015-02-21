@@ -38,12 +38,12 @@ import ca.rmen.android.networkmonitor.util.Log;
 /**
  * Create different types of dialog fragments (edit text input, information, choice, confirmation, progress).
  * The dialogs created by this class are not only created but also shown in the activity given to the creation methods.
- * 
+ *
  * This is a subset of the same DialogFragmentFactory class from the scrum chatter project.
  */
 public class DialogFragmentFactory extends DialogFragment {
 
-    private static final String TAG = Constants.TAG + "/" + DialogFragmentFactory.class.getSimpleName();
+    private static final String TAG = Constants.TAG + DialogFragmentFactory.class.getSimpleName();
     static final String EXTRA_TITLE = "title";
     static final String EXTRA_MESSAGE = "message";
     static final String EXTRA_ACTION_ID = "action_id";

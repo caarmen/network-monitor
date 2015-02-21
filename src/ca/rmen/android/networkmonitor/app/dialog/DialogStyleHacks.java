@@ -53,7 +53,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  */
 class DialogStyleHacks {
 
-    private final String TAG = Constants.TAG + "/" + DialogStyleHacks.class.getSimpleName();
+    private final String TAG = Constants.TAG + DialogStyleHacks.class.getSimpleName();
     private static int sHoloBlueLightColorId = -1;
     private static int sHoloBlueDarkColorId = -1;
     private static Field sNinePatchSourceField = null;
@@ -68,7 +68,7 @@ class DialogStyleHacks {
      * @param dialogStyleId refers to a style which defines all the styling attributes for the dialog.
      * @param myAppColorId will be used for the dialog title text and, depending on the OS version (4.x), the horizontal divider.
      * @param horizontalDividerDrawableId the drawable to use for the horizontal divider for 2.x and 3.x.
-     * 
+     *
      */
     DialogStyleHacks(Context context, int dialogStyleId, int myAppColorId, int horizontalDividerDrawableId) {
         mContext = context;

@@ -44,7 +44,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  */
 public class ChoiceDialogFragment extends DialogFragment { // NO_UCD (use default)
 
-    private static final String TAG = Constants.TAG + "/" + ChoiceDialogFragment.class.getSimpleName();
+    private static final String TAG = Constants.TAG + ChoiceDialogFragment.class.getSimpleName();
 
     /**
      * An activity which contains a choice dialog fragment should implement this interface.

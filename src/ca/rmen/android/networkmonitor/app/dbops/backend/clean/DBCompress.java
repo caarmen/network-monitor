@@ -42,7 +42,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  * Reduces groups of 3 or more consecutive rows with identical data (except the timestamp) into a single row.
  */
 public class DBCompress implements Task<Integer> {
-    private static final String TAG = Constants.TAG + "/" + DBCompress.class.getSimpleName();
+    private static final String TAG = Constants.TAG + DBCompress.class.getSimpleName();
 
     private final Context mContext;
 
