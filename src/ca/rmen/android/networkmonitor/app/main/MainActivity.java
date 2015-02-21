@@ -51,6 +51,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class MainActivity extends PreferenceActivity {
     private static final String TAG = Constants.TAG + MainActivity.class.getSimpleName();
+    private Dialog mGPSDialog;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -76,6 +77,7 @@ public class MainActivity extends PreferenceActivity {
     protected void onStop() {
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
         super.onStop();
+        if (mGPSDialog != null) mGPSDialog.dismiss();
     }
 
     @Override
@@ -107,13 +109,16 @@ public class MainActivity extends PreferenceActivity {
                 if (sharedPreferences.getBoolean(NetMonPreferences.PREF_SERVICE_ENABLED, NetMonPreferences.PREF_SERVICE_ENABLED_DEFAULT)) {
                     int playServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable(MainActivity.this);
                     if (playServicesAvailable != ConnectionResult.SUCCESS) {
-                        Dialog errorDialog = null;
+                        if (mGPSDialog != null) {
+                            mGPSDialog.dismiss();
+                            mGPSDialog = null;
+                        }
 
                         if (GooglePlayServicesUtil.isUserRecoverableError(playServicesAvailable)) {
-                            errorDialog = GooglePlayServicesUtil.getErrorDialog(playServicesAvailable, MainActivity.this, 1);
+                            mGPSDialog = GooglePlayServicesUtil.getErrorDialog(playServicesAvailable, MainActivity.this, 1);
                         }
-                        if (errorDialog != null) {
-                            errorDialog.show();
+                        if (mGPSDialog != null) {
+                            mGPSDialog.show();
                         } else {
                             Toast.makeText(MainActivity.this, "Google Play Services must be installed", Toast.LENGTH_LONG).show();
                         }
