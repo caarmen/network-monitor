@@ -86,7 +86,6 @@ public abstract class DBOpAsyncTask<T> extends AsyncTask<Void, Integer, T> {
         ProgressDialogFragment fragment = (ProgressDialogFragment) mActivity.getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_FRAGMENT_TAG);
         if (mActivity.isFinishing()) {
             Log.v(TAG, "Activity " + mActivity + " finished when updating the dialog progress.  Monkey?");
-            if (fragment != null) fragment.dismiss();
             return;
         }
         if (fragment != null) {

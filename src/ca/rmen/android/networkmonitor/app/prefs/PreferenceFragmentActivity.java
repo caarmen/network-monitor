@@ -54,7 +54,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  * This activity has a transparent theme. The only thing the user will see will be alert dialogs that this activity creates.
  */
 public class PreferenceFragmentActivity extends FragmentActivity implements DialogItemListener, DialogButtonListener, OnDismissListener, OnCancelListener,
-InfoDialogListener { // NO_UCD (use default)
+        InfoDialogListener { // NO_UCD (use default)
     public static final String ACTION_SHARE = PreferenceFragmentActivity.class.getPackage().getName() + "_share";
     public static final String ACTION_CLEAR = PreferenceFragmentActivity.class.getPackage().getName() + "_clear";
     public static final String ACTION_IMPORT = PreferenceFragmentActivity.class.getPackage().getName() + "_import";
@@ -82,19 +82,18 @@ InfoDialogListener { // NO_UCD (use default)
     protected void onCreate(Bundle bundle) {
         Log.v(TAG, "onCreate, bundle = " + bundle);
         super.onCreate(bundle);
+        handleIntent(getIntent());
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         Log.v(TAG, "onNewIntent: intent = " + intent);
         super.onNewIntent(intent);
+        handleIntent(intent);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Intent intent = getIntent();
-        Log.v(TAG, "onResume: intent =  " + intent);
+    private void handleIntent(Intent intent) {
+        Log.v(TAG, "handleIntent: intent =  " + intent);
         String action = intent.getAction();
         if (ACTION_SHARE.equals(action)) {
             DialogFragmentFactory.showChoiceDialog(this, getString(R.string.export_choice_title), getResources().getStringArray(R.array.export_choices), -1,
