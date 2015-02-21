@@ -23,6 +23,7 @@
  */
 package ca.rmen.android.networkmonitor.app.dialog;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,7 +31,6 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.view.ContextThemeWrapper;
 
@@ -61,16 +61,16 @@ public class PreferenceDialog {
     /**
      * Show the user a dialog to select the primary data field for a KML export.
      */
-    public static void showKMLExportColumnChoiceDialog(Context context, PreferenceDialog.PreferenceChoiceDialogListener listener) {
-        showPreferenceChoiceDialog(context, NetMonPreferences.PREF_KML_EXPORT_COLUMN, NetMonColumns.SOCKET_CONNECTION_TEST, R.array.db_columns,
+    public static AlertDialog showKMLExportColumnChoiceDialog(Context context, PreferenceDialog.PreferenceChoiceDialogListener listener) {
+        return showPreferenceChoiceDialog(context, NetMonPreferences.PREF_KML_EXPORT_COLUMN, NetMonColumns.SOCKET_CONNECTION_TEST, R.array.db_columns,
                 NetMonColumns.getColumnLabels(context), R.string.export_kml_choice_title, listener);
     }
 
     /**
      * Show the user a dialog to select how many records to display in the log view.
      */
-    public static void showFilterRecordCountChoiceDialog(Context context, PreferenceDialog.PreferenceChoiceDialogListener listener) {
-        showPreferenceChoiceDialog(context, NetMonPreferences.PREF_FILTER_RECORD_COUNT, NetMonPreferences.PREF_FILTER_RECORD_COUNT_DEFAULT,
+    public static AlertDialog showFilterRecordCountChoiceDialog(Context context, PreferenceDialog.PreferenceChoiceDialogListener listener) {
+        return showPreferenceChoiceDialog(context, NetMonPreferences.PREF_FILTER_RECORD_COUNT, NetMonPreferences.PREF_FILTER_RECORD_COUNT_DEFAULT,
                 R.array.preferences_filter_record_count_values, R.array.preferences_filter_record_count_labels, R.string.pref_title_filter_record_count,
                 listener);
     }
@@ -78,25 +78,25 @@ public class PreferenceDialog {
     /**
      * Show the user a dialog to choose the format for the cell ids.
      */
-    public static void showCellIdFormatChoiceDialog(Context context, PreferenceDialog.PreferenceChoiceDialogListener listener) {
-        showPreferenceChoiceDialog(context, NetMonPreferences.PREF_CELL_ID_FORMAT, NetMonPreferences.PREF_CELL_ID_FORMAT_DEFAULT,
+    public static AlertDialog showCellIdFormatChoiceDialog(Context context, PreferenceDialog.PreferenceChoiceDialogListener listener) {
+        return showPreferenceChoiceDialog(context, NetMonPreferences.PREF_CELL_ID_FORMAT, NetMonPreferences.PREF_CELL_ID_FORMAT_DEFAULT,
                 R.array.preferences_cell_id_format_values, R.array.preferences_cell_id_format_labels, R.string.pref_title_cell_id_format, listener);
     }
 
     /**
      * Show the user a preference choice dialog.
      */
-    private static void showPreferenceChoiceDialog(Context context, final String preferenceName, String defaultValue, int valuesArrayId, int labelsArrayId,
-            int titleId, final PreferenceDialog.PreferenceChoiceDialogListener listener) {
-        showPreferenceChoiceDialog(context, preferenceName, defaultValue, valuesArrayId, context.getResources().getStringArray(labelsArrayId), titleId,
+    private static AlertDialog showPreferenceChoiceDialog(Context context, final String preferenceName, String defaultValue, int valuesArrayId,
+            int labelsArrayId, int titleId, final PreferenceDialog.PreferenceChoiceDialogListener listener) {
+        return showPreferenceChoiceDialog(context, preferenceName, defaultValue, valuesArrayId, context.getResources().getStringArray(labelsArrayId), titleId,
                 listener);
     }
 
     /**
      * Show the user a preference choice dialog.
      */
-    private static void showPreferenceChoiceDialog(final Context context, final String preferenceName, String defaultValue, int valuesArrayId, String[] labels,
-            int titleId, final PreferenceDialog.PreferenceChoiceDialogListener listener) {
+    private static AlertDialog showPreferenceChoiceDialog(final Context context, final String preferenceName, String defaultValue, int valuesArrayId,
+            String[] labels, int titleId, final PreferenceDialog.PreferenceChoiceDialogListener listener) {
         Log.v(TAG, "showPreferenceChoic@eDialog");
         final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         // Find the position in the list of choices which corresponds to our current preference.
@@ -119,21 +119,8 @@ public class PreferenceDialog {
                         // Save the preference for the record count.
                         int selectedItemPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
                         final String selectedItemValue = values[selectedItemPosition];
-                        new AsyncTask<Void, Void, Void>() {
-
-                            // Save our preference
-                            @Override
-                            protected Void doInBackground(Void... params) {
-                                sharedPrefs.edit().putString(preferenceName, selectedItemValue).apply();
-                                return null;
-                            }
-
-                            // Notify the listener
-                            @Override
-                            protected void onPostExecute(Void result) {
-                                listener.onPreferenceValueSelected(selectedItemValue);
-                            }
-                        }.execute();
+                        sharedPrefs.edit().putString(preferenceName, selectedItemValue).apply();
+                        listener.onPreferenceValueSelected(selectedItemValue);
                     }
                 });
         DialogStyle.setCustomTitle(context, builder, context.getString(titleId));
@@ -155,6 +142,7 @@ public class PreferenceDialog {
             }
         });
         dialog.show();
+        return dialog;
     }
 
     public static void showInfoDialog(Context context, String title, String message) {
@@ -164,10 +152,10 @@ public class PreferenceDialog {
         context.startActivity(intent);
     }
 
-    public static void showWarningDialog(Context context, String title, String message) {
+    public static void showWarningDialog(Activity activity, String title, String message) {
         Intent intent = new Intent(PreferenceFragmentActivity.ACTION_SHOW_WARNING_DIALOG);
         intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_TITLE, title);
         intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_MESSAGE, message);
-        context.startActivity(intent);
+        activity.startActivity(intent);
     }
 }
