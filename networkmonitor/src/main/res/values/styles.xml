@@ -14,10 +14,5 @@
     <style name="NetMonPreferenceCategoryStyle">
         <item name="android:layout">@layout/preference_category</item>
     </style>
-    <style name="NetMonPreferenceCategoryTextAppearance" parent="@style/TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/netmon_text_color</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
 
 </resources>

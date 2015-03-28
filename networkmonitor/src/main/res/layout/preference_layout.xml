@@ -15,5 +15,6 @@
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        style="@style/ListViewNetMon"
         android:id="@android:id/list" />
 </LinearLayout>
