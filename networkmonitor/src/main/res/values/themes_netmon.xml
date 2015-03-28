@@ -5,7 +5,7 @@
 
   <style name="NetMon" parent="@style/_NetMon"/>
 
-  <style name="_NetMon" parent="Theme.AppCompat.Light.NoActionBar">
+  <style name="_NetMon" parent="Theme.AppCompat.Light">
 
     <item name="android:checkboxStyle">@style/CheckBoxNetMon</item>
 
