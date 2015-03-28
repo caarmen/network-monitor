@@ -1,18 +1,15 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--style name="SwitchStyle" parent="@style/Widget.Holo.Light.CompoundButton.Switch">
-        <item name="asb_thumb">@drawable/netmon_switch_inner_holo_light</item>
-    </style-->
-
-    <style name="NetMonListViewSeparatorStyle" parent="@android:style/Widget.TextView">
-        <item name="android:textColor">@color/netmon_text_color</item>
-        <item name="android:background">@color/netmon_color_light</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">25dip</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingLeft">5sp</item>
+    <style name="NetMonActionBar" parent="Base.Widget.AppCompat.Light.ActionBar">
+        <item name="background">@android:color/black</item>
+        <item name="titleTextStyle">@style/NetMonActionBarTitleStyle</item>
     </style>
+
+    <style name="NetMonActionBarTitleStyle">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
 
 </resources>
