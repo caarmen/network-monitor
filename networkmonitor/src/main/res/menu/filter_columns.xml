@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_select_all"
+        android:showAsAction="never"
+        android:title="@string/action_select_all"/>
+    <item
+        android:id="@+id/action_select_none"
+        android:showAsAction="never"
+        android:title="@string/action_select_none"/>
+</menu>

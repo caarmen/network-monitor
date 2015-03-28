@@ -1,0 +1,55 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:key="preferenceScreen"
+    >
+
+    <PreferenceCategory android:title="@string/pref_category_monitoring_settings" >
+        <org.jraf.android.backport.switchwidget.SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_pref_enable_service"
+            android:key="PREF_SERVICE_ENABLED"
+            android:title="@string/pref_title_service_enabled" />
+
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
+            android:defaultValue="10000"
+            android:entries="@array/preferences_updateInterval_labels"
+            android:entryValues="@array/preferences_updateInterval_values"
+            android:icon="@drawable/ic_pref_update_interval"
+            android:key="PREF_UPDATE_INTERVAL"
+            android:summary="@string/pref_summary_update_interval"
+            android:title="@string/pref_title_update_interval" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_log_actions" >
+        <Preference
+            android:icon="@drawable/ic_pref_show_log"
+            android:key="PREF_SHOW_LOG_FILE"
+            android:title="@string/pref_title_show_log_file" >
+            <intent android:action="ca.rmen.android.networkmonitor.app.log.LogActivity" />
+        </Preference>
+        <Preference
+            android:icon="@drawable/ic_pref_share"
+            android:key="PREF_SHARE"
+            android:title="@string/action_share" >
+            <intent android:action="ca.rmen.android.networkmonitor.app.prefs_share" />
+        </Preference>
+        <Preference
+            android:icon="@drawable/ic_pref_clear"
+            android:key="PREF_CLEAR_LOG_FILE"
+            android:title="@string/action_clear" >
+            <intent android:action="ca.rmen.android.networkmonitor.app.prefs_clear" />
+        </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_other" >
+        <Preference
+            android:icon="@drawable/ic_pref_settings"
+            android:title="@string/pref_title_advanced" >
+            <intent android:action="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity" />
+        </Preference>
+        <Preference
+            android:icon="@drawable/ic_pref_about"
+            android:key="PREF_ABOUT"
+            android:title="@string/pref_title_about" >
+            <intent android:action="ca.rmen.android.networkmonitor.app.about.AboutActivity" />
+        </Preference>
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="NetMon" parent="@style/_NetMon"/>
+
+  <style name="_NetMon" parent="Theme.AppCompat.Light.NoActionBar">
+
+    <item name="android:checkboxStyle">@style/CheckBoxNetMon</item>
+
+    <item name="android:radioButtonStyle">@style/RadioButtonNetMon</item>
+
+    <item name="android:buttonStyle">@style/ButtonNetMon</item>
+
+    <item name="android:imageButtonStyle">@style/ImageButtonNetMon</item>
+
+    <item name="android:progressBarStyleHorizontal">@style/ProgressBarNetMon</item>
+
+    <item name="android:listViewStyle">@style/ListViewNetMon</item>
+
+    <item name="android:listViewWhiteStyle">@style/ListViewNetMon.White</item>
+
+    <item name="android:spinnerItemStyle">@style/SpinnerItemNetMon</item>
+
+  </style>
+
+</resources>

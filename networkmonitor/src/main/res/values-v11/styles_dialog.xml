@@ -1,0 +1,13 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- This style is referenced from code: DialogStyleHacks applies this style to dialogs. -->
+    <style name="dialogStyle">
+        <item name="android:textColor">@color/netmon_text_color</item>
+        <item name="android:listViewStyle">@style/ListViewNetMon</item>
+        <item name="android:selectableItemBackground">@drawable/netmon_list_selector_holo_light</item>
+        <item name="android:listChoiceIndicatorSingle">@drawable/netmon_btn_radio_holo_light</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/netmon_btn_check_holo_light</item>
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBarNetMon</item>
+    </style>
+
+</resources>

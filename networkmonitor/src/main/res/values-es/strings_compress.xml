@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Strings for compressing a database -->
+    <string name="compress_confirm_title">¿Comprimir la base de datos?</string>
+    <string name="compress_confirm_message">Fusionará líneas consecutivas con datos idénticos.</string>
+    <string name="compress_successful">%1$s filas borradas de la base de datos.</string>
+    <string name="compress_failed">Error en la compresión de la base de datos.</string>
+</resources>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <string name="app_name">Network Monitor</string>
+    <string name="log_title">Log file</string>
+
+    <!-- Strings for the log screen -->
+    <string name="action_share">Share log file</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_clear">Clear log file</string>
+    <string name="action_filter">Number of rows</string>
+    <string name="action_cell_id_format">Cell id format</string>
+    <string name="action_reset_filters">Clear all filters</string>
+    <string name="progress_dialog_message">Please wait&#8230;</string>
+    <string name="error_reading_log">Could not read log file.</string>
+    <string name="success_logs_clear">Logs have been cleared</string>
+    <string name="confirm_logs_clear">Do you really want to clear all the logs?</string>
+    <string name="clear_filters_confirm_dialog_title">Clear filters?</string>
+    <string name="clear_filters_confirm_dialog_message">Are you sure you want to remove all filters?</string>
+
+    <!-- Strings for the select_fields activity -->
+    <string name="action_select_all">Select all</string>
+    <string name="action_select_none">Select none</string>
+    <string name="action_select_profile_wifi">WiFi profile</string>
+    <string name="action_select_profile_mobile_gsm">Mobile profile (GSM)</string>
+    <string name="action_select_profile_mobile_cdma">Mobile profile (CDMA)</string>
+    <string name="action_select_profile_location">Location profile</string>
+
+    <!-- Strings for the filter_columns activity -->
+    <string name="filter_columns_title">Filter values (beta)</string>
+    <string name="filter_columns_empty_value">Empty</string>
+    <string name="filter_columns_hint">Select the values for \"%s\" you wish to appear in the report. If you select no values, no filtering will be done (all values will appear).</string>
+
+    <!-- Strings for warning about location settings -->
+    <string name="no_location_confirm_dialog_title">Locations not enabled</string>
+    <string name="no_location_confirm_dialog_message">You have disabled location tracking in your system settings.  Enable location tracking so that Network Monitor can log your location.</string>
+
+    <!-- Strings for the about screen -->
+    <string name="about_title">About</string>
+    <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2015 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
+    <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2014 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
+    <string name="about_projectUrl">Source code:\nhttps://github.com/caarmen/network-monitor</string>
+    <string name="about_issues">Report bugs:\nhttps://github.com/caarmen/network-monitor/issues</string>
+    <string name="about_rate">Rate the app on the Play Store:\nhttps://play.google.com/store/apps/details?id=ca.rmen.android.networkmonitor</string>
+
+    <!-- Notification -->
+    <string name="service_notification_ticker">Network Monitor is collecting data</string>
+    <string name="service_notification_text">Collecting data.</string>
+    <string name="service_notification_action_stop">Stop</string>
+    <string name="service_notification_action_logs">Logs</string>
+
+    <!-- Send debugging logs -->
+    <string name="action_send_logs">Send debugging logs</string>
+    <string name="support_send_debug_logs_subject">Debugging logs for Network Monitor</string>
+    <string name="support_send_debug_logs_body">Here are the logs ;)</string>
+    <string name="support_send_debug_logs_to">c@rmen.ca</string>
+    <string name="support_error">Error creating log file.  Make sure your device\'s SD card is present.</string>
+
+    <!-- Strings about sending emails -->
+    <string name="missing_email_settings_info_dialog_title">Missing information</string>
+    <string name="missing_email_settings_info_dialog_message">E-mail reports cannot be sent, because not all of the e-mail settings have been filled in. The e-mail report frequency has been reset to \'Never\'.</string>
+    <string name="warning_notification_ticker_email_failed">Error sending report</string>
+    <string name="warning_notification_message_email_failed">Could not send the report.</string>
+
+    <!-- Strings for the notification about a failed test -->
+    <string name="warning_notification_ticker_test_failed">Network test failed.</string>
+    <string name="warning_notification_message_test_failed">Problem with the data connection.</string>
+
+    <!-- Speed test strings -->
+    <string name="speed_test_warning_title">Warning!</string>
+    <string name="speed_test_warning_message">Enabling the speed test will result in significant network traffic (and battery drain).  Don\'t enable it if you have a quota for network traffic!</string>
+    <string name="speed_test_missing_info_dialog_title">Missing information</string>
+    <string name="speed_test_missing_info_dialog_message">The speed test cannot be enabled because the URL field is empty</string>
+    <string name="speed_test_disabled">Disabled</string>
+    <string name="speed_test_good_enough">Good enough!</string>
+    <string name="speed_test_play_store">I want more&#8230;</string>
+    <string name="speed_test_about_file">file:///android_asset/speed_test_about.html</string>
+
+    <!-- Polling frequency strings -->
+    <string name="warning_fast_polling_title">Warning!</string>
+    <string name="warning_fast_polling_message">You have selected a very fast polling frequency. Data tests have been disabled, and a maximum limit to the database size has been set. You can re-enable data tests by selecting a slower polling frequency, and going to the advanced options.</string>
+    <string name="unknown">N/A</string>
+
+</resources>

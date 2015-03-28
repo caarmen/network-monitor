@@ -1,0 +1,32 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_select_all"
+        android:showAsAction="never"
+        android:title="@string/action_select_all"/>
+    <item
+        android:id="@+id/action_select_none"
+        android:showAsAction="never"
+        android:title="@string/action_select_none"/>
+    <item
+        android:id="@+id/action_select_profile_wifi"
+        android:icon="@drawable/ic_action_profile_wifi"
+        android:showAsAction="never"
+        android:title="@string/action_select_profile_wifi"/>
+    <item
+        android:id="@+id/action_select_profile_mobile_gsm"
+        android:icon="@drawable/ic_action_profile_mobile"
+        android:showAsAction="never"
+        android:title="@string/action_select_profile_mobile_gsm"/>
+    <item
+        android:id="@+id/action_select_profile_mobile_cdma"
+        android:icon="@drawable/ic_action_profile_mobile"
+        android:showAsAction="never"
+        android:title="@string/action_select_profile_mobile_cdma"/>
+    <item
+        android:id="@+id/action_select_profile_location"
+        android:icon="@drawable/ic_action_profile_location"
+        android:showAsAction="never"
+        android:title="@string/action_select_profile_location"/>
+
+</menu>

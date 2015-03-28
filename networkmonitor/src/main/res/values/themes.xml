@@ -1,0 +1,42 @@
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="@style/NetMon">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+        <item name="colorPrimary">@color/netmon_color</item>
+        <item name="colorAccent">@color/netmon_text_color</item>
+        <!--
+        Not sure why listChoiceIndicatorMultiple is only generated
+        in themes_netmon.xml for v11.  We need it for 2.x too, for SelectFieldsFragment -->
+        <item name="android:listChoiceIndicatorMultiple">@drawable/netmon_btn_check_holo_light</item>
+        <item name="android:listSeparatorTextViewStyle">@style/NetMonListViewSeparatorStyle</item>
+    </style>
+
+    <!--
+    Special theme for a transparent activity (used when we need to 
+    show a dialog on top of a PreferenceActivity
+    -->
+    <style name="NetMonNoDisplayTheme" parent="@style/NetMon">
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowNoDisplay">true</item>
+    </style>
+
+</resources>

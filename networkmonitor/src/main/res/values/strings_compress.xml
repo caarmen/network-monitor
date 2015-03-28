@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Strings for compressing a database -->
+    <string name="compress_confirm_title">Compress the database?</string>
+    <string name="compress_confirm_message">This will merge consecutive rows with identical data.</string>
+    <string name="compress_successful">%1$s rows deleted from the database.</string>
+    <string name="compress_failed">Failed to compress the database.</string>
+</resources>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Preferences in the main screen -->
+    <string name="pref_category_monitoring_settings">MONITORING SETTINGS</string>
+    <string name="pref_category_log_actions">LOG ACTIONS</string>
+    <string name="pref_category_other">OTHER</string>
+    <string name="pref_title_update_interval">Test frequency</string>
+    <string name="pref_summary_update_interval">%s</string>
+    <string name="pref_title_service_enabled">Enable service</string>
+    <string name="pref_title_show_log_file">View log file</string>
+    <string name="pref_title_advanced">Advanced options</string>
+    <string name="pref_title_about">About</string>
+    <string name="pref_value_interval_never">Never</string>
+    <string name="pref_value_interval_network_change">When the network changes</string>
+    <string name="pref_value_interval_500_ms">½ second (data tests disabled)</string>
+    <string name="pref_value_interval_1_second">1 second (data tests disabled)</string>
+    <string name="pref_value_interval_10_seconds">10 seconds</string>
+    <string name="pref_value_interval_20_seconds">20 seconds</string>
+    <string name="pref_value_interval_30_seconds">30 seconds</string>
+    <string name="pref_value_interval_1_minute">1 minute</string>
+    <string name="pref_value_interval_2_minutes">2 minutes</string>
+    <string name="pref_value_interval_5_minutes">5 minutes</string>
+    <string name="pref_value_interval_10_minutes">10 minutes</string>
+    <string name="pref_value_interval_15_minutes">15 minutes</string>
+    <string name="pref_value_interval_25_minutes">25 minutes</string>
+    <string name="pref_value_interval_30_minutes">30 minutes</string>
+    <string name="pref_value_interval_55_minutes">55 minutes</string>
+    <string name="pref_value_interval_1_hour">1 hour</string>
+    <!-- Advanced preferences -->
+    <string name="pref_category_report_content">REPORT CONTENT</string>
+    <string name="pref_category_performance">PERFORMANCE</string>
+    <string name="pref_category_notifications">NOTIFICATIONS</string>
+    <string name="pref_category_database">DATABASE</string>
+    <string name="pref_title_enable_connection_test">Enable data connection tests</string>
+    <string name="pref_summary_enable_connection_test">Enable or disable connection tests (uses data)</string>
+    <string name="pref_title_select_fields">Fields to monitor</string>
+    <string name="pref_summary_select_fields">Select a set of fields for the log display and export.</string>
+    <string name="pref_title_speed_test">Speed test</string>
+    <string name="pref_summary_speed_test">Settings to test download or upload speed.</string>
+    <string name="pref_title_wake_interval">Prevent sleep</string>
+    <string name="pref_summary_wake_interval">Wake up the phone periodically to make sure the data connection stays on (drains battery): %s</string>
+    <string name="pref_title_scheduler">Polling interval</string>
+    <string name="pref_summary_scheduler">Current setting: %s</string>
+    <string name="pref_value_executor_service_scheduler">Precise timing</string>
+    <string name="pref_value_alarm_manager_scheduler">Save battery</string>
+    <string name="pref_title_cell_id_format">Cell ID format</string>
+    <string name="pref_summary_cell_id_format">Choose the format to display the cell ids: %s</string>
+    <string name="pref_value_cell_id_format_decimal">Decimal</string>
+    <string name="pref_value_cell_id_format_hex">Hex</string>
+    <string name="pref_value_cell_id_format_decimal_hex">Both</string>
+    <string name="pref_title_test_server">Server</string>
+    <string name="pref_summary_test_server">The server we try to reach to test connectivity: %s</string>
+    <string name="pref_title_location_fetching_strategy">Location accuracy</string>
+    <string name="pref_summary_location_fetching_strategy">Choose between high accuracy or power saving mode: %s</string>
+    <string name="pref_value_location_fetching_strategy_accurate">High accuracy</string>
+    <string name="pref_value_location_fetching_strategy_save_power">Save battery</string>
+    <string name="pref_title_import">Import</string>
+    <string name="pref_summary_import">Import another database which was exported from Network Monitor.</string>
+    <string name="pref_title_compress">Compress the database</string>
+    <string name="pref_summary_compress">Reduce the database size by merging duplicate rows.</string>
+    <string name="pref_title_db_record_count">Limit the database size</string>
+    <string name="pref_summary_db_record_count">Limit the number of rows saved in the database: %s</string>
+    <string name="pref_title_email">Send yourself reports by e-mail</string>
+    <string name="pref_summary_email">Periodically send yourself a report in one or several formats, by e-mail.</string>
+    <string name="pref_title_notification_enabled">Enable notifications</string>
+    <string name="pref_summary_notification_enabled">Notify when a network test fails.</string>
+    <string name="pref_title_notification_ringtone">Notification ringtone</string>
+    <string name="pref_summary_notification_ringtone">%s</string>
+    <string name="pref_value_notification_ringtone_silent">Silent</string>
+
+
+    <!-- Other preferences -->
+    <string name="pref_title_filter_record_count">Number of records to display</string>
+    <string name="pref_value_filter_record_count_100">100 rows</string>
+    <string name="pref_value_filter_record_count_250">250 rows</string>
+    <string name="pref_value_filter_record_count_500">500 rows</string>
+    <string name="pref_value_filter_record_count_1000">1000 rows</string>
+    <string name="pref_value_filter_record_count_10000">10000 rows</string>
+    <string name="pref_value_filter_record_count_all">All</string>
+
+</resources>

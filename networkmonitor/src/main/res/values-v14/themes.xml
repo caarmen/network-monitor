@@ -1,0 +1,13 @@
+<resources>
+
+    <style name="AppBaseTheme" parent="@style/NetMon">
+        <item name="android:actionBarItemBackground">@drawable/netmon_list_selector_holo_light</item>
+        <item name="android:selectableItemBackground">@drawable/netmon_list_selector_holo_light</item>
+        <item name="android:actionBarWidgetTheme">@style/NetMonActionBarWidgetTheme</item>
+    </style>
+
+    <style name="NetMonActionBarWidgetTheme" parent="@android:style/Theme.Holo">
+        <item name="android:dropDownListViewStyle">@style/ListViewNetMon</item>
+    </style>
+
+</resources>

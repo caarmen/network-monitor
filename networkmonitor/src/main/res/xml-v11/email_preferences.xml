@@ -1,0 +1,79 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="preferenceScreen" >
+
+    <PreferenceCategory android:title="@string/pref_category_email_sending_settings" >
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
+            android:defaultValue="0"
+            android:entries="@array/preferences_email_report_interval_labels"
+            android:entryValues="@array/preferences_email_report_interval_values"
+            android:icon="@drawable/ic_pref_update_interval"
+            android:key="PREF_EMAIL_INTERVAL"
+            android:summary="@string/pref_summary_email_report_interval"
+            android:title="@string/pref_title_email_report_interval" />
+
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+            android:defaultValue=""
+            android:hint="@string/pref_hint_email_recipients"
+            android:icon="@drawable/ic_pref_email_recipients"
+            android:inputType="textEmailAddress"
+            android:key="PREF_EMAIL_RECIPIENTS"
+            android:summary="@string/pref_summary_email_recipients"
+            android:title="@string/pref_title_email_recipients" />
+
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedMultiSelectListPreference
+            android:defaultValue="@array/empty_array"
+            android:entries="@array/preferences_email_report_formats_labels"
+            android:entryValues="@array/preferences_email_report_formats_values"
+            android:icon="@drawable/ic_pref_email_report_formats"
+            android:key="PREF_EMAIL_REPORT_FORMATS"
+            android:summary="@string/pref_summary_email_report_formats"
+            android:title="@string/pref_title_email_report_formats" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_email_server_settings" >
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+            android:defaultValue="smtp.gmail.com"
+            android:hint="@string/pref_hint_email_server"
+            android:icon="@drawable/ic_pref_server"
+            android:key="PREF_EMAIL_SERVER"
+            android:summary="@string/pref_summary_email_server"
+            android:title="@string/pref_title_email_server" />
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+            android:defaultValue="587"
+            android:hint="@string/pref_hint_email_port"
+            android:icon="@drawable/ic_pref_server"
+            android:key="PREF_EMAIL_PORT"
+            android:summary="@string/pref_summary_email_port"
+            android:title="@string/pref_title_email_port" />
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+            android:defaultValue=""
+            android:hint="@string/pref_hint_email_user"
+            android:icon="@drawable/ic_pref_email_user"
+            android:inputType="textEmailAddress"
+            android:key="PREF_EMAIL_USER"
+            android:summary="@string/pref_summary_email_user"
+            android:title="@string/pref_title_email_user" />
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+            android:defaultValue=""
+            android:icon="@drawable/ic_pref_email_password"
+            android:inputType="textPassword"
+            android:key="PREF_EMAIL_PASSWORD"
+            android:title="@string/pref_title_email_password" />
+
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
+            android:defaultValue="TLS"
+            android:entries="@array/preferences_email_security_labels"
+            android:entryValues="@array/preferences_email_security_values"
+            android:icon="@drawable/ic_pref_email_security"
+            android:key="PREF_EMAIL_SECURITY"
+            android:summary="@string/pref_summary_email_security"
+            android:title="@string/pref_title_email_security" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_email_status" >
+        <Preference
+            android:defaultValue=""
+            android:icon="@drawable/ic_pref_show_log"
+            android:key="PREF_EMAIL_LAST_EMAIL_SENT"
+            android:title="@string/pref_title_email_last_email_sent" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
