@@ -23,10 +23,7 @@
         <item name="actionBarItemBackground">@drawable/netmon_list_selector_holo_light</item>
         <item name="selectableItemBackground">@drawable/netmon_list_selector_holo_light</item>
         <item name="actionBarWidgetTheme">@style/NetMonActionBarWidgetTheme</item>
-        <!--
-        Not sure why listChoiceIndicatorMultiple is only generated
-        in themes_netmon.xml for v11.  We need it for 2.x too, for SelectFieldsFragment -->
-        <item name="android:listChoiceIndicatorMultiple">@drawable/netmon_btn_check_holo_light</item>
+        <item name="android:preferenceCategoryStyle">@style/NetMonPreferenceCategoryStyle</item>
     </style>
 
     <!--
@@ -45,5 +42,10 @@
     <style name="NetMonActionBarWidgetTheme" parent="Base.Theme.AppCompat">
         <item name="android:dropDownListViewStyle">@style/ListViewNetMon</item>
     </style>
+    <style name="ToolBarTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:background">@android:color/black</item>
+    </style>
+
 
 </resources>

@@ -37,6 +37,7 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
+import ca.rmen.android.networkmonitor.app.prefs.PreferencesCompat;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
 import ca.rmen.android.networkmonitor.util.FileUtil;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -54,6 +55,7 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+        PreferencesCompat.setupActionBar(this);
         PreferenceManager.setDefaultValues(this, R.xml.speed_test_preferences, false);
         addPreferencesFromResource(R.xml.speed_test_preferences);
         mSpeedTestPrefs = SpeedTestPreferences.getInstance(this);

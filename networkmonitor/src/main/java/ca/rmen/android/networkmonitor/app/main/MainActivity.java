@@ -29,11 +29,13 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.view.Window;
 import android.widget.Toast;
 
 import org.jraf.android.backport.switchwidget.SwitchPreference;
@@ -42,6 +44,7 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
+import ca.rmen.android.networkmonitor.app.prefs.PreferencesCompat;
 import ca.rmen.android.networkmonitor.app.service.NetMonService;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -57,6 +60,7 @@ public class MainActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PreferencesCompat.setupActionBar(this);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         addPreferencesFromResource(R.xml.preferences);
         if (NetMonPreferences.getInstance(this).isServiceEnabled()) startService(new Intent(MainActivity.this, NetMonService.class));

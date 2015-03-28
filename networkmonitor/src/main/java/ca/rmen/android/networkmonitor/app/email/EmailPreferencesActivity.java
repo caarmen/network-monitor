@@ -44,6 +44,7 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailConfig;
+import ca.rmen.android.networkmonitor.app.prefs.PreferencesCompat;
 import ca.rmen.android.networkmonitor.util.Log;
 
 public class EmailPreferencesActivity extends PreferenceActivity { // NO_UCD (use default)
@@ -55,6 +56,7 @@ public class EmailPreferencesActivity extends PreferenceActivity { // NO_UCD (us
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+        PreferencesCompat.setupActionBar(this);
         PreferenceManager.setDefaultValues(this, R.xml.email_preferences, false);
         addPreferencesFromResource(R.xml.email_preferences);
         updatePreferenceSummary(EmailPreferences.PREF_EMAIL_REPORT_FORMATS, R.string.pref_summary_email_report_formats);

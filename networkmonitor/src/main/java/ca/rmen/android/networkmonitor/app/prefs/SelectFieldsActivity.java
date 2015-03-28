@@ -31,6 +31,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBarActivity;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,7 +44,7 @@ import ca.rmen.android.networkmonitor.app.prefs.SelectFieldsFragment.SelectField
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
-public class SelectFieldsActivity extends FragmentActivity implements SelectFieldsFragmentListener { // NO_UCD (use default)
+public class SelectFieldsActivity extends ActionBarActivity implements SelectFieldsFragmentListener { // NO_UCD (use default)
     private static final String TAG = SelectFieldsActivity.class.getSimpleName();
     private ListView mListView;
 

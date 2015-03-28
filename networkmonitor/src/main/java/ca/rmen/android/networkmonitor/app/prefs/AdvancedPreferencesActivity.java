@@ -60,6 +60,7 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PreferencesCompat.setupActionBar(this);
         NetMonPreferences prefs = NetMonPreferences.getInstance(this);
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         // The first time the user sees the notification preferences, we'll set the ringtone preference
