@@ -2,3 +2,10 @@ bin
 gen
 local.properties
 target/
+build/
+networkmonitor/build
+.idea
+.gradle
+*.iml
+networkmonitor/*.iml
+

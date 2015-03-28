@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Strings for importing a database -->
-    <string name="import_confirm_title">Confirmar la importación</string>
-    <string name="import_confirm_message">¿Borrar todos los datos y reemplazarlos con %s?</string>
-    <string name="import_successful">Importación de %s realizada correctamente</string>
-    <string name="import_failed">Error en la importación de %s.</string>
-</resources>
