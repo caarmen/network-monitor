@@ -37,4 +37,5 @@
     <string name="pref_title_email_password">Mot de passe</string>
     <string name="pref_title_email_last_email_sent">Dernier e-mail envoyé</string>
     <string name="pref_summary_email_last_email_sent">%s</string>
+    <string name="pref_value_email_report_format_db">Base de données</string>
 </resources>

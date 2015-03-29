@@ -132,13 +132,12 @@
     </string-array>
     
     <!-- Report formats -->
-    <!-- Report formats -->
     <string-array name="preferences_email_report_formats_labels" translatable="false">
         <item>CSV</item>
         <item>HTML</item>
         <item>Excel</item>
         <item>KML</item>
-        <item>Raw database</item>
+        <item>@string/pref_value_email_report_format_db</item>
     </string-array>
     <string-array name="preferences_email_report_formats_values" translatable="false">
         <item>csv</item>
