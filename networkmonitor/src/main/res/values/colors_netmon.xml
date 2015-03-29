@@ -3,5 +3,6 @@
     <color name="netmon_color">#fda63e</color>
     <color name="netmon_text_color">#ed7900</color>
     <color name="netmon_color_light">#ffffe1</color>
-    <color name="netmon_color_dark">#e09830</color>
+    <color name="netmon_color_dark">#ffe66000</color>
+    <color name="netmon_color_darker">#ff974c00</color>
 </resources>
