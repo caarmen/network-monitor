@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="UnusedResources">
     <string name="timestamp">Horodatage</string>
     <string name="network_type">Type de réseau</string>
     <string name="mobile_data_network_type">Type de réseau de données mobiles</string>
