@@ -24,25 +24,25 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
+import android.content.Intent;
 import android.preference.PreferenceActivity;
+import android.support.v4.app.NavUtils;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.util.Log;
 
 public class PreferencesCompat extends PreferenceActivity { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + PreferencesCompat.class.getSimpleName();
 
     public static void setupActionBar(final PreferenceActivity activity) {
-        setupActionBar(activity, false);
-    }
-
-    public static void setupActionBar(final PreferenceActivity activity, boolean isTopLevel) {
         activity.setContentView(R.layout.preference_layout);
         Toolbar actionbar = (Toolbar) activity.findViewById(R.id.actionbar);
         actionbar.setTitle(activity.getTitle());
-        if (isTopLevel) {
+        Intent parent = NavUtils.getParentActivityIntent(activity);
+        if (parent == null) {
             actionbar.setNavigationIcon(activity.getResources().getDrawable(activity.getApplicationInfo().icon));
         } else {
             actionbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
