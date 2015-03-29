@@ -16,16 +16,16 @@
     <style name="AppTheme" parent="AppBaseTheme">
 
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-        <item name="actionBarStyle">@style/NetMonActionBar</item>
-        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
-        <item name="colorPrimary">@color/netmon_color</item>
-        <item name="colorAccent">@color/netmon_text_color</item>
-        <item name="actionBarItemBackground">@drawable/netmon_list_selector_holo_light</item>
-        <item name="selectableItemBackground">@drawable/netmon_list_selector_holo_light</item>
         <item name="android:preferenceCategoryStyle">@style/NetMonPreferenceCategoryStyle</item>
         <item name="android:buttonStyle">@style/ButtonNetMon</item>
         <item name="android:imageButtonStyle">@style/ImageButtonNetMon</item>
+        <item name="actionBarStyle">@style/NetMonActionBar</item>
+        <item name="actionBarItemBackground">@drawable/netmon_list_selector_holo_light</item>
+        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+        <item name="colorAccent">@color/netmon_text_color</item>
+        <item name="colorPrimary">@color/netmon_color</item>
         <item name="listChoiceBackgroundIndicator">@drawable/netmon_list_selector_holo_light</item>
+        <item name="selectableItemBackground">@drawable/netmon_list_selector_holo_light</item>
     </style>
 
     <!--
@@ -39,13 +39,13 @@
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowDisablePreview">true</item>
         <item name="android:windowNoDisplay">true</item>
-        <item name="colorPrimary">@color/netmon_color</item>
         <item name="colorAccent">@color/netmon_text_color</item>
+        <item name="colorPrimary">@color/netmon_color</item>
     </style>
 
     <style name="ToolBarTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:background">@android:color/black</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
 

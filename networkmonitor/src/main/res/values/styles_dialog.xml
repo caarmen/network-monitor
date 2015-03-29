@@ -4,7 +4,6 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:buttonStyle">@style/ButtonNetMon</item>
         <item name="android:progressBarStyleHorizontal">@style/ProgressBarNetMon</item>
-        <item name="android:listViewStyle">@style/ListViewNetMon</item>
     </style>
     <!-- This style is referenced from code: DialogStyleHacks applies this style to dialogs. -->
     <style name="dialogStyle" parent="dialogStyleBase">
