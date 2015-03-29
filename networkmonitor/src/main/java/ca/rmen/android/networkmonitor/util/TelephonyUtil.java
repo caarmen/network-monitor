@@ -142,8 +142,7 @@ public class TelephonyUtil {
             Method method = cmClass.getDeclaredMethod("getMobileDataEnabled");
             method.setAccessible(true); // Make the method callable
             // get the setting for "mobile data"
-            boolean mobileDataEnabled = (Boolean) method.invoke(cm);
-            return mobileDataEnabled;
+            return (Boolean) method.invoke(cm);
         } catch (Exception e) {
             // Verbose warning instead of error, because we don't want this polluting the logs.
             Log.v(TAG, "Could not determine if we have mobile data enabled", e);

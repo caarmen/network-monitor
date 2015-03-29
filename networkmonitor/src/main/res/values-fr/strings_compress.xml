@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Strings for compressing a database -->
     <string name="compress_confirm_title">Compresser la base de données ?</string>
     <string name="compress_confirm_message">Fusionner les lignes consecutives avec données identiques.</string>

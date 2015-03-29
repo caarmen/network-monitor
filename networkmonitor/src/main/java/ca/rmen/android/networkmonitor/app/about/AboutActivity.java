@@ -26,7 +26,6 @@ package ca.rmen.android.networkmonitor.app.about;
 import java.io.File;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;

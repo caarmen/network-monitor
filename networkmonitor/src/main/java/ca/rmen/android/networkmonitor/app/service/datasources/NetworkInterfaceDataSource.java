@@ -92,8 +92,7 @@ class NetworkInterfaceDataSource implements NetMonDataSource {
     }
 
     private boolean isValidNetworkInterface(NetworkInterface intf) throws SocketException {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) return isValidNetworkInterfaceApi9(intf);
-        return true;
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD || isValidNetworkInterfaceApi9(intf);
     }
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)

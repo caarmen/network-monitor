@@ -50,17 +50,16 @@ public class NetMonPreferences {
 
     public enum CellIdFormat {
         DECIMAL, HEX, DECIMAL_HEX
-    };
+    }
 
     public enum LocationFetchingStrategy {
         SAVE_POWER, HIGH_ACCURACY
-    };
+    }
 
 
     static final String PREF_TEST_SERVER = "PREF_TEST_SERVER";
     public static final int PREF_MIN_POLLING_INTERVAL = 10000;
     public static final String PREF_UPDATE_INTERVAL = "PREF_UPDATE_INTERVAL";
-    public static final String PREF_UPDATE_INTERVAL_DEFAULT = "10000";
     public static final int PREF_UPDATE_ON_NETWORK_CHANGE = -1;
     public static final String PREF_SERVICE_ENABLED = "PREF_SERVICE_ENABLED";
     public static final boolean PREF_SERVICE_ENABLED_DEFAULT = false;
@@ -68,19 +67,21 @@ public class NetMonPreferences {
     public static final String PREF_SORT_ORDER = "PREF_SORT_ORDER";
     public static final String PREF_SORT_COLUMN_NAME = "PREF_SORT_COLUMN_NAME";
 
-    static final String PREF_WAKE_INTERVAL = "PREF_WAKE_INTERVAL";
     public static final String PREF_KML_EXPORT_COLUMN = "PREF_KML_EXPORT_COLUMN";
     public static final String PREF_FILTER_RECORD_COUNT = "PREF_FILTER_RECORD_COUNT";
     public static final String PREF_FILTER_RECORD_COUNT_DEFAULT = "100";
     public static final String PREF_DB_RECORD_COUNT = "PREF_DB_RECORD_COUNT";
-    public static final String PREF_DB_RECORD_COUNT_DEFAULT = "-1";
     public static final String PREF_ENABLE_CONNECTION_TEST = "PREF_ENABLE_CONNECTION_TEST";
-    public static final boolean PREF_ENABLE_CONNECTION_TEST_DEFAULT = true;
     public static final String PREF_CELL_ID_FORMAT = "PREF_CELL_ID_FORMAT";
     public static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
     public static final String PREF_LOCATION_FETCHING_STRATEGY = "PREF_LOCATION_FETCHING_STRATEGY";
     public static final String PREF_NOTIFICATION_RINGTONE = "PREF_NOTIFICATION_RINGTONE";
     public static final String PREF_NOTIFICATION_ENABLED = "PREF_NOTIFICATION_ENABLED";
+
+    private static final String PREF_WAKE_INTERVAL = "PREF_WAKE_INTERVAL";
+    private static final String PREF_UPDATE_INTERVAL_DEFAULT = "10000";
+    private static final String PREF_DB_RECORD_COUNT_DEFAULT = "-1";
+    private static final boolean PREF_ENABLE_CONNECTION_TEST_DEFAULT = true;
 
     private static final String PREF_TEST_SERVER_DEFAULT = "173.194.45.41";
     private static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
@@ -192,14 +193,6 @@ public class NetMonPreferences {
         return CellIdFormat.DECIMAL_HEX;
     }
 
-
-    /**
-     * @return the db column name which will be used for the placemark names in the KML export.
-     */
-    public String getKMLExportColumn() {
-        return mSharedPrefs.getString(NetMonPreferences.PREF_KML_EXPORT_COLUMN, NetMonColumns.SOCKET_CONNECTION_TEST);
-    }
-
     /**
      * @return the implementation of the {@link Scheduler} interface which schedules each logging of data.
      */
@@ -225,7 +218,7 @@ public class NetMonPreferences {
     }
 
     /**
-     * @return the list of columns to appear in the log view. This is only for display. All columns will be exported.
+     * set the list of columns to appear in the log view. This is only for display. All columns will be exported.
      */
     public void setSelectedColumns(List<String> selectedColumns) {
         String selectedColumnsString = TextUtils.join(",", selectedColumns);
@@ -280,7 +273,7 @@ public class NetMonPreferences {
     }
 
     /**
-     * @return the settings for how rows in the log view or table export formats should be sorted.
+     * set the settings for how rows in the log view or table export formats should be sorted.
      */
     public void setSortPreferences(SortPreferences sortPreferences) {
         Editor editor = mSharedPrefs.edit();
@@ -323,8 +316,7 @@ public class NetMonPreferences {
 
     private int getIntPreference(String key, String defaultValue) {
         String valueStr = mSharedPrefs.getString(key, defaultValue);
-        int valueInt = Integer.valueOf(valueStr);
-        return valueInt;
+        return Integer.valueOf(valueStr);
     }
 
     private void setIntPreference(String key, int value) {

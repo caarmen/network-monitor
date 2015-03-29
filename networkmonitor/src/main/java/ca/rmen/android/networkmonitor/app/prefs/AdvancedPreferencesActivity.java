@@ -182,8 +182,7 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
             // Ignore the value if it is empty.
             if (NetMonPreferences.PREF_TEST_SERVER.equals(preference.getKey())) {
                 String newValueStr = (String) newValue;
-                if (TextUtils.isEmpty(newValueStr)) return false;
-                return true;
+                return !TextUtils.isEmpty(newValueStr);
             }
             return true;
         }

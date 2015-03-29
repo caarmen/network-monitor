@@ -136,8 +136,7 @@ public class NetMonColumns implements BaseColumns {
      */
     public static String getColumnLabel(Context context, String columnName) {
         int columnLabelId = context.getResources().getIdentifier(columnName, "string", R.class.getPackage().getName());
-        String columnLabel = context.getString(columnLabelId);
-        return columnLabel;
+        return context.getString(columnLabelId);
     }
 
     /**

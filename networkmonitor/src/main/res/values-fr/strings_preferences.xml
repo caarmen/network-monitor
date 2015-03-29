@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Preferences in the main screen -->
     <string name="pref_category_monitoring_settings">PRÉFÉRENCES DES TESTS</string>
     <string name="pref_category_log_actions">FICHIER JOURNAL</string>

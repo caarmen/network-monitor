@@ -131,8 +131,7 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
             CharSequence value = ((EditTextPreference) pref).getText();
             String summary = getString(summaryResId, value);
             pref.setSummary(summary);
-        } else
-            return;
+        }
     }
 
     /**

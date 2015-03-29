@@ -80,7 +80,7 @@ public class NetworkChangeScheduler implements Scheduler {
      * If we've already run the task recently, schedule it
      * to run in a few seconds. Otherwise just run it right now.
      */
-    private Runnable mBufferedRunnable = new Runnable() {
+    private final Runnable mBufferedRunnable = new Runnable() {
 
         @Override
         public void run() {
@@ -107,7 +107,7 @@ public class NetworkChangeScheduler implements Scheduler {
 
     };
 
-    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 
 
         @Override

@@ -32,7 +32,7 @@ import java.util.Map;
 interface KMLStyle {
     enum IconColor {
         RED, YELLOW, GREEN
-    };
+    }
 
     /**
      * @return the icon color to use given the attributes for a given placemark

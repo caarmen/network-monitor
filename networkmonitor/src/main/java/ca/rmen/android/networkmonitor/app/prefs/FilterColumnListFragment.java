@@ -83,7 +83,7 @@ public class FilterColumnListFragment extends ListFragment {
 
     }
 
-    private LoaderCallbacks<Cursor> mLoaderCallbacks = new LoaderCallbacks<Cursor>() {
+    private final LoaderCallbacks<Cursor> mLoaderCallbacks = new LoaderCallbacks<Cursor>() {
         @Override
         public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
             Log.v(TAG, "onCreateLoader, loaderId = " + loaderId + ", bundle = " + bundle);
@@ -91,9 +91,8 @@ public class FilterColumnListFragment extends ListFragment {
             // We only want to show values for this column that appear with all the filters for the other columns being used at the same time.
             // So we build a query with a selection applying the filters on all the other columns.
             Selection selection = FilterPreferences.getSelectionClause(getActivity(), mColumnName);
-            CursorLoader loader = new CursorLoader(getActivity(), Uri.withAppendedPath(UniqueValuesColumns.CONTENT_URI, mColumnName), projection,
+            return new CursorLoader(getActivity(), Uri.withAppendedPath(UniqueValuesColumns.CONTENT_URI, mColumnName), projection,
                     selection.selectionString, selection.selectionArgs, mColumnName + " ASC");
-            return loader;
         }
 
         @Override

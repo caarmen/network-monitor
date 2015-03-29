@@ -86,7 +86,7 @@ class CellSignalStrengthDataSource implements NetMonDataSource {
         return values;
     }
 
-    private PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
+    private final PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
         @Override
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
             Log.v(TAG, "onSignalStrengthsChanged: " + signalStrength);

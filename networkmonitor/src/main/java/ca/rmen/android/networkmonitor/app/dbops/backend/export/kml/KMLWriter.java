@@ -50,7 +50,7 @@ class KMLWriter extends PrintWriter {
     /**
      * @param file the kml file to create
      * @param emptyLabel when the placemark name has no value, use this label instead of a blank value
-     * @fieldDisplayNames mapping between the names of the placemark fields and the user-friendly names to display for these fields
+     * @param fieldDisplayNames mapping between the names of the placemark fields and the user-friendly names to display for these fields
      */
     public KMLWriter(File file, String title, KMLStyle kmlStyle, String emptyLabel, Map<String, String> fieldDisplayNames) throws FileNotFoundException {
         super(file);
@@ -74,7 +74,7 @@ class KMLWriter extends PrintWriter {
     /**
      * Write a single Placemark
      * 
-     * @values map of field name to value
+     * @param values map of field name to value
      */
     public void writePlacemark(String name, Map<String, String> values, String latitude, String longitude, long timestamp) {
         println("    <Placemark>");

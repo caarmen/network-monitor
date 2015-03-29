@@ -58,7 +58,7 @@ class ConnectionTesterDataSource implements NetMonDataSource {
 
     private enum NetworkTestResult {
         PASS, FAIL, SLOW
-    };
+    }
 
     private static final int PORT = 80;
     private static final int DURATION_SLOW = 5000;
@@ -91,7 +91,7 @@ class ConnectionTesterDataSource implements NetMonDataSource {
     }
 
     /**
-     * @param maxTimeout the maximum total time it should take to perform all connection tests.
+     * @param timeout the maximum total time it should take to perform all connection tests.
      */
     private void setTimeout(int timeout) {
         Log.v(TAG, "setTimeout " + timeout);
@@ -127,8 +127,6 @@ class ConnectionTesterDataSource implements NetMonDataSource {
     /**
      * Try to open a connection to an HTTP server, and execute a simple GET request. If we can read a response to the GET request, we consider that the network
      * is up. This test uses a basic socket connection.
-     *
-     * @return
      *
      * @return {@link NetworkTestResult#PASS} if we were able to read a response to a GET request quickly, {@link NetworkTestResult#FAIL} if any error occurred
      *         trying to execute the GET, or {@link NetworkTestResult#SLOW} if we were able to read a response, but it took too long.
@@ -189,8 +187,6 @@ class ConnectionTesterDataSource implements NetMonDataSource {
      * Try to open a connection to an HTTP server, and execute a simple GET request. If we can read a response to the GET request, we consider that the network
      * is up. This test uses an HttpURLConnection.
      *
-     * @return
-     *
      * @return {@link NetworkTestResult#PASS} if we were able to read a response to a GET request quickly, {@link NetworkTestResult#FAIL} if any error occurred
      *         trying to execute the GET, or {@link NetworkTestResult#SLOW} if we were able to read a response, but it took too long.
      */
@@ -233,7 +229,7 @@ class ConnectionTesterDataSource implements NetMonDataSource {
         }
     }
 
-    private OnSharedPreferenceChangeListener mPrefListener = new OnSharedPreferenceChangeListener() {
+    private final OnSharedPreferenceChangeListener mPrefListener = new OnSharedPreferenceChangeListener() {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

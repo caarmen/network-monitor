@@ -86,8 +86,9 @@ public class DBPurge implements Task<Integer> {
                 if (cursor.moveToLast()) {
                     oldestIdToKeep = cursor.getInt(0);
                 }
-            } finally {}
-            cursor.close();
+            } finally {
+                cursor.close();
+            }
         }
 
         if (oldestIdToKeep > 0) {

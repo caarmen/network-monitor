@@ -25,7 +25,6 @@
 package ca.rmen.android.networkmonitor.app.dialog;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 

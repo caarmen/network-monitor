@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- Speed test preferences -->
     <string name="pref_category_speed_test_settings">PRUEBA DE VELOCIDAD</string>

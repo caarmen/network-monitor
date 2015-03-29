@@ -70,8 +70,7 @@ public class NetMonNotification {
                 PendingIntent.getBroadcast(context, 0, new Intent(ACTION_DISABLE), PendingIntent.FLAG_CANCEL_CURRENT));
         builder.addAction(R.drawable.ic_action_logs, context.getString(R.string.service_notification_action_logs),
                 PendingIntent.getActivity(context, 0, new Intent(context, LogActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
-        Notification notification = builder.build();
-        return notification;
+        return builder.build();
     }
 
     static void dismissNotifications(Context context) {

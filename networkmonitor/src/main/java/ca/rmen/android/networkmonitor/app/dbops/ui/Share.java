@@ -24,7 +24,6 @@
 package ca.rmen.android.networkmonitor.app.dbops.ui;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import android.app.Activity;
@@ -95,12 +94,8 @@ public class Share {
 
             @Override
             public void onPreferenceValueSelected(String value) {
-                try {
-                    KMLExport kmlExport = new KMLExport(activity, value);
-                    shareFile(activity, kmlExport);
-                } catch (FileNotFoundException e) {
-                    Log.w(TAG, "Error sharing file: " + e.getMessage(), e);
-                }
+                KMLExport kmlExport = new KMLExport(activity, value);
+                shareFile(activity, kmlExport);
             }
 
             @Override

@@ -29,13 +29,11 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.view.Window;
 import android.widget.Toast;
 
 import org.jraf.android.backport.switchwidget.SwitchPreference;

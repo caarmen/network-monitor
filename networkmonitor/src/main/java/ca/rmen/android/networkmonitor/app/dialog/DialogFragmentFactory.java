@@ -49,7 +49,6 @@ public class DialogFragmentFactory extends DialogFragment {
     static final String EXTRA_ACTION_ID = "action_id";
     static final String EXTRA_ICON_ID = "icon_id";
     static final String EXTRA_EXTRAS = "extras";
-    static final String EXTRA_PROGRESS_DIALOG_STYLE = "progress_dialog_style";
     static final String EXTRA_SELECTED_ITEM = "selected_item";
     static final String EXTRA_CHOICES = "choices";
 
@@ -128,7 +127,6 @@ public class DialogFragmentFactory extends DialogFragment {
         Log.v(TAG, "showProgressDialog: message = " + message);
         Bundle arguments = new Bundle(2);
         arguments.putString(EXTRA_MESSAGE, message);
-        arguments.putInt(EXTRA_PROGRESS_DIALOG_STYLE, progressDialogStyle);
         ProgressDialogFragment result = new ProgressDialogFragment();
         result.setArguments(arguments);
         result.setCancelable(false);

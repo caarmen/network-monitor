@@ -26,6 +26,7 @@ package ca.rmen.android.networkmonitor.app.email;
 import java.util.HashSet;
 import java.util.Set;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -35,12 +36,13 @@ import android.text.TextUtils;
 /**
  * Convenience methods for getting/setting shared preferences.
  */
+@TargetApi(11)
 public class EmailPreferences {
 
 
     enum EmailSecurity {
         NONE, SSL, TLS
-    };
+    }
 
     static class EmailConfig {
         final Set<String> reportFormats;
@@ -111,7 +113,7 @@ public class EmailPreferences {
     }
 
     /**
-     * @return set the interval, in milliseconds, between e-mailing reports.
+     * set the interval, in milliseconds, between e-mailing reports.
      */
     public void setEmailReportInterval(int interval) {
         Editor editor = mSharedPrefs.edit();
@@ -142,8 +144,7 @@ public class EmailPreferences {
 
     private int getIntPreference(String key, String defaultValue) {
         String valueStr = mSharedPrefs.getString(key, defaultValue);
-        int valueInt = Integer.valueOf(valueStr);
-        return valueInt;
+        return Integer.valueOf(valueStr);
     }
 
 }

@@ -43,7 +43,6 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class ExecutorServiceScheduler implements Scheduler {
     private static final String TAG = ExecutorServiceScheduler.class.getSimpleName();
 
-    private Context mContext;
     private ScheduledExecutorService mExecutorService;
     private Future<?> mFuture;
     private WakeLock mWakeLock = null;
@@ -52,10 +51,9 @@ public class ExecutorServiceScheduler implements Scheduler {
     @Override
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
-        mContext = context;
         mExecutorService = Executors.newSingleThreadScheduledExecutor();
         // Prevent the system from closing the connection after 30 minutes of screen off.
-        PowerManager powerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
     }
 
@@ -84,7 +82,7 @@ public class ExecutorServiceScheduler implements Scheduler {
         if (mExecutorService != null) mExecutorService.shutdownNow();
     }
 
-    private Runnable mRunnable = new Runnable() {
+    private final Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
             try {
@@ -92,7 +90,7 @@ public class ExecutorServiceScheduler implements Scheduler {
                 mRunnableImpl.run();
             } catch (Throwable t) {
                 Log.v(TAG, "Error executing task: " + t.getMessage(), t);
-            } finally {}
+            }
         }
     };
 }

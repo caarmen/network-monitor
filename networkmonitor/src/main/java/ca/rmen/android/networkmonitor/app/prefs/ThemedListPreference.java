@@ -26,8 +26,6 @@ package ca.rmen.android.networkmonitor.app.prefs;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Build;
-import android.os.Bundle;
-import android.preference.ListPreference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 

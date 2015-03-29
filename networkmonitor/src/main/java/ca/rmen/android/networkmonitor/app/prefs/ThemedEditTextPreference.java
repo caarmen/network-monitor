@@ -25,8 +25,6 @@ package ca.rmen.android.networkmonitor.app.prefs;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.os.Bundle;
-import android.preference.EditTextPreference;
 import android.util.AttributeSet;
 
 import com.afollestad.materialdialogs.prefs.MaterialEditTextPreference;

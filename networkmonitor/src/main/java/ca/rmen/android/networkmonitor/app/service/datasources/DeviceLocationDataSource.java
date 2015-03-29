@@ -97,7 +97,7 @@ class DeviceLocationDataSource implements NetMonDataSource {
         mDeviceLocationDataSourceImpl.onCreate(mContext);
     }
 
-    private ConnectionCallbacks mConnectionCallbacks = new ConnectionCallbacks() {
+    private final ConnectionCallbacks mConnectionCallbacks = new ConnectionCallbacks() {
         @Override
         public void onConnected(Bundle bundle) {
             Log.v(TAG, "onConnected: " + bundle);
@@ -111,7 +111,7 @@ class DeviceLocationDataSource implements NetMonDataSource {
         }
     };
 
-    private OnConnectionFailedListener mConnectionFailedListener = new OnConnectionFailedListener() {
+    private final OnConnectionFailedListener mConnectionFailedListener = new OnConnectionFailedListener() {
         @Override
         public void onConnectionFailed(ConnectionResult result) {
             Log.v(TAG, "onConnectionFailed: " + result);

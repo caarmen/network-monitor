@@ -25,7 +25,6 @@ package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,7 +43,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class DBExport extends FileExport {
     private static final String TAG = Constants.TAG + DBExport.class.getSimpleName();
 
-    public DBExport(Context context) throws FileNotFoundException {
+    public DBExport(Context context) {
         super(context, new File(context.getExternalFilesDir(null), NetMonDatabase.DATABASE_NAME));
     }
 

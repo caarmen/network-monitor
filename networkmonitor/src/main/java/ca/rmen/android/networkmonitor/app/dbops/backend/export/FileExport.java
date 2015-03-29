@@ -24,7 +24,6 @@
 package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import android.content.Context;
 
@@ -43,7 +42,7 @@ public abstract class FileExport implements Task<File> {
     protected final Context mContext;
     protected final File mFile;
 
-    protected FileExport(Context context, File file) throws FileNotFoundException {
+    protected FileExport(Context context, File file) {
         Log.v(TAG, "FileExport: file " + file);
         mContext = context;
         mFile = file;

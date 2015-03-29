@@ -113,7 +113,7 @@ public abstract class DBOpAsyncTask<T> extends AsyncTask<Void, Integer, T> {
         @Override
         public void onProgress(final int progress, final int max) {
             Log.v(TAG, "onProgress: " + progress + "/" + max);
-            publishProgress(new Integer[] { progress, max });
+            publishProgress(progress, max);
         }
     };
 

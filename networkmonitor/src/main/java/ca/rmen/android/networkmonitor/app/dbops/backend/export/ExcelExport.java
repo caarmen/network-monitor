@@ -94,7 +94,7 @@ public class ExcelExport extends TableFileExport {
 
 
     @Override
-    void writeRow(int rowNumber, String[] cellValues) throws IOException {
+    void writeRow(int rowNumber, String[] cellValues) {
         mSheet.insertRow(rowNumber + 1);
         for (int i = 0; i < cellValues.length; i++) {
             CellFormat cellFormat = null;

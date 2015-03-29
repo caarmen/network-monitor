@@ -48,8 +48,8 @@ public class SpeedTestPreferences {
     static final String PREF_SPEED_TEST_UPLOAD_SERVER = "PREF_SPEED_TEST_UPLOAD_SERVER";
     static final String PREF_SPEED_TEST_UPLOAD_PORT = "PREF_SPEED_TEST_UPLOAD_PORT";
     static final String PREF_SPEED_TEST_UPLOAD_USER = "PREF_SPEED_TEST_UPLOAD_USER";
-    static final String PREF_SPEED_TEST_UPLOAD_PASSWORD = "PREF_SPEED_TEST_UPLOAD_PASSWORD";
     static final String PREF_SPEED_TEST_UPLOAD_PATH = "PREF_SPEED_TEST_UPLOAD_PATH";
+    private static final String PREF_SPEED_TEST_UPLOAD_PASSWORD = "PREF_SPEED_TEST_UPLOAD_PASSWORD";
     private static final String PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT = "PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT";
 
     private static final String PREF_SPEED_TEST_DEFAULT_UPLOAD_PORT = "21";
@@ -107,8 +107,7 @@ public class SpeedTestPreferences {
 
     private int getIntPreference(String key, String defaultValue) {
         String valueStr = mSharedPrefs.getString(key, defaultValue);
-        int valueInt = Integer.valueOf(valueStr);
-        return valueInt;
+        return Integer.valueOf(valueStr);
     }
 
 }

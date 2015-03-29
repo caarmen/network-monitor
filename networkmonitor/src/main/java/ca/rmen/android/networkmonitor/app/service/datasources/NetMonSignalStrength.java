@@ -232,8 +232,7 @@ class NetMonSignalStrength {
         }
         try {
             Method methodGetLteLevel = SignalStrength.class.getMethod("getLteLevel");
-            int result = (Integer) methodGetLteLevel.invoke(signalStrength);
-            return result;
+            return (Integer) methodGetLteLevel.invoke(signalStrength);
         } catch (Throwable t) {
             Log.v(TAG, "getLteLevel failed: " + t.getMessage(), t);
             return SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
@@ -250,8 +249,7 @@ class NetMonSignalStrength {
         // accessible in any public, non-hidden methods.
         try {
             Method methodGetLteDbm = SignalStrength.class.getMethod("getLteDbm");
-            int result = (Integer) methodGetLteDbm.invoke(signalStrength);
-            return result;
+            return (Integer) methodGetLteDbm.invoke(signalStrength);
         } catch (Throwable t) {
             Log.v(TAG, "getLteDbm failed: " + t.getMessage(), t);
             return SIGNAL_STRENGTH_NONE_OR_UNKNOWN;

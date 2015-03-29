@@ -128,7 +128,7 @@ public class NetMonService extends Service {
         }
     }
 
-    private Runnable mTask = new Runnable() {
+    private final Runnable mTask = new Runnable() {
 
         @Override
         public void run() {
@@ -145,6 +145,7 @@ public class NetMonService extends Service {
                 Log.d(TAG, "wakeInterval = " + wakeInterval + ", lastWakeUp = " + mLastWakeUp + ", timeSinceLastWake = " + timeSinceLastWake);
                 if (wakeInterval > 0 && timeSinceLastWake > wakeInterval) {
                     Log.d(TAG, "acquiring lock");
+                    //noinspection deprecation
                     wakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, TAG);
                     wakeLock.acquire();
                     mLastWakeUp = now;
@@ -171,7 +172,7 @@ public class NetMonService extends Service {
         }
     };
 
-    private OnSharedPreferenceChangeListener mSharedPreferenceListener = new OnSharedPreferenceChangeListener() {
+    private final OnSharedPreferenceChangeListener mSharedPreferenceListener = new OnSharedPreferenceChangeListener() {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

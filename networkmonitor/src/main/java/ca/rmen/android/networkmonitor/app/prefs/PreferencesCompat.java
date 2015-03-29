@@ -34,10 +34,11 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.util.Log;
 
-public class PreferencesCompat extends PreferenceActivity { // NO_UCD (use default)
+public class PreferencesCompat {
     private static final String TAG = Constants.TAG + PreferencesCompat.class.getSimpleName();
 
     public static void setupActionBar(final PreferenceActivity activity) {
+        Log.v(TAG, "setupActionBar " + activity);
         activity.setContentView(R.layout.preference_layout);
         Toolbar actionbar = (Toolbar) activity.findViewById(R.id.actionbar);
         actionbar.setTitle(activity.getTitle());

@@ -92,7 +92,7 @@ public class FilterPreferences {
             }
         }
         String selectionString = TextUtils.join(" AND ", selectionStrings);
-        Selection result = new Selection(selectionString.toString(), selectionArgs.toArray(new String[selectionArgs.size()]));
+        Selection result = new Selection(selectionString, selectionArgs.toArray(new String[selectionArgs.size()]));
         Log.v(TAG, "returning " + result);
         return result;
     }
@@ -110,7 +110,8 @@ public class FilterPreferences {
             selectionString.append("(");
             // If we support empty value, add the special condition for that.
             if (values.contains(EMPTY)) {
-                selectionString.append(columnName + " IS NULL OR " + columnName + " = ''");
+                selectionString.append(columnName).append(" IS NULL OR ")
+                        .append(columnName).append(" = ''");
                 // If we only have the empty value, we're done.
                 if (values.size() == 1) {
                     selectionString.append(")\n");
@@ -120,7 +121,7 @@ public class FilterPreferences {
             }
 
             // Add each value (other than the special empty value).
-            selectionString.append(columnName + " in (");
+            selectionString.append(columnName).append(" in (");
             for (int i = 0; i < values.size(); i++) {
                 if (values.get(i).equals(EMPTY)) continue;
                 selectionString.append("?");

@@ -24,7 +24,6 @@
 package ca.rmen.android.networkmonitor.app.dbops.backend.imp0rt;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -93,7 +92,7 @@ public class DBImport implements Task<Boolean> {
      * In a single database transaction, delete all the cells from the current database, read the data from the given importDb file, create a batch of
      * corresponding insert operations, and execute the inserts.
      */
-    private void importDB(File importDb, ProgressListener listener) throws RemoteException, OperationApplicationException, FileNotFoundException {
+    private void importDB(File importDb, ProgressListener listener) throws RemoteException, OperationApplicationException {
         Log.v(TAG, "importDB from " + importDb);
         SQLiteDatabase dbImport = SQLiteDatabase.openDatabase(importDb.getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY);
         ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();

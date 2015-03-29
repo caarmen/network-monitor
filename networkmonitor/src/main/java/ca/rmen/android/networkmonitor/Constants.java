@@ -35,5 +35,5 @@ public class Constants {
 
     public static enum ConnectionType {
         GSM, CDMA, WIFI
-    };
+    }
 }

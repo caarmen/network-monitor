@@ -250,7 +250,7 @@ public class ReportEmailer {
      * @param fileType one of the file types the user selected in the preference
      * @return the BodyPart containing the exported file of this type.
      */
-    private BodyPart createBodyPart(String fileType) throws MessagingException, FileNotFoundException, UnsupportedEncodingException {
+    private BodyPart createBodyPart(String fileType) throws MessagingException, FileNotFoundException {
         Log.v(TAG, "createBodyPart: fileType = " + fileType);
         // Get the FileExport instance which can export mContext file type.
         final FileExport fileExport;

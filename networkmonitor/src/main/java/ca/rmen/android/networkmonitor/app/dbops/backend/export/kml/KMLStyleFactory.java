@@ -60,7 +60,7 @@ class KMLStyleFactory {
 
     private static class KMLStyleDefault implements KMLStyle {
         // The name of the field which is used for the label/name of a placemark.
-        protected final String mPlacemarkNameField;
+        final String mPlacemarkNameField;
 
         /**
          * @param placemarkNameField the name of the field which determines the name/label of the placemark. In most cases the value of this field will also
@@ -82,7 +82,7 @@ class KMLStyleFactory {
         /**
          * @return the icon color to use given the value for the relevant attribute of a given placemark.
          */
-        protected IconColor getColor(String value) {
+        IconColor getColor(String value) {
             if (TextUtils.isEmpty(value)) return IconColor.YELLOW;
             return IconColor.GREEN;
         }

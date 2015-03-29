@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <string name="timestamp">Horodatage</string>
     <string name="network_type">Type de réseau</string>
@@ -20,7 +20,7 @@
     <string name="wifi_bssid">BSSID WiFi</string>
     <string name="wifi_frequency">Fréquence WiFi</string>
     <string name="wifi_channel">Canal WiFi</string>
-    <string name="wifi_signal_strength">Force du signal WiFi (0-4)</string>
+    <string name="wifi_signal_strength">Force du signal WiFi (0&#8211;4)</string>
     <string name="wifi_rssi">Force du signal WiFi (RSSI)</string>
     <string name="sim_operator">Opérateur de la carte SIM</string>
     <string name="sim_mcc">MCC SIM</string>
@@ -32,7 +32,7 @@
     <string name="device_latitude">Latitude de l\'appareil</string>
     <string name="device_longitude">Longitude de l\'appareil</string>
     <string name="device_position_accuracy">Précision de la position de l\'appareil (m)</string>
-    <string name="cell_signal_strength">Force du signal mobile (0-4)</string>
+    <string name="cell_signal_strength">Force du signal mobile (0&#8211;4)</string>
     <string name="cell_signal_strength_dbm">Force du signal mobile (dBm)</string>
     <string name="cell_asu_level">Niveau ASU</string>
     <string name="cdma_cell_base_station_id">Id de la station de base (CDMA)</string>

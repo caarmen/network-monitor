@@ -37,7 +37,7 @@ import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
- * @return the SSID, BSSID, signal strength, and RSSI of the currently connected WiFi network, if any.
+ * retrieves the SSID, BSSID, signal strength, and RSSI of the currently connected WiFi network, if any.
  */
 class WiFiDataSource implements NetMonDataSource {
 

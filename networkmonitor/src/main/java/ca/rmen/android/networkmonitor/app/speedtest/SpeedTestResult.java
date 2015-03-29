@@ -32,10 +32,10 @@ public class SpeedTestResult {
         SUCCESS, INVALID_FILE, FAILURE, AUTH_FAILURE, UNKNOWN
     }
 
-    public final long totalBytes;
     public final long fileBytes;
-    public final long transferTime;
     public final SpeedTestStatus status;
+    private final long totalBytes;
+    private final long transferTime;
 
     /**
      * @param totalBytes the total bytes transferred (either received or sent) during the time the file was being transferred.

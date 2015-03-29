@@ -64,7 +64,7 @@ public class KMLExport extends FileExport {
     /**
      * @param placemarkNameColumn the column whose value will be exported to the KML placemark names.
      */
-    public KMLExport(Context context, String placemarkNameColumn) throws FileNotFoundException {
+    public KMLExport(Context context, String placemarkNameColumn) {
         super(context, new File(context.getExternalFilesDir(null), KML_FILE_PREFIX + placemarkNameColumn + ".kml"));
         mPlacemarkNameColumn = placemarkNameColumn;
     }

@@ -38,7 +38,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -168,8 +167,7 @@ public class LogActivity extends ActionBarActivity implements DialogButtonListen
                     // Export the DB to the HTML file.
                     HTMLExport htmlExport = new HTMLExport(LogActivity.this, false);
                     int recordCount = NetMonPreferences.getInstance(LogActivity.this).getFilterRecordCount();
-                    File file = htmlExport.export(recordCount, null);
-                    return file;
+                    return htmlExport.export(recordCount, null);
                 } catch (IOException e) {
                     Log.e(TAG, "doInBackground Could not load data into html file: " + e.getMessage(), e);
                 }

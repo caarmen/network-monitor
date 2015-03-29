@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Strings for exporting the log file -->
     <string name="export_subject_send_log">Fichier journal du Network Monitor</string>
     <string name="export_error_sdcard_unmounted">Impossible de créer le fichier journal.  Vérifiez que la carte SD soit disponible.</string>

@@ -24,7 +24,6 @@
 package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -50,7 +49,7 @@ abstract class TableFileExport extends FileExport {
     private static final String TAG = Constants.TAG + TableFileExport.class.getSimpleName();
     private final FormatterStyle mFormatterStyle;
 
-    TableFileExport(Context context, File file, FormatterStyle formatterStyle) throws FileNotFoundException {
+    TableFileExport(Context context, File file, FormatterStyle formatterStyle) {
         super(context, file);
         mFormatterStyle = formatterStyle;
     }
@@ -64,7 +63,7 @@ abstract class TableFileExport extends FileExport {
     /**
      * Write a single row to the file.
      */
-    abstract void writeRow(int rowNumber, String[] cellValues) throws IOException;
+    abstract void writeRow(int rowNumber, String[] cellValues);
 
     /**
      * Write the footer (if any) and do any cleanup after the export.

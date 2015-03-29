@@ -46,7 +46,7 @@ import com.google.android.gms.location.LocationServices;
  */
 class GmsDeviceLocationDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + GmsDeviceLocationDataSource.class.getSimpleName();
-    private GoogleApiClient mLocationClient;
+    private final GoogleApiClient mLocationClient;
     private Location mMostRecentLocation;
     private Context mContext;
 
@@ -120,7 +120,7 @@ class GmsDeviceLocationDataSource implements NetMonDataSource {
         LocationServices.FusedLocationApi.requestLocationUpdates(mLocationClient, request, mGmsLocationListener);
     }
 
-    private LocationListener mGmsLocationListener = new LocationListener() {
+    private final LocationListener mGmsLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             Log.v(TAG, "onLocationChanged, location = " + location);
@@ -128,7 +128,7 @@ class GmsDeviceLocationDataSource implements NetMonDataSource {
         }
     };
 
-    private OnSharedPreferenceChangeListener mPreferenceListener = new OnSharedPreferenceChangeListener() {
+    private final OnSharedPreferenceChangeListener mPreferenceListener = new OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             Log.v(TAG, "onSharedPreferenceChanged: key = " + key);

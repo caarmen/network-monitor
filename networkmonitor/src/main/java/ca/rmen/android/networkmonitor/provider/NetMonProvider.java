@@ -203,8 +203,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     }
 
     /**
-     * Perform all operations in a single transaction and notify all relevant URIs at the end. The {@link MemberStatsColumns#CONTENT_URI} uri is always notified
-     * for a successful transaction.
+     * Perform all operations in a single transaction and notify all relevant URIs at the end.
      *
      * @see android.content.ContentProvider#applyBatch(java.util.ArrayList)
      */
@@ -281,9 +280,6 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
 
     /**
      * Log the query of the given cursor.
-     *
-     * @param cursor
-     * @param selectionArgs
      */
     private void logCursor(Cursor cursor, String[] selectionArgs) {
         try {

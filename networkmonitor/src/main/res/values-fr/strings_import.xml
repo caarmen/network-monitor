@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Strings for importing a database -->
     <string name="import_confirm_title">Confirmer l\'import</string>
     <string name="import_confirm_message">Supprimer toutes les données et les remplacer par %s?</string>

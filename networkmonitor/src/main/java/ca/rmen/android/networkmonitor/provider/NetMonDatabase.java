@@ -268,7 +268,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     /**
      * @return a query to retrieve the stats of the connection test results.
      */
-    private static final String buildConnectionTestQuery() {
+    private static String buildConnectionTestQuery() {
         String gsmQuery = buildConnectionTestSubQuery(ConnectionType.GSM, NetMonColumns.GSM_CELL_LAC, NetMonColumns.GSM_SHORT_CELL_ID,
                 NetMonColumns.GSM_FULL_CELL_ID, NetMonColumns.EXTRA_INFO, NetMonColumns.DATA_STATE + "='" + Constants.DATA_STATE_CONNECTED + "'");
         String cdmaQuery = buildConnectionTestSubQuery(ConnectionType.CDMA, NetMonColumns.CDMA_CELL_BASE_STATION_ID, NetMonColumns.CDMA_CELL_NETWORK_ID,
@@ -281,7 +281,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     /**
      * @return a query to retrieve the stats of the connection test results, for a particular connection type (gsm, cdma, or wifi).
      */
-    private static final String buildConnectionTestSubQuery(ConnectionType type, String id1Column, String id2Column, String id3Column, String labelColumn,
+    private static String buildConnectionTestSubQuery(ConnectionType type, String id1Column, String id2Column, String id3Column, String labelColumn,
             String selection) {
         // @formatter:off
         return "SELECT '" + type + "' as " + ConnectionTestStatsColumns.TYPE + ","
@@ -341,12 +341,10 @@ public class NetMonDatabase extends SQLiteOpenHelper {
                     cursor.close();
                 }
                 if (mccMncUpdates.size() > 0) {
-                    try {
-                        Log.v(TAG, "Will update MCC/MNC columns for " + mccMncUpdates.size() + " records");
-                        for (long id : mccMncUpdates.keySet())
-                            db.update(NetMonColumns.TABLE_NAME, mccMncUpdates.get(id), NetMonColumns._ID + "=?", new String[] { String.valueOf(id) });
-                        Log.v(TAG, "MCC/MNC update complete");
-                    } finally {}
+                    Log.v(TAG, "Will update MCC/MNC columns for " + mccMncUpdates.size() + " records");
+                    for (long id : mccMncUpdates.keySet())
+                        db.update(NetMonColumns.TABLE_NAME, mccMncUpdates.get(id), NetMonColumns._ID + "=?", new String[] { String.valueOf(id) });
+                    Log.v(TAG, "MCC/MNC update complete");
                 } else {
                     Log.v(TAG, "No MCC/MNC records to update");
                 }

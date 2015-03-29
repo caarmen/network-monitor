@@ -69,23 +69,4 @@ public class IoUtil {
         return res;
     }
 
-    /**
-     * Fully reads the given {@link InputStream} into a {@link String}.<br/>
-     * The encoding inside the {@link InputStream} is assumed to be {@code UTF-8}.<br/>
-     * Note: the given {@link InputStream} won't be closed.
-     * 
-     * @param in The {@link InputStream} to read.
-     * @return a String containing the contents of the given {@link InputStream}.
-     * @throws IOException If a error occurs while reading.
-     */
-    public static String readFully(InputStream in) throws IOException { // NO_UCD (unused code)
-        StringBuilder stringBuilder = new StringBuilder();
-        byte[] buffer = new byte[BUFFER_SIZE];
-        int read;
-        while ((read = in.read(buffer)) != -1) {
-            stringBuilder.append(new String(buffer, 0, read, "utf-8"));
-        }
-        return stringBuilder.toString();
-    }
-
 }

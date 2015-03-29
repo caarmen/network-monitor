@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources>
 
     <string-array name="empty_array"/>
     <!-- Update interval -->
@@ -18,7 +18,7 @@
         <item>@string/pref_value_interval_30_minutes</item>
         <item>@string/pref_value_interval_1_hour</item>
     </string-array>
-    <string-array name="preferences_updateInterval_values">
+    <string-array name="preferences_updateInterval_values" translatable="false">
         <item>-1</item>
         <item>500</item>
         <item>1000</item>
@@ -48,7 +48,7 @@
         <item>@string/pref_value_interval_25_minutes</item>
         <item>@string/pref_value_interval_55_minutes</item>
     </string-array>
-    <string-array name="preferences_wake_interval_values">
+    <string-array name="preferences_wake_interval_values" translatable="false">
         <item>0</item>
         <item>300000</item>
         <item>600000</item>
@@ -59,7 +59,7 @@
         <item>@string/pref_value_executor_service_scheduler</item>
         <item>@string/pref_value_alarm_manager_scheduler</item>
     </string-array>
-    <string-array name="preferences_scheduler_values">_
+    <string-array name="preferences_scheduler_values" translatable="false">
         <item>ExecutorServiceScheduler</item>
         <item>AlarmManagerScheduler</item>
     </string-array>
@@ -71,7 +71,7 @@
         <item>@string/pref_value_filter_record_count_10000</item>
         <item>@string/pref_value_filter_record_count_all</item>
     </string-array>
-    <string-array name="preferences_filter_record_count_values">
+    <string-array name="preferences_filter_record_count_values" translatable="false">
         <item>100</item>
         <item>250</item>
         <item>500</item>
@@ -84,7 +84,7 @@
         <item>@string/pref_value_cell_id_format_hex</item>
         <item>@string/pref_value_cell_id_format_decimal_hex</item>
     </string-array>
-    <string-array name="preferences_cell_id_format_values">
+    <string-array name="preferences_cell_id_format_values" translatable="false">
         <item>decimal</item>
         <item>hex</item>
         <item>decimal_hex</item>
@@ -109,7 +109,7 @@
         <item>@string/pref_value_email_report_interval_6_hours</item>
         <item>@string/pref_value_email_report_interval_1_day</item>
     </string-array>
-    <string-array name="preferences_email_report_interval_values">
+    <string-array name="preferences_email_report_interval_values" translatable="false">
         <item>0</item>
         <item>1</item>
         <item>10</item>
@@ -125,7 +125,7 @@
         <item>@string/pref_value_email_security_ssl</item>
         <item>@string/pref_value_email_security_tls</item>
     </string-array>
-    <string-array name="preferences_email_security_values">
+    <string-array name="preferences_email_security_values" translatable="false">
         <item>NONE</item>
         <item>SSL</item>
         <item>TLS</item>
@@ -140,7 +140,7 @@
         <item>KML</item>
         <item>Raw database</item>
     </string-array>
-    <string-array name="preferences_email_report_formats_values">
+    <string-array name="preferences_email_report_formats_values" translatable="false">
         <item>csv</item>
         <item>html</item>
         <item>excel</item>

@@ -117,11 +117,12 @@ class StandardDeviceLocationDataSource implements NetMonDataSource {
     private boolean isBetter(Location location1, Location location2) {
         if (location1 == null && location2 == null) return false;
         if (location1 == null && location2 != null) return true;
+        //noinspection SimplifiableIfStatement
         if (location1 != null && location2 == null) return false;
         return location2.getTime() > location1.getTime();
     }
 
-    private LocationListener mLocationListener = new LocationListener() {
+    private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
             extras.isEmpty();
@@ -148,7 +149,7 @@ class StandardDeviceLocationDataSource implements NetMonDataSource {
         }
     };
 
-    private OnSharedPreferenceChangeListener mPreferenceListener = new OnSharedPreferenceChangeListener() {
+    private final OnSharedPreferenceChangeListener mPreferenceListener = new OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             Log.v(TAG, "onSharedPreferenceChanged: key = " + key);

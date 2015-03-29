@@ -55,10 +55,6 @@ public class SummaryExport {
         final String label;
         final String id1, id2, id3;
 
-        /**
-         * @param passRate the percent of tests which pass (0..100)
-         * @param testCount the number of tests on this cell.
-         */
         private TestResult(String label, String id1, String id2, String id3) {
             if (TextUtils.isEmpty(label)) this.label = "*";
             else
@@ -173,7 +169,7 @@ public class SummaryExport {
     /**
      * @return a summary report listing the tested cells: the cell ids, % pass rate, and number of tests are shown.
      */
-    public static final String getSummary(Context context) {
+    public static String getSummary(Context context) {
         Log.v(TAG, "getSummary");
 
         String[] projection = new String[] { ConnectionTestStatsColumns.TYPE, ConnectionTestStatsColumns.ID1, ConnectionTestStatsColumns.ID2,
@@ -220,7 +216,7 @@ public class SummaryExport {
     /**
      * @return a user-friendly string including the earliest and latest timestamps of all data collected.
      */
-    public static final String getDataCollectionDateRange(Context context) {
+    public static String getDataCollectionDateRange(Context context) {
         Log.v(TAG, "getDataCollectionDateRange");
         String[] projection = new String[] { "MIN(" + NetMonColumns.TIMESTAMP + ")", "MAX(" + NetMonColumns.TIMESTAMP + ")" };
         Cursor c = context.getContentResolver().query(NetMonColumns.CONTENT_URI, projection, null, null, null);
@@ -234,7 +230,7 @@ public class SummaryExport {
         return dateRange;
     }
 
-    private static final <T> void add(Map<String, TreeSet<T>> map, String key, T value) {
+    private static <T> void add(Map<String, TreeSet<T>> map, String key, T value) {
         TreeSet<T> set = map.get(key);
         if (set == null) {
             set = new TreeSet<T>();
@@ -245,12 +241,12 @@ public class SummaryExport {
 
     private static String generateReport(Context context, SortedMap<String, TreeSet<TestResult>> cellResults) {
         StringBuilder sb = new StringBuilder();
-        sb.append(Build.MODEL + "/" + Build.VERSION.RELEASE + "\n");
+        sb.append(Build.MODEL).append("/").append(Build.VERSION.RELEASE).append("\n");
         if (cellResults == null || cellResults.size() == 0) {
             sb.append(context.getString(R.string.export_error_no_mobile_tests));
         } else
             for (String extraInfo : cellResults.keySet()) {
-                sb.append(extraInfo + ":\n");
+                sb.append(extraInfo).append(":\n");
                 for (int i = 0; i < extraInfo.length(); i++)
                     sb.append("-");
                 sb.append("\n");
