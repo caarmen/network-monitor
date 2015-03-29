@@ -33,6 +33,9 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 
+import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -63,7 +66,7 @@ public class ConfirmDialogFragment extends DialogFragment { // NO_UCD (use defau
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.v(TAG, "onCreateDialog: savedInstanceState = " + savedInstanceState);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getActivity());
         Bundle arguments = getArguments();
         DialogStyle.setCustomTitle(getActivity(), builder, arguments.getString(DialogFragmentFactory.EXTRA_TITLE));
         builder.setMessage(arguments.getString(DialogFragmentFactory.EXTRA_MESSAGE));
@@ -98,7 +101,6 @@ public class ConfirmDialogFragment extends DialogFragment { // NO_UCD (use defau
         if (getActivity() instanceof OnCancelListener) builder.setOnCancelListener((OnCancelListener) getActivity());
         final AlertDialog dialog = builder.create();
         if (getActivity() instanceof OnDismissListener) dialog.setOnDismissListener((OnDismissListener) getActivity());
-        new NetMonDialogStyleHacks(getActivity()).styleDialog(dialog);
         return dialog;
 
     }

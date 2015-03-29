@@ -29,10 +29,11 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.util.AttributeSet;
 
-import ca.rmen.android.networkmonitor.app.dialog.DialogStyle;
-import ca.rmen.android.networkmonitor.app.dialog.NetMonDialogStyleHacks;
+import com.afollestad.materialdialogs.prefs.MaterialEditTextPreference;
 
-public class ThemedEditTextPreference extends EditTextPreference {
+import ca.rmen.android.networkmonitor.app.dialog.DialogStyle;
+
+public class ThemedEditTextPreference extends MaterialEditTextPreference {
 
     public ThemedEditTextPreference(Context context) {
         super(context);
@@ -48,11 +49,5 @@ public class ThemedEditTextPreference extends EditTextPreference {
         super.onPrepareDialogBuilder(builder);
     }
 
-    @Override
-    protected void showDialog(Bundle state) {
-        super.showDialog(state);
-        AlertDialog dialog = (AlertDialog) getDialog();
-        new NetMonDialogStyleHacks(getContext()).styleDialog(dialog);
-    }
 
 }

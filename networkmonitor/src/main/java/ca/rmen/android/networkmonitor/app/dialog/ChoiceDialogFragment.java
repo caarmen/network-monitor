@@ -37,6 +37,8 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.ContextThemeWrapper;
 
+import com.afollestad.materialdialogs.AlertDialogWrapper;
+
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -65,8 +67,8 @@ public class ChoiceDialogFragment extends DialogFragment { // NO_UCD (use defaul
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.v(TAG, "onCreateDialog: savedInstanceState = " + savedInstanceState);
-        Context context = new ContextThemeWrapper(getActivity(), R.style.dialogStyle);
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        Context context = getActivity();
+        AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context);
         Bundle arguments = getArguments();
         DialogStyle.setCustomTitle(context, builder, arguments.getString(DialogFragmentFactory.EXTRA_TITLE));
         final int actionId = arguments.getInt(DialogFragmentFactory.EXTRA_ACTION_ID);
@@ -91,7 +93,7 @@ public class ChoiceDialogFragment extends DialogFragment { // NO_UCD (use defaul
             };
         }
         // If one item is to be pre-selected, use the single choice items layout.
-        if (selectedItem >= 0) builder.setSingleChoiceItems(choices, selectedItem, listener);
+        if (selectedItem >= 0) builder.setSingleChoiceItems((String[]) choices, selectedItem, listener);
         // If no particular item is to be pre-selected, use the default list item layout.
         else
             builder.setItems(choices, listener);
@@ -99,7 +101,6 @@ public class ChoiceDialogFragment extends DialogFragment { // NO_UCD (use defaul
         if (getActivity() instanceof OnCancelListener) builder.setOnCancelListener((OnCancelListener) getActivity());
         final AlertDialog dialog = builder.create();
         if (getActivity() instanceof OnDismissListener) dialog.setOnDismissListener((OnDismissListener) getActivity());
-        new NetMonDialogStyleHacks(getActivity()).styleDialog(dialog);
         return dialog;
     }
 

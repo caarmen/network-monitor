@@ -29,6 +29,8 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -45,27 +47,23 @@ public class ProgressDialogFragment extends DialogFragment { // NO_UCD (use priv
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.v(TAG, "onCreateDialog");
-        ProgressDialog dialog = new ProgressDialog(getActivity());
-        dialog.setMessage(getArguments().getString(DialogFragmentFactory.EXTRA_MESSAGE));
-        dialog.setIndeterminate(true);
-        dialog.setProgressStyle(getArguments().getInt(DialogFragmentFactory.EXTRA_PROGRESS_DIALOG_STYLE));
-        new NetMonDialogStyleHacks(getActivity()).styleDialog(dialog);
-        return dialog;
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
+        builder.content(getArguments().getString(DialogFragmentFactory.EXTRA_MESSAGE));
+        builder.progress(false, 0, true);
+        return builder.build();
     }
 
     public void setProgress(int progress, int max) {
         Log.v(TAG, "setProgress " + progress + "/" + max);
-        ProgressDialog dialog = (ProgressDialog) getDialog();
+        MaterialDialog dialog = (MaterialDialog) getDialog();
         if (progress >= max) {
-            dialog.setMax(100);
+            dialog.setMaxProgress(100);
             dialog.setProgress(0);
-            dialog.setIndeterminate(true);
-            dialog.setMessage(getActivity().getString(R.string.export_progress_finalizing_export));
+            dialog.setContent(getActivity().getString(R.string.export_progress_finalizing_export));
         } else {
-            dialog.setIndeterminate(false);
-            dialog.setMax(max);
+            dialog.setMaxProgress(max);
             dialog.setProgress(progress);
-            dialog.setMessage(getActivity().getString(R.string.export_progress_processing_data));
+            dialog.setContent(getActivity().getString(R.string.export_progress_processing_data));
         }
     }
 

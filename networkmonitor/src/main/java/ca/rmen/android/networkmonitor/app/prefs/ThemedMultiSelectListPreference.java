@@ -23,16 +23,17 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.os.Bundle;
-import android.preference.MultiSelectListPreference;
 import android.util.AttributeSet;
 
-import ca.rmen.android.networkmonitor.app.dialog.DialogStyle;
-import ca.rmen.android.networkmonitor.app.dialog.NetMonDialogStyleHacks;
+import com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference;
 
-public class ThemedMultiSelectListPreference extends MultiSelectListPreference {
+import ca.rmen.android.networkmonitor.app.dialog.DialogStyle;
+
+@TargetApi(11)
+public class ThemedMultiSelectListPreference extends MaterialMultiSelectListPreference {
 
     public ThemedMultiSelectListPreference(Context context) {
         super(context);
@@ -48,11 +49,5 @@ public class ThemedMultiSelectListPreference extends MultiSelectListPreference {
         super.onPrepareDialogBuilder(builder);
     }
 
-    @Override
-    protected void showDialog(Bundle state) {
-        super.showDialog(state);
-        AlertDialog dialog = (AlertDialog) getDialog();
-        new NetMonDialogStyleHacks(getContext()).styleDialog(dialog);
-    }
 
 }

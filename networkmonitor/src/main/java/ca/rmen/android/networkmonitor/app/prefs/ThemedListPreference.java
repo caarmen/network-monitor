@@ -31,10 +31,11 @@ import android.preference.ListPreference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
-import ca.rmen.android.networkmonitor.app.dialog.DialogStyle;
-import ca.rmen.android.networkmonitor.app.dialog.NetMonDialogStyleHacks;
+import com.afollestad.materialdialogs.prefs.MaterialListPreference;
 
-public class ThemedListPreference extends ListPreference {
+import ca.rmen.android.networkmonitor.app.dialog.DialogStyle;
+
+public class ThemedListPreference extends MaterialListPreference {
 
     public ThemedListPreference(Context context) {
         super(context);
@@ -48,13 +49,6 @@ public class ThemedListPreference extends ListPreference {
     protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
         DialogStyle.setCustomTitle(getContext(), builder, getTitle());
         super.onPrepareDialogBuilder(builder);
-    }
-
-    @Override
-    protected void showDialog(Bundle state) {
-        super.showDialog(state);
-        AlertDialog dialog = (AlertDialog) getDialog();
-        new NetMonDialogStyleHacks(getContext()).styleDialog(dialog);
     }
 
     // http://stackoverflow.com/questions/10119852/listpreferences-summary-text-is-not-updated-automatically-whenever-there-is-cha

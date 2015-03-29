@@ -34,6 +34,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.ContextThemeWrapper;
 
+import com.afollestad.materialdialogs.AlertDialogWrapper;
+
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity;
@@ -110,8 +112,7 @@ public class PreferenceDialog {
             }
         }
         // Build a chooser dialog for the preference
-        Context contextWrapper = new ContextThemeWrapper(context, R.style.dialogStyle);
-        AlertDialog.Builder builder = new AlertDialog.Builder(contextWrapper).setSingleChoiceItems(labels, currentPrefPosition, null).setPositiveButton(
+        AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context).setSingleChoiceItems(labels, currentPrefPosition, null).setPositiveButton(
                 android.R.string.ok, new OnClickListener() {
 
                     @Override
@@ -133,7 +134,6 @@ public class PreferenceDialog {
             }
         });
         final AlertDialog dialog = builder.create();
-        new NetMonDialogStyleHacks(context).styleDialog(dialog);
         dialog.setOnCancelListener(new OnCancelListener() {
 
             @Override

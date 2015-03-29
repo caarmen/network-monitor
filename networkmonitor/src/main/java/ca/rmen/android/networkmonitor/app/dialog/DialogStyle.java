@@ -28,6 +28,9 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import ca.rmen.android.networkmonitor.R;
 
 /**
@@ -43,5 +46,15 @@ public class DialogStyle {
         TextView textView = (TextView) customTitle.findViewById(R.id.dialog_title);
         textView.setText(title);
         builder.setCustomTitle(customTitle);
+    }
+
+    /**
+     * Set the text of the dialog's custom title view.
+     */
+    public static void setCustomTitle(Context context, AlertDialogWrapper.Builder builder, CharSequence title) {
+        View customTitle = View.inflate(context, R.layout.dialog_title, null);
+        TextView textView = (TextView) customTitle.findViewById(R.id.dialog_title);
+        textView.setText(title);
+        builder.setTitle(title);
     }
 }

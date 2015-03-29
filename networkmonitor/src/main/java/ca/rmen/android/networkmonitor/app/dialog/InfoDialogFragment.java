@@ -35,6 +35,8 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.ContextThemeWrapper;
 
+import com.afollestad.materialdialogs.AlertDialogWrapper;
+
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -60,8 +62,8 @@ public class InfoDialogFragment extends DialogFragment { // NO_UCD (use default)
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.v(TAG, "onCreateDialog: savedInstanceState = " + savedInstanceState);
-        Context context = new ContextThemeWrapper(getActivity(), R.style.dialogStyle);
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        Context context = getActivity();
+        AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context);
         Bundle arguments = getArguments();
         final int actionId = arguments.getInt(DialogFragmentFactory.EXTRA_ACTION_ID);
         final int iconId = arguments.getInt(DialogFragmentFactory.EXTRA_ICON_ID);
@@ -84,7 +86,6 @@ public class InfoDialogFragment extends DialogFragment { // NO_UCD (use default)
         if (getActivity() instanceof OnCancelListener) builder.setOnCancelListener((OnCancelListener) getActivity());
         final AlertDialog dialog = builder.create();
         if (getActivity() instanceof OnDismissListener) dialog.setOnDismissListener((OnDismissListener) getActivity());
-        new NetMonDialogStyleHacks(getActivity()).styleDialog(dialog);
         return dialog;
     }
 
