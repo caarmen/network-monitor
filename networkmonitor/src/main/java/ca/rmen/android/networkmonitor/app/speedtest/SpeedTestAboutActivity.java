@@ -28,6 +28,7 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 
 import ca.rmen.android.networkmonitor.Constants;
@@ -37,7 +38,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 /**
  * Activity which shows an HTML explanation of the speed test limitations
  */
-public class SpeedTestAboutActivity extends FragmentActivity { // NO_UCD (use default)
+public class SpeedTestAboutActivity extends ActionBarActivity {
     private static final String TAG = Constants.TAG + SpeedTestAboutActivity.class.getSimpleName();
 
     @Override
