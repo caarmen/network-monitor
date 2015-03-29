@@ -1,7 +1,8 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_send_logs"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/action_send_logs"/>
 </menu>

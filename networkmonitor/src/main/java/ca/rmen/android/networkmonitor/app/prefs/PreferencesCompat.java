@@ -44,7 +44,7 @@ public class PreferencesCompat {
         actionbar.setTitle(activity.getTitle());
         Intent parent = NavUtils.getParentActivityIntent(activity);
         if (parent == null) {
-            actionbar.setNavigationIcon(activity.getResources().getDrawable(activity.getApplicationInfo().icon));
+            actionbar.setNavigationIcon(activity.getApplicationInfo().icon);
         } else {
             actionbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
             actionbar.setNavigationOnClickListener(new View.OnClickListener() {

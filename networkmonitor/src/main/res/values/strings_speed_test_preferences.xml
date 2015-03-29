@@ -8,7 +8,7 @@
     <string name="pref_category_speed_test_download_settings">DOWNLOAD TEST (HTTP)</string>
     <string name="pref_title_speed_test_download_url">URL of the file to download</string>
     <string name="pref_summary_speed_test_download_url">%1$s\n(%2$s Mb)\nLarger file = better accuracy (and more network traffic usage)</string>
-    <string name="pref_value_speed_test_default_download_url">https://github.com/caarmen/network-monitor/archive/netmon-1.12.2.zip</string>
+    <string name="pref_value_speed_test_default_download_url" translatable="false">https://github.com/caarmen/network-monitor/archive/netmon-1.12.2.zip</string>
     <!-- Upload speed test preferences -->
     <string name="pref_category_speed_test_upload_settings">UPLOAD TEST (FTP)</string>
     <string name="pref_title_speed_test_upload_server">Server name</string>

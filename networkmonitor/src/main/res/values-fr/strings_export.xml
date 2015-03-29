@@ -21,5 +21,6 @@
 \n%1$s.
 \n\n</string>
     <string name="export_message_text_file_attached">Ci-joint vous trouverez un fichier avec les données complètes de l\'ensemble des tests.\n\n</string>
+    <string name="export_value_unknown">N/D</string>
 
 </resources>

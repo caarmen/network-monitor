@@ -90,11 +90,11 @@
         <item>decimal_hex</item>
     </string-array>
 
-    <string-array name="preferences_location_fetching_strategy_labels">_
+    <string-array name="preferences_location_fetching_strategy_labels">
         <item>@string/pref_value_location_fetching_strategy_accurate</item>
         <item>@string/pref_value_location_fetching_strategy_save_power</item>
     </string-array>
-    <string-array name="preferences_location_fetching_strategy_values">_
+    <string-array name="preferences_location_fetching_strategy_values" translatable="false">
         <item>HIGH_ACCURACY</item>
         <item>SAVE_POWER</item>
     </string-array>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="ca.rmen.android.networkmonitor"
     android:versionCode="11700"
     android:versionName="1.17.0" >
@@ -36,7 +37,8 @@
 
         <activity
             android:name="ca.rmen.android.networkmonitor.app.main.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            tools:ignore="ExportedPreferenceActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

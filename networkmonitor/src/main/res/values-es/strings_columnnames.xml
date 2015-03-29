@@ -35,6 +35,9 @@
     <string name="cell_signal_strength">Fuerza de la señal móvil (0&#8211;4)</string>
     <string name="cell_signal_strength_dbm">Fuerza de la señal móvil (dBm)</string>
     <string name="cell_asu_level">Nivel ASU</string>
+    <string name="gsm_ber">RxQual</string>
+    <!--string name="evdo_">EVDO ECIO</string-->
+    <string name="lte_rsrq">LTE RSRQ</string>
     <string name="cdma_cell_base_station_id">Id de la estación base (CDMA)</string>
     <string name="cdma_cell_latitude">Latitud de la estación base (CDMA)</string>
     <string name="cdma_cell_longitude">Longitud de la estación base (CDMA)</string>
