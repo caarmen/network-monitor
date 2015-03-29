@@ -24,15 +24,12 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
-import android.annotation.TargetApi;
-import ca.rmen.android.networkmonitor.R;
-import android.support.v7.widget.Toolbar;
-import android.app.ActionBar;
-import android.os.Build;
 import android.preference.PreferenceActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.R;
 
 public class PreferencesCompat extends PreferenceActivity { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + PreferencesCompat.class.getSimpleName();
@@ -40,19 +37,21 @@ public class PreferencesCompat extends PreferenceActivity { // NO_UCD (use defau
     public static void setupActionBar(final PreferenceActivity activity) {
         setupActionBar(activity, false);
     }
+
     public static void setupActionBar(final PreferenceActivity activity, boolean isTopLevel) {
         activity.setContentView(R.layout.preference_layout);
         Toolbar actionbar = (Toolbar) activity.findViewById(R.id.actionbar);
         actionbar.setTitle(activity.getTitle());
-        if(isTopLevel)
+        if (isTopLevel) {
             actionbar.setNavigationIcon(activity.getResources().getDrawable(activity.getApplicationInfo().icon));
-        else
+        } else {
             actionbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-        actionbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.finish();
-            }
-        });
+            actionbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    activity.finish();
+                }
+            });
+        }
     }
 }
