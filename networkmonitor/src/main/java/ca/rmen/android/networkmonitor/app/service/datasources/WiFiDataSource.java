@@ -39,7 +39,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 /**
  * retrieves the SSID, BSSID, signal strength, and RSSI of the currently connected WiFi network, if any.
  */
-class WiFiDataSource implements NetMonDataSource {
+public class WiFiDataSource implements NetMonDataSource {
 
     private static final String TAG = Constants.TAG + WiFiDataSource.class.getSimpleName();
     private static final SparseIntArray CHANNEL_FREQUENCIES = new SparseIntArray(14);

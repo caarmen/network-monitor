@@ -36,7 +36,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 /**
  * Retrieves the battery level.
  */
-class BatteryDataSource implements NetMonDataSource {
+public class BatteryDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + BatteryDataSource.class.getSimpleName();
     private Context mContext;
 

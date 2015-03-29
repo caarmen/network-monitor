@@ -39,7 +39,7 @@ import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 /**
  * Retrieves information from the current cell we are connected to.
  */
-class CellLocationDataSource implements NetMonDataSource {
+public class CellLocationDataSource implements NetMonDataSource {
 
     private static final String TAG = Constants.TAG + CellLocationDataSource.class.getSimpleName();
     private TelephonyManager mTelephonyManager;

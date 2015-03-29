@@ -44,7 +44,7 @@ import com.google.android.gms.location.LocationServices;
 /**
  * Retrieves the device's location, using Google Play Services.
  */
-class GmsDeviceLocationDataSource implements NetMonDataSource {
+public class GmsDeviceLocationDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + GmsDeviceLocationDataSource.class.getSimpleName();
     private final GoogleApiClient mLocationClient;
     private Location mMostRecentLocation;

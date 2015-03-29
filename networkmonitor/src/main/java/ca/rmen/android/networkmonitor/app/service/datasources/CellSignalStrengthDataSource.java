@@ -38,7 +38,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 /**
  * Retrieves the cell signal strength in various units.
  */
-class CellSignalStrengthDataSource implements NetMonDataSource {
+public class CellSignalStrengthDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + CellSignalStrengthDataSource.class.getSimpleName();
 
     private NetMonSignalStrength mNetMonSignalStrength;

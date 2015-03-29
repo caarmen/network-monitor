@@ -44,7 +44,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 /**
  * Retrieves the device's location, using the most recent Location retrieved among all of the available the location providers.
  */
-class StandardDeviceLocationDataSource implements NetMonDataSource {
+public class StandardDeviceLocationDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + StandardDeviceLocationDataSource.class.getSimpleName();
     private LocationManager mLocationManager;
     private Location mMostRecentLocation;

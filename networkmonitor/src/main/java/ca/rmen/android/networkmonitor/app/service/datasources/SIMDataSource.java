@@ -35,7 +35,7 @@ import ca.rmen.android.networkmonitor.util.TelephonyUtil;
 /**
  * Retrieves attributes of the SIM card.
  */
-class SIMDataSource implements NetMonDataSource {
+public class SIMDataSource implements NetMonDataSource {
 
     private static final String TAG = Constants.TAG + SIMDataSource.class.getSimpleName();
     private TelephonyManager mTelephonyManager;

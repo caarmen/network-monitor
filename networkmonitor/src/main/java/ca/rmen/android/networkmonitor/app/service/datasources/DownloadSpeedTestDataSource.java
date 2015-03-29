@@ -39,7 +39,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 /**
  * Tests download speed by downloading a file.
  */
-class DownloadSpeedTestDataSource implements NetMonDataSource {
+public class DownloadSpeedTestDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + DownloadSpeedTestDataSource.class.getSimpleName();
 
     private SpeedTestPreferences mPreferences;

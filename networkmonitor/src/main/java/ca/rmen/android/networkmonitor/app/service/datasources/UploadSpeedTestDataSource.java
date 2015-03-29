@@ -39,7 +39,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 /**
  * Tests upload speed by uploading a file.
  */
-class UploadSpeedTestDataSource implements NetMonDataSource {
+public class UploadSpeedTestDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + UploadSpeedTestDataSource.class.getSimpleName();
 
     private SpeedTestPreferences mPreferences;

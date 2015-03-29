@@ -35,7 +35,7 @@ import ca.rmen.android.networkmonitor.util.TelephonyUtil;
 /**
  * Retrieves attributes of the mobile data connection.
  */
-class MobileDataConnectionDataSource implements NetMonDataSource {
+public class MobileDataConnectionDataSource implements NetMonDataSource {
 
     private static final String TAG = Constants.TAG + MobileDataConnectionDataSource.class.getSimpleName();
     private TelephonyManager mTelephonyManager;

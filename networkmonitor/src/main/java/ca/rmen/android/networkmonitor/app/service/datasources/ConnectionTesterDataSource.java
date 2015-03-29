@@ -52,7 +52,7 @@ import ca.rmen.android.networkmonitor.util.TelephonyUtil;
 /**
  * Performs network connection tests and provides the results of each test.
  */
-class ConnectionTesterDataSource implements NetMonDataSource {
+public class ConnectionTesterDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + ConnectionTesterDataSource.class.getSimpleName();
     private Context mContext;
 
