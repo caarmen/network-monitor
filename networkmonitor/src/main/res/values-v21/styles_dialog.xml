@@ -1,0 +1,8 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- This style is referenced from code: DialogStyleHacks applies this style to dialogs. -->
+    <style name="dialogStyle" parent="dialogStyleBase">
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+
+</resources>
