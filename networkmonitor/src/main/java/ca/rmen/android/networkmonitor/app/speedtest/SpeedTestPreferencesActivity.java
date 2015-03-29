@@ -100,26 +100,33 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
             // Show a warning when the user enables the speed test.
-            if (SpeedTestPreferences.PREF_SPEED_TEST_ENABLED.equals(key)) {
-                if (sharedPreferences.getBoolean(key, false)) {
-                    PreferenceDialog.showWarningDialog(SpeedTestPreferencesActivity.this, getString(R.string.speed_test_warning_title),
-                            getString(R.string.speed_test_warning_message));
-                }
-
-            }
-            // If the user changed the download url, delete the previously downloaded file
-            // and download the new one.
-            else if (SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL.equals(key)) {
-                FileUtil.clearCache(SpeedTestPreferencesActivity.this);
-                download();
-            } else if (SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_SERVER.equals(key)) {
-                updatePreferenceSummary(SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_SERVER, R.string.pref_summary_speed_test_upload_server);
-            } else if (SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_PORT.equals(key)) {
-                updatePreferenceSummary(SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_PORT, R.string.pref_summary_speed_test_upload_port);
-            } else if (SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_USER.equals(key)) {
-                updatePreferenceSummary(SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_USER, R.string.pref_summary_speed_test_upload_user);
-            } else if (SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_PATH.equals(key)) {
-                updatePreferenceSummary(SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_PATH, R.string.pref_summary_speed_test_upload_path);
+            switch(key) {
+                case SpeedTestPreferences.PREF_SPEED_TEST_ENABLED:
+                    if (sharedPreferences.getBoolean(key, false)) {
+                        PreferenceDialog.showWarningDialog(SpeedTestPreferencesActivity.this, getString(R.string.speed_test_warning_title),
+                                getString(R.string.speed_test_warning_message));
+                    }
+                    break;
+                // If the user changed the download url, delete the previously downloaded file
+                // and download the new one.
+                case SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL:
+                    FileUtil.clearCache(SpeedTestPreferencesActivity.this);
+                    download();
+                    break;
+                case SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_SERVER:
+                    updatePreferenceSummary(key, R.string.pref_summary_speed_test_upload_server);
+                    break;
+                case SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_PORT:
+                    updatePreferenceSummary(key, R.string.pref_summary_speed_test_upload_port);
+                    break;
+                case SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_USER:
+                    updatePreferenceSummary(key, R.string.pref_summary_speed_test_upload_user);
+                    break;
+                case SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_PATH:
+                    updatePreferenceSummary(key, R.string.pref_summary_speed_test_upload_path);
+                    break;
+                default:
+                    break;
             }
         }
     };
