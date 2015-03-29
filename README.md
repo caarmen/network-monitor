@@ -3,13 +3,6 @@ Network Monitor
 
 A network monitor tool for Android that executes an http GET to google.com every x seconds and logs the results into a file. 
 
-Dependencies
-------------
-This project depends on the following libraries:
-
-* Google Play Services Lib: available in the Android SDK in this folder: extras/google/google_play_services/libproject/google-play-services_lib/
-* android-switch-backport: https://github.com/BoD/android-switch-backport
-
 Credits
 -------
 This project was initially created by Benoit 'BoD' Lubek (BoD@JRAF.org / http://github.com/BoD),
