@@ -133,7 +133,7 @@
     
     <!-- Report formats -->
     <!-- Report formats -->
-    <string-array name="preferences_email_report_formats_labels">
+    <string-array name="preferences_email_report_formats_labels" translatable="false">
         <item>CSV</item>
         <item>HTML</item>
         <item>Excel</item>
