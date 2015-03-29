@@ -68,7 +68,7 @@ public class ChoiceDialogFragment extends DialogFragment { // NO_UCD (use defaul
         Context context = getActivity();
         AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context);
         Bundle arguments = getArguments();
-        DialogStyle.setCustomTitle(context, builder, arguments.getString(DialogFragmentFactory.EXTRA_TITLE));
+        builder.setTitle(arguments.getString(DialogFragmentFactory.EXTRA_TITLE));
         final int actionId = arguments.getInt(DialogFragmentFactory.EXTRA_ACTION_ID);
         int selectedItem = arguments.getInt(DialogFragmentFactory.EXTRA_SELECTED_ITEM);
         final CharSequence[] choices = arguments.getCharSequenceArray(DialogFragmentFactory.EXTRA_CHOICES);

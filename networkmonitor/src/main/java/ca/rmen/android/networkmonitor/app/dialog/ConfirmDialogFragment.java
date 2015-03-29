@@ -67,7 +67,7 @@ public class ConfirmDialogFragment extends DialogFragment { // NO_UCD (use defau
 
         AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getActivity());
         Bundle arguments = getArguments();
-        DialogStyle.setCustomTitle(getActivity(), builder, arguments.getString(DialogFragmentFactory.EXTRA_TITLE));
+        builder.setTitle(arguments.getString(DialogFragmentFactory.EXTRA_TITLE));
         builder.setMessage(arguments.getString(DialogFragmentFactory.EXTRA_MESSAGE));
         final int actionId = arguments.getInt(DialogFragmentFactory.EXTRA_ACTION_ID);
         final Bundle extras = arguments.getBundle(DialogFragmentFactory.EXTRA_EXTRAS);

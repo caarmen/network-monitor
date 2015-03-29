@@ -28,7 +28,7 @@
             android:autoLink="all"
             android:text="@string/about_copyright_1"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColorLink="@color/netmon_text_color" />
+            android:textColorLink="@color/netmon_color" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -37,7 +37,7 @@
             android:autoLink="all"
             android:text="@string/about_copyright_2"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColorLink="@color/netmon_text_color" />
+            android:textColorLink="@color/netmon_color" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
             android:drawablePadding="8dp"
             android:text="@string/about_projectUrl"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColorLink="@color/netmon_text_color" />
+            android:textColorLink="@color/netmon_color" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -59,7 +59,7 @@
             android:drawablePadding="8dp"
             android:text="@string/about_issues"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColorLink="@color/netmon_text_color" />
+            android:textColorLink="@color/netmon_color" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
             android:drawablePadding="8dp"
             android:text="@string/about_rate"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColorLink="@color/netmon_text_color" />
+            android:textColorLink="@color/netmon_color" />
     </LinearLayout>
 
 </ScrollView>

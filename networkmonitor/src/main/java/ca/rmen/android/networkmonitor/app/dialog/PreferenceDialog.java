@@ -127,6 +127,7 @@ public class PreferenceDialog {
                     }
 
                 })
+                .title(titleId)
                 .positiveText(android.R.string.ok)
                 .negativeText(android.R.string.cancel)
                 .cancelListener(new OnCancelListener() {
@@ -135,7 +136,6 @@ public class PreferenceDialog {
                         listener.onCancel();
                     }
                 });
-        DialogStyle.setCustomTitle(context, builder, context.getString(titleId));
         final Dialog dialog = builder.build();
         dialog.setOnCancelListener(new OnCancelListener() {
 

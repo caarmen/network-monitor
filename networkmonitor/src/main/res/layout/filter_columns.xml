@@ -16,7 +16,7 @@
         android:padding="8dp"
         android:text="@string/filter_columns_hint"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/netmon_text_color" />
+        android:textColor="@color/netmon_color" />
 
     <View
         android:layout_width="match_parent"

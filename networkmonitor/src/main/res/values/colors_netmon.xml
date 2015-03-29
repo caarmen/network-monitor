@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="netmon_color">#fda63e</color>
-    <color name="netmon_text_color">#ed7900</color>
-    <color name="netmon_color_light">#ffffe1</color>
-    <color name="netmon_color_dark">#ffe66000</color>
-    <color name="netmon_color_darker">#ff974c00</color>
+    <color name="netmon_color_dark">#ff974c00</color>
+    <color name="netmon_color">#ffe68f3e</color>
+    <color name="netmon_color_light">#a5ffa047</color>
 </resources>
