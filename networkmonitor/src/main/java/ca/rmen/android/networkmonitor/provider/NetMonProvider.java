@@ -185,7 +185,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
                 break;
             case URI_TYPE_UNIQUE_VALUES_ID:
                 String columnName = uri.getLastPathSegment();
-                Map<String, String> projectionMap = new HashMap<String, String>();
+                Map<String, String> projectionMap = new HashMap<>();
                 projectionMap.put(UniqueValuesColumns.VALUE, columnName);
                 projectionMap.put(UniqueValuesColumns.COUNT, "count(*)");
                 SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
@@ -210,7 +210,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     @Override
     public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations) throws OperationApplicationException {
         Log.v(TAG, "applyBatch: " + operations.size());
-        Set<Uri> urisToNotify = new HashSet<Uri>();
+        Set<Uri> urisToNotify = new HashSet<>();
         for (ContentProviderOperation operation : operations)
             urisToNotify.add(operation.getUri());
         Log.v(TAG, "applyBatch: will notify these uris after persisting: " + urisToNotify);
@@ -221,7 +221,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
             int operationsProcessed = 0;
             ContentProviderResult[] result = new ContentProviderResult[operations.size()];
             while (!operations.isEmpty()) {
-                ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>(batchSize);
+                ArrayList<ContentProviderOperation> batch = new ArrayList<>(batchSize);
                 for (int i = 0; i < batchSize && !operations.isEmpty(); i++)
                     batch.add(operations.remove(0));
                 Log.v(TAG, "applyBatch of " + batch.size() + " operations");

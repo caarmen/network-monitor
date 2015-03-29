@@ -124,7 +124,7 @@ public class EmailPreferencesActivity extends PreferenceActivity { // NO_UCD (us
      * @return a String containing the user-friendly names of the values selected by the user.
      */
     private String getSummary(MultiSelectListPreference preference, Set<String> values) {
-        List<CharSequence> result = new ArrayList<CharSequence>();
+        List<CharSequence> result = new ArrayList<>();
         CharSequence[] entries = preference.getEntries();
         for (String value : values) {
             int index = preference.findIndexOfValue(value);

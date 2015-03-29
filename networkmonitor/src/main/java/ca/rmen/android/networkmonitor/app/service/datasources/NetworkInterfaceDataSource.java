@@ -65,9 +65,9 @@ class NetworkInterfaceDataSource implements NetMonDataSource {
             // We'll save the name and addresses of all interfaces.  If there happen to 
             // be multiple ones, we'll return a delimited list.
             // In most cases, we should have one interface name, one IP v4 address, and one IP v6 address.
-            List<String> interfaceNames = new ArrayList<String>();
-            List<String> ipv4Addresses = new ArrayList<String>();
-            List<String> ipv6Addresses = new ArrayList<String>();
+            List<String> interfaceNames = new ArrayList<>();
+            List<String> ipv4Addresses = new ArrayList<>();
+            List<String> ipv6Addresses = new ArrayList<>();
             Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
             while (networkInterfaces.hasMoreElements()) {
                 NetworkInterface networkInterface = networkInterfaces.nextElement();

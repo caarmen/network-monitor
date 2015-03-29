@@ -120,7 +120,7 @@ public class SelectFieldsActivity extends ActionBarActivity implements SelectFie
         Log.v(TAG, "onOk");
         SparseBooleanArray checkedPositions = mListView.getCheckedItemPositions();
         String[] dbColumns = NetMonColumns.getColumnNames(this);
-        final List<String> selectedColumns = new ArrayList<String>(dbColumns.length);
+        final List<String> selectedColumns = new ArrayList<>(dbColumns.length);
         for (int i = 0; i < dbColumns.length; i++) {
             if (checkedPositions.get(i)) selectedColumns.add(dbColumns[i]);
         }

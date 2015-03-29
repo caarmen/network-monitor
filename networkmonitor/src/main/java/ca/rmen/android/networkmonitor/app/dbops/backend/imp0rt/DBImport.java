@@ -95,7 +95,7 @@ public class DBImport implements Task<Boolean> {
     private void importDB(File importDb, ProgressListener listener) throws RemoteException, OperationApplicationException {
         Log.v(TAG, "importDB from " + importDb);
         SQLiteDatabase dbImport = SQLiteDatabase.openDatabase(importDb.getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY);
-        ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
         operations.add(ContentProviderOperation.newDelete(NetMonColumns.CONTENT_URI).build());
         Uri insertUri = new Uri.Builder().authority(NetMonProvider.AUTHORITY).appendPath(NetMonColumns.TABLE_NAME)
                 .appendQueryParameter(NetMonProvider.QUERY_PARAMETER_NOTIFY, "false").build();

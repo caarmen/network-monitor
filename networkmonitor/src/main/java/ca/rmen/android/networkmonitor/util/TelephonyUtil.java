@@ -40,7 +40,7 @@ import android.text.TextUtils;
 public class TelephonyUtil {
     private static final String TAG = TelephonyUtil.class.getSimpleName();
 
-    private static final Map<String, String> sConstantsCache = new HashMap<String, String>();
+    private static final Map<String, String> sConstantsCache = new HashMap<>();
 
     /**
      * Returns a TelephonyManager int constant as a string. For example, for {@link TelephonyManager#DATA_CONNECTED}, this returns the string "CONNECTED".

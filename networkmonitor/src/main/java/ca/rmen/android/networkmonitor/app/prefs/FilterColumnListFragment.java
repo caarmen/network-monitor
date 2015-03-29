@@ -119,7 +119,7 @@ public class FilterColumnListFragment extends ListFragment {
                 values[i++] = new FilterListItem(value, label);
             }
 
-            ArrayAdapter<FilterListItem> adapter = new ArrayAdapter<FilterListItem>(context, android.R.layout.simple_list_item_multiple_choice, values);
+            ArrayAdapter<FilterListItem> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_multiple_choice, values);
             setListAdapter(adapter);
             ListView lv = getListView();
             lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);

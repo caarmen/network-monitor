@@ -63,7 +63,7 @@ public class FilterPreferences {
     static Selection getSelectionClause(Context context, String excludeColumn) {
         Log.v(TAG, "getSelectionClause: exclude column " + excludeColumn);
         String[] filterableColumnNames = NetMonColumns.getFilterableColumns(context);
-        List<String> filterableColumnNamesList = new ArrayList<String>();
+        List<String> filterableColumnNamesList = new ArrayList<>();
         for (String filterableColumnName : filterableColumnNames)
             if (!filterableColumnName.equals(excludeColumn)) filterableColumnNamesList.add(filterableColumnName);
         return getSelectionClause(context, filterableColumnNamesList);
@@ -82,8 +82,8 @@ public class FilterPreferences {
      * @return a selection clause based on all the filters the user chose for the given column names.
      */
     private static Selection getSelectionClause(Context context, List<String> columnNames) {
-        List<String> selectionStrings = new ArrayList<String>();
-        List<String> selectionArgs = new ArrayList<String>();
+        List<String> selectionStrings = new ArrayList<>();
+        List<String> selectionArgs = new ArrayList<>();
         for (String columnName : columnNames) {
             Selection selection = createSelection(context, columnName);
             if (selection != null) {
@@ -106,7 +106,7 @@ public class FilterPreferences {
         if (values != null && values.size() > 0) {
 
             StringBuilder selectionString = new StringBuilder();
-            List<String> selectionArgs = new ArrayList<String>();
+            List<String> selectionArgs = new ArrayList<>();
             selectionString.append("(");
             // If we support empty value, add the special condition for that.
             if (values.contains(EMPTY)) {

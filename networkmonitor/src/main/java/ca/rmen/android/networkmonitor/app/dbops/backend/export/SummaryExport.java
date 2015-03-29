@@ -176,7 +176,7 @@ public class SummaryExport {
                 ConnectionTestStatsColumns.ID3, ConnectionTestStatsColumns.LABEL, ConnectionTestStatsColumns.TEST_COUNT, ConnectionTestStatsColumns.TEST_RESULT };
         String orderBy = ConnectionTestStatsColumns.ID1 + "," + ConnectionTestStatsColumns.ID2 + "," + ConnectionTestStatsColumns.ID3;
         Cursor c = context.getContentResolver().query(ConnectionTestStatsColumns.CONTENT_URI, projection, null, null, orderBy);
-        SortedMap<String, TreeSet<TestResult>> testResults = new TreeMap<String, TreeSet<TestResult>>();
+        SortedMap<String, TreeSet<TestResult>> testResults = new TreeMap<>();
         if (c != null) {
             try {
                 if (c.moveToFirst()) {
@@ -233,7 +233,7 @@ public class SummaryExport {
     private static <T> void add(Map<String, TreeSet<T>> map, String key, T value) {
         TreeSet<T> set = map.get(key);
         if (set == null) {
-            set = new TreeSet<T>();
+            set = new TreeSet<>();
             map.put(key, set);
         }
         set.add(value);

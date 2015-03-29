@@ -76,13 +76,13 @@ public class KMLExport extends FileExport {
     public File execute(ProgressListener listener) {
         Log.v(TAG, "export");
         Formatter formatter = FormatterFactory.getFormatter(FormatterStyle.XML, mContext);
-        List<String> selectedColumns = new ArrayList<String>(NetMonPreferences.getInstance(mContext).getSelectedColumns());
+        List<String> selectedColumns = new ArrayList<>(NetMonPreferences.getInstance(mContext).getSelectedColumns());
         if (!selectedColumns.contains(NetMonColumns.DEVICE_LATITUDE)) selectedColumns.add(NetMonColumns.DEVICE_LATITUDE);
         if (!selectedColumns.contains(NetMonColumns.DEVICE_LONGITUDE)) selectedColumns.add(NetMonColumns.DEVICE_LONGITUDE);
         if (!selectedColumns.contains(mPlacemarkNameColumn)) selectedColumns.add(mPlacemarkNameColumn);
         final String[] columnsToExport = new String[selectedColumns.size()];
         selectedColumns.toArray(columnsToExport);
-        Map<String, String> columnNamesMapping = new HashMap<String, String>(columnsToExport.length);
+        Map<String, String> columnNamesMapping = new HashMap<>(columnsToExport.length);
         // Filter the results based on the user's preferences.
         Selection selection = FilterPreferences.getSelectionClause(mContext);
         Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, columnsToExport, selection.selectionString, selection.selectionArgs,
@@ -114,7 +114,7 @@ public class KMLExport extends FileExport {
 
                 // Write one KML placemark for each row in the DB.
                 while (c.moveToNext()) {
-                    Map<String, String> cellValues = new LinkedHashMap<String, String>(c.getColumnCount());
+                    Map<String, String> cellValues = new LinkedHashMap<>(c.getColumnCount());
                     long timestamp = -1;
                     if (timestampIndex >= 0) {
                         timestamp = c.getLong(timestampIndex);

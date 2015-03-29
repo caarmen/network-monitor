@@ -58,7 +58,7 @@ public class DBCompress implements Task<Integer> {
         Log.v(TAG, "compress DB");
         Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, null, null, null, BaseColumns._ID);
         Map<Integer, String> previousRow = null;
-        List<Integer> rowIdsToDelete = new ArrayList<Integer>();
+        List<Integer> rowIdsToDelete = new ArrayList<>();
         int idLastRow = 0;
         int posLastNewRow = 0;
         if (c != null) {
@@ -117,7 +117,7 @@ public class DBCompress implements Task<Integer> {
      * @return a map of the row's values: the key is the column index, and the value the string representation of a cell.
      */
     private static Map<Integer, String> readRow(Cursor c, int columnCount, int timestampIndex, int idIndex) {
-        Map<Integer, String> result = new HashMap<Integer, String>();
+        Map<Integer, String> result = new HashMap<>();
         for (int i = 0; i < columnCount; i++) {
             if (i == timestampIndex || i == idIndex) continue;
             result.put(i, c.getString(i));

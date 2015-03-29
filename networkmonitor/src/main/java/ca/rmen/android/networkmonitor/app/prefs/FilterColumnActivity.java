@@ -102,7 +102,7 @@ public class FilterColumnActivity extends ActionBarActivity { // NO_UCD (use def
 
         // Build a list of all the values the user selected.
         SparseBooleanArray checkedPositions = mListView.getCheckedItemPositions();
-        final List<String> selectedValues = new ArrayList<String>(mListView.getCount());
+        final List<String> selectedValues = new ArrayList<>(mListView.getCount());
         for (int i = 0; i < mListView.getCount(); i++) {
             if (checkedPositions.get(i)) selectedValues.add(((FilterListItem) mListView.getAdapter().getItem(i)).value);
         }

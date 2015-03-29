@@ -40,7 +40,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class NetMonDataSources {
 
     private static final String TAG = Constants.TAG + NetMonDataSources.class.getSimpleName();
-    private final List<NetMonDataSource> mSources = new ArrayList<NetMonDataSource>();
+    private final List<NetMonDataSource> mSources = new ArrayList<>();
     // @formatter:off
     private static final Class<?>[] DATA_SOURCE_CLASSES = new Class<?>[] { 
         ActiveNetworkInfoDataSource.class,

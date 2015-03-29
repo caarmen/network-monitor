@@ -238,7 +238,7 @@ public class NetMonPreferences {
      */
     public List<String> getColumnFilterValues(String columnName) {
         String filteredValuesString = mSharedPrefs.getString(PREF_FILTER_PREFIX + columnName, "");
-        if (TextUtils.isEmpty(filteredValuesString)) return new ArrayList<String>();
+        if (TextUtils.isEmpty(filteredValuesString)) return new ArrayList<>();
         return Arrays.asList(filteredValuesString.split(","));
     }
 

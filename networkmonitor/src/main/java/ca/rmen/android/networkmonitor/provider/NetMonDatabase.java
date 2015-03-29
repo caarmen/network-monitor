@@ -319,7 +319,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
                     null, null, null);
             if (cursor != null) {
                 // Keep track of all the rows we need to update.
-                Map<Long, ContentValues> mccMncUpdates = new HashMap<Long, ContentValues>();
+                Map<Long, ContentValues> mccMncUpdates = new HashMap<>();
                 try {
                     int idIndex = cursor.getColumnIndex(NetMonColumns._ID);
                     int simOperatorIndex = cursor.getColumnIndex(NetMonColumns.SIM_OPERATOR);
