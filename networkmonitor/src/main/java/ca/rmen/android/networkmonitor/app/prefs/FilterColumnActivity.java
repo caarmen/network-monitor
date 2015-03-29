@@ -31,6 +31,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBarActivity;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,7 +47,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 /**
  * Activity which lets the user choose which values for a particular column will appear in the report.
  */
-public class FilterColumnActivity extends FragmentActivity { // NO_UCD (use default)
+public class FilterColumnActivity extends ActionBarActivity { // NO_UCD (use default)
     private static final String TAG = FilterColumnActivity.class.getSimpleName();
     public static final String EXTRA_COLUMN_NAME = "column_name";
     private ListView mListView;
