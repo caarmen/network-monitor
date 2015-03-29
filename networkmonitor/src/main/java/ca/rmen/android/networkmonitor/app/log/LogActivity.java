@@ -25,7 +25,6 @@
 package ca.rmen.android.networkmonitor.app.log;
 
 import java.io.File;
-import java.io.IOException;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;

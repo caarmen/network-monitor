@@ -24,7 +24,6 @@
 package ca.rmen.android.networkmonitor.app.dbops.ui;
 
 import java.io.File;
-import java.io.IOException;
 
 import android.app.Activity;
 import android.app.ProgressDialog;

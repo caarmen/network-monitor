@@ -55,7 +55,7 @@ public class DialogFragmentFactory extends DialogFragment {
     /**
      * @return a visible dialog fragment with the given title and message, and just one OK button.
      */
-    public static InfoDialogFragment showInfoDialog(FragmentActivity activity, String title, String message) {
+    public static void showInfoDialog(FragmentActivity activity, String title, String message) {
         Log.v(TAG, "showInfoDialog");
         Bundle arguments = new Bundle(3);
         arguments.putString(EXTRA_TITLE, title);
@@ -63,13 +63,12 @@ public class DialogFragmentFactory extends DialogFragment {
         InfoDialogFragment result = new InfoDialogFragment();
         result.setArguments(arguments);
         result.show(activity.getSupportFragmentManager(), InfoDialogFragment.class.getSimpleName());
-        return result;
     }
 
     /**
      * @return a visible warning dialog fragment with the given title and message, and just one OK button.
      */
-    public static InfoDialogFragment showWarningDialog(FragmentActivity activity, String title, String message) {
+    public static void showWarningDialog(FragmentActivity activity, String title, String message) {
         Log.v(TAG, "showInfoDialog");
         Bundle arguments = new Bundle(3);
         arguments.putString(EXTRA_TITLE, title);
@@ -78,7 +77,6 @@ public class DialogFragmentFactory extends DialogFragment {
         InfoDialogFragment result = new InfoDialogFragment();
         result.setArguments(arguments);
         result.show(activity.getSupportFragmentManager(), InfoDialogFragment.class.getSimpleName());
-        return result;
     }
 
     /**
@@ -86,7 +84,7 @@ public class DialogFragmentFactory extends DialogFragment {
      *         {@link DialogButtonListener}, the actionId and extras parameter will be provided in
      *         the {@link DialogButtonListener#onOkClicked(int, Bundle)} callback on the activity, when the user clicks on the ok button.
      */
-    public static ConfirmDialogFragment showConfirmDialog(FragmentActivity activity, String title, String message, int actionId, Bundle extras) {
+    public static void showConfirmDialog(FragmentActivity activity, String title, String message, int actionId, Bundle extras) {
         Log.v(TAG, "showConfirmDialog: title = " + title + ", message = " + message + ", actionId = " + actionId + ", extras = " + extras);
         ConfirmDialogFragment result = new ConfirmDialogFragment();
         Bundle arguments = new Bundle(4);
@@ -96,7 +94,6 @@ public class DialogFragmentFactory extends DialogFragment {
         if (extras != null) arguments.putBundle(EXTRA_EXTRAS, extras);
         result.setArguments(arguments);
         result.show(activity.getSupportFragmentManager(), ConfirmDialogFragment.class.getSimpleName());
-        return result;
     }
 
     /**
@@ -105,7 +102,7 @@ public class DialogFragmentFactory extends DialogFragment {
      *         {@link DialogItemListener#onItemSelected(int, CharSequence[], int)} callback on the activity, when the user selects an item.
      * @param selectedItem if greater than zero, then the given item at that index will be pre-selected in the list.
      */
-    public static ChoiceDialogFragment showChoiceDialog(FragmentActivity activity, String title, CharSequence[] items, int selectedItem, int actionId) {
+    public static void showChoiceDialog(FragmentActivity activity, String title, CharSequence[] items, int selectedItem, int actionId) {
         Log.v(TAG, "showChoiceDialog: title = " + title + ", actionId = " + actionId + ", items =" + Arrays.toString(items) + ", selectedItem = "
                 + selectedItem);
         ChoiceDialogFragment result = new ChoiceDialogFragment();
@@ -116,14 +113,13 @@ public class DialogFragmentFactory extends DialogFragment {
         arguments.putInt(EXTRA_SELECTED_ITEM, selectedItem);
         result.setArguments(arguments);
         result.show(activity.getSupportFragmentManager(), ChoiceDialogFragment.class.getSimpleName());
-        return result;
     }
 
     /**
      * @return a visible dialog fragment with the given message.
      * @param tag should be used by the calling activity, when the background task is complete, to find the fragment and dismiss it.
      */
-    public static ProgressDialogFragment showProgressDialog(FragmentActivity activity, String message, int progressDialogStyle, String tag) {
+    public static void showProgressDialog(FragmentActivity activity, String message, int progressDialogStyle, String tag) {
         Log.v(TAG, "showProgressDialog: message = " + message);
         Bundle arguments = new Bundle(2);
         arguments.putString(EXTRA_MESSAGE, message);
@@ -131,7 +127,6 @@ public class DialogFragmentFactory extends DialogFragment {
         result.setArguments(arguments);
         result.setCancelable(false);
         result.show(activity.getSupportFragmentManager(), tag);
-        return result;
     }
 
 }

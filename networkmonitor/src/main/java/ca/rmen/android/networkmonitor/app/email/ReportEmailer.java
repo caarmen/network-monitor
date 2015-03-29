@@ -24,7 +24,6 @@
 package ca.rmen.android.networkmonitor.app.email;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
@@ -220,8 +219,6 @@ public class ReportEmailer {
             Log.e(TAG, "Could not send mail " + e.getMessage(), e);
         } catch (UnsupportedEncodingException e) {
             Log.e(TAG, "Could not send mail " + e.getMessage(), e);
-        } catch (FileNotFoundException e) {
-            Log.e(TAG, "Could not send mail " + e.getMessage(), e);
         }
         return null;
     }
@@ -250,7 +247,7 @@ public class ReportEmailer {
      * @param fileType one of the file types the user selected in the preference
      * @return the BodyPart containing the exported file of this type.
      */
-    private BodyPart createBodyPart(String fileType) throws MessagingException, FileNotFoundException {
+    private BodyPart createBodyPart(String fileType) throws MessagingException {
         Log.v(TAG, "createBodyPart: fileType = " + fileType);
         // Get the FileExport instance which can export mContext file type.
         final FileExport fileExport;
