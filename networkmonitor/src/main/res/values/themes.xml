@@ -39,6 +39,8 @@
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowDisablePreview">true</item>
         <item name="android:windowNoDisplay">true</item>
+        <item name="colorPrimary">@color/netmon_color</item>
+        <item name="colorAccent">@color/netmon_text_color</item>
     </style>
 
     <style name="NetMonActionBarWidgetTheme" parent="Base.Theme.AppCompat">

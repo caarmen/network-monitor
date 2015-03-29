@@ -2,16 +2,16 @@
 
     <style name="dialogStyleBase" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:textColor">@color/netmon_text_color</item>
         <item name="android:buttonStyle">@style/ButtonNetMon</item>
-        <item name="android:listViewStyle">@style/ListViewNetMon</item>
-        <item name="android:listChoiceIndicatorSingle">@drawable/netmon_btn_radio_holo_light</item>
-        <item name="android:listChoiceIndicatorMultiple">@drawable/netmon_btn_check_holo_light</item>
         <item name="android:progressBarStyleHorizontal">@style/ProgressBarNetMon</item>
+        <item name="android:listViewStyle">@style/ListViewNetMon</item>
     </style>
     <!-- This style is referenced from code: DialogStyleHacks applies this style to dialogs. -->
     <style name="dialogStyle" parent="dialogStyleBase">
         <item name="android:alertDialogStyle">@style/alertDialogStyle</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/netmon_btn_check_holo_light</item>
+        <item name="android:listChoiceIndicatorSingle">@drawable/netmon_btn_radio_holo_light</item>
+        <item name="android:textColor">@color/netmon_text_color</item>
     </style>
 
     <style name="textAppearanceLarge" parent="@android:style/TextAppearance.Large">
