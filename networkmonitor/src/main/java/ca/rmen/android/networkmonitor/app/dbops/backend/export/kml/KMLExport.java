@@ -97,7 +97,7 @@ public class KMLExport extends FileExport {
                 }
                 Log.v(TAG, "Column names: " + Arrays.toString(columnsToExport));
 
-                KMLStyle kmlStyle = KMLStyleFactory.getKMLStyle(mContext, mPlacemarkNameColumn);
+                KMLStyle kmlStyle = KMLStyleFactory.getKMLStyle(mPlacemarkNameColumn);
                 int placemarkNameColumnId = c.getColumnIndex(mPlacemarkNameColumn);
                 String now = DATE_FORMAT.format(new Date());
                 String title = mContext.getString(R.string.app_name) + ": " + columnNamesMapping.get(mPlacemarkNameColumn) + " (" + now + ")";

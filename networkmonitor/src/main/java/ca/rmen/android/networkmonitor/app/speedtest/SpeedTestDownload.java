@@ -74,7 +74,7 @@ public class SpeedTestDownload {
             Log.v(TAG, "Will open input stream");
             inputStream = connection.getInputStream();
             byte[] buffer = new byte[1024];
-            int read = 0;
+            int read;
             do {
                 read = inputStream.read(buffer);
                 if (read > 0) outputStream.write(buffer, 0, read);

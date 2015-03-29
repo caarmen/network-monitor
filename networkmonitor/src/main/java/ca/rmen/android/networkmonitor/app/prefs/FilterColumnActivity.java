@@ -91,12 +91,12 @@ public class FilterColumnActivity extends ActionBarActivity { // NO_UCD (use def
         return true;
     }
 
-    public void onCancel(View v) { // NO_UCD (unused code)
+    public void onCancel(@SuppressWarnings("UnusedParameters") View v) {
         Log.v(TAG, "onCancel");
         finish();
     }
 
-    public void onOk(View v) { // NO_UCD (unused code)
+    public void onOk(@SuppressWarnings("UnusedParameters") View v) {
         Log.v(TAG, "onOk");
         // Update the preference for values to filter, for this particular column.
 

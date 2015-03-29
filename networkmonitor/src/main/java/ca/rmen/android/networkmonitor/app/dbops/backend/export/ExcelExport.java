@@ -24,7 +24,6 @@
 package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -67,7 +66,7 @@ public class ExcelExport extends TableFileExport {
     private int mRowCount;
     private int mColumnCount;
 
-    public ExcelExport(Context context) throws FileNotFoundException {
+    public ExcelExport(Context context) {
         super(context, new File(context.getExternalFilesDir(null), EXCEL_FILE), FormatterStyle.DEFAULT);
     }
 

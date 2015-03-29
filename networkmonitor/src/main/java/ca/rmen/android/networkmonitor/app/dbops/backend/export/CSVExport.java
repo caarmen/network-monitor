@@ -24,7 +24,6 @@
 package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -40,7 +39,7 @@ public class CSVExport extends TableFileExport {
     private static final String CSV_FILE = "networkmonitor.csv";
     private PrintWriter mPrintWriter;
 
-    public CSVExport(Context context) throws FileNotFoundException {
+    public CSVExport(Context context) {
         super(context, new File(context.getExternalFilesDir(null), CSV_FILE), FormatterStyle.DEFAULT);
     }
 

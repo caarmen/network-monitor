@@ -62,8 +62,8 @@ public class PreferenceDialog {
     /**
      * Show the user a dialog to select the primary data field for a KML export.
      */
-    public static Dialog showKMLExportColumnChoiceDialog(Context context, PreferenceDialog.PreferenceChoiceDialogListener listener) {
-        return showPreferenceChoiceDialog(context, NetMonPreferences.PREF_KML_EXPORT_COLUMN, NetMonColumns.SOCKET_CONNECTION_TEST, R.array.db_columns,
+    public static void showKMLExportColumnChoiceDialog(Context context, PreferenceDialog.PreferenceChoiceDialogListener listener) {
+        showPreferenceChoiceDialog(context, NetMonPreferences.PREF_KML_EXPORT_COLUMN, NetMonColumns.SOCKET_CONNECTION_TEST, R.array.db_columns,
                 NetMonColumns.getColumnLabels(context), R.string.export_kml_choice_title, listener);
     }
 

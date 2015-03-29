@@ -70,13 +70,11 @@ class StandardDeviceLocationDataSource implements NetMonDataSource {
         Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues(3);
         Location mostRecentLocation = null;
-        if (mostRecentLocation == null) {
-            List<String> providers = mLocationManager.getProviders(true);
-            for (String provider : providers) {
-                Location location = mLocationManager.getLastKnownLocation(provider);
-                Log.v(TAG, "Location for provider " + provider + ": " + location);
-                if (isBetter(mostRecentLocation, location)) mostRecentLocation = location;
-            }
+        List<String> providers = mLocationManager.getProviders(true);
+        for (String provider : providers) {
+            Location location = mLocationManager.getLastKnownLocation(provider);
+            Log.v(TAG, "Location for provider " + provider + ": " + location);
+            if (isBetter(mostRecentLocation, location)) mostRecentLocation = location;
         }
         Log.v(TAG, "Most recent location: " + mostRecentLocation);
         if (mostRecentLocation != null) {

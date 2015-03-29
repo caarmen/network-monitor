@@ -79,7 +79,7 @@ public class FormatterFactory {
          */
         @Override
         public String format(Cursor c, int columnIndex) {
-            String result = null;
+            String result;
             String columnName = c.getColumnName(columnIndex);
             // Format timestamps
             if (NetMonColumns.TIMESTAMP.equals(columnName)) {

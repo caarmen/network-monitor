@@ -111,12 +111,12 @@ public class SelectFieldsActivity extends ActionBarActivity implements SelectFie
         }
     }
 
-    public void onCancel(View v) { // NO_UCD (unused code)
+    public void onCancel(@SuppressWarnings("UnusedParameters") View v) {
         Log.v(TAG, "onCancel");
         finish();
     }
 
-    public void onOk(View v) { // NO_UCD (unused code)
+    public void onOk(@SuppressWarnings("UnusedParameters") View v) {
         Log.v(TAG, "onOk");
         SparseBooleanArray checkedPositions = mListView.getCheckedItemPositions();
         String[] dbColumns = NetMonColumns.getColumnNames(this);

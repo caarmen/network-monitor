@@ -81,7 +81,7 @@ class KMLWriter extends PrintWriter {
         writePlacemarkName(name);
         writePlacemarkCoordinates(longitude, latitude);
         if (timestamp > 0) writePlacemarkTimestamp(timestamp);
-        writePlacemarkStyleUrl(name, values);
+        writePlacemarkStyleUrl(values);
         writePlacemarkExtendedData(values);
         println("    </Placemark>");
         flush();
@@ -157,7 +157,7 @@ class KMLWriter extends PrintWriter {
     /**
      * Refer to the correct style, depending on the value of the data point for this record.
      */
-    private void writePlacemarkStyleUrl(String placemarkName, Map<String, String> values) {
+    private void writePlacemarkStyleUrl(Map<String, String> values) {
         final String styleUrl;
         KMLStyle.IconColor iconColor = mKmlStyle.getColor(values);
         if (iconColor == KMLStyle.IconColor.GREEN) styleUrl = STYLEMAP_GREEN;

@@ -79,16 +79,16 @@ public class EmailPreferences {
     }
 
     public static final String PREF_EMAIL_REPORTS = "PREF_EMAIL_REPORTS";
-    static final String PREF_EMAIL_INTERVAL = "PREF_EMAIL_INTERVAL";
     static final String PREF_EMAIL_REPORT_FORMATS = "PREF_EMAIL_REPORT_FORMATS";
     static final String PREF_EMAIL_SERVER = "PREF_EMAIL_SERVER";
     static final String PREF_EMAIL_PORT = "PREF_EMAIL_PORT";
-    static final String PREF_EMAIL_SECURITY = "PREF_EMAIL_SECURITY";
     static final String PREF_EMAIL_USER = "PREF_EMAIL_USER";
     static final String PREF_EMAIL_RECIPIENTS = "PREF_EMAIL_RECIPIENTS";
     static final String PREF_EMAIL_LAST_EMAIL_SENT = "PREF_EMAIL_LAST_EMAIL_SENT";
     private static final String PREF_EMAIL_PASSWORD = "PREF_EMAIL_PASSWORD";
 
+    private static final String PREF_EMAIL_INTERVAL = "PREF_EMAIL_INTERVAL";
+    private static final String PREF_EMAIL_SECURITY = "PREF_EMAIL_SECURITY";
     private static final String PREF_EMAIL_PORT_DEFAULT = "587";
 
     private static EmailPreferences INSTANCE = null;

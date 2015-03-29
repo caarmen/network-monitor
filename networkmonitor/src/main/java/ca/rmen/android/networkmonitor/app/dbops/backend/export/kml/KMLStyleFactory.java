@@ -25,7 +25,6 @@ package ca.rmen.android.networkmonitor.app.dbops.backend.export.kml;
 
 import java.util.Map;
 
-import android.content.Context;
 import android.text.TextUtils;
 
 import ca.rmen.android.networkmonitor.Constants;
@@ -39,8 +38,8 @@ class KMLStyleFactory {
     /**
      * @return an implementation of KMLStyle for the given placemark extended data field name.
      */
-    static KMLStyle getKMLStyle(Context context, String fieldName) {
-        KMLStyle result = null;
+    static KMLStyle getKMLStyle(String fieldName) {
+        KMLStyle result;
         if (NetMonColumns.SOCKET_CONNECTION_TEST.equals(fieldName) || NetMonColumns.HTTP_CONNECTION_TEST.equals(fieldName)) result = new KMLStyleConnectionTest(
                 fieldName);
         else if (NetMonColumns.IS_CONNECTED.equals(fieldName) || NetMonColumns.IS_ROAMING.equals(fieldName) || NetMonColumns.IS_AVAILABLE.equals(fieldName)
@@ -132,7 +131,7 @@ class KMLStyleFactory {
         }
 
         @Override
-        protected IconColor getColor(String value) {
+        IconColor getColor(String value) {
             if (TextUtils.isEmpty(value)) return IconColor.YELLOW;
             Integer signalStrength = Integer.valueOf(value);
             if (signalStrength >= 4) return IconColor.GREEN;

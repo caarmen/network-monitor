@@ -55,10 +55,12 @@ class BatteryDataSource implements NetMonDataSource {
         ContentValues result = new ContentValues();
         IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         Intent batteryStatus = mContext.registerReceiver(null, filter);
-        int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-        int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-        float batteryPct = level / (float) scale;
-        result.put(NetMonColumns.BATTERY_LEVEL, (int) (batteryPct * 100));
+        if(batteryStatus != null) {
+            int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+            int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+            float batteryPct = level / (float) scale;
+            result.put(NetMonColumns.BATTERY_LEVEL, (int) (batteryPct * 100));
+        }
         return result;
     }
 

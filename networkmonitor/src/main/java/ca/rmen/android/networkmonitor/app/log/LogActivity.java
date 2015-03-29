@@ -163,15 +163,10 @@ public class LogActivity extends ActionBarActivity implements DialogButtonListen
             @Override
             protected File doInBackground(Void... params) {
                 Log.v(TAG, "loadHTMLFile:doInBackground");
-                try {
-                    // Export the DB to the HTML file.
-                    HTMLExport htmlExport = new HTMLExport(LogActivity.this, false);
-                    int recordCount = NetMonPreferences.getInstance(LogActivity.this).getFilterRecordCount();
-                    return htmlExport.export(recordCount, null);
-                } catch (IOException e) {
-                    Log.e(TAG, "doInBackground Could not load data into html file: " + e.getMessage(), e);
-                }
-                return null;
+                // Export the DB to the HTML file.
+                HTMLExport htmlExport = new HTMLExport(LogActivity.this, false);
+                int recordCount = NetMonPreferences.getInstance(LogActivity.this).getFilterRecordCount();
+                return htmlExport.export(recordCount, null);
             }
 
             @SuppressLint("SetJavaScriptEnabled")

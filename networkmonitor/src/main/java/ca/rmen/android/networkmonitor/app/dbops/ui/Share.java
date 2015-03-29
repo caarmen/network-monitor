@@ -62,26 +62,22 @@ public class Share {
     public static void share(FragmentActivity activity, String selectedShareFormat) {
         Log.v(TAG, "share " + selectedShareFormat);
         FileExport fileExport = null;
-        try {
-            if (activity.getString(R.string.export_choice_csv).equals(selectedShareFormat)) {
-                fileExport = new CSVExport(activity);
-            } else if (activity.getString(R.string.export_choice_html).equals(selectedShareFormat)) {
-                fileExport = new HTMLExport(activity, true);
-            } else if (activity.getString(R.string.export_choice_kml).equals(selectedShareFormat)) {
-                // The KML export requires a second dialog before we can share, so we return here.
-                shareKml(activity);
-                return;
-            } else if (activity.getString(R.string.export_choice_excel).equals(selectedShareFormat)) {
-                fileExport = new ExcelExport(activity);
-            } else if (activity.getString(R.string.export_choice_db).equals(selectedShareFormat)) {
-                fileExport = new DBExport(activity);
-            } else {
-                // Text summary only
-            }
-            shareFile(activity, fileExport);
-        } catch (IOException e) {
-            Log.w(TAG, "Error sharing file: " + e.getMessage(), e);
+        if (activity.getString(R.string.export_choice_csv).equals(selectedShareFormat)) {
+            fileExport = new CSVExport(activity);
+        } else if (activity.getString(R.string.export_choice_html).equals(selectedShareFormat)) {
+            fileExport = new HTMLExport(activity, true);
+        } else if (activity.getString(R.string.export_choice_kml).equals(selectedShareFormat)) {
+            // The KML export requires a second dialog before we can share, so we return here.
+            shareKml(activity);
+            return;
+        } else if (activity.getString(R.string.export_choice_excel).equals(selectedShareFormat)) {
+            fileExport = new ExcelExport(activity);
+        } else if (activity.getString(R.string.export_choice_db).equals(selectedShareFormat)) {
+            fileExport = new DBExport(activity);
+        } else {
+            // Text summary only
         }
+        shareFile(activity, fileExport);
     }
 
     /**

@@ -67,10 +67,9 @@ public class InfoDialogFragment extends DialogFragment { // NO_UCD (use default)
         final int iconId = arguments.getInt(DialogFragmentFactory.EXTRA_ICON_ID);
         if (iconId > 0) builder.setIcon(iconId);
         final Bundle extras = arguments.getBundle(DialogFragmentFactory.EXTRA_EXTRAS);
-        OnClickListener neutralListener = null;
         builder.setTitle(arguments.getString(DialogFragmentFactory.EXTRA_TITLE)).setMessage(arguments.getString(DialogFragmentFactory.EXTRA_MESSAGE));
         if (getActivity() instanceof InfoDialogListener) {
-            neutralListener = new OnClickListener() {
+            OnClickListener neutralListener = new OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     FragmentActivity activity = getActivity();

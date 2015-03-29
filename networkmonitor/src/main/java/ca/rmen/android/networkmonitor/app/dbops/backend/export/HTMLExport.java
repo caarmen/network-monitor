@@ -54,7 +54,7 @@ public class HTMLExport extends TableFileExport {
     /**
      * @param external if true, the file will be exported to the sd card. Otherwise it will written to the application's internal storage.
      */
-    public HTMLExport(Context context, boolean external) throws FileNotFoundException {
+    public HTMLExport(Context context, boolean external) {
         super(context, new File(external ? context.getExternalFilesDir(null) : context.getFilesDir(), HTML_FILE), FormatterStyle.XML);
     }
 

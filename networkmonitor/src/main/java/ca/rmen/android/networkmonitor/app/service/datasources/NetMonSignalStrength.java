@@ -327,7 +327,7 @@ class NetMonSignalStrength {
      * Asu is calculated based on 3GPP RSRP. Refer to 3GPP 27.007 (Ver 10.3.0) Sec 8.69
      */
     private int getLteAsuLevel(SignalStrength signalStrength) {
-        int lteAsuLevel = 99;
+        int lteAsuLevel;
         int lteDbm = getLteDbm(signalStrength);
         /*
          * 3GPP 27.007 (Ver 10.3.0) Sec 8.69

@@ -180,7 +180,7 @@ public class NetMonPreferences {
      * Enable or disable the data connection tests.
      */
     public void setConnectionTestEnabled(boolean enabled) {
-        setBooleanPreference(NetMonPreferences.PREF_ENABLE_CONNECTION_TEST, false);
+        setBooleanPreference(NetMonPreferences.PREF_ENABLE_CONNECTION_TEST, enabled);
     }
 
     /**

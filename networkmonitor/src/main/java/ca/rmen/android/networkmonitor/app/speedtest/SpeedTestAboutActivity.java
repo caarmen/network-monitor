@@ -56,7 +56,7 @@ public class SpeedTestAboutActivity extends FragmentActivity { // NO_UCD (use de
         finish();
     }
 
-    public void playStoreClicked(View view) {
+    public void playStoreClicked(@SuppressWarnings("UnusedParameters") View view) {
         Log.v(TAG, "playStoreClicked");
         String playStoreUrl = "https://play.google.com/store/search?c=apps&q=speed test";
         final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(playStoreUrl));

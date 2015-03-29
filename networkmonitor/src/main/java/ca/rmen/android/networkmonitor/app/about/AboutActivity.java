@@ -49,7 +49,7 @@ public class AboutActivity extends ActionBarActivity { // NO_UCD (use default)
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about);
 
-        String versionName = null;
+        String versionName;
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             versionName = packageInfo.versionName;
