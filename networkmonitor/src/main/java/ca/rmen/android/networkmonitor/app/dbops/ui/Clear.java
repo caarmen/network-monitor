@@ -45,7 +45,7 @@ public class Clear {
      * Deletes rows from the database, keeping only the given number of rows.
      *
      * @param activity a progress dialog will be displayed in this activity
-     * @param numRowsToKeep delete all but the most recet numRowToKeep rows. 0 to delete all rows.
+     * @param numRowsToKeep delete all but the most recent numRowToKeep rows. 0 to delete all rows.
      */
     public static void clear(final FragmentActivity activity, int numRowsToKeep) {
         Log.v(TAG, "clear, keeping " + numRowsToKeep + " records");

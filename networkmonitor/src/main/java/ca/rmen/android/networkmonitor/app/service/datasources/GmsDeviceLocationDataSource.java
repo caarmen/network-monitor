@@ -96,7 +96,7 @@ class GmsDeviceLocationDataSource implements NetMonDataSource {
     }
 
     /**
-     * Depending on the location fetching strategy, and the app's test interval register a listener to
+     * Depending on the location fetching strategy, and the application's test interval register a listener to
      * receive location updates.
      */
     private void registerLocationListener() {

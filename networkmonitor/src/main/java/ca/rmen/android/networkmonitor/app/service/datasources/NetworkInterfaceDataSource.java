@@ -91,13 +91,13 @@ class NetworkInterfaceDataSource implements NetMonDataSource {
         return result;
     }
 
-    private boolean isValidNetworkInterface(NetworkInterface intf) throws SocketException {
-        return Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD || isValidNetworkInterfaceApi9(intf);
+    private boolean isValidNetworkInterface(NetworkInterface networkInterface) throws SocketException {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD || isValidNetworkInterfaceApi9(networkInterface);
     }
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    private boolean isValidNetworkInterfaceApi9(NetworkInterface intf) throws SocketException {
-        return intf.isUp() && !intf.isLoopback();
+    private boolean isValidNetworkInterfaceApi9(NetworkInterface networkInterface) throws SocketException {
+        return networkInterface.isUp() && !networkInterface.isLoopback();
     }
 
 }

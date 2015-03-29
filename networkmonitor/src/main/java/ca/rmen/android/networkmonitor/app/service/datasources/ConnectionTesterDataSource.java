@@ -141,15 +141,15 @@ class ConnectionTesterDataSource implements NetMonDataSource {
             socket.setSoTimeout(mTimeout);
             String host = NetMonPreferences.getInstance(mContext).getTestServer();
             Log.d(TAG, "getSocketTestResult Resolving " + host);
-            InetSocketAddress remoteAddr = new InetSocketAddress(host, PORT);
-            InetAddress address = remoteAddr.getAddress();
+            InetSocketAddress remoteAddress = new InetSocketAddress(host, PORT);
+            InetAddress address = remoteAddress.getAddress();
             if (address == null) {
                 Log.d(TAG, "getSocketTestResult Could not resolve");
                 return NetworkTestResult.FAIL;
             }
             Log.d(TAG, "getSocketTestResult Resolved " + address.getHostAddress());
             Log.d(TAG, "getSocketTestResult Connecting...");
-            socket.connect(remoteAddr, mTimeout);
+            socket.connect(remoteAddress, mTimeout);
             Log.d(TAG, "getSocketTestResult Connected");
 
             Log.d(TAG, "getSocketTestResult Sending GET...");

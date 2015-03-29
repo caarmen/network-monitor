@@ -27,7 +27,7 @@ package ca.rmen.android.networkmonitor.provider;
 import android.net.Uri;
 
 /**
- * This is neither a db table nor view. These columns and content uri allow retrieving, for a givne column, the unique values that that column has, as well as
+ * This is neither a db table nor view. These columns and content uri allow retrieving, for a given column, the unique values that that column has, as well as
  * the count of each of these unique values.
  */
 public class UniqueValuesColumns {

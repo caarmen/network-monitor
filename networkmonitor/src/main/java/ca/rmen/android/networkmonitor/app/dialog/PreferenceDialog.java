@@ -98,7 +98,7 @@ public class PreferenceDialog {
      */
     private static Dialog showPreferenceChoiceDialog(final Context context, final String preferenceName, String defaultValue, int valuesArrayId,
             String[] labels, int titleId, final PreferenceDialog.PreferenceChoiceDialogListener listener) {
-        Log.v(TAG, "showPreferenceChoic@eDialog");
+        Log.v(TAG, "showPreferenceChoiceDialog");
         final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         // Find the position in the list of choices which corresponds to our current preference.
         final String[] values = context.getResources().getStringArray(valuesArrayId);

@@ -147,7 +147,7 @@ public class SummaryExport {
 
         @Override
         public String toString() {
-            return "BSID=" + id1 + ",SID=" + id2 + ",NID=" + id3 + ": " + super.toString();
+            return "BSSID=" + id1 + ",SID=" + id2 + ",NID=" + id3 + ": " + super.toString();
         }
     }
 

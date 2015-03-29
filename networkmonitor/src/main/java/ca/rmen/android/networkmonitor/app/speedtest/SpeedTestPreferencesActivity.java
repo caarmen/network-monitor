@@ -157,7 +157,7 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
 
     /**
      * Download the file to use for the speed test.
-     * We save the downlaod result so we can update the summary of the url preference to include the file size.
+     * We save the download result so we can update the summary of the url preference to include the file size.
      */
     private void download() {
         final SpeedTestDownloadConfig config = mSpeedTestPrefs.getDownloadConfig();
