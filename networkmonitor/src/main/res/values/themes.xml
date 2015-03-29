@@ -4,7 +4,7 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="@style/NetMon">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -24,13 +24,15 @@
         <item name="selectableItemBackground">@drawable/netmon_list_selector_holo_light</item>
         <item name="actionBarWidgetTheme">@style/NetMonActionBarWidgetTheme</item>
         <item name="android:preferenceCategoryStyle">@style/NetMonPreferenceCategoryStyle</item>
+        <item name="android:buttonStyle">@style/ButtonNetMon</item>
+        <item name="android:imageButtonStyle">@style/ImageButtonNetMon</item>
     </style>
 
     <!--
     Special theme for a transparent activity (used when we need to 
     show a dialog on top of a PreferenceActivity
     -->
-    <style name="NetMonNoDisplayTheme" parent="@style/NetMon">
+    <style name="NetMonNoDisplayTheme" parent="@style/AppBaseTheme">
         <item name="android:windowBackground">@null</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsTranslucent">true</item>
