@@ -22,10 +22,10 @@
         <item name="colorAccent">@color/netmon_text_color</item>
         <item name="actionBarItemBackground">@drawable/netmon_list_selector_holo_light</item>
         <item name="selectableItemBackground">@drawable/netmon_list_selector_holo_light</item>
-        <item name="actionBarWidgetTheme">@style/NetMonActionBarWidgetTheme</item>
         <item name="android:preferenceCategoryStyle">@style/NetMonPreferenceCategoryStyle</item>
         <item name="android:buttonStyle">@style/ButtonNetMon</item>
         <item name="android:imageButtonStyle">@style/ImageButtonNetMon</item>
+        <item name="listChoiceBackgroundIndicator">@drawable/netmon_list_selector_holo_light</item>
     </style>
 
     <!--
@@ -43,9 +43,6 @@
         <item name="colorAccent">@color/netmon_text_color</item>
     </style>
 
-    <style name="NetMonActionBarWidgetTheme" parent="Base.Theme.AppCompat">
-        <item name="android:dropDownListViewStyle">@style/ListViewNetMon</item>
-    </style>
     <style name="ToolBarTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:background">@android:color/black</item>
