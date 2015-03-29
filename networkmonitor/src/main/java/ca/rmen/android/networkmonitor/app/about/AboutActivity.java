@@ -35,6 +35,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -43,8 +44,8 @@ import android.widget.Toast;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.util.Log;
 
-public class AboutActivity extends Activity { // NO_UCD (use default)
-    @Override
+public class AboutActivity extends ActionBarActivity { // NO_UCD (use default)
+@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about);
@@ -64,7 +65,7 @@ public class AboutActivity extends Activity { // NO_UCD (use default)
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void setDisplayHomeAsUpEnabled(boolean enabled) {
-        getActionBar().setDisplayHomeAsUpEnabled(enabled);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
     }
 
     @Override
