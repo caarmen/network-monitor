@@ -45,7 +45,6 @@ public class ThemedListPreference extends MaterialListPreference {
 
     @Override
     protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
-        DialogStyle.setCustomTitle(getContext(), builder, getTitle());
         super.onPrepareDialogBuilder(builder);
     }
 

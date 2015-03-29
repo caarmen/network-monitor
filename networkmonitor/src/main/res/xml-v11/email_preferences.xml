@@ -11,7 +11,7 @@
             android:summary="@string/pref_summary_email_report_interval"
             android:title="@string/pref_title_email_report_interval" />
 
-        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+        <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
             android:defaultValue=""
             android:hint="@string/pref_hint_email_recipients"
             android:icon="@drawable/ic_pref_email_recipients"
@@ -20,7 +20,7 @@
             android:summary="@string/pref_summary_email_recipients"
             android:title="@string/pref_title_email_recipients" />
 
-        <ca.rmen.android.networkmonitor.app.prefs.ThemedMultiSelectListPreference
+        <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference
             android:defaultValue="@array/empty_array"
             android:entries="@array/preferences_email_report_formats_labels"
             android:entryValues="@array/preferences_email_report_formats_values"
@@ -30,21 +30,21 @@
             android:title="@string/pref_title_email_report_formats" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_email_server_settings" >
-        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+        <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
             android:defaultValue="smtp.gmail.com"
             android:hint="@string/pref_hint_email_server"
             android:icon="@drawable/ic_pref_server"
             android:key="PREF_EMAIL_SERVER"
             android:summary="@string/pref_summary_email_server"
             android:title="@string/pref_title_email_server" />
-        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+        <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
             android:defaultValue="587"
             android:hint="@string/pref_hint_email_port"
             android:icon="@drawable/ic_pref_server"
             android:key="PREF_EMAIL_PORT"
             android:summary="@string/pref_summary_email_port"
             android:title="@string/pref_title_email_port" />
-        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+        <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
             android:defaultValue=""
             android:hint="@string/pref_hint_email_user"
             android:icon="@drawable/ic_pref_email_user"
@@ -52,7 +52,7 @@
             android:key="PREF_EMAIL_USER"
             android:summary="@string/pref_summary_email_user"
             android:title="@string/pref_title_email_user" />
-        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+        <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
             android:defaultValue=""
             android:icon="@drawable/ic_pref_email_password"
             android:inputType="textPassword"

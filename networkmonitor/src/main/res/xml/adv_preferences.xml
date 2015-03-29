@@ -30,7 +30,7 @@
             android:summary="@string/pref_summary_cell_id_format"
             android:title="@string/pref_title_cell_id_format" />
 
-        <ca.rmen.android.networkmonitor.app.prefs.ThemedEditTextPreference
+        <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
             android:defaultValue="173.194.45.41"
             android:hint="173.194.45.41"
             android:icon="@drawable/ic_pref_server"
