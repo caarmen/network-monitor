@@ -15,4 +15,9 @@
         <item name="android:layout">@layout/preference_category</item>
     </style>
 
+    <style name="ListViewNetMon" parent="android:Widget.ListView">
+        <item name="android:listSelector">@drawable/netmon_list_selector_holo_light</item>
+        <item name="android:divider">@null</item>
+    </style>
+
 </resources>

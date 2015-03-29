@@ -20,10 +20,6 @@
         <item name="md_list_selector">@drawable/netmon_list_selector_holo_light</item>
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:preferenceCategoryStyle">@style/NetMonPreferenceCategoryStyle</item>
-        <!--
-        <item name="android:buttonStyle">@style/ButtonNetMon</item>
-        <item name="android:imageButtonStyle">@style/ImageButtonNetMon</item>
-        -->
         <item name="actionBarStyle">@style/NetMonActionBar</item>
         <item name="actionBarItemBackground">@drawable/netmon_list_selector_holo_light</item>
         <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>

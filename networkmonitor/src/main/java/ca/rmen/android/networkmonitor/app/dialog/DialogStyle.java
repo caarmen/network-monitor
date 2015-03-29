@@ -57,4 +57,14 @@ public class DialogStyle {
         textView.setText(title);
         builder.setTitle(title);
     }
+
+    /**
+     * Set the text of the dialog's custom title view.
+     */
+    public static void setCustomTitle(Context context, MaterialDialog.Builder builder, CharSequence title) {
+        View customTitle = View.inflate(context, R.layout.dialog_title, null);
+        TextView textView = (TextView) customTitle.findViewById(R.id.dialog_title);
+        textView.setText(title);
+        builder.title(title);
+    }
 }

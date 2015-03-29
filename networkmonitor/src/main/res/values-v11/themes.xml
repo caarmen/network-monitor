@@ -11,7 +11,6 @@
             backward-compatibility can go here.
         -->
         <item name="android:listChoiceBackgroundIndicator">@drawable/netmon_list_selector_holo_light</item>
-        <item name="android:selectableItemBackground">@drawable/netmon_list_selector_holo_light</item>
     </style>
 
 </resources>

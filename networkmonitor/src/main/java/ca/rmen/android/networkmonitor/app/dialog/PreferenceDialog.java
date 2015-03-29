@@ -25,6 +25,7 @@ package ca.rmen.android.networkmonitor.app.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -33,8 +34,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.ContextThemeWrapper;
+import android.view.View;
 
 import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
@@ -63,7 +66,7 @@ public class PreferenceDialog {
     /**
      * Show the user a dialog to select the primary data field for a KML export.
      */
-    public static AlertDialog showKMLExportColumnChoiceDialog(Context context, PreferenceDialog.PreferenceChoiceDialogListener listener) {
+    public static Dialog showKMLExportColumnChoiceDialog(Context context, PreferenceDialog.PreferenceChoiceDialogListener listener) {
         return showPreferenceChoiceDialog(context, NetMonPreferences.PREF_KML_EXPORT_COLUMN, NetMonColumns.SOCKET_CONNECTION_TEST, R.array.db_columns,
                 NetMonColumns.getColumnLabels(context), R.string.export_kml_choice_title, listener);
     }
@@ -71,7 +74,7 @@ public class PreferenceDialog {
     /**
      * Show the user a dialog to select how many records to display in the log view.
      */
-    public static AlertDialog showFilterRecordCountChoiceDialog(Context context, PreferenceDialog.PreferenceChoiceDialogListener listener) {
+    public static Dialog showFilterRecordCountChoiceDialog(Context context, PreferenceDialog.PreferenceChoiceDialogListener listener) {
         return showPreferenceChoiceDialog(context, NetMonPreferences.PREF_FILTER_RECORD_COUNT, NetMonPreferences.PREF_FILTER_RECORD_COUNT_DEFAULT,
                 R.array.preferences_filter_record_count_values, R.array.preferences_filter_record_count_labels, R.string.pref_title_filter_record_count,
                 listener);
@@ -80,7 +83,7 @@ public class PreferenceDialog {
     /**
      * Show the user a dialog to choose the format for the cell ids.
      */
-    public static AlertDialog showCellIdFormatChoiceDialog(Context context, PreferenceDialog.PreferenceChoiceDialogListener listener) {
+    public static Dialog showCellIdFormatChoiceDialog(Context context, PreferenceDialog.PreferenceChoiceDialogListener listener) {
         return showPreferenceChoiceDialog(context, NetMonPreferences.PREF_CELL_ID_FORMAT, NetMonPreferences.PREF_CELL_ID_FORMAT_DEFAULT,
                 R.array.preferences_cell_id_format_values, R.array.preferences_cell_id_format_labels, R.string.pref_title_cell_id_format, listener);
     }
@@ -88,7 +91,7 @@ public class PreferenceDialog {
     /**
      * Show the user a preference choice dialog.
      */
-    private static AlertDialog showPreferenceChoiceDialog(Context context, final String preferenceName, String defaultValue, int valuesArrayId,
+    private static Dialog showPreferenceChoiceDialog(Context context, final String preferenceName, String defaultValue, int valuesArrayId,
             int labelsArrayId, int titleId, final PreferenceDialog.PreferenceChoiceDialogListener listener) {
         return showPreferenceChoiceDialog(context, preferenceName, defaultValue, valuesArrayId, context.getResources().getStringArray(labelsArrayId), titleId,
                 listener);
@@ -97,7 +100,7 @@ public class PreferenceDialog {
     /**
      * Show the user a preference choice dialog.
      */
-    private static AlertDialog showPreferenceChoiceDialog(final Context context, final String preferenceName, String defaultValue, int valuesArrayId,
+    private static Dialog showPreferenceChoiceDialog(final Context context, final String preferenceName, String defaultValue, int valuesArrayId,
             String[] labels, int titleId, final PreferenceDialog.PreferenceChoiceDialogListener listener) {
         Log.v(TAG, "showPreferenceChoic@eDialog");
         final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -111,29 +114,33 @@ public class PreferenceDialog {
                 break;
             }
         }
-        // Build a chooser dialog for the preference
-        AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context).setSingleChoiceItems(labels, currentPrefPosition, null).setPositiveButton(
-                android.R.string.ok, new OnClickListener() {
-
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
+                .title(titleId)
+                .items(labels)
+                .itemsCallbackSingleChoice(currentPrefPosition, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Save the preference for the record count.
-                        int selectedItemPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                        final String selectedItemValue = values[selectedItemPosition];
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        /**
+                         * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
+                         * returning false here won't allow the newly selected radio button to actually be selected.
+                         **/
+                        final String selectedItemValue = values[which];
                         sharedPrefs.edit().putString(preferenceName, selectedItemValue).apply();
                         listener.onPreferenceValueSelected(selectedItemValue);
+                        return true;
+                    }
+
+                })
+                .positiveText(android.R.string.ok)
+                .negativeText(android.R.string.cancel)
+                .cancelListener(new OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        listener.onCancel();
                     }
                 });
         DialogStyle.setCustomTitle(context, builder, context.getString(titleId));
-        // Manage canceling: the user can either click on the cancel button or can tap back to dismiss the dialog
-        builder.setNegativeButton(android.R.string.cancel, new OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                listener.onCancel();
-            }
-        });
-        final AlertDialog dialog = builder.create();
+        final Dialog dialog = builder.build();
         dialog.setOnCancelListener(new OnCancelListener() {
 
             @Override
