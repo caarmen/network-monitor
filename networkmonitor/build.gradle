@@ -43,10 +43,12 @@ dependencies {
     compile 'org.jraf:android-switch-backport:2.0.1'
     compile 'com.android.support:support-v4:22.0.0'
     compile 'com.google.android.gms:play-services-location:7.0.0'
-    compile 'com.afollestad:material-dialogs:0.6.6.3'
+    compile 'com.afollestad:material-dialogs:0.7.2.4'
+    compile ('net.sourceforge.jexcelapi:jxl:2.6.12') {
+        exclude group: "log4j"
+    }
+    compile 'commons-net:commons-net:3.3'
     compile files('libs/activation.jar')
     compile files('libs/additionnal.jar')
-    compile files('libs/commons-net-3.3.jar')
-    compile files('libs/jxl-2.6.12.jar')
     compile files('libs/mail.jar')
 }

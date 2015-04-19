@@ -23,7 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.dialog;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -59,7 +58,7 @@ public class ConfirmDialogFragment extends DialogFragment { // NO_UCD (use defau
     }
 
     /**
-     * @return an AlertDialog with a title, message, ok, and cancel buttons.
+     * @return a Dialog with a title, message, ok, and cancel buttons.
      */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -98,7 +97,7 @@ public class ConfirmDialogFragment extends DialogFragment { // NO_UCD (use defau
         builder.setNegativeButton(android.R.string.cancel, negativeListener);
         builder.setPositiveButton(android.R.string.ok, positiveListener);
         if (getActivity() instanceof OnCancelListener) builder.setOnCancelListener((OnCancelListener) getActivity());
-        final AlertDialog dialog = builder.create();
+        final Dialog dialog = builder.create();
         if (getActivity() instanceof OnDismissListener) dialog.setOnDismissListener((OnDismissListener) getActivity());
         return dialog;
 

@@ -23,7 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.dialog;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -55,7 +54,7 @@ public class InfoDialogFragment extends DialogFragment { // NO_UCD (use default)
     }
 
     /**
-     * @return an AlertDialog with a title, message, and single button to dismiss the dialog.
+     * @return a Dialog with a title, message, and single button to dismiss the dialog.
      */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -81,7 +80,7 @@ public class InfoDialogFragment extends DialogFragment { // NO_UCD (use default)
             builder.setNeutralButton(android.R.string.ok, neutralListener);
         }
         if (getActivity() instanceof OnCancelListener) builder.setOnCancelListener((OnCancelListener) getActivity());
-        final AlertDialog dialog = builder.create();
+        final Dialog dialog = builder.create();
         if (getActivity() instanceof OnDismissListener) dialog.setOnDismissListener((OnDismissListener) getActivity());
         return dialog;
     }

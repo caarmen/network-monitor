@@ -18,6 +18,7 @@
         <item name="md_dark_theme">false</item>
         <item name="md_background_color">@android:color/white</item>
         <item name="md_list_selector">@drawable/netmon_list_selector_holo_light</item>
+        <item name="md_widget_color">@color/netmon_color</item>
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:preferenceCategoryStyle">@style/NetMonPreferenceCategoryStyle</item>
         <item name="actionBarStyle">@style/NetMonActionBar</item>

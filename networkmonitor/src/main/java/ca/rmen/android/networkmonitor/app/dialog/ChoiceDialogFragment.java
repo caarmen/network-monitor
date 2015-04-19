@@ -25,7 +25,6 @@ package ca.rmen.android.networkmonitor.app.dialog;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -37,6 +36,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 
 import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -60,7 +60,7 @@ public class ChoiceDialogFragment extends DialogFragment { // NO_UCD (use defaul
     }
 
     /**
-     * @return an AlertDialog with a list of items, one of them possibly pre-selected.
+     * @return a Dialog with a list of items, one of them possibly pre-selected.
      */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -97,7 +97,7 @@ public class ChoiceDialogFragment extends DialogFragment { // NO_UCD (use defaul
             builder.setItems(choices, listener);
 
         if (getActivity() instanceof OnCancelListener) builder.setOnCancelListener((OnCancelListener) getActivity());
-        final AlertDialog dialog = builder.create();
+        final Dialog dialog = builder.create();
         if (getActivity() instanceof OnDismissListener) dialog.setOnDismissListener((OnDismissListener) getActivity());
         return dialog;
     }
@@ -106,7 +106,7 @@ public class ChoiceDialogFragment extends DialogFragment { // NO_UCD (use defaul
     public void onDismiss(DialogInterface dialog) {
         Log.v(TAG, "onDismiss");
         super.onDismiss(dialog);
-        AlertDialog alertDialog = (AlertDialog) dialog;
+        MaterialDialog alertDialog = (MaterialDialog) dialog;
         int selectedItemPosition = alertDialog.getListView().getSelectedItemPosition();
         Log.v(TAG, "Dialog dismissed: item = " + selectedItemPosition);
         if (selectedItemPosition < 0 && getActivity() instanceof OnDismissListener) ((OnDismissListener) getActivity()).onDismiss(dialog);
