@@ -1,6 +1,8 @@
 awt-datatransfer-minimal dependencies
 =====================================
 
+Why?
+----
 These dependencies allow us to use the java mail api to send e-mails on Android.
 
 The javax.activation and javax.mail libraries rely on some standard java classes
@@ -29,8 +31,12 @@ classes must be modified to use the myjava package.  They are repackaged into
 The approach in this project is different:
 * The necessary files from java.awt.datatransfer are included here, in the original java package.
 * No customization or repackaging is done for the javax.mail and javax.activation libraries
-* The android project depending on this project must therefore include some gradle configuration
-  in order to prevent the compilation errors about using the java package.  There are two options:
+
+Configuration:
+--------------
+Since this project includes classes in the top-level java packate, an android project depending 
+on this project must therefore include some gradle configuration in order to prevent the 
+compilation errors about using the java package.  There are two options:
 
 **First option**: add the --core-library argument to dex:
 ```
