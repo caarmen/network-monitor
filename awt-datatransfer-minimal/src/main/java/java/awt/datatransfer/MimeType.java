@@ -62,7 +62,7 @@ class MimeType implements Externalizable, Cloneable {
      * @param rawdata text used to initialize the <code>MimeType</code>
      * @throws NullPointerException if <code>rawdata</code> is null
      */
-    public MimeType(String rawdata) throws MimeTypeParseException {
+    public MimeType(String rawdata) throws Exception {
         parse(rawdata);
     }
 
@@ -75,37 +75,21 @@ class MimeType implements Externalizable, Cloneable {
      * @throws NullPointerException if either <code>primary</code> or
      *         <code>sub</code> is null
      */
-    public MimeType(String primary, String sub) throws MimeTypeParseException {
-        this(primary, sub, new MimeTypeParameterList());
-    }
-
-    /**
-     * Builds a <code>MimeType</code> with a pre-defined
-     * and valid (or empty) parameter list.
-     *
-     * @param primary the primary type of this <code>MimeType</code>
-     * @param sub the subtype of this <code>MimeType</code>
-     * @param mtpl the requested parameter list
-     * @throws NullPointerException if either <code>primary</code>,
-     *         <code>sub</code> or <code>mtpl</code> is null
-     */
-    public MimeType(String primary, String sub, MimeTypeParameterList mtpl) throws
-MimeTypeParseException {
+    public MimeType(String primary, String sub) throws Exception {
         //    check to see if primary is valid
         if(isValidToken(primary)) {
             primaryType = primary.toLowerCase();
         } else {
-            throw new MimeTypeParseException("Primary type is invalid.");
+            throw new Exception("Primary type is invalid.");
         }
 
         //    check to see if sub is valid
         if(isValidToken(sub)) {
             subType = sub.toLowerCase();
         } else {
-            throw new MimeTypeParseException("Sub type is invalid.");
+            throw new Exception("Sub type is invalid.");
         }
 
-        parameters = (MimeTypeParameterList)mtpl.clone();
     }
 
     public int hashCode() {
@@ -115,7 +99,6 @@ MimeTypeParseException {
         int code = 0;
         code += primaryType.hashCode();
         code += subType.hashCode();
-        code += parameters.hashCode();
         return code;
     } // hashCode()
 
@@ -135,8 +118,7 @@ MimeTypeParseException {
         MimeType that = (MimeType)thatObject;
         boolean isIt =
             ((this.primaryType.equals(that.primaryType)) &&
-             (this.subType.equals(that.subType)) &&
-             (this.parameters.equals(that.parameters)));
+             (this.subType.equals(that.subType)));
         return isIt;
     } // equals()
 
@@ -145,48 +127,45 @@ MimeTypeParseException {
      *
      * @throws NullPointerException if <code>rawdata</code> is null
      */
-    private void parse(String rawdata) throws MimeTypeParseException {
+    private void parse(String rawdata) throws Exception {
         int slashIndex = rawdata.indexOf('/');
         int semIndex = rawdata.indexOf(';');
         if((slashIndex < 0) && (semIndex < 0)) {
             //    neither character is present, so treat it
             //    as an error
-            throw new MimeTypeParseException("Unable to find a sub type.");
+            throw new Exception("Unable to find a sub type.");
         } else if((slashIndex < 0) && (semIndex >= 0)) {
             //    we have a ';' (and therefore a parameter list),
             //    but no '/' indicating a sub type is present
-            throw new MimeTypeParseException("Unable to find a sub type.");
+            throw new Exception("Unable to find a sub type.");
         } else if((slashIndex >= 0) && (semIndex < 0)) {
             //    we have a primary and sub type but no parameter list
             primaryType = rawdata.substring(0,
 slashIndex).trim().toLowerCase();
             subType = rawdata.substring(slashIndex +
 1).trim().toLowerCase();
-            parameters = new MimeTypeParameterList();
         } else if (slashIndex < semIndex) {
             //    we have all three items in the proper sequence
             primaryType = rawdata.substring(0,
 slashIndex).trim().toLowerCase();
             subType = rawdata.substring(slashIndex + 1,
 semIndex).trim().toLowerCase();
-            parameters = new
-MimeTypeParameterList(rawdata.substring(semIndex));
         } else {
             //    we have a ';' lexically before a '/' which means we have a primary type
             //    & a parameter list but no sub type
-            throw new MimeTypeParseException("Unable to find a sub type.");
+            throw new Exception("Unable to find a sub type.");
         }
 
         //    now validate the primary and sub types
 
         //    check to see if primary is valid
         if(!isValidToken(primaryType)) {
-            throw new MimeTypeParseException("Primary type is invalid.");
+            throw new Exception("Primary type is invalid.");
         }
 
         //    check to see if sub is valid
         if(!isValidToken(subType)) {
-            throw new MimeTypeParseException("Sub type is invalid.");
+            throw new Exception("Sub type is invalid.");
         }
     }
 
@@ -202,47 +181,6 @@ MimeTypeParameterList(rawdata.substring(semIndex));
      */
     public String getSubType() {
         return subType;
-    }
-
-    /**
-     * Retrieve a copy of this object's parameter list.
-     */
-    public MimeTypeParameterList getParameters() {
-        return (MimeTypeParameterList)parameters.clone();
-    }
-
-    /**
-     * Retrieve the value associated with the given name, or null if there
-     * is no current association.
-     */
-    public String getParameter(String name) {
-        return parameters.get(name);
-    }
-
-    /**
-     * Set the value to be associated with the given name, replacing
-     * any previous association.
-     *
-     * @throw IllegalArgumentException if parameter or value is illegal
-     */
-    public void setParameter(String name, String value) {
-        parameters.set(name, value);
-    }
-
-    /**
-     * Remove any value associated with the given name.
-     *
-     * @throw IllegalArgumentExcpetion if parameter may not be deleted
-     */
-    public void removeParameter(String name) {
-        parameters.remove(name);
-    }
-
-    /**
-     * Return the String representation of this object.
-     */
-    public String toString() {
-        return getBaseType() + parameters.toString();
     }
 
     /**
@@ -286,7 +224,7 @@ MimeTypeParameterList(rawdata.substring(semIndex));
      *    <code>false</code>; if <code>rawdata</code> is
      *    <code>null</code>, returns <code>false</code>
      */
-    public boolean match(String rawdata) throws MimeTypeParseException {
+    public boolean match(String rawdata) throws Exception {
         if (rawdata == null)
             return false;
         return match(new MimeType(rawdata));
@@ -331,7 +269,7 @@ ClassNotFoundException {
         }
         try {
             parse(s);
-        } catch(MimeTypeParseException e) {
+        } catch(Exception e) {
             throw new IOException(e.toString());
         }
     }
@@ -347,13 +285,11 @@ ClassNotFoundException {
             newObj = (MimeType)super.clone();
         } catch (CloneNotSupportedException cannotHappen) {
         }
-        newObj.parameters = (MimeTypeParameterList)parameters.clone();
         return newObj;
     }
 
     private String    primaryType;
     private String    subType;
-    private MimeTypeParameterList parameters;
 
     //    below here be scary parsing related things
 

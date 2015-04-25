@@ -45,6 +45,6 @@ public class UnsupportedFlavorException extends Exception {
      *        be <code>null</code>.
      */
     public UnsupportedFlavorException(DataFlavor flavor) {
-        super((flavor != null) ? flavor.getHumanPresentableName() : null);
+        super("UsupportedFlavorException: " + flavor);
     }
 }
