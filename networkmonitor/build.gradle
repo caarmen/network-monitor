@@ -51,6 +51,7 @@ project.tasks.withType(com.android.build.gradle.tasks.Dex) {
 }
 
 dependencies {
+    compile project (':awt-datatransfer-minimal')
     compile 'org.jraf:android-switch-backport:2.0.1'
     compile 'com.android.support:support-v4:22.0.0'
     compile 'com.google.android.gms:play-services-location:7.0.0'
