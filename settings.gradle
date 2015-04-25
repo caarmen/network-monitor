@@ -1,1 +1,1 @@
-include ':networkmonitor'
+include ':networkmonitor', ':awt-datatransfer-minimal'

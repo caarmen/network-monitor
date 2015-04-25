@@ -24,26 +24,15 @@
 package ca.rmen.android.networkmonitor.app.email;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.util.Properties;
-
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.MimeUtility;
 
 import android.content.Context;
+import android.text.TextUtils;
+
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.Email;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.MultiPartEmail;
+import org.apache.commons.mail.SimpleEmail;
 
 import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
@@ -83,9 +72,7 @@ public class ReportEmailer {
         if (shouldSendMail()) {
             final EmailConfig emailConfig = EmailPreferences.getInstance(mContext).getEmailConfig();
             if (emailConfig.isValid()) {
-                Session mailSession = getMailSession(emailConfig);
-                Message message = createMessage(mailSession, emailConfig);
-                if (message != null) sendMail(mailSession, message);
+                sendEmail(emailConfig);
             } else {
                 Log.w(TAG, "Cannot send mail with the current email settings: " + emailConfig);
             }
@@ -113,114 +100,53 @@ public class ReportEmailer {
     /**
      * @return an SMTP Session that we can open to send a message on.
      */
-    private static Session getMailSession(final EmailConfig emailConfig) {
-        Log.v(TAG, "getMailSession: emailConfig = " + emailConfig);
+    private void sendEmail(final EmailConfig emailConfig) {
+        Log.v(TAG, "sendEmail: emailConfig = " + emailConfig);
         // Set up properties for mail sending.
-        Properties props = new Properties();
-        String propertyPrefix, transportProtocol;
-        if (emailConfig.security == EmailSecurity.SSL) {
-            propertyPrefix = "mail.smtps.";
-            transportProtocol = "smtps";
-        } else {
-            propertyPrefix = "mail.smtp.";
-            transportProtocol = "smtp";
-        }
-        props.put(propertyPrefix + "host", emailConfig.server);
-        props.put(propertyPrefix + "port", String.valueOf(emailConfig.port));
-        props.put(propertyPrefix + "auth", "true");
-        props.put(propertyPrefix + "timeout", "15000");
-        props.put(propertyPrefix + "connectiontimeout", "15000");
-        props.put(propertyPrefix + "writetimeout", "15000");
-        if (emailConfig.security == EmailSecurity.TLS) props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", String.valueOf(BuildConfig.DEBUG));
-        props.put("mail.transport.protocol", transportProtocol);
+        Email email = null;
+        if (emailConfig.reportFormats.isEmpty())
+            email = new SimpleEmail();
+        else
+            email = new MultiPartEmail();
+        // Set up the mail connectivity
+        email.setDebug(BuildConfig.DEBUG);
+        email.setHostName(emailConfig.server);
+        email.setAuthenticator(new DefaultAuthenticator(emailConfig.user, emailConfig.password));
+        if(emailConfig.security == EmailSecurity.TLS)
+            email.setStartTLSEnabled(true);
+        else if(emailConfig.security == EmailSecurity.SSL)
+            email.setSSLOnConnect(true);
+        email.setSmtpPort(emailConfig.port);
+        email.setSocketTimeout(15000);
+        email.setSocketConnectionTimeout(15000);
 
-        // Create the session with the properties.
-        Session mailSession = Session.getInstance(props, new javax.mail.Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(emailConfig.user, emailConfig.password);
-            }
-        });
-        Log.v(TAG, "getMailSession, created session " + mailSession);
-        return mailSession;
-    }
-
-    /**
-     * Actually send the e-mail.
-     */
-    private void sendMail(Session mailSession, Message message) {
-        Log.v(TAG, "sendMail");
-        Transport transport = null;
+        // Set up the mail participants
         try {
-            transport = mailSession.getTransport();
-            transport.connect();
-            transport.sendMessage(message, message.getAllRecipients());
+            String from = getFromAddress(emailConfig);
+            email.setFrom(from);
+            String[] recipients = TextUtils.split(emailConfig.recipients, "[, ]");
+            email.addTo(recipients);
+
+            // Set up the mail content
+            String subject = mContext.getString(R.string.export_subject_send_log);
+            email.setSubject(subject);
+            String messageText = getMessageBody(emailConfig);
+            email.setMsg(messageText);
+            // Now add the file attachments.
+            for (String fileType : emailConfig.reportFormats) {
+                File attachment = createAttachment(fileType);
+                ((MultiPartEmail) email).attach(attachment);
+            }
+            email.send();
             Log.v(TAG, "sent message");
             // The mail was sent file.  Dismiss the e-mail error notification if it's showing.
             NetMonNotification.dismissEmailFailureNotification(mContext);
             EmailPreferences.getInstance(mContext).setLastEmailSent(System.currentTimeMillis());
-        } catch (MessagingException e) {
+        } catch (EmailException e) {
             Log.e(TAG, "Could not send mail " + e.getMessage(), e);
             // There was an error sending the mail. Show an error notification.
             NetMonNotification.showEmailFailureNotification(mContext);
-        } finally {
-            try {
-                if (transport != null) transport.close();
-            } catch (MessagingException e) {
-                Log.e(TAG, "onHandleIntent Could not close the transport", e);
-            }
         }
-    }
-
-
-    /**
-     * @return a Message we can send using the given mailSession, or null if there was a problem creating the message.
-     */
-    private Message createMessage(Session mailSession, EmailConfig emailConfig) {
-        Log.v(TAG, "createMessage: emailConfig = " + emailConfig);
-
-        try {
-            MimeMessage message = new MimeMessage(mailSession);
-            // Set the subject, from, and to fields.
-            String subject = mContext.getString(R.string.export_subject_send_log);
-            message.setSubject(MimeUtility.encodeText(subject, ENCODING, "Q"));
-            String from = getFromAddress(emailConfig);
-            message.setFrom(new InternetAddress(from));
-            message.addRecipients(Message.RecipientType.TO, InternetAddress.parse(emailConfig.recipients));
-
-            // Get the plain text of the mail body.
-            String messageText = getMessageBody(emailConfig);
-
-            // Case 1: No file attachment, just send a plain text mail with the summary.
-            if (emailConfig.reportFormats.isEmpty()) {
-                message.setHeader("Content-Transfer-Encoding", "quoted-printable");
-                message.setText(messageText, ENCODING);
-            }
-            // Case 2: We have file attachments, so we need to do a multi-part mail.
-            else {
-                // Add the plain text version of the mail
-                Multipart mp = new MimeMultipart("mixed");
-                BodyPart bp = new MimeBodyPart();
-                bp.setContent(messageText, "text/plain;charset=" + ENCODING);
-                bp.setHeader("Content-Transfer-Encoding", "quoted-printable");
-                mp.addBodyPart(bp);
-
-                // Now add the file attachments.
-                for (String fileType : emailConfig.reportFormats) {
-                    bp = createBodyPart(fileType);
-                    mp.addBodyPart(bp);
-                }
-                message.setContent(mp);
-            }
-            Log.v(TAG, "createMessage: created message " + message);
-            return message;
-        } catch (MessagingException e) {
-            Log.e(TAG, "Could not send mail " + e.getMessage(), e);
-        } catch (UnsupportedEncodingException e) {
-            Log.e(TAG, "Could not send mail " + e.getMessage(), e);
-        }
-        return null;
     }
 
     /**
@@ -247,8 +173,8 @@ public class ReportEmailer {
      * @param fileType one of the file types the user selected in the preference
      * @return the BodyPart containing the exported file of this type.
      */
-    private BodyPart createBodyPart(String fileType) throws MessagingException {
-        Log.v(TAG, "createBodyPart: fileType = " + fileType);
+    private File createAttachment(String fileType) {
+        Log.v(TAG, "createAttachment: fileType = " + fileType);
         // Get the FileExport instance which can export mContext file type.
         final FileExport fileExport;
         switch(fileType) {
@@ -269,13 +195,7 @@ public class ReportEmailer {
                 fileExport = new DBExport(mContext);
                 break;
         }
-        BodyPart bp = new MimeBodyPart();
-        File file = fileExport.execute(null);
-        DataSource dataSource = new FileDataSource(file);
-        bp.setDataHandler(new DataHandler(dataSource));
-        bp.setFileName(file.getName());
-        Log.v(TAG, "created body part for " + fileExport);
-        return bp;
+        return fileExport.execute(null);
     }
 
     /**
