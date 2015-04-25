@@ -1,5 +1,5 @@
-awt-datatransfer dependencies
-=============================
+awt-datatransfer-minimal dependencies
+=====================================
 
 These dependencies allow us to use the java mail api to send e-mails on Android.
 
@@ -10,17 +10,21 @@ which are not present in Android. In particular, the following classes are requi
 * java.awt.datatransfer.UnsupportedFlavorException
 
 One solution exists for this problem: the javamail-android library: 
-https://code.google.com/p/javamail-android/source/checkout
+https://code.google.com/p/javamail-android/source/
 This library does not seem to be available on maven central or jcenter 
 (or any maven repository). If you know of a place where it is hosted, please let me know!
 
 The javamail-android library repackages the above java.awt.datatransfer classes
-into an "additionnal.jar" file, but in a separate package: myjava.awt.datatransfer.
+into an ```additionnal.jar``` file, but in a separate package: ```myjava.awt.datatransfer```.
 This is to prevent errors when compiling the code, related to using "java" as a 
-top-level package.
+top-level package:
+```
+Ill-advised or mistaken usage of a core class (java.* or javax.*)
+  	when not building a core library.
+```
 Since the classes are moved to myjava.awt.datatransfer, the javax.mail and javax.activation
 classes must be modified to use the myjava package.  They are repackaged into
-mail.jar and activation.jar files.
+```mail.jar``` and ```activation.jar``` files.
 
 The approach in this project is different:
 * The necessary files from java.awt.datatransfer are included here, in the original java package.
