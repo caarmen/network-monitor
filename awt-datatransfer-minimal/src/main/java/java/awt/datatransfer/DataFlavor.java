@@ -38,12 +38,7 @@ public class DataFlavor {
         if (representationClass == null) {
             throw new NullPointerException("representationClass");
         }
-
-        try {
-            mimeType = new MimeType(primaryType, subType);
-        } catch (Exception mtpe) {
-            throw new IllegalArgumentException("MimeType Parse Exception: " + mtpe.getMessage());
-        }
+        mimeType = primaryType + "/" + subType;
 
         this.representationClass  = representationClass;
         if (representationClass == null) {
@@ -70,10 +65,9 @@ public class DataFlavor {
             throw new NullPointerException("mimeType");
         }
 
-        this.mimeType = new MimeType(mimeType); // throws
+        this.mimeType = mimeType;
 
-        if ("application/x-java-serialized-object".equals(this.mimeType.getBaseType()))
-
+        if ("application/x-java-serialized-object".equals(this.mimeType))
             throw new IllegalArgumentException("no representation class specified for:" + mimeType);
         else
             representationClass = java.io.InputStream.class; // default
@@ -115,7 +109,7 @@ public class DataFlavor {
                 return false;
             }
         } else {
-            if (!mimeType.match(that.mimeType)) {
+            if (!mimeType.equals(that.mimeType)) {
                 return false;
             }
         }
@@ -131,16 +125,13 @@ public class DataFlavor {
         }
 
         if (mimeType != null) {
-            String primaryType = mimeType.getPrimaryType();
-            if (primaryType != null) {
-                total += primaryType.hashCode();
-            }
+            total += mimeType.hashCode();
         }
 
         return total;
     }
 
-    MimeType            mimeType;
+    String mimeType;
     private Class       representationClass;
 
 } // class DataFlavor
