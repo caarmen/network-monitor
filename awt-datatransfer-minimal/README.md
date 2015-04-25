@@ -32,7 +32,7 @@ The approach in this project is different:
 * The android project depending on this project must therefore include some gradle configuration
   in order to prevent the compilation errors about using the java package.  There are two options:
 
-First option: add the --core-library argument to dex:
+**First option**: add the --core-library argument to dex:
 ```
 android {
     dexOptions {
@@ -47,7 +47,7 @@ Note, this is only needed for a debug configuration. In the release configuratio
 these java.awt.datatransfer.* classes will have their package name changed by 
 proguard.  
 
-Second option: let proguard repackage these classes for both debug and release build types:
+**Second option**: let proguard repackage these classes for both debug and release build types:
 ```
 buildTypes {
     debug {
@@ -65,3 +65,9 @@ proguard-debug.txt:
 -dontoptimize
 -keep class com.myandroidapp.** {*;}
 ```
+
+TODO
+====
+I would like to publish this as a stand-alone library on jcenter at some point.
+But for now, this has only been tested with the network monitor app which only
+uses some basic functionality for sending e-mails.
