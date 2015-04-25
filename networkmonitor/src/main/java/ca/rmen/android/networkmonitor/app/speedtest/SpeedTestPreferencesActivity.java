@@ -30,14 +30,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
+import ca.rmen.android.networkmonitor.app.prefs.AppCompatPreferenceActivity;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
-import ca.rmen.android.networkmonitor.app.prefs.PreferencesCompat;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
 import ca.rmen.android.networkmonitor.util.FileUtil;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -45,7 +44,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 /**
  * Preferences for the speed test.
  */
-public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD (use default)
+public class SpeedTestPreferencesActivity extends AppCompatPreferenceActivity { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + SpeedTestPreferencesActivity.class.getSimpleName();
 
     private SpeedTestPreferences mSpeedTestPrefs;
@@ -55,7 +54,7 @@ public class SpeedTestPreferencesActivity extends PreferenceActivity { // NO_UCD
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        PreferencesCompat.setupActionBar(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         PreferenceManager.setDefaultValues(this, R.xml.speed_test_preferences, false);
         addPreferencesFromResource(R.xml.speed_test_preferences);
         mSpeedTestPrefs = SpeedTestPreferences.getInstance(this);
