@@ -30,7 +30,8 @@ The approach in this project is different:
 * The necessary files from java.awt.datatransfer are included here, in the original java package.
 * No customization or repackaging is done for the javax.mail and javax.activation libraries
 * The android project depending on this project must therefore include some gradle configuration
-  in order to prevent the compilation errors about using the java package:
+  in order to prevent the compilation errors about using the java package.  There are two options:
+First option: add the --core-library argument to dex:
 ```
 android {
     dexOptions {
@@ -41,4 +42,25 @@ project.tasks.withType(com.android.build.gradle.tasks.Dex) {
     additionalParameters=['--core-library']
 }
 ```
+Note, this is only needed for a debug configuration. In the release configuration,
+these java.awt.datatransfer.* classes will have their package names changed by 
+proguard.  
 
+Second option: let proguard repackage these classes for both debug and release build types:
+```
+buildTypes {
+    debug {
+        minifyEnabled true
+        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-project.txt', 'proguard-debug.txt'
+    }
+    release {
+        minifyEnabled true
+        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-project.txt'
+    }
+}
+```
+proguard-debug.txt:
+```
+-dontoptimize
+-keep class com.myandroidapp.** {*;}
+```

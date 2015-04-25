@@ -32,6 +32,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-project.txt', 'proguard-debug.txt'
+        }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-project.txt'
@@ -41,14 +45,8 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
-    dexOptions {
-        preDexLibraries = false
-    }
 }
 
-project.tasks.withType(com.android.build.gradle.tasks.Dex) {
-    additionalParameters=['--core-library']
-}
 
 dependencies {
     compile project (':awt-datatransfer-minimal')
