@@ -31,6 +31,7 @@ The approach in this project is different:
 * No customization or repackaging is done for the javax.mail and javax.activation libraries
 * The android project depending on this project must therefore include some gradle configuration
   in order to prevent the compilation errors about using the java package.  There are two options:
+
 First option: add the --core-library argument to dex:
 ```
 android {
@@ -43,7 +44,7 @@ project.tasks.withType(com.android.build.gradle.tasks.Dex) {
 }
 ```
 Note, this is only needed for a debug configuration. In the release configuration,
-these java.awt.datatransfer.* classes will have their package names changed by 
+these java.awt.datatransfer.* classes will have their package name changed by 
 proguard.  
 
 Second option: let proguard repackage these classes for both debug and release build types:
