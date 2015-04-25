@@ -1,15 +1,18 @@
 awt-datatransfer-minimal dependencies
 =====================================
 
-Why?
-----
+WTF, Why are there awt classes in an Android project?
+-----------------------------------------------------
 These dependencies allow us to use the java mail api to send e-mails on Android.
 
 The javax.activation and javax.mail libraries rely on some standard java classes
 which are not present in Android. In particular, the following classes are required:
 * java.awt.datatransfer.DataFlavor
 * java.awt.datatransfer.Transferable
-* java.awt.datatransfer.UnsupportedFlavorException
+* java.awt.datatransfer.UnsupportedFlavorException 
+
+Another solution: javamail-android
+----------------------------------
 
 One solution exists for this problem: the javamail-android library: 
 https://code.google.com/p/javamail-android/source/
@@ -32,8 +35,8 @@ The approach in this project is different:
 * The necessary files from java.awt.datatransfer are included here, in the original java package.
 * No customization or repackaging is done for the javax.mail and javax.activation libraries
 
-Configuration:
---------------
+Configuration
+-------------
 Since this project includes classes in the top-level java packate, an android project depending 
 on this project must therefore include some gradle configuration in order to prevent the 
 compilation errors about using the java package.  There are two options:
