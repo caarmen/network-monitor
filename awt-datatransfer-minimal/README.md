@@ -1,7 +1,7 @@
 awt-datatransfer-minimal dependencies
 =====================================
 
-WTF, Why are there awt classes in an Android project?
+WTF, why are there awt classes in an Android project?
 -----------------------------------------------------
 These dependencies allow us to use the java mail api to send e-mails on Android.
 
@@ -31,13 +31,13 @@ Since the classes are moved to myjava.awt.datatransfer, the javax.mail and javax
 classes must be modified to use the myjava package.  They are repackaged into
 ```mail.jar``` and ```activation.jar``` files.
 
+Configuration
+-------------
 The approach in this project is different:
 * The necessary files from java.awt.datatransfer are included here, in the original java package.
 * No customization or repackaging is done for the javax.mail and javax.activation libraries
 
-Configuration
--------------
-Since this project includes classes in the top-level java packate, an android project depending 
+Since this project includes classes in the top-level java package, an android project depending 
 on this project must therefore include some gradle configuration in order to prevent the 
 compilation errors about using the java package.  There are two options:
 
