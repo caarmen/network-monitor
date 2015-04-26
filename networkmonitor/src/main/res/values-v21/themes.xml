@@ -13,7 +13,9 @@
         <item name="android:listChoiceBackgroundIndicator">@drawable/netmon_list_selector_holo_light</item>
         <item name="android:colorAccent">@color/netmon_color</item>
         <item name="android:colorPrimary">@color/netmon_color</item>
+        <!--
         <item name="android:colorControlNormal">@color/netmon_color</item>
+        -->
         <item name="android:colorButtonNormal">@color/netmon_color</item>
         <item name="android:colorPrimaryDark">@color/netmon_color_dark</item>
         <item name="android:colorControlActivated">@color/netmon_color</item>

@@ -31,9 +31,8 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
-
-import com.afollestad.materialdialogs.MaterialDialog;
 
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
@@ -110,33 +109,27 @@ public class PreferenceDialog {
                 break;
             }
         }
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
-                .title(titleId)
-                .items(labels)
-                .itemsCallbackSingleChoice(currentPrefPosition, new MaterialDialog.ListCallbackSingleChoice() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                .setTitle(titleId)
+                .setSingleChoiceItems(labels, currentPrefPosition, null)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
-                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        /**
-                         * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
-                         * returning false here won't allow the newly selected radio button to actually be selected.
-                         **/
-                        final String selectedItemValue = values[which];
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Save the preference for the record count.
+                        int selectedItemPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                        final String selectedItemValue = values[selectedItemPosition];
                         sharedPrefs.edit().putString(preferenceName, selectedItemValue).apply();
                         listener.onPreferenceValueSelected(selectedItemValue);
-                        return true;
                     }
 
                 })
-                .title(titleId)
-                .positiveText(android.R.string.ok)
-                .negativeText(android.R.string.cancel)
-                .cancelListener(new OnCancelListener() {
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onCancel(DialogInterface dialog) {
+                    public void onClick(DialogInterface dialog, int which) {
                         listener.onCancel();
                     }
                 });
-        final Dialog dialog = builder.build();
+        final Dialog dialog = builder.create();
         dialog.setOnCancelListener(new OnCancelListener() {
 
             @Override

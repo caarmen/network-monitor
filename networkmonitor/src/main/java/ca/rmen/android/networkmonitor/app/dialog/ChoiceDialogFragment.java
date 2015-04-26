@@ -34,9 +34,7 @@ import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-
-import com.afollestad.materialdialogs.AlertDialogWrapper;
-import com.afollestad.materialdialogs.MaterialDialog;
+import android.support.v7.app.AlertDialog;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -66,7 +64,7 @@ public class ChoiceDialogFragment extends DialogFragment { // NO_UCD (use defaul
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.v(TAG, "onCreateDialog: savedInstanceState = " + savedInstanceState);
         Context context = getActivity();
-        AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         Bundle arguments = getArguments();
         builder.setTitle(arguments.getString(DialogFragmentFactory.EXTRA_TITLE));
         final int actionId = arguments.getInt(DialogFragmentFactory.EXTRA_ACTION_ID);
@@ -106,7 +104,7 @@ public class ChoiceDialogFragment extends DialogFragment { // NO_UCD (use defaul
     public void onDismiss(DialogInterface dialog) {
         Log.v(TAG, "onDismiss");
         super.onDismiss(dialog);
-        MaterialDialog alertDialog = (MaterialDialog) dialog;
+        AlertDialog alertDialog = (AlertDialog) dialog;
         int selectedItemPosition = alertDialog.getListView().getSelectedItemPosition();
         Log.v(TAG, "Dialog dismissed: item = " + selectedItemPosition);
         if (selectedItemPosition < 0 && getActivity() instanceof OnDismissListener) ((OnDismissListener) getActivity()).onDismiss(dialog);

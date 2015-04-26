@@ -50,7 +50,7 @@ import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.LocationFetchi
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
 import ca.rmen.android.networkmonitor.util.Log;
 
-public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD (use default)
+public class AdvancedPreferencesActivity extends AppCompatPreferenceActivity { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + AdvancedPreferencesActivity.class.getSimpleName();
     private static final int ACTIVITY_REQUEST_CODE_IMPORT = 1;
     private static final String PREF_IMPORT = "PREF_IMPORT";
@@ -60,7 +60,7 @@ public class AdvancedPreferencesActivity extends PreferenceActivity { // NO_UCD 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PreferencesCompat.setupActionBar(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         NetMonPreferences prefs = NetMonPreferences.getInstance(this);
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         // The first time the user sees the notification preferences, we'll set the ringtone preference
