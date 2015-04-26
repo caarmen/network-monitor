@@ -1,1 +1,7 @@
+gradle.ext.isFoss = false
+for(String taskName : startParameter.taskNames) {
+    if(taskName.contains("Foss")) {
+        gradle.ext.isFoss = true
+    }
+}
 include ':networkmonitor', ':awt-datatransfer-minimal'
