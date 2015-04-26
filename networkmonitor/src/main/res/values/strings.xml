@@ -41,6 +41,7 @@
     <string name="about_projectUrl">Source code:\nhttps://github.com/caarmen/network-monitor</string>
     <string name="about_issues">Report bugs:\nhttps://github.com/caarmen/network-monitor/issues</string>
     <string name="about_rate">Rate the app on the Play Store:\nhttps://play.google.com/store/apps/details?id=ca.rmen.android.networkmonitor</string>
+    <string name="about_libraries">3rd party libraries</string>
 
     <!-- Notification -->
     <string name="service_notification_ticker">Network Monitor is collecting data</string>
