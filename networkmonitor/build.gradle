@@ -70,5 +70,7 @@ dependencies {
     compile 'commons-net:commons-net:3.3'
     compile 'org.apache.commons:commons-email:1.3.3'
 
-    proprietaryCompile 'com.google.android.gms:play-services-location:7.0.0'
+    if (!gradle.isFoss) {
+        proprietaryCompile 'com.google.android.gms:play-services-location:7.0.0'
+    }
 }
