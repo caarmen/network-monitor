@@ -54,7 +54,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.android.support:support-v4:22.1.1'
     compile 'com.google.android.gms:play-services-location:7.0.0'
-    compile 'com.afollestad:material-dialogs:0.7.2.4'
+    compile 'com.afollestad:material-dialogs:0.7.2.8'
     compile ('net.sourceforge.jexcelapi:jxl:2.6.12') {
         exclude group: "log4j"
     }
