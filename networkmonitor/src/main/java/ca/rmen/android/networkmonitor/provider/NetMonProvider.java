@@ -45,6 +45,7 @@ import android.database.sqlite.SQLiteQuery;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -112,7 +113,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     }
 
     @Override
-    public int bulkInsert(Uri uri, ContentValues[] values) {
+    public int bulkInsert(Uri uri, @NonNull ContentValues[] values) {
         Log.d(TAG, "bulkInsert uri=" + uri + " values.length=" + values.length);
         final String table = uri.getLastPathSegment();
         final SQLiteDatabase db = mNetworkMonitorDatabase.getWritableDatabase();
@@ -208,7 +209,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
      * @see android.content.ContentProvider#applyBatch(java.util.ArrayList)
      */
     @Override
-    public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations) throws OperationApplicationException {
+    public ContentProviderResult[] applyBatch(@NonNull ArrayList<ContentProviderOperation> operations) throws OperationApplicationException {
         Log.v(TAG, "applyBatch: " + operations.size());
         Set<Uri> urisToNotify = new HashSet<>();
         for (ContentProviderOperation operation : operations)

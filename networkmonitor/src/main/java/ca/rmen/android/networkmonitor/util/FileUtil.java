@@ -67,7 +67,8 @@ public class FileUtil {
     private static void deleteDirContents(File directory) {
         File[] files = directory.listFiles();
         for (File file : files)
-            if (file.isFile()) file.delete();
+            if (file.isFile()) //noinspection ResultOfMethodCallIgnored
+                file.delete();
     }
 
 }

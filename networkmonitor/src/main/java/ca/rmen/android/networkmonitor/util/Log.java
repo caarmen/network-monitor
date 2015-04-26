@@ -39,6 +39,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
 
 
@@ -101,59 +102,7 @@ public class Log {
 
         HandlerThread handlerThread = new HandlerThread(Log.class.getName(), android.os.Process.THREAD_PRIORITY_LOWEST);
         handlerThread.start();
-        sHandler = new Handler(handlerThread.getLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                if (sCurrentFile.length() >= sMaxLogSize / 2) {
-                    android.util.Log.d("Log", "File is " + sCurrentFile.length() + " bytes: switch");
-                    // Switch files
-                    sCurrentFile = sCurrentFile == sFile0 ? sFile1 : sFile0;
-                    try {
-                        IoUtil.closeSilently(sWriter);
-                        sWriter = new BufferedWriter(new FileWriter(sCurrentFile, false));
-                    } catch (IOException e) {
-                        logError("Fatal error! Could not open log file.", e);
-                        sError = true;
-                    }
-                }
-
-                try {
-                    sWriter.write(String.valueOf(System.currentTimeMillis()));
-                    switch (msg.what) {
-                        case MSG_V:
-                            sWriter.write(" V ");
-                            break;
-                        case MSG_D:
-                            sWriter.write(" D ");
-                            break;
-                        case MSG_I:
-                            sWriter.write(" I ");
-                            break;
-                        case MSG_W:
-                            sWriter.write(" W ");
-                            break;
-                        case MSG_E:
-                            sWriter.write(" E ");
-                            break;
-                    }
-                    Bundle data = msg.getData();
-                    sWriter.write(data.getString(KEY_THREADID));
-                    sWriter.write(" ");
-                    sWriter.write(data.getString(KEY_TAG));
-                    sWriter.write(' ');
-                    sWriter.write(data.getString(KEY_MESSAGE));
-                    sWriter.write('\n');
-                    Throwable throwable = (Throwable) data.getSerializable(KEY_THROWABLE);
-                    if (throwable != null) {
-                        throwable.printStackTrace(new PrintWriter(sWriter));
-                    }
-                    sWriter.flush();
-                } catch (IOException e) {
-                    logError("Fatal error! Could not write to log file.", e);
-                    sError = true;
-                }
-            }
-        };
+        sHandler = new LogHandler(handlerThread.getLooper());
 
         // Install an exception handler
         final UncaughtExceptionHandler previousExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
@@ -247,6 +196,7 @@ public class Log {
      * Info.
      */
 
+    @SuppressWarnings("unused")
     public static void i(String tag, String message) { // NO_UCD (unused code)
         i(tag, message, null);
     }
@@ -283,6 +233,7 @@ public class Log {
      * Error.
      */
 
+    @SuppressWarnings("unused")
     public static void e(String tag, String message) { // NO_UCD (unused code)
         e(tag, message, null);
     }
@@ -352,5 +303,64 @@ public class Log {
         }
         android.util.Log.d("Log", "Done.");
         return true;
+    }
+
+    final static class LogHandler extends Handler {
+        public LogHandler(Looper looper) {
+            super(looper);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            if (sCurrentFile.length() >= sMaxLogSize / 2) {
+                android.util.Log.d("Log", "File is " + sCurrentFile.length() + " bytes: switch");
+                // Switch files
+                sCurrentFile = sCurrentFile == sFile0 ? sFile1 : sFile0;
+                try {
+                    IoUtil.closeSilently(sWriter);
+                    sWriter = new BufferedWriter(new FileWriter(sCurrentFile, false));
+                } catch (IOException e) {
+                    logError("Fatal error! Could not open log file.", e);
+                    sError = true;
+                }
+            }
+
+            try {
+                sWriter.write(String.valueOf(System.currentTimeMillis()));
+                switch (msg.what) {
+                    case MSG_V:
+                        sWriter.write(" V ");
+                        break;
+                    case MSG_D:
+                        sWriter.write(" D ");
+                        break;
+                    case MSG_I:
+                        sWriter.write(" I ");
+                        break;
+                    case MSG_W:
+                        sWriter.write(" W ");
+                        break;
+                    case MSG_E:
+                        sWriter.write(" E ");
+                        break;
+                }
+                Bundle data = msg.getData();
+                sWriter.write(data.getString(KEY_THREADID));
+                sWriter.write(" ");
+                sWriter.write(data.getString(KEY_TAG));
+                sWriter.write(' ');
+                sWriter.write(data.getString(KEY_MESSAGE));
+                sWriter.write('\n');
+                Throwable throwable = (Throwable) data.getSerializable(KEY_THROWABLE);
+                if (throwable != null) {
+                    throwable.printStackTrace(new PrintWriter(sWriter));
+                }
+                sWriter.flush();
+            } catch (IOException e) {
+                logError("Fatal error! Could not write to log file.", e);
+                sError = true;
+            }
+        }
+
     }
 }

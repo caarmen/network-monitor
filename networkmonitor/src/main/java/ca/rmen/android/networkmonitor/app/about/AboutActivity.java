@@ -25,16 +25,14 @@ package ca.rmen.android.networkmonitor.app.about;
 
 import java.io.File;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -43,7 +41,7 @@ import android.widget.Toast;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.util.Log;
 
-public class AboutActivity extends ActionBarActivity { // NO_UCD (use default)
+public class AboutActivity extends AppCompatActivity { // NO_UCD (use default)
 @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,12 +57,7 @@ public class AboutActivity extends ActionBarActivity { // NO_UCD (use default)
         }
 
         ((TextView) findViewById(R.id.txtVersion)).setText(getString(R.string.app_name) + " v" + versionName);
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) setDisplayHomeAsUpEnabled(true);
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void setDisplayHomeAsUpEnabled(boolean enabled) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

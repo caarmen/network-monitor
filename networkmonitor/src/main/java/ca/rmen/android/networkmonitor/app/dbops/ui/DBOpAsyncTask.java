@@ -25,7 +25,6 @@ package ca.rmen.android.networkmonitor.app.dbops.ui;
 
 import java.util.Arrays;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -47,13 +46,11 @@ import ca.rmen.android.networkmonitor.util.Log;
 public abstract class DBOpAsyncTask<T> extends AsyncTask<Void, Integer, T> {
     private static final String TAG = Constants.TAG + DBOpAsyncTask.class.getSimpleName();
 
-    public static final String EXTRA_DIALOG_STYLE = "extra_dialog_style";
     public static final String EXTRA_DIALOG_MESSAGE = "extra_dialog_message";
     private static final String PROGRESS_DIALOG_FRAGMENT_TAG = "progress_dialog_fragment_tag";
 
     private final FragmentActivity mActivity;
     private final Task<T> mTask;
-    private final int mDialogStyle;
     private final String mDialogMessage;
 
     public DBOpAsyncTask(FragmentActivity activity, Task<T> task, Bundle args) {
@@ -61,7 +58,6 @@ public abstract class DBOpAsyncTask<T> extends AsyncTask<Void, Integer, T> {
         mActivity = activity;
         mTask = task;
         if (args == null) args = new Bundle();
-        mDialogStyle = args.getInt(EXTRA_DIALOG_STYLE, ProgressDialog.STYLE_HORIZONTAL);
         String dialogMessage = args.getString(EXTRA_DIALOG_MESSAGE);
         mDialogMessage = TextUtils.isEmpty(dialogMessage) ? activity.getString(R.string.progress_dialog_message) : dialogMessage;
     }
@@ -69,7 +65,7 @@ public abstract class DBOpAsyncTask<T> extends AsyncTask<Void, Integer, T> {
     @Override
     protected void onPreExecute() {
         Log.v(TAG, "onPreExecute");
-        DialogFragmentFactory.showProgressDialog(mActivity, mDialogMessage, mDialogStyle, PROGRESS_DIALOG_FRAGMENT_TAG);
+        DialogFragmentFactory.showProgressDialog(mActivity, mDialogMessage, PROGRESS_DIALOG_FRAGMENT_TAG);
     }
 
     @Override

@@ -34,7 +34,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
@@ -53,7 +53,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  * functions which require a FragmentActivity.
  * This activity has a transparent theme. The only thing the user will see will be alert dialogs that this activity creates.
  */
-public class PreferenceFragmentActivity extends ActionBarActivity implements DialogItemListener, DialogButtonListener, OnDismissListener, OnCancelListener,
+public class PreferenceFragmentActivity extends AppCompatActivity implements DialogItemListener, DialogButtonListener, OnDismissListener, OnCancelListener,
         InfoDialogListener { // NO_UCD (use default)
     public static final String ACTION_SHARE = PreferenceFragmentActivity.class.getPackage().getName() + "_share";
     public static final String ACTION_CLEAR = PreferenceFragmentActivity.class.getPackage().getName() + "_clear";

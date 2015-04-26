@@ -43,6 +43,7 @@ public class SpeedTestDownloadConfig {
     /**
      * @return true if we have enough info to attempt to download a file.
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isValid() {
         return !TextUtils.isEmpty(url);
     }

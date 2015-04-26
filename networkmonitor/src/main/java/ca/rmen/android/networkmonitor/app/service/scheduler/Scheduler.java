@@ -33,20 +33,20 @@ public interface Scheduler {
     /**
      * Perform any initialization needed.
      */
-    public void onCreate(Context context);
+    void onCreate(Context context);
 
     /**
      * Perform any shutdown tasks and free any resources.
      */
-    public void onDestroy();
+    void onDestroy();
 
     /**
      * Schedule the given task at the given interval in milliseconds.
      */
-    public void schedule(Runnable runnable, int interval);
+    void schedule(Runnable runnable, int interval);
 
     /**
      * Change the interval at which the existing task is scheduled.
      */
-    public void setInterval(int interval);
+    void setInterval(int interval);
 }

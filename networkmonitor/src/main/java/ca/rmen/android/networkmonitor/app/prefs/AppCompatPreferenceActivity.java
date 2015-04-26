@@ -109,6 +109,7 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
         return mDelegate;
     }
 
+    // This method added for NetworkMonitor
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent parent = NavUtils.getParentActivityIntent(this);

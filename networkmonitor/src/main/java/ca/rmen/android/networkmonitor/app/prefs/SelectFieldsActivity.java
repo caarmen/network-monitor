@@ -30,7 +30,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,7 +43,7 @@ import ca.rmen.android.networkmonitor.app.prefs.SelectFieldsFragment.SelectField
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
-public class SelectFieldsActivity extends ActionBarActivity implements SelectFieldsFragmentListener { // NO_UCD (use default)
+public class SelectFieldsActivity extends AppCompatActivity implements SelectFieldsFragmentListener { // NO_UCD (use default)
     private static final String TAG = SelectFieldsActivity.class.getSimpleName();
     private ListView mListView;
 
@@ -142,6 +142,7 @@ public class SelectFieldsActivity extends ActionBarActivity implements SelectFie
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+        Log.v(TAG, "onListItemClick: clicked on view " + v + " at position " + position + " with id " + id);
         View okButton = findViewById(R.id.ok);
         SparseBooleanArray checkedItemPositions = l.getCheckedItemPositions();
         for (int i = 0; i < checkedItemPositions.size(); i++) {

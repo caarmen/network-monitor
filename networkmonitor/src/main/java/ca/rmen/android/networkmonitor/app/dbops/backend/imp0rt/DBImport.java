@@ -78,6 +78,7 @@ public class DBImport implements Task<Boolean> {
                 FileOutputStream os = new FileOutputStream(tempDb);
                 if (IoUtil.copy(is, os) > 0) {
                     importDB(tempDb, listener);
+                    //noinspection ResultOfMethodCallIgnored
                     tempDb.delete();
                 }
             }
@@ -99,7 +100,7 @@ public class DBImport implements Task<Boolean> {
         operations.add(ContentProviderOperation.newDelete(NetMonColumns.CONTENT_URI).build());
         Uri insertUri = new Uri.Builder().authority(NetMonProvider.AUTHORITY).appendPath(NetMonColumns.TABLE_NAME)
                 .appendQueryParameter(NetMonProvider.QUERY_PARAMETER_NOTIFY, "false").build();
-        buildInsertOperations(dbImport, insertUri, NetMonColumns.TABLE_NAME, operations, listener);
+        buildInsertOperations(dbImport, insertUri, operations, listener);
         dbImport.close();
     }
 
@@ -109,10 +110,10 @@ public class DBImport implements Task<Boolean> {
      * @throws OperationApplicationException
      * @throws RemoteException
      */
-    private void buildInsertOperations(SQLiteDatabase dbImport, Uri uri, String table, ArrayList<ContentProviderOperation> operations, ProgressListener listener)
+    private void buildInsertOperations(SQLiteDatabase dbImport, Uri uri, ArrayList<ContentProviderOperation> operations, ProgressListener listener)
             throws RemoteException, OperationApplicationException {
-        Log.v(TAG, "buildInsertOperations: uri = " + uri + ", table=" + table);
-        Cursor c = dbImport.query(false, table, null, null, null, null, null, null, null);
+        Log.v(TAG, "buildInsertOperations: uri = " + uri);
+        Cursor c = dbImport.query(false, NetMonColumns.TABLE_NAME, null, null, null, null, null, null, null);
         if (c != null) {
             try {
                 int count = c.getCount();

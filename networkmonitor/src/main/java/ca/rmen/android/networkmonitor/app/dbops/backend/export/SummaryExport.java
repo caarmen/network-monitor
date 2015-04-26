@@ -32,6 +32,7 @@ import java.util.TreeSet;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
@@ -97,7 +98,7 @@ public class SummaryExport {
         }
 
         @Override
-        public int compareTo(TestResult other) {
+        public int compareTo(@NonNull TestResult other) {
             if (other.getClass().equals(other.getClass())) {
                 // First, compare by score
                 int rateDiff = passRate - other.passRate;
@@ -276,8 +277,8 @@ public class SummaryExport {
             case CDMA:
                 return new CdmaCellResult(label, id1, id2, id3);
             case WIFI:
+            default:
                 return new WiFiResult(label, id1);
         }
-        return null;
     }
 }

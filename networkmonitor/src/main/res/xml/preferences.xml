@@ -2,6 +2,7 @@
     android:key="preferenceScreen">
 
     <PreferenceCategory android:title="@string/pref_category_monitoring_settings" >
+        <!--suppress AndroidElementNotAllowed -->
         <org.jraf.android.backport.switchwidget.SwitchPreference
             android:defaultValue="false"
             android:icon="@drawable/ic_pref_enable_service"

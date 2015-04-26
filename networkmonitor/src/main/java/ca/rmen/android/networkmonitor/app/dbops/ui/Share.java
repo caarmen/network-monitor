@@ -26,7 +26,6 @@ package ca.rmen.android.networkmonitor.app.dbops.ui;
 import java.io.File;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -108,8 +107,7 @@ public class Share {
     private static void shareFile(final FragmentActivity activity, final FileExport fileExport) {
         Log.v(TAG, "shareFile " + fileExport);
 
-        Bundle bundle = new Bundle(2);
-        bundle.putInt(DBOpAsyncTask.EXTRA_DIALOG_STYLE, fileExport != null ? ProgressDialog.STYLE_HORIZONTAL : ProgressDialog.STYLE_SPINNER);
+        Bundle bundle = new Bundle(1);
         bundle.putString(DBOpAsyncTask.EXTRA_DIALOG_MESSAGE, activity.getString(R.string.export_progress_preparing_export));
         new DBOpAsyncTask<File>(activity, fileExport, bundle) {
 

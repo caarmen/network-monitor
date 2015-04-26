@@ -32,6 +32,7 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
@@ -61,6 +62,7 @@ public class ChoiceDialogFragment extends DialogFragment { // NO_UCD (use defaul
      * @return a Dialog with a list of items, one of them possibly pre-selected.
      */
     @Override
+    @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.v(TAG, "onCreateDialog: savedInstanceState = " + savedInstanceState);
         Context context = getActivity();
@@ -89,7 +91,7 @@ public class ChoiceDialogFragment extends DialogFragment { // NO_UCD (use defaul
             };
         }
         // If one item is to be pre-selected, use the single choice items layout.
-        if (selectedItem >= 0) builder.setSingleChoiceItems((String[]) choices, selectedItem, listener);
+        if (selectedItem >= 0) builder.setSingleChoiceItems(choices, selectedItem, listener);
         // If no particular item is to be pre-selected, use the default list item layout.
         else
             builder.setItems(choices, listener);

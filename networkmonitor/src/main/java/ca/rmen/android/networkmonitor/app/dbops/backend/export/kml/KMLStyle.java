@@ -37,6 +37,6 @@ interface KMLStyle {
     /**
      * @return the icon color to use given the attributes for a given placemark
      */
-    public IconColor getColor(Map<String, String> values);
+    IconColor getColor(Map<String, String> values);
 
 }

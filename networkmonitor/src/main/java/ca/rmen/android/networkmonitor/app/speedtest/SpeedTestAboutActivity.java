@@ -27,8 +27,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import ca.rmen.android.networkmonitor.Constants;
@@ -38,7 +37,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 /**
  * Activity which shows an HTML explanation of the speed test limitations
  */
-public class SpeedTestAboutActivity extends ActionBarActivity {
+public class SpeedTestAboutActivity extends AppCompatActivity {
     private static final String TAG = Constants.TAG + SpeedTestAboutActivity.class.getSimpleName();
 
     @Override
@@ -52,7 +51,7 @@ public class SpeedTestAboutActivity extends ActionBarActivity {
         }
     }
 
-    public void okClicked(View view) {
+    public void okClicked(@SuppressWarnings("UnusedParameters") View view) {
         Log.v(TAG, "okClicked");
         finish();
     }

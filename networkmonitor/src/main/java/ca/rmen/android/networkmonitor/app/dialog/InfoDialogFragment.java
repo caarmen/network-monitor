@@ -30,6 +30,7 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 
@@ -46,7 +47,7 @@ public class InfoDialogFragment extends DialogFragment { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + InfoDialogFragment.class.getSimpleName();
 
     public interface InfoDialogListener {
-        public void onNeutralClicked(int actionId, Bundle extras);
+        void onNeutralClicked(int actionId, Bundle extras);
     }
 
     public InfoDialogFragment() {
@@ -57,6 +58,7 @@ public class InfoDialogFragment extends DialogFragment { // NO_UCD (use default)
      * @return a Dialog with a title, message, and single button to dismiss the dialog.
      */
     @Override
+    @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.v(TAG, "onCreateDialog: savedInstanceState = " + savedInstanceState);
         Context context = getActivity();

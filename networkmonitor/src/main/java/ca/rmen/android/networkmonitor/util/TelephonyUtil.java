@@ -72,9 +72,7 @@ public class TelephonyUtil {
                         return result;
                     }
                 }
-            } catch (IllegalArgumentException e) {
-                Log.e(TAG, "getConstantName Could not get constant name for prefix = " + fieldPrefix + " and value = " + value, e);
-            } catch (IllegalAccessException e) {
+            } catch (IllegalArgumentException | IllegalAccessException e) {
                 Log.e(TAG, "getConstantName Could not get constant name for prefix = " + fieldPrefix + " and value = " + value, e);
             }
         }

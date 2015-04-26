@@ -11,6 +11,7 @@
             android:summary="@string/pref_summary_email_report_interval"
             android:title="@string/pref_title_email_report_interval" />
 
+        <!--suppress AndroidElementNotAllowed -->
         <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
             android:defaultValue=""
             android:hint="@string/pref_hint_email_recipients"
@@ -20,6 +21,7 @@
             android:summary="@string/pref_summary_email_recipients"
             android:title="@string/pref_title_email_recipients" />
 
+        <!--suppress AndroidElementNotAllowed -->
         <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference
             android:defaultValue="@array/empty_array"
             android:entries="@array/preferences_email_report_formats_labels"
@@ -30,6 +32,7 @@
             android:title="@string/pref_title_email_report_formats" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_email_server_settings" >
+        <!--suppress AndroidElementNotAllowed -->
         <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
             android:defaultValue="smtp.gmail.com"
             android:hint="@string/pref_hint_email_server"
@@ -37,6 +40,7 @@
             android:key="PREF_EMAIL_SERVER"
             android:summary="@string/pref_summary_email_server"
             android:title="@string/pref_title_email_server" />
+        <!--suppress AndroidElementNotAllowed -->
         <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
             android:defaultValue="587"
             android:hint="@string/pref_hint_email_port"
@@ -44,6 +48,7 @@
             android:key="PREF_EMAIL_PORT"
             android:summary="@string/pref_summary_email_port"
             android:title="@string/pref_title_email_port" />
+        <!--suppress AndroidElementNotAllowed -->
         <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
             android:defaultValue=""
             android:hint="@string/pref_hint_email_user"
@@ -52,6 +57,7 @@
             android:key="PREF_EMAIL_USER"
             android:summary="@string/pref_summary_email_user"
             android:title="@string/pref_title_email_user" />
+        <!--suppress AndroidElementNotAllowed -->
         <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
             android:defaultValue=""
             android:icon="@drawable/ic_pref_email_password"

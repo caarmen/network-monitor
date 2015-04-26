@@ -108,6 +108,7 @@ public class NetMonService extends Service {
         NetMonPreferences prefs = NetMonPreferences.getInstance(this);
         Class<?> schedulerClass = prefs.getSchedulerClass();
         Log.v(TAG, "Will use scheduler " + schedulerClass);
+        //noinspection TryWithIdenticalCatches
         try {
             if (mScheduler == null || !mScheduler.getClass().getName().equals(schedulerClass.getName())) {
                 Log.v(TAG, "Creating new scheduler " + schedulerClass);

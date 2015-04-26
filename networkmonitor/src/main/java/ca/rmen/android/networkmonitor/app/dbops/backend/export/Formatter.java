@@ -33,5 +33,5 @@ public interface Formatter {
     /**
      * @return a non-null String representation of the value at the given column and current Cursor row.
      */
-    public String format(Cursor c, int columnIndex);
+    String format(Cursor c, int columnIndex);
 }

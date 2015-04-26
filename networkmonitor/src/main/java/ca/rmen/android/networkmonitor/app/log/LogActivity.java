@@ -27,7 +27,6 @@ package ca.rmen.android.networkmonitor.app.log;
 import java.io.File;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,7 +37,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -76,7 +74,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         Log.v(TAG, "onCreate " + savedInstanceState);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.log);
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         loadHTMLFile();
     }
 
@@ -144,12 +142,6 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void setDisplayHomeAsUpEnabled(boolean enabled) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
-    }
-
 
     /**
      * Read the data from the DB, export it to an HTML file, and load the HTML file in the WebView.

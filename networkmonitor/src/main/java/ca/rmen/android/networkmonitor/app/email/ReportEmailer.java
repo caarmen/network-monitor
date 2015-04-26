@@ -98,12 +98,12 @@ public class ReportEmailer {
     }
 
     /**
-     * @return an SMTP Session that we can open to send a message on.
+     * Send the e-mail with the given e-mail settings.
      */
     private void sendEmail(final EmailConfig emailConfig) {
         Log.v(TAG, "sendEmail: emailConfig = " + emailConfig);
         // Set up properties for mail sending.
-        Email email = null;
+        final Email email;
         if (emailConfig.reportFormats.isEmpty())
             email = new SimpleEmail();
         else
@@ -128,6 +128,7 @@ public class ReportEmailer {
             email.addTo(recipients);
 
             // Set up the mail content
+            email.setCharset(ENCODING);
             String subject = mContext.getString(R.string.export_subject_send_log);
             email.setSubject(subject);
             String messageText = getMessageBody(emailConfig);

@@ -33,7 +33,7 @@ public class Constants {
     public static final String CONNECTION_TEST_SLOW = "SLOW";
     public static final String DATA_STATE_CONNECTED = "CONNECTED";
 
-    public static enum ConnectionType {
+    public enum ConnectionType {
         GSM, CDMA, WIFI
     }
 }

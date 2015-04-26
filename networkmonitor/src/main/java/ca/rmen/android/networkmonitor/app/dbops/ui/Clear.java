@@ -24,8 +24,6 @@
 package ca.rmen.android.networkmonitor.app.dbops.ui;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
@@ -50,9 +48,7 @@ public class Clear {
     public static void clear(final FragmentActivity activity, int numRowsToKeep) {
         Log.v(TAG, "clear, keeping " + numRowsToKeep + " records");
         DBPurge dbPurge = new DBPurge(activity, numRowsToKeep);
-        Bundle bundle = new Bundle(1);
-        bundle.putInt(DBOpAsyncTask.EXTRA_DIALOG_STYLE, ProgressDialog.STYLE_SPINNER);
-        new DBOpAsyncTask<Integer>(activity, dbPurge, bundle) {
+        new DBOpAsyncTask<Integer>(activity, dbPurge, null) {
 
             @Override
             protected void onPostExecute(Integer result) {

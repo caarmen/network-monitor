@@ -26,6 +26,7 @@ package ca.rmen.android.networkmonitor.app.dialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -44,6 +45,7 @@ public class ProgressDialogFragment extends DialogFragment { // NO_UCD (use priv
 
 
     @Override
+    @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.v(TAG, "onCreateDialog");
         MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());

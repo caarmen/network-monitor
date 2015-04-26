@@ -65,6 +65,7 @@ public class NetMonDataSources {
         Log.v(TAG, "onCreate");
         for (Class<?> clazz : DATA_SOURCE_CLASSES) {
             NetMonDataSource dataSource;
+            //noinspection TryWithIdenticalCatches
             try {
                 dataSource = (NetMonDataSource) clazz.newInstance();
                 Log.v(TAG, "Added data source " + dataSource);
