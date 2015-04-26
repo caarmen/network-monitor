@@ -25,7 +25,6 @@
 package ca.rmen.android.networkmonitor.app.main;
 
 import android.app.ActivityManager;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -33,7 +32,6 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import org.jraf.android.backport.switchwidget.SwitchPreference;
 
@@ -46,17 +44,16 @@ import ca.rmen.android.networkmonitor.app.service.NetMonService;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
 import ca.rmen.android.networkmonitor.util.Log;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class MainActivity extends AppCompatPreferenceActivity {
     private static final String TAG = Constants.TAG + MainActivity.class.getSimpleName();
-    private Dialog mGPSDialog;
+    private GPSVerifier mGPSVerifier;
 
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mGPSVerifier = new GPSVerifier(this);
         getSupportActionBar().setIcon(R.drawable.ic_launcher);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -79,7 +76,7 @@ public class MainActivity extends AppCompatPreferenceActivity {
     protected void onStop() {
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
         super.onStop();
-        if (mGPSDialog != null) mGPSDialog.dismiss();
+        mGPSVerifier.dismissGPSDialog();
     }
 
     @Override
@@ -109,22 +106,7 @@ public class MainActivity extends AppCompatPreferenceActivity {
             NetMonPreferences prefs = NetMonPreferences.getInstance(MainActivity.this);
             if (NetMonPreferences.PREF_SERVICE_ENABLED.equals(key)) {
                 if (sharedPreferences.getBoolean(NetMonPreferences.PREF_SERVICE_ENABLED, NetMonPreferences.PREF_SERVICE_ENABLED_DEFAULT)) {
-                    int playServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable(MainActivity.this);
-                    if (playServicesAvailable != ConnectionResult.SUCCESS) {
-                        if (mGPSDialog != null) {
-                            mGPSDialog.dismiss();
-                            mGPSDialog = null;
-                        }
-
-                        if (GooglePlayServicesUtil.isUserRecoverableError(playServicesAvailable)) {
-                            mGPSDialog = GooglePlayServicesUtil.getErrorDialog(playServicesAvailable, MainActivity.this, 1);
-                        }
-                        if (mGPSDialog != null) {
-                            mGPSDialog.show();
-                        } else {
-                            Toast.makeText(MainActivity.this, "Google Play Services must be installed", Toast.LENGTH_LONG).show();
-                        }
-                    }
+                    mGPSVerifier.verifyGPS();
                     startService(new Intent(MainActivity.this, NetMonService.class));
                 }
             } else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {

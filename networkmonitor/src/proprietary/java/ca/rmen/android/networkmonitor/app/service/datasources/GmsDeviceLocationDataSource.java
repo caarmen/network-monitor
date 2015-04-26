@@ -50,8 +50,8 @@ public class GmsDeviceLocationDataSource implements NetMonDataSource {
     private Location mMostRecentLocation;
     private Context mContext;
 
-    GmsDeviceLocationDataSource(GoogleApiClient locationClient) {
-        mLocationClient = locationClient;
+    GmsDeviceLocationDataSource(Object locationClient) {
+        mLocationClient = (GoogleApiClient) locationClient;
     }
 
     @Override
