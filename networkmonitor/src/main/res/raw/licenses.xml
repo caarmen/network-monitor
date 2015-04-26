@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<notices>
+    <notice>
+        <name>Android Switch Preference Backport</name>
+        <url>https://github.com/BoD/android-switch-backport</url>
+        <copyright>Copyright Benoit 'BoD' Lubek (BoD@JRAF.org)</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Android Support Library</name>
+        <url>http://developer.android.com/tools/support-library/index.html</url>
+        <copyright>Copyright (c) The Android Open Source Project</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Material Dialogs</name>
+        <url>https://github.com/afollestad/material-dialogs</url>
+        <copyright>Copyright (c) Aidan Michael Follestad</copyright>
+        <license>MIT License</license>
+    </notice>
+    <notice>
+        <name>Java Excel API</name>
+        <url>http://sourceforge.net/projects/jexcelapi/files/jexcelapi/</url>
+        <copyright>Copyright (c) Andy Khan</copyright>
+        <license>GNU Lesser General Public License 2.1</license>
+    </notice>
+    <notice>
+        <name>Apache Commons Net</name>
+        <url>https://commons.apache.org/proper/commons-net/</url>
+        <copyright>Copyright (c) The Apache Software Foundation</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Apache Commons Email</name>
+        <url>https://commons.apache.org/proper/commons-email/</url>
+        <copyright>Copyright (c) The Apache Software Foundation</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+</notices>

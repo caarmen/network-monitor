@@ -50,6 +50,7 @@ android {
 
 dependencies {
     compile project (':awt-datatransfer-minimal')
+    compile 'de.psdev.licensesdialog:licensesdialog:1.7.0'
     compile 'org.jraf:android-switch-backport:2.0.1'
     compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.android.support:support-v4:22.1.1'

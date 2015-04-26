@@ -33,13 +33,22 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.util.Log;
+import de.psdev.licensesdialog.LicensesDialog;
+import de.psdev.licensesdialog.LicensesDialogFragment;
+import de.psdev.licensesdialog.SingleLicenseDialogFragment;
+import de.psdev.licensesdialog.licenses.ApacheSoftwareLicense20;
+import de.psdev.licensesdialog.licenses.License;
+import de.psdev.licensesdialog.model.Notice;
 
 public class AboutActivity extends AppCompatActivity { // NO_UCD (use default)
 @Override
@@ -57,6 +66,10 @@ public class AboutActivity extends AppCompatActivity { // NO_UCD (use default)
         }
 
         ((TextView) findViewById(R.id.txtVersion)).setText(getString(R.string.app_name) + " v" + versionName);
+        TextView tvLibraries = (TextView) findViewById(R.id.about_libraries);
+        SpannableString content = new SpannableString(getString(R.string.about_libraries));
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        tvLibraries.setText(content);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -105,5 +118,10 @@ public class AboutActivity extends AppCompatActivity { // NO_UCD (use default)
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onLibrariesClicked(View v) {
+        final LicensesDialogFragment fragment = LicensesDialogFragment.newInstance(R.raw.licenses, false, true, R.style.AppCompatAlertDialogStyle, R.color.netmon_color, this);
+        fragment.show(getSupportFragmentManager(), null);
     }
 }
