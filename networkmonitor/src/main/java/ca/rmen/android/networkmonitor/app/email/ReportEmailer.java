@@ -23,16 +23,26 @@
  */
 package ca.rmen.android.networkmonitor.app.email;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.net.DatagramSocket;
+import java.nio.charset.Charset;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Base64;
 
-import org.apache.commons.mail.DefaultAuthenticator;
-import org.apache.commons.mail.Email;
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.MultiPartEmail;
-import org.apache.commons.mail.SimpleEmail;
+import org.apache.commons.net.PrintCommandListener;
+import org.apache.commons.net.smtp.AuthenticatingSMTPClient;
+import org.apache.commons.net.smtp.SMTPClient;
+import org.apache.commons.net.smtp.SMTPReply;
+import org.apache.commons.net.smtp.SimpleSMTPHeader;
 
 import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
@@ -48,6 +58,7 @@ import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailConfig;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailSecurity;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
+import ca.rmen.android.networkmonitor.util.IoUtil;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -102,54 +113,122 @@ public class ReportEmailer {
      */
     private void sendEmail(final EmailConfig emailConfig) {
         Log.v(TAG, "sendEmail: emailConfig = " + emailConfig);
-        // Set up properties for mail sending.
-        final Email email;
-        if (emailConfig.reportFormats.isEmpty())
-            email = new SimpleEmail();
-        else
-            email = new MultiPartEmail();
-        // Set up the mail connectivity
-        email.setDebug(BuildConfig.DEBUG);
-        email.setHostName(emailConfig.server);
-        email.setAuthenticator(new DefaultAuthenticator(emailConfig.user, emailConfig.password));
-        if(emailConfig.security == EmailSecurity.TLS)
-            email.setStartTLSEnabled(true);
-        else if(emailConfig.security == EmailSecurity.SSL)
-            email.setSSLOnConnect(true);
-        email.setSmtpPort(emailConfig.port);
-        email.setSocketTimeout(15000);
-        email.setSocketConnectionTimeout(15000);
+        // Prepare the file attachments before we start to send the e-mail.
+        Set<File> attachments = new HashSet<>();
+        for (String fileType : emailConfig.reportFormats) {
+            attachments.add(createAttachment(fileType));
+        }
 
-        // Set up the mail participants
+        // Set up the mail connectivity
+        AuthenticatingSMTPClient client = null;
         try {
+            if(emailConfig.security == EmailSecurity.TLS)
+                client = new AuthenticatingSMTPClient("TLS");
+            else if(emailConfig.security == EmailSecurity.SSL)
+                client = new AuthenticatingSMTPClient("SSL");
+            else
+                client = new AuthenticatingSMTPClient();
+            if(BuildConfig.DEBUG) {
+                client.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out), true));
+            }
+            client.setDefaultTimeout(15000);
+            client.connect(emailConfig.server, emailConfig.port);
+            checkReply(client);
+            client.helo("[" + client.getLocalAddress().getHostAddress()+"]");
+            if(emailConfig.security == EmailSecurity.TLS) {
+                if(!client.execTLS()) {
+                    checkReply(client);
+                    throw new RuntimeException("Could not start tls");
+                }
+            }
+            client.auth(AuthenticatingSMTPClient.AUTH_METHOD.LOGIN, emailConfig.user, emailConfig.password);
+            checkReply(client);
+
+            // Set up the mail participants
             String from = getFromAddress(emailConfig);
-            email.setFrom(from);
-            String[] recipients = TextUtils.split(emailConfig.recipients, "[, ]");
-            email.addTo(recipients);
+            client.setSender(from);
+            checkReply(client);
+            String[] recipients = TextUtils.split(emailConfig.recipients, "[,; ]+");
+            for(String recipient : recipients) {
+                client.addRecipient(recipient);
+                checkReply(client);
+            }
 
             // Set up the mail content
-            email.setCharset(ENCODING);
+            client.setCharset(Charset.forName(ENCODING));
+            checkReply(client);
+            Writer writer = client.sendMessageData();
             String subject = mContext.getString(R.string.export_subject_send_log);
-            email.setSubject(subject);
+            SimpleSMTPHeader header = new SimpleSMTPHeader(from, recipients[0], subject);
+            for(int i=1; i < recipients.length; i++)
+                header.addCC(recipients[i]);
             String messageText = getMessageBody(emailConfig);
-            email.setMsg(messageText);
-            // Now add the file attachments.
-            for (String fileType : emailConfig.reportFormats) {
-                File attachment = createAttachment(fileType);
-                ((MultiPartEmail) email).attach(attachment);
+            // Just plain text mail: no attachments
+            if(emailConfig.reportFormats.isEmpty()) {
+                // Weird bug: have to add the first header twice
+                header.addHeaderField("Content-Type", "text/plain; charset=" + ENCODING);
+                header.addHeaderField("Content-Type", "text/plain; charset=" + ENCODING);
+                writer.write(header.toString());
+                writer.write(messageText);
+            } else {
+                String boundary = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 28);
+                // Weird bug: have to add the first header twice
+                header.addHeaderField("Content-Type", "multipart/mixed; boundary=" + boundary);
+                header.addHeaderField("Content-Type", "multipart/mixed; boundary=" + boundary);
+                writer.write(header.toString());
+
+                // Write the main text message
+                writer.write("--" + boundary + "\n");
+                writer.write("Content-Type: text/plain; charset=" + ENCODING + "\n\n");
+                writer.write(messageText);
+                writer.write("\n");
+
+                // Write the attachments
+                for (File attachment : attachments) {
+                    ByteArrayOutputStream fileOs = new ByteArrayOutputStream((int) attachment.length());
+                    FileInputStream fileIs = new FileInputStream(attachment);
+                    try {
+                        IoUtil.copy(fileIs, fileOs);
+                    } finally {
+                        IoUtil.closeSilently(fileIs, fileOs);
+                    }
+                    final String mimeType = attachment.getName().substring(attachment.getName().indexOf(".") + 1);
+                    writer.write("--" + boundary + "\n");
+                    writer.write("Content-Type: application/" + mimeType + "; name=\"" + attachment.getName() + "\"\n");
+                    writer.write("Content-Disposition: attachment; filename=\"" + attachment.getName() + "\"\n");
+                    writer.write("Content-Transfer-Encoding: base64\n\n");
+                    String encodedFile = Base64.encodeToString(fileOs.toByteArray(), Base64.DEFAULT);
+                    writer.write(encodedFile);
+                    writer.write("\n");
+                }
+                writer.write("--" + boundary + "--\n\n");
             }
-            email.send();
+
+            writer.close();
+            if (!client.completePendingCommand()) {
+                throw new RuntimeException("Could not send mail");
+            }
+            client.logout();
+            client.disconnect();
             Log.v(TAG, "sent message");
             // The mail was sent file.  Dismiss the e-mail error notification if it's showing.
             NetMonNotification.dismissEmailFailureNotification(mContext);
             EmailPreferences.getInstance(mContext).setLastEmailSent(System.currentTimeMillis());
-        } catch (EmailException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Could not send mail " + e.getMessage(), e);
             // There was an error sending the mail. Show an error notification.
             NetMonNotification.showEmailFailureNotification(mContext);
         }
-    }
 
+    }
+    // http://blog.dahanne.net/2013/06/17/sending-a-mail-in-java-and-android-with-apache-commons-net/
+    private static void checkReply(SMTPClient sc) throws Exception {
+        if (SMTPReply.isNegativeTransient(sc.getReplyCode())) {
+            throw new Exception("Transient SMTP error " + sc.getReply() + sc.getReplyString());
+        } else if (SMTPReply.isNegativePermanent(sc.getReplyCode())) {
+            throw new Exception("Permanent SMTP error " + sc.getReply() + sc.getReplyString());
+        }
+    }
     /**
      * Construct the from address based on the user name and possibly the smtp server name.
      */

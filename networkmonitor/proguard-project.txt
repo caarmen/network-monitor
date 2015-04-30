@@ -33,11 +33,3 @@
 
 -keepattributes SourceFile,LineNumberTable
 
--dontwarn java.awt.**
--dontwarn javax.security.**
--dontwarn java.beans.Beans
--dontwarn javax.naming.**
--dontwarn com.sun.activation.viewers.**
--dontwarn javax.activation.ActivationDataFlavor
--keep class javax.mail.** {*;}
--keep class com.sun.mail.** {*;}
