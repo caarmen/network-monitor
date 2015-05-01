@@ -30,10 +30,4 @@
         <copyright>Copyright (c) The Apache Software Foundation</copyright>
         <license>Apache Software License 2.0</license>
     </notice>
-    <notice>
-        <name>Apache Commons Email</name>
-        <url>https://commons.apache.org/proper/commons-email/</url>
-        <copyright>Copyright (c) The Apache Software Foundation</copyright>
-        <license>Apache Software License 2.0</license>
-    </notice>
 </notices>
