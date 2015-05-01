@@ -43,14 +43,9 @@ import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.util.Log;
-import de.psdev.licensesdialog.LicensesDialog;
 import de.psdev.licensesdialog.LicensesDialogFragment;
-import de.psdev.licensesdialog.SingleLicenseDialogFragment;
-import de.psdev.licensesdialog.licenses.ApacheSoftwareLicense20;
-import de.psdev.licensesdialog.licenses.License;
-import de.psdev.licensesdialog.model.Notice;
 
-public class AboutActivity extends AppCompatActivity { // NO_UCD (use default)
+public class AboutActivity extends AppCompatActivity {
 @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

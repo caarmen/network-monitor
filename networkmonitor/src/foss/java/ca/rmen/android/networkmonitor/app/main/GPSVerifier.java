@@ -33,9 +33,11 @@ class GPSVerifier {
     GPSVerifier(Activity activity) {
     }
 
+    @SuppressWarnings("EmptyMethod")
     void verifyGPS() {
     }
 
+    @SuppressWarnings("EmptyMethod")
     void dismissGPSDialog() {
     }
 }

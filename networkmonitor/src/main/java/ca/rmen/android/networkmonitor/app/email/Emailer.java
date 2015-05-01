@@ -48,7 +48,7 @@ import ca.rmen.android.networkmonitor.util.IoUtil;
  * Sends a mail to a recipient or recipients, including (or not) some file attachments.
  * This class attempts to have the fewest dependencies possible on Android or this project.
  */
-public class Emailer {
+class Emailer {
 
     private static final String ENCODING = "UTF-8";
     private static final int SMTP_TIMEOUT_MS = 15000;
@@ -68,14 +68,15 @@ public class Emailer {
                           boolean debug) throws Exception {
 
         // Set up the mail connectivity
-        AuthenticatingSMTPClient client = null;
+        final AuthenticatingSMTPClient client;
         if (protocol == null)
             client = new AuthenticatingSMTPClient();
         else
             client = new AuthenticatingSMTPClient(protocol);
-        if (debug) {
+
+        if (debug)
             client.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out), true));
-        }
+
         client.setDefaultTimeout(SMTP_TIMEOUT_MS);
         client.setCharset(Charset.forName(ENCODING));
         client.connect(server, port);

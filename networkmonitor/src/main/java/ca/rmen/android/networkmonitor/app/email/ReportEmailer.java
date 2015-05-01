@@ -52,7 +52,6 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class ReportEmailer {
 
     private static final String TAG = Constants.TAG + ReportEmailer.class.getSimpleName();
-    private static final String ENCODING = "UTF-8";
     private final Context mContext;
 
     public ReportEmailer(Context context) {
