@@ -26,11 +26,9 @@ package ca.rmen.android.networkmonitor.app.email;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.net.DatagramSocket;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.HashSet;
@@ -135,9 +133,10 @@ public class ReportEmailer {
                 client.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out), true));
             }
             client.setDefaultTimeout(15000);
+            client.setCharset(Charset.forName(ENCODING));
             client.connect(emailConfig.server, emailConfig.port);
             checkReply(client);
-            client.helo("[" + client.getLocalAddress().getHostAddress()+"]");
+            client.helo("[" + client.getLocalAddress().getHostAddress() + "]");
             checkReply(client);
             if(emailConfig.security == EmailSecurity.TLS) {
                 if(!client.execTLS()) {
@@ -159,8 +158,6 @@ public class ReportEmailer {
             }
 
             // Set up the mail content
-            client.setCharset(Charset.forName(ENCODING));
-            checkReply(client);
             Writer writer = client.sendMessageData();
             String subject = mContext.getString(R.string.export_subject_send_log);
             SimpleSMTPHeader header = new SimpleSMTPHeader(from, recipients[0], subject);
@@ -169,15 +166,11 @@ public class ReportEmailer {
             String messageText = getMessageBody(emailConfig);
             // Just plain text mail: no attachments
             if(emailConfig.reportFormats.isEmpty()) {
-                // Weird bug: have to add the first header twice
-                header.addHeaderField("Content-Type", "text/plain; charset=" + ENCODING);
                 header.addHeaderField("Content-Type", "text/plain; charset=" + ENCODING);
                 writer.write(header.toString());
                 writer.write(messageText);
             } else {
                 String boundary = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 28);
-                // Weird bug: have to add the first header twice
-                header.addHeaderField("Content-Type", "multipart/mixed; boundary=" + boundary);
                 header.addHeaderField("Content-Type", "multipart/mixed; boundary=" + boundary);
                 writer.write(header.toString());
 
