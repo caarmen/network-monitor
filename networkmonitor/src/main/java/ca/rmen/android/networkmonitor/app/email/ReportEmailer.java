@@ -26,10 +26,13 @@ package ca.rmen.android.networkmonitor.app.email;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.DatagramSocket;
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -135,6 +138,7 @@ public class ReportEmailer {
             client.connect(emailConfig.server, emailConfig.port);
             checkReply(client);
             client.helo("[" + client.getLocalAddress().getHostAddress()+"]");
+            checkReply(client);
             if(emailConfig.security == EmailSecurity.TLS) {
                 if(!client.execTLS()) {
                     checkReply(client);
@@ -184,23 +188,7 @@ public class ReportEmailer {
                 writer.write("\n");
 
                 // Write the attachments
-                for (File attachment : attachments) {
-                    ByteArrayOutputStream fileOs = new ByteArrayOutputStream((int) attachment.length());
-                    FileInputStream fileIs = new FileInputStream(attachment);
-                    try {
-                        IoUtil.copy(fileIs, fileOs);
-                    } finally {
-                        IoUtil.closeSilently(fileIs, fileOs);
-                    }
-                    final String mimeType = attachment.getName().substring(attachment.getName().indexOf(".") + 1);
-                    writer.write("--" + boundary + "\n");
-                    writer.write("Content-Type: application/" + mimeType + "; name=\"" + attachment.getName() + "\"\n");
-                    writer.write("Content-Disposition: attachment; filename=\"" + attachment.getName() + "\"\n");
-                    writer.write("Content-Transfer-Encoding: base64\n\n");
-                    String encodedFile = Base64.encodeToString(fileOs.toByteArray(), Base64.DEFAULT);
-                    writer.write(encodedFile);
-                    writer.write("\n");
-                }
+                appendAttachments(writer, boundary, attachments);
                 writer.write("--" + boundary + "--\n\n");
             }
 
@@ -221,6 +209,31 @@ public class ReportEmailer {
         }
 
     }
+
+    /**
+     * Append the given attachments to the message which is being written by the given writer.
+     * @param boundary separates each file attachment
+     */
+    private static void appendAttachments(Writer writer, String boundary, Collection<File> attachments) throws IOException {
+        for (File attachment : attachments) {
+            ByteArrayOutputStream fileOs = new ByteArrayOutputStream((int) attachment.length());
+            FileInputStream fileIs = new FileInputStream(attachment);
+            try {
+                IoUtil.copy(fileIs, fileOs);
+            } finally {
+                IoUtil.closeSilently(fileIs, fileOs);
+            }
+            final String mimeType = attachment.getName().substring(attachment.getName().indexOf(".") + 1);
+            writer.write("--" + boundary + "\n");
+            writer.write("Content-Type: application/" + mimeType + "; name=\"" + attachment.getName() + "\"\n");
+            writer.write("Content-Disposition: attachment; filename=\"" + attachment.getName() + "\"\n");
+            writer.write("Content-Transfer-Encoding: base64\n\n");
+            String encodedFile = Base64.encodeToString(fileOs.toByteArray(), Base64.DEFAULT);
+            writer.write(encodedFile);
+            writer.write("\n");
+        }
+    }
+
     // http://blog.dahanne.net/2013/06/17/sending-a-mail-in-java-and-android-with-apache-commons-net/
     private static void checkReply(SMTPClient sc) throws Exception {
         if (SMTPReply.isNegativeTransient(sc.getReplyCode())) {
