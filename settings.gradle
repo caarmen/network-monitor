@@ -4,4 +4,4 @@ for(String taskName : startParameter.taskNames) {
         gradle.ext.isFoss = true
     }
 }
-include ':networkmonitor', ':awt-datatransfer-minimal'
+include ':networkmonitor'
