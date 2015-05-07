@@ -34,6 +34,7 @@ import android.text.TextUtils;
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
+import org.apache.commons.net.ftp.FTP;
 
 import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
@@ -61,6 +62,8 @@ public class SpeedTestUpload {
         }
         InputStream is = null;
         try {
+            // Set buffer size of FTP client
+            ftp.setBufferSize(1024000);
             // Open a connection to the FTP server
             ftp.connect(uploadConfig.server, uploadConfig.port);
             int reply = ftp.getReplyCode();
@@ -79,10 +82,12 @@ public class SpeedTestUpload {
                 return new SpeedTestResult(0, 0, 0, SpeedTestStatus.INVALID_FILE);
             }
 
+            // set the filetype to be read as a binary file
+            ftp.setFileType(FTP.BINARY_FILE_TYPE);
             // Upload the file
+            is = new FileInputStream(uploadConfig.file);
             long before = System.currentTimeMillis();
             long txBytesBefore = TrafficStats.getTotalTxBytes();
-            is = new FileInputStream(uploadConfig.file);
             if (!ftp.storeFile(uploadConfig.file.getName(), is)) {
                 ftp.disconnect();
                 Log.v(TAG,
