@@ -93,6 +93,35 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/netmon_color" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:autoLink="all"
+            android:drawableLeft="@drawable/ic_about_contributions"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/about_contributions"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="48dp"
+            android:autoLink="all"
+            android:text="@string/about_contribution1"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColorLink="@color/netmon_color" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="48dp"
+            android:autoLink="all"
+            android:text="@string/about_contribution2"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColorLink="@color/netmon_color" />
+
     </LinearLayout>
 
 </ScrollView>

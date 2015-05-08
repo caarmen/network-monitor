@@ -42,6 +42,7 @@
     <string name="about_issues">Remonter des anomalies :\nhttps://github.com/caarmen/network-monitor/issues</string>
     <string name="about_rate">Donnez votre avis sur le Play Store :\nhttps://play.google.com/store/apps/details?id=ca.rmen.android.networkmonitor</string>
     <string name="about_libraries">Librairies externes</string>
+    <string name="about_contributions">Contributions :</string>
 
     <!-- Notification -->
     <string name="service_notification_ticker">Network Monitor recueille des données.</string>
