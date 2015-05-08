@@ -73,7 +73,7 @@ public class SpeedTestDownload {
             connection.setUseCaches(false);
             Log.v(TAG, "Will open input stream");
             inputStream = connection.getInputStream();
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[1048576];
             int read;
             do {
                 read = inputStream.read(buffer);

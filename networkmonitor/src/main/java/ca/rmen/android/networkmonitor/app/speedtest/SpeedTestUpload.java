@@ -63,7 +63,7 @@ public class SpeedTestUpload {
         InputStream is = null;
         try {
             // Set buffer size of FTP client
-            ftp.setBufferSize(1024000);
+            ftp.setBufferSize(1048576);
             // Open a connection to the FTP server
             ftp.connect(uploadConfig.server, uploadConfig.port);
             int reply = ftp.getReplyCode();
