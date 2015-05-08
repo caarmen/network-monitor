@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Based on http://androidblog.reindustries.com/animating-update-or-loading-refresh-actionbar-button/ -->
+<ImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.AppCompat.ActionButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:contentDescription="@string/action_refresh"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:src="@drawable/ic_action_refresh" />

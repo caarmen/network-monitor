@@ -27,7 +27,9 @@ package ca.rmen.android.networkmonitor.app.log;
 import java.io.File;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -37,11 +39,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -65,6 +70,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
     private static final String TAG = Constants.TAG + LogActivity.class.getSimpleName();
     private WebView mWebView;
     private Dialog mDialog;
+    private Menu mMenu;
     private static final int REQUEST_CODE_CLEAR = 1;
     private static final int REQUEST_CODE_SELECT_FIELDS = 2;
     private static final int REQUEST_CODE_FILTER_COLUMN = 3;
@@ -98,6 +104,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.log, menu);
+        mMenu = menu;
         return true;
     }
 
@@ -150,6 +157,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         Log.v(TAG, "loadHTMLFile");
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
+        startRefreshIconAnimation();
         AsyncTask<Void, Void, File> asyncTask = new AsyncTask<Void, Void, File>() {
 
             @Override
@@ -200,6 +208,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
                     public void onPageFinished(WebView view, String url) {
                         super.onPageFinished(view, url);
                         progressBar.setVisibility(View.GONE);
+                        stopRefreshIconAnimation();
                     }
 
                     @Override
@@ -300,5 +309,29 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
 
     @Override
     public void onCancelClicked(int actionId, Bundle extras) {}
+
+    private void startRefreshIconAnimation() {
+        Log.v(TAG, "startRefreshIconAnimation");
+        if(mMenu == null) return; // This is null when we first enter the activity and the page loads.
+        MenuItem menuItemRefresh = mMenu.findItem(R.id.action_refresh);
+        if(menuItemRefresh == null) return;
+        View refreshIcon = View.inflate(this, R.layout.refresh_icon, null);
+        Animation rotation = AnimationUtils.loadAnimation(this, R.anim.rotate);
+        rotation.setRepeatCount(Animation.INFINITE);
+        refreshIcon.startAnimation(rotation);
+        MenuItemCompat.setActionView(menuItemRefresh, refreshIcon);
+    }
+
+    private void stopRefreshIconAnimation() {
+        Log.v(TAG, "stopRefreshIconAnimation");
+        if(mMenu == null) return;
+        MenuItem menuItemRefresh = mMenu.findItem(R.id.action_refresh);
+        if(menuItemRefresh == null) return;
+        View refreshIcon = MenuItemCompat.getActionView(menuItemRefresh);
+        if (refreshIcon != null) {
+            refreshIcon.clearAnimation();
+            MenuItemCompat.setActionView(menuItemRefresh, null);
+        }
+    }
 
 }
