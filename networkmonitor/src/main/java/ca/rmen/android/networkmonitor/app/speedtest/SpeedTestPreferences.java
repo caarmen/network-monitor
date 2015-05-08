@@ -80,11 +80,11 @@ public class SpeedTestPreferences {
     }
 
     public SpeedTestUploadConfig getUploadConfig() {
-        String server = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_SERVER, "");
+        String server = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_SERVER, "").trim();
         int port = getIntPreference(PREF_SPEED_TEST_UPLOAD_PORT, PREF_SPEED_TEST_DEFAULT_UPLOAD_PORT);
-        String user = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_USER, "");
-        String password = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_PASSWORD, "");
-        String path = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_PATH, PREF_SPEED_TEST_DEFAULT_UPLOAD_PATH);
+        String user = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_USER, "").trim();
+        String password = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_PASSWORD, "").trim();
+        String path = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_PATH, PREF_SPEED_TEST_DEFAULT_UPLOAD_PATH).trim();
 
         File file = FileUtil.getCacheFile(mContext, FILE);
         return new SpeedTestUploadConfig(server, port, user, password, path, file);

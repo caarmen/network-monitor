@@ -133,10 +133,10 @@ public class EmailPreferences {
 
     public EmailConfig getEmailConfig() {
         Set<String> reportFormats = mSharedPrefs.getStringSet(PREF_EMAIL_REPORT_FORMATS, new HashSet<String>());
-        String server = mSharedPrefs.getString(PREF_EMAIL_SERVER, "");
+        String server = mSharedPrefs.getString(PREF_EMAIL_SERVER, "").trim();
         int port = getIntPreference(PREF_EMAIL_PORT, PREF_EMAIL_PORT_DEFAULT);
-        String user = mSharedPrefs.getString(PREF_EMAIL_USER, "");
-        String password = mSharedPrefs.getString(PREF_EMAIL_PASSWORD, "");
+        String user = mSharedPrefs.getString(PREF_EMAIL_USER, "").trim();
+        String password = mSharedPrefs.getString(PREF_EMAIL_PASSWORD, "").trim();
         String recipients = mSharedPrefs.getString(PREF_EMAIL_RECIPIENTS, "");
         EmailSecurity security = EmailSecurity.valueOf(mSharedPrefs.getString(PREF_EMAIL_SECURITY, EmailSecurity.NONE.name()));
         return new EmailConfig(reportFormats, server, port, user, password, recipients, security);

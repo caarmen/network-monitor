@@ -139,7 +139,7 @@ public class ConnectionTesterDataSource implements NetMonDataSource {
             long before = System.currentTimeMillis();
             socket = new Socket();
             socket.setSoTimeout(mTimeout);
-            String host = NetMonPreferences.getInstance(mContext).getTestServer();
+            String host = NetMonPreferences.getInstance(mContext).getTestServer().trim();
             Log.d(TAG, "getSocketTestResult Resolving " + host);
             InetSocketAddress remoteAddress = new InetSocketAddress(host, PORT);
             InetAddress address = remoteAddress.getAddress();
@@ -195,7 +195,7 @@ public class ConnectionTesterDataSource implements NetMonDataSource {
         InputStream inputStream = null;
         try {
             long before = System.currentTimeMillis();
-            String host = NetMonPreferences.getInstance(mContext).getTestServer();
+            String host = NetMonPreferences.getInstance(mContext).getTestServer().trim();
             URL url = new URL("http", host, PORT, "/");
             URLConnection connection = url.openConnection();
             Log.v(TAG, "Opened connection");
