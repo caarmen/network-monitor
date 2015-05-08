@@ -18,6 +18,7 @@
             android:id="@+id/txtVersion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
 
@@ -26,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:autoLink="all"
+            android:gravity="center_vertical"
             android:text="@string/about_copyright_1"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColorLink="@color/netmon_color" />
@@ -35,6 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:autoLink="all"
+            android:gravity="center_vertical"
             android:text="@string/about_copyright_2"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColorLink="@color/netmon_color" />
@@ -46,6 +49,7 @@
             android:autoLink="all"
             android:drawableLeft="@drawable/ic_about_source_code"
             android:drawablePadding="8dp"
+            android:gravity="center_vertical"
             android:text="@string/about_projectUrl"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColorLink="@color/netmon_color" />
@@ -57,6 +61,7 @@
             android:autoLink="all"
             android:drawableLeft="@drawable/ic_about_bug"
             android:drawablePadding="8dp"
+            android:gravity="center_vertical"
             android:text="@string/about_issues"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColorLink="@color/netmon_color" />
@@ -68,21 +73,26 @@
             android:autoLink="all"
             android:drawableLeft="@drawable/ic_about_rate"
             android:drawablePadding="8dp"
+            android:gravity="center_vertical"
             android:text="@string/about_rate"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColorLink="@color/netmon_color" />
 
         <TextView
-            android:autoLink="all"
-            android:clickable="true"
             android:id="@+id/about_libraries"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:autoLink="all"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_about_libraries"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
             android:onClick="onLibrariesClicked"
             android:text="@string/about_libraries"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/netmon_color" />
+
     </LinearLayout>
 
 </ScrollView>
