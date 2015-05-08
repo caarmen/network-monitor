@@ -3,11 +3,13 @@
 
     <item
         android:id="@+id/action_select_all"
-        app:showAsAction="never"
+        android:icon="@drawable/ic_action_select_all"
+        app:showAsAction="ifRoom"
         android:title="@string/action_select_all"/>
     <item
         android:id="@+id/action_select_none"
-        app:showAsAction="never"
+        android:icon="@drawable/ic_action_select_none"
+        app:showAsAction="ifRoom"
         android:title="@string/action_select_none"/>
     <item
         android:id="@+id/action_select_profile_wifi"
