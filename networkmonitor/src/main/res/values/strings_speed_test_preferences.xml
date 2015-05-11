@@ -27,6 +27,24 @@ limitations under the License.
     <!-- Speed test preferences -->
     <string name="pref_category_speed_test_settings">SPEED TEST SETTINGS</string>
     <string name="pref_title_speed_test_enabled">Enable speed test</string>
+    <!-- Advanced speed test settings -->
+    <string name="pref_category_advanced_speed_test_settings">ADVANCED SPEED TEST SETTINGS</string>
+    <string name="pref_title_advanced_speed_test_settings_enable">Enable advanced</string>
+    <string name="pref_title_advanced_speed_test_logging_interval">Logging interval</string>
+    <string name="pref_summary_advanced_speed_test_logging_interval">%s</string>
+    <string name="pref_value_advanced_speed_test_logging_interval_never">Never</string>
+    <string name="pref_value_advanced_speed_test_logging_interval_network_change">When the network changes</string>
+    <string name="pref_value_advanced_speed_test_logging_interval_signal_change_5dbm">When network or signal changes 5 dbm</string>
+    <string name="pref_value_advanced_speed_test_logging_interval_10_seconds">10 seconds</string>
+    <string name="pref_value_advanced_speed_test_logging_interval_20_seconds">20 seconds</string>
+    <string name="pref_value_advanced_speed_test_logging_interval_30_seconds">30 seconds</string>
+    <string name="pref_value_advanced_speed_test_logging_interval_1_minute">1 minute</string>
+    <string name="pref_value_advanced_speed_test_logging_interval_2_minutes">2 minutes</string>
+    <string name="pref_value_advanced_speed_test_logging_interval_5_minutes">5 minutes</string>
+    <string name="pref_value_advanced_speed_test_logging_interval_10_minutes">10 minutes</string>
+    <string name="pref_value_advanced_speed_test_logging_interval_15_minutes">15 minutes</string>
+    <string name="pref_value_advanced_speed_test_logging_interval_30_minutes">30 minutes</string>
+    <string name="pref_value_advanced_speed_test_logging_interval_1_hour">1 hour</string>
     <!-- Download speed test preferences -->
     <string name="pref_category_speed_test_download_settings">DOWNLOAD TEST (HTTP)</string>
     <string name="pref_title_speed_test_download_url">URL of the file to download</string>

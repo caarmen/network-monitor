@@ -33,6 +33,22 @@ limitations under the License.
             android:key="PREF_SPEED_TEST_ENABLED"
             android:title="@string/pref_title_speed_test_enabled" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_advanced_speed_test_settings" >
+        <!--suppress AndroidElementNotAllowed -->
+        <org.jraf.android.backport.switchwidget.SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_pref_enable_service"
+            android:key="PREF_ADVANCED_SPEED_TEST_ENABLED"
+            android:title="@string/pref_title_advanced_speed_test_settings_enable"/>
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
+            android:defaultValue="-2"
+            android:entries="@array/preferences_speed_test_interval_labels"
+            android:entryValues="@array/preferences_speed_test_interval_values"
+            android:icon="@drawable/ic_pref_update_interval"
+            android:key="PREF_ADVANCED_UPDATE_INTERVAL"
+            android:summary="%s"
+            android:title="@string/pref_title_advanced_speed_test_logging_interval" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_speed_test_download_settings" >
         <!--suppress AndroidElementNotAllowed -->
         <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference

@@ -56,6 +56,34 @@ limitations under the License.
         <item>1800000</item>
         <item>3600000</item>
     </string-array>
+    <string-array name="preferences_speed_test_interval_labels">
+        <item>@string/pref_value_advanced_speed_test_logging_interval_network_change</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_signal_change_5dbm</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_10_seconds</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_20_seconds</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_30_seconds</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_1_minute</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_2_minutes</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_5_minutes</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_10_minutes</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_15_minutes</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_30_minutes</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_1_hour</item>
+    </string-array>
+    <string-array name="preferences_speed_test_interval_values" translatable="false">
+        <item>-2</item>
+        <item>-1</item>
+        <item>10000</item>
+        <item>20000</item>
+        <item>30000</item>
+        <item>60000</item>
+        <item>120000</item>
+        <item>300000</item>
+        <item>600000</item>
+        <item>900000</item>
+        <item>1800000</item>
+        <item>3600000</item>
+    </string-array>
     <string-array name="export_choices">
         <item>@string/export_choice_csv</item>
         <item>@string/export_choice_html</item>
