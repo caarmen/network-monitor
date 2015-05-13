@@ -83,9 +83,9 @@ public class UploadSpeedTestDataSource implements NetMonDataSource {
             // Switch case since I have different types of modes for the speed interval
             int mode = Integer.parseInt(mPreferences.getAdvancedSpeedInterval());
             switch (mode){
-                case -2:
+                case -2: // check for change in network
                     break;
-                case -1:
+                case -1: // check for change in network and for a difference in dbm by 5
                     break;
                 case 2:
                     mIntervalCounter++;
