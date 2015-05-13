@@ -44,12 +44,14 @@ public class UploadSpeedTestDataSource implements NetMonDataSource {
 
     private SpeedTestPreferences mPreferences;
     private String mDisabledValue;
+    private int mIntervalCounter;
 
     @Override
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
         mPreferences = SpeedTestPreferences.getInstance(context);
         mDisabledValue = context.getString(R.string.speed_test_disabled);
+        mIntervalCounter = 0;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class UploadSpeedTestDataSource implements NetMonDataSource {
         Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues();
 
-        if (mPreferences.isEnabled()) {
+        if (mPreferences.isEnabled() && doUpdate()) {
             SpeedTestUploadConfig uploadConfig = mPreferences.getUploadConfig();
             if (!uploadConfig.isValid()) return values;
             SpeedTestResult result = SpeedTestUpload.upload(uploadConfig);
@@ -70,4 +72,82 @@ public class UploadSpeedTestDataSource implements NetMonDataSource {
         }
         return values;
     }
+
+    // Determines if the function should do a download test this call
+    private boolean doUpdate() {
+        Log.v(TAG, "doUpdate() " + mPreferences.getAdvancedSpeedInterval() + " : " + mIntervalCounter );
+        if (!mPreferences.isAdvancedEnabled()) {
+            return true;
+        }
+        else {
+            // Switch case since I have different types of modes for the speed interval
+            int mode = Integer.parseInt(mPreferences.getAdvancedSpeedInterval());
+            switch (mode){
+                case -2:
+                    break;
+                case -1:
+                    break;
+                case 2:
+                    mIntervalCounter++;
+                    if (2 <= mIntervalCounter) {
+                        mIntervalCounter=0;
+                        return true;
+                    }
+                    break;
+                case 5:
+                    mIntervalCounter++;
+                    if (5 <= mIntervalCounter) {
+                        mIntervalCounter=0;
+                        return true;
+                    }
+                    break;
+                case 10:
+                    mIntervalCounter++;
+                    if (10 <= mIntervalCounter) {
+                        mIntervalCounter=0;
+                        return true;
+                    }
+                    break;
+                case 20:
+                    mIntervalCounter++;
+                    if (20 <= mIntervalCounter) {
+                        mIntervalCounter=0;
+                        return true;
+                    }
+                    break;
+                case 30:
+                    mIntervalCounter++;
+                    if (30 <= mIntervalCounter) {
+                        mIntervalCounter=0;
+                        return true;
+                    }
+                    break;
+                case 60:
+                    mIntervalCounter++;
+                    if (60 <= mIntervalCounter) {
+                        mIntervalCounter=0;
+                        return true;
+                    }
+                    break;
+                case 100:
+                    mIntervalCounter++;
+                    if (100 <= mIntervalCounter) {
+                        mIntervalCounter=0;
+                        return true;
+                    }
+                    break;
+                case 1000:
+                    mIntervalCounter++;
+                    if (1000 <= mIntervalCounter) {
+                        mIntervalCounter=0;
+                        return true;
+                    }
+                    break;
+                default:
+                    return false;
+            }
+            return false;
+        }
+    }
+
 }

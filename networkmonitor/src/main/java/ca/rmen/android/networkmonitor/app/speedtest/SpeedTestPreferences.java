@@ -81,6 +81,24 @@ public class SpeedTestPreferences {
         mSharedPrefs.edit().putBoolean(PREF_SPEED_TEST_ENABLED, enabled).apply();
     }
 
+    public boolean isAdvancedEnabled() {
+        return mSharedPrefs.getBoolean(PREF_ADVANCED_SPEED_TEST_ENABLED, false);
+    }
+
+    public void setAdvancedEnabled(boolean enabled) {
+        Log.v(TAG, "setAdvancedEnabled " + enabled);
+        mSharedPrefs.edit().putBoolean(PREF_ADVANCED_SPEED_TEST_ENABLED, enabled).apply();
+    }
+
+    public String getAdvancedSpeedInterval() {
+        return mSharedPrefs.getString(PREF_ADVANCED_UPDATE_INTERVAL, "");
+    }
+
+    public void setAdvancedSpeedInterval(String speedInterval){
+        Log.v(TAG, "setAdvancedSpeedInterval" + speedInterval);
+        mSharedPrefs.edit().putString(PREF_ADVANCED_UPDATE_INTERVAL, speedInterval);
+    }
+
     public SpeedTestUploadConfig getUploadConfig() {
         String server = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_SERVER, "").trim();
         int port = getIntPreference(PREF_SPEED_TEST_UPLOAD_PORT, PREF_SPEED_TEST_DEFAULT_UPLOAD_PORT);
