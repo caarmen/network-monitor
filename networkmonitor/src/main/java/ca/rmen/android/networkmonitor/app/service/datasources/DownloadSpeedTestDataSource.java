@@ -25,6 +25,11 @@ package ca.rmen.android.networkmonitor.app.service.datasources;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.os.Build;
+import android.telephony.PhoneStateListener;
+import android.telephony.ServiceState;
+import android.telephony.SignalStrength;
+import android.telephony.TelephonyManager;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
@@ -44,18 +49,41 @@ public class DownloadSpeedTestDataSource implements NetMonDataSource {
 
     private SpeedTestPreferences mPreferences;
     private String mDisabledValue;
-    private int mIntervalCounter;
+
+    /**
+     * Advanced options below for speedtest
+     */
+    private NetMonSignalStrength mNetMonSignalStrength;
+    private int mLastSignalStrengthDbm;
+
+    // For fetching data regarding the network such as signal strength, network type etc.
+    private static TelephonyManager mTelephonyManager;
+    private static int mOldSignalStrength;
+    private static String mNetwork;
+    private static int mIntervalCounter;
+    private static int mDifference;
 
     @Override
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
         mPreferences = SpeedTestPreferences.getInstance(context);
         mDisabledValue = context.getString(R.string.speed_test_disabled);
+        // advanced settings below
         mIntervalCounter = 0;
+        mDifference = 5;
+        mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_SERVICE_STATE);
+        mNetMonSignalStrength = new NetMonSignalStrength(context);
+        // Some value that never should be possible so we always updates the first run
+        mOldSignalStrength = 255;
     }
 
+    // Need to make sure we do not listen after we are done
     @Override
-    public void onDestroy() {}
+    public void onDestroy() {
+        Log.v(TAG, "onDestroy");
+        if (mTelephonyManager != null) mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+    }
 
     @Override
     public ContentValues getContentValues() {
@@ -73,6 +101,7 @@ public class DownloadSpeedTestDataSource implements NetMonDataSource {
         }
         return values;
     }
+
     // Determines if the function should do a download test this call
     private boolean doUpdate() {
         Log.v(TAG, "doUpdate() " + mPreferences.getAdvancedSpeedInterval() + " : " + mIntervalCounter );
@@ -84,8 +113,11 @@ public class DownloadSpeedTestDataSource implements NetMonDataSource {
             int mode = Integer.parseInt(mPreferences.getAdvancedSpeedInterval());
             switch (mode){
                 case -2: // check for change in network
-                    break;
-                case -1: // check for change in network and for a difference in dbm by 5
+                    return changedNetwork();
+                case -1:// check for change in network and for a difference in dbm by 5
+                    if (changedDbm() || changedNetwork()){
+                        return true;
+                    }
                     break;
                 case 2:
                     mIntervalCounter++;
@@ -149,4 +181,36 @@ public class DownloadSpeedTestDataSource implements NetMonDataSource {
             return false;
         }
     }
+
+    private boolean changedNetwork() {
+        return false;
+    }
+
+    private boolean changedDbm() {
+        Log.v(TAG, "changedDbm by: " + mDifference + '?');
+        if (mLastSignalStrengthDbm != NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
+            if (mLastSignalStrengthDbm >= mOldSignalStrength + mDifference || mLastSignalStrengthDbm <= mOldSignalStrength - mDifference ) {
+                Log.v(TAG,"mOldSignalStrength has changed from " + mOldSignalStrength + " to " + mLastSignalStrengthDbm);
+                mOldSignalStrength = mLastSignalStrengthDbm;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private final PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
+        @Override
+        public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+            Log.v(TAG, "onSignalStrengthsChanged: " + signalStrength);
+            mLastSignalStrengthDbm = mNetMonSignalStrength.getDbm(signalStrength);
+        }
+
+        @Override
+        public void onServiceStateChanged(ServiceState serviceState) {
+            Log.v(TAG, "onServiceStateChanged " + serviceState);
+            if (serviceState.getState() != ServiceState.STATE_IN_SERVICE) {
+                mLastSignalStrengthDbm = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+            }
+        }
+    };
 }
