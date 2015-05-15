@@ -58,10 +58,16 @@ public class DownloadSpeedTestDataSource implements NetMonDataSource {
 
     // For fetching data regarding the network such as signal strength, network type etc.
     private static TelephonyManager mTelephonyManager;
+
+    // For finding changes in the signal strength
     private static int mOldSignalStrength;
-    private static String mNetwork;
-    private static int mIntervalCounter;
     private static int mDifference;
+
+    // For finding changes in the network
+    private static int mNetworkType;
+
+    // For counting entries since last speedtest was performed
+    private static int mIntervalCounter;
 
     @Override
     public void onCreate(Context context) {
@@ -76,6 +82,7 @@ public class DownloadSpeedTestDataSource implements NetMonDataSource {
         mNetMonSignalStrength = new NetMonSignalStrength(context);
         // Some value that never should be possible so we always updates the first run
         mOldSignalStrength = 255;
+        mNetworkType = 255;
     }
 
     // Need to make sure we do not listen after we are done
@@ -183,6 +190,10 @@ public class DownloadSpeedTestDataSource implements NetMonDataSource {
     }
 
     private boolean changedNetwork() {
+        if (mTelephonyManager.getNetworkType() != mNetworkType ){
+            mNetworkType = mTelephonyManager.getNetworkType();
+            return true;
+        }
         return false;
     }
 
@@ -190,7 +201,7 @@ public class DownloadSpeedTestDataSource implements NetMonDataSource {
         Log.v(TAG, "changedDbm by: " + mDifference + '?');
         if (mLastSignalStrengthDbm != NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
             if (mLastSignalStrengthDbm >= mOldSignalStrength + mDifference || mLastSignalStrengthDbm <= mOldSignalStrength - mDifference ) {
-                Log.v(TAG,"mOldSignalStrength has changed from " + mOldSignalStrength + " to " + mLastSignalStrengthDbm);
+                Log.v(TAG,"mOldSignalStrength has been changed from " + mOldSignalStrength + " to " + mLastSignalStrengthDbm);
                 mOldSignalStrength = mLastSignalStrengthDbm;
                 return true;
             }
