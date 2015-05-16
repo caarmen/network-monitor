@@ -43,8 +43,8 @@
     <string name="about_rate">Rate the app on the Play Store:\nhttps://play.google.com/store/apps/details?id=ca.rmen.android.networkmonitor</string>
     <string name="about_libraries">3rd party libraries</string>
     <string name="about_contributions">Contributions:</string>
-    <string name="about_contribution1" translatable="false">* Abdallah Ali</string>
-    <string name="about_contribution2" translatable="false">* motorolja: https://github.com/motorolja</string>
+    <string name="about_contribution1" translatable="false">* Abdallah Ali: https://www.linkedin.com/in/abdullahshaikhali</string>
+    <string name="about_contribution2" translatable="false">* Rasmus Holm: https://github.com/motorolja</string>
 
     <!-- Notification -->
     <string name="service_notification_ticker">Network Monitor is collecting data</string>
