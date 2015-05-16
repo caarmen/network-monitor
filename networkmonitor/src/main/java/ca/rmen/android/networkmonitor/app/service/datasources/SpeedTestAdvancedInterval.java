@@ -1,5 +1,6 @@
 package ca.rmen.android.networkmonitor.app.service.datasources;
 
+import android.app.usage.ConfigurationStats;
 import android.content.Context;
 import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
@@ -15,6 +16,9 @@ import ca.rmen.android.networkmonitor.util.Log;
  */
 public class SpeedTestAdvancedInterval {
     private static final String TAG = Constants.TAG + SpeedTestAdvancedInterval.class.getSimpleName();
+    private static final int SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM = 5;
+    private static final int SPEED_TEST_INTERVAL_NETWORK_CHANGE = -2;
+    private static final int SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE = -1;
 
     private SpeedTestPreferences mPreferences;
 
@@ -26,7 +30,6 @@ public class SpeedTestAdvancedInterval {
 
     // For finding changes in the signal strength
     private int mOldSignalStrength;
-    private int mDifference;
 
     // For finding changes in the network
     private int mNetworkType;
@@ -38,7 +41,6 @@ public class SpeedTestAdvancedInterval {
         Log.v(TAG, "onCreate");
         mPreferences = SpeedTestPreferences.getInstance(context);
         mIntervalCounter = 0;
-        mDifference = 5;
         mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_SERVICE_STATE);
         mNetMonSignalStrength = new NetMonSignalStrength(context);
@@ -60,74 +62,23 @@ public class SpeedTestAdvancedInterval {
             return true;
         }
         else {
-            // Switch case since I have different types of modes for the speed interval
             int mode = Integer.parseInt(mPreferences.getAdvancedSpeedInterval());
-            switch (mode){
-                case -2: // check for change in network
-                    return changedNetwork();
-                case -1:// check for change in network and for a difference in dbm by 5
-                    if (changedDbm() || changedNetwork()){
-                        return true;
-                    }
-                    break;
-                case 2:
-                    mIntervalCounter++;
-                    if (2 <= mIntervalCounter) {
-                        mIntervalCounter=0;
-                        return true;
-                    }
-                    break;
-                case 5:
-                    mIntervalCounter++;
-                    if (5 <= mIntervalCounter) {
-                        mIntervalCounter=0;
-                        return true;
-                    }
-                    break;
-                case 10:
-                    mIntervalCounter++;
-                    if (10 <= mIntervalCounter) {
-                        mIntervalCounter=0;
-                        return true;
-                    }
-                    break;
-                case 20:
-                    mIntervalCounter++;
-                    if (20 <= mIntervalCounter) {
-                        mIntervalCounter=0;
-                        return true;
-                    }
-                    break;
-                case 30:
-                    mIntervalCounter++;
-                    if (30 <= mIntervalCounter) {
-                        mIntervalCounter=0;
-                        return true;
-                    }
-                    break;
-                case 60:
-                    mIntervalCounter++;
-                    if (60 <= mIntervalCounter) {
-                        mIntervalCounter=0;
-                        return true;
-                    }
-                    break;
-                case 100:
-                    mIntervalCounter++;
-                    if (100 <= mIntervalCounter) {
-                        mIntervalCounter=0;
-                        return true;
-                    }
-                    break;
-                case 1000:
-                    mIntervalCounter++;
-                    if (1000 <= mIntervalCounter) {
-                        mIntervalCounter=0;
-                        return true;
-                    }
-                    break;
-                default:
-                    return false;
+            if (mode == SPEED_TEST_INTERVAL_NETWORK_CHANGE) {
+                // check for change in network
+                return changedNetwork();
+            }
+            else if (mode == SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE) {
+                // check for change in network and for a difference in dbm by 5
+                if (changedDbm() || changedNetwork()) {
+                    return true;
+                }
+            }
+            else {
+                mIntervalCounter++;
+                if (mode <= mIntervalCounter) {
+                    mIntervalCounter = mode;
+                    return true;
+                }
             }
             return false;
         }
@@ -142,9 +93,10 @@ public class SpeedTestAdvancedInterval {
     }
 
     private boolean changedDbm() {
-        Log.v(TAG, "changedDbm by: " + mDifference + '?');
+        Log.v(TAG, "changedDbm by: " + SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM + '?');
         if (mLastSignalStrengthDbm != NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
-            if (mLastSignalStrengthDbm >= mOldSignalStrength + mDifference || mLastSignalStrengthDbm <= mOldSignalStrength - mDifference ) {
+            if (mLastSignalStrengthDbm >= mOldSignalStrength + SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM
+                    || mLastSignalStrengthDbm <= mOldSignalStrength - SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM ) {
                 Log.v(TAG,"mOldSignalStrength has been changed from " + mOldSignalStrength + " to " + mLastSignalStrengthDbm);
                 mOldSignalStrength = mLastSignalStrengthDbm;
                 return true;
