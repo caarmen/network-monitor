@@ -54,7 +54,6 @@ public class DownloadSpeedTestDataSource implements NetMonDataSource {
         mAdvancedInterval = new SpeedTestAdvancedInterval(context);
     }
 
-    // Need to make sure we do not listen after we are done
     @Override
     public void onDestroy() {}
 
