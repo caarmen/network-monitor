@@ -76,7 +76,7 @@ public class SpeedTestAdvancedInterval {
             else {
                 mIntervalCounter++;
                 if (mode <= mIntervalCounter) {
-                    mIntervalCounter = mode;
+                    mIntervalCounter = 0;
                     return true;
                 }
             }
