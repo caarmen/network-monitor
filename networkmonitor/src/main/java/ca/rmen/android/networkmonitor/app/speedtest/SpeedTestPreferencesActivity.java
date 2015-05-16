@@ -106,13 +106,6 @@ public class SpeedTestPreferencesActivity extends AppCompatPreferenceActivity { 
                                 getString(R.string.speed_test_warning_message));
                     }
                     break;
-                // Advanced speed test settings
-                case SpeedTestPreferences.PREF_ADVANCED_SPEED_TEST_ENABLED:
-                    if (sharedPreferences.getBoolean(key, false)) {
-                        PreferenceDialog.showWarningDialog(SpeedTestPreferencesActivity.this, "Note!",
-                                "This enables the advanced settings!");
-                    }
-                    break;
                 case SpeedTestPreferences.PREF_ADVANCED_UPDATE_INTERVAL:
                     updatePreferenceSummary(key, R.string.pref_summary_advanced_speed_test_logging_interval);
                     break;
