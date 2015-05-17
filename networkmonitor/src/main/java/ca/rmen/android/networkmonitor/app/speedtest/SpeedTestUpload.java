@@ -82,7 +82,7 @@ public class SpeedTestUpload {
                 return new SpeedTestResult(0, 0, 0, SpeedTestStatus.INVALID_FILE);
             }
 
-            // set the filetype to be read as a binary file
+            // set the file type to be read as a binary file
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
             // Upload the file
             is = new FileInputStream(uploadConfig.file);
