@@ -44,9 +44,9 @@ public class SpeedTestPreferences {
     private final Context mContext;
 
 
-    static final String PREF_SPEED_TEST_ENABLED = "PREF_SPEED_TEST_ENABLED";
+    public static final String PREF_SPEED_TEST_ENABLED = "PREF_SPEED_TEST_ENABLED";
     static final String PREF_SPEED_TEST_DOWNLOAD_URL = "PREF_SPEED_TEST_DOWNLOAD_URL";
-    static final String PREF_SPEED_TEST_INTERVAL = "PREF_SPEED_TEST_INTERVAL";
+    public static final String PREF_SPEED_TEST_INTERVAL = "PREF_SPEED_TEST_INTERVAL";
     static final String PREF_SPEED_TEST_UPLOAD_SERVER = "PREF_SPEED_TEST_UPLOAD_SERVER";
     static final String PREF_SPEED_TEST_UPLOAD_PORT = "PREF_SPEED_TEST_UPLOAD_PORT";
     static final String PREF_SPEED_TEST_UPLOAD_USER = "PREF_SPEED_TEST_UPLOAD_USER";

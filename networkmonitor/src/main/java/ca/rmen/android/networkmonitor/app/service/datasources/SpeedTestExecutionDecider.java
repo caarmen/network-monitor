@@ -25,7 +25,10 @@
 package ca.rmen.android.networkmonitor.app.service.datasources;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
+import android.provider.BaseColumns;
 import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
@@ -52,33 +55,32 @@ class SpeedTestExecutionDecider {
     private int mCurrentSignalStrengthDbm;
 
     // For fetching data regarding the network such as signal strength, network type etc.
-    private static TelephonyManager mTelephonyManager;
-
-    // For counting entries since last speedtest was performed
-    private int mIntervalCounter;
+    private final TelephonyManager mTelephonyManager;
 
     SpeedTestExecutionDecider(Context context) {
         Log.v(TAG, "onCreate");
         mContext = context;
         mPreferences = SpeedTestPreferences.getInstance(context);
-        mIntervalCounter = 0;
         mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_SERVICE_STATE);
         mNetMonSignalStrength = new NetMonSignalStrength(context);
+        if (mPreferences.isEnabled() && mPreferences.getSpeedTestInterval() == SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE) {
+            registerPhoneStateListener();
+        }
+        PreferenceManager.getDefaultSharedPreferences(mContext).registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
     }
 
     // Need to make sure we do not listen after we are done
     public void onDestroy() {
         Log.v(TAG, "onDestroy");
-        if (mTelephonyManager != null)
-            mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+        unregisterPhoneStateListener();
+        PreferenceManager.getDefaultSharedPreferences(mContext).unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
     }
 
     /**
      * @return true if a speed test should be executed.
      */
     public boolean shouldExecute() {
-        Log.v(TAG, "shouldExecute() " + mPreferences.getSpeedTestInterval() + " : " + mIntervalCounter);
+        Log.v(TAG, "shouldExecute");
         int speedTestInterval = mPreferences.getSpeedTestInterval();
         if (speedTestInterval == SPEED_TEST_INTERVAL_NETWORK_CHANGE) {
             // check for change in network
@@ -88,12 +90,8 @@ class SpeedTestExecutionDecider {
             if (hasSignalStrengthChanged() || hasNetworkTypeChanged()) {
                 return true;
             }
-        } else {
-            mIntervalCounter++;
-            if (speedTestInterval <= mIntervalCounter) {
-                mIntervalCounter = 0;
-                return true;
-            }
+        } else if (isIntervalExceeded()) {
+            return true;
         }
         return false;
     }
@@ -126,11 +124,55 @@ class SpeedTestExecutionDecider {
     }
 
     /**
+     * @return true if enough network monitor tests, without speed tests, have been logged.
+     */
+    private boolean isIntervalExceeded() {
+        int numberOfRecordsSinceLastSpeedTest = readNumberOfRecordsSinceLastSpeedTest();
+        Log.v(TAG, "isIntervalExcceeded: numberOfRecordsSinceLastSpeedTest: " + numberOfRecordsSinceLastSpeedTest
+                + " vs speed test interval: " + mPreferences.getSpeedTestInterval());
+        if (numberOfRecordsSinceLastSpeedTest < 0)
+            return true;
+        return numberOfRecordsSinceLastSpeedTest >= mPreferences.getSpeedTestInterval();
+    }
+
+    private int readIdOfLatestSpeedTest() {
+        String[] projection = new String[]{BaseColumns._ID};
+        String orderBy = BaseColumns._ID + " DESC";
+        String selection = "CAST(" + NetMonColumns.DOWNLOAD_SPEED + " AS REAL) > 0 OR CAST(" + NetMonColumns.UPLOAD_SPEED + " AS REAL) > 0";
+        Cursor cursor = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, projection, selection, null, orderBy);
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    return cursor.getInt(0);
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        return -1;
+    }
+
+    private int readNumberOfRecordsSinceLastSpeedTest() {
+        int idOfLatestSpeedTest = readIdOfLatestSpeedTest();
+        String orderBy = BaseColumns._ID + " DESC";
+        String selection = BaseColumns._ID + " > " + idOfLatestSpeedTest;
+        Cursor cursor = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, null, selection, null, orderBy);
+        if (cursor != null) {
+            try {
+                return cursor.getCount();
+            } finally {
+                cursor.close();
+            }
+        }
+        return 0;
+    }
+
+    /**
      * @return the network type we logged to the db in the last network monitor test.
      */
     private int readLastLoggedNetworkType() {
         String[] projection = new String[]{NetMonColumns.NETWORK_TYPE};
-        String orderBy = NetMonColumns.TIMESTAMP + " DESC";
+        String orderBy = BaseColumns._ID + " DESC";
         Cursor cursor = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, projection, null, null, orderBy);
         if (cursor != null) {
             try {
@@ -149,7 +191,7 @@ class SpeedTestExecutionDecider {
      */
     private int readLastLoggedSignalStrength() {
         String[] projection = new String[]{NetMonColumns.CELL_SIGNAL_STRENGTH_DBM};
-        String orderBy = NetMonColumns.TIMESTAMP + " DESC";
+        String orderBy = BaseColumns._ID + " DESC";
         Cursor cursor = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, projection, null, null, orderBy);
         if (cursor != null) {
             try {
@@ -161,6 +203,16 @@ class SpeedTestExecutionDecider {
             }
         }
         return NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+    }
+
+    private void registerPhoneStateListener() {
+        Log.v(TAG, "registerPhoneStateListener");
+        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_SERVICE_STATE);
+    }
+
+    private void unregisterPhoneStateListener() {
+        Log.v(TAG, "unregisterPhoneStateListener");
+        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
     }
 
     private final PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
@@ -178,5 +230,17 @@ class SpeedTestExecutionDecider {
             }
         }
     };
-
+    private final SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (SpeedTestPreferences.PREF_SPEED_TEST_ENABLED.equals(key) || SpeedTestPreferences.PREF_SPEED_TEST_INTERVAL.equals(key)) {
+                if (mPreferences.isEnabled() && mPreferences.getSpeedTestInterval() == SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE) {
+                    registerPhoneStateListener();
+                } else {
+                    unregisterPhoneStateListener();
+                }
+            }
+        }
+    };
 }
+
