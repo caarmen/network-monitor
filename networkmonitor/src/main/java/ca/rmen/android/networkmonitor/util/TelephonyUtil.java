@@ -31,6 +31,7 @@ import java.util.Map;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
@@ -146,5 +147,20 @@ public class TelephonyUtil {
             Log.v(TAG, "Could not determine if we have mobile data enabled", e);
             return true;
         }
+    }
+
+    /**
+     * Returns the full network type (network type and subtype if available) of the active network info, as a String.
+     * For example, this may turn just "WIFI" or "MOBILE/LTE".
+     * @return the full network type as a String, or null, if we couldn't retrieve the active network info.
+     */
+    public static String getNetworkType(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
+        if (activeNetworkInfo == null) return null;
+        String networkType = activeNetworkInfo.getTypeName();
+        String networkSubType = activeNetworkInfo.getSubtypeName();
+        if (!TextUtils.isEmpty(networkSubType)) networkType += "/" + networkSubType;
+        return networkType;
     }
 }

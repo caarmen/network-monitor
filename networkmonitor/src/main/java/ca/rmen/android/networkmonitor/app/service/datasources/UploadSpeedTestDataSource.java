@@ -8,6 +8,7 @@
  * repository.
  *
  * Copyright (C) 2014-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2015 Rasmus Holm
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +29,7 @@ import android.content.Context;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestExecutionDecider;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
@@ -45,22 +47,27 @@ public class UploadSpeedTestDataSource implements NetMonDataSource {
     private SpeedTestPreferences mPreferences;
     private String mDisabledValue;
 
+    private SpeedTestExecutionDecider mSpeedTestExecutionDecider;
+
     @Override
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
         mPreferences = SpeedTestPreferences.getInstance(context);
         mDisabledValue = context.getString(R.string.speed_test_disabled);
+        mSpeedTestExecutionDecider = new SpeedTestExecutionDecider(context);
     }
 
     @Override
-    public void onDestroy() {}
+    public void onDestroy() {
+        mSpeedTestExecutionDecider.onDestroy();
+    }
 
     @Override
     public ContentValues getContentValues() {
         Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues();
 
-        if (mPreferences.isEnabled()) {
+        if (mSpeedTestExecutionDecider.shouldExecute()) {
             SpeedTestUploadConfig uploadConfig = mPreferences.getUploadConfig();
             if (!uploadConfig.isValid()) return values;
             SpeedTestResult result = SpeedTestUpload.upload(uploadConfig);

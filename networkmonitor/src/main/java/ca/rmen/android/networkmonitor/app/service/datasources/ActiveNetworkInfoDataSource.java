@@ -29,22 +29,24 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.text.TextUtils;
 import ca.rmen.android.networkmonitor.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
+import ca.rmen.android.networkmonitor.util.TelephonyUtil;
 
 /**
  * Retrieves information from the currently active {@link NetworkInfo}.
  */
 public class ActiveNetworkInfoDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + ActiveNetworkInfoDataSource.class.getSimpleName();
+    private Context mContext;
     private ConnectivityManager mConnectivityManager;
 
     @Override
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
+        mContext = context;
         mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
@@ -58,9 +60,7 @@ public class ActiveNetworkInfoDataSource implements NetMonDataSource {
 
         NetworkInfo activeNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
         if (activeNetworkInfo == null) return values;
-        String networkType = activeNetworkInfo.getTypeName();
-        String networkSubType = activeNetworkInfo.getSubtypeName();
-        if (!TextUtils.isEmpty(networkSubType)) networkType += "/" + networkSubType;
+        String networkType = TelephonyUtil.getNetworkType(mContext);
         values.put(NetMonColumns.NETWORK_TYPE, networkType);
         values.put(NetMonColumns.IS_ROAMING, activeNetworkInfo.isRoaming());
         values.put(NetMonColumns.IS_AVAILABLE, activeNetworkInfo.isAvailable());

@@ -9,6 +9,7 @@ This source is part of the
 repository.
 
 Copyright (C) 2014-2015 Carmen Alvarez (c@rmen.ca)
+Copyright (C) 2015 Rasmus Holm
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,6 +33,14 @@ limitations under the License.
             android:icon="@drawable/ic_pref_enable_service"
             android:key="PREF_SPEED_TEST_ENABLED"
             android:title="@string/pref_title_speed_test_enabled" />
+        <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
+            android:defaultValue="1"
+            android:entries="@array/preferences_speed_test_interval_labels"
+            android:entryValues="@array/preferences_speed_test_interval_values"
+            android:icon="@drawable/ic_pref_update_interval"
+            android:key="PREF_SPEED_TEST_INTERVAL"
+            android:summary="%s"
+            android:title="@string/pref_title_speed_test_interval" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_speed_test_download_settings" >
         <!--suppress AndroidElementNotAllowed -->

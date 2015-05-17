@@ -9,6 +9,7 @@
  *
  * Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
  * Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2015 Rasmus Holm
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +60,8 @@ public class SpeedTestPreferencesActivity extends AppCompatPreferenceActivity { 
         addPreferencesFromResource(R.xml.speed_test_preferences);
         mSpeedTestPrefs = SpeedTestPreferences.getInstance(this);
         Preference prefSpeedTestEnabled = findPreference(SpeedTestPreferences.PREF_SPEED_TEST_ENABLED);
-        if (NetMonPreferences.getInstance(this).isFastPollingEnabled()) prefSpeedTestEnabled.setEnabled(false);
+        if (NetMonPreferences.getInstance(this).isFastPollingEnabled())
+            prefSpeedTestEnabled.setEnabled(false);
         SpeedTestResult result = mSpeedTestPrefs.getLastDownloadResult();
         if (result.status != SpeedTestStatus.SUCCESS) download();
         else
@@ -99,12 +101,15 @@ public class SpeedTestPreferencesActivity extends AppCompatPreferenceActivity { 
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
             // Show a warning when the user enables the speed test.
-            switch(key) {
+            switch (key) {
                 case SpeedTestPreferences.PREF_SPEED_TEST_ENABLED:
                     if (sharedPreferences.getBoolean(key, false)) {
                         PreferenceDialog.showWarningDialog(SpeedTestPreferencesActivity.this, getString(R.string.speed_test_warning_title),
                                 getString(R.string.speed_test_warning_message));
                     }
+                    break;
+                case SpeedTestPreferences.PREF_SPEED_TEST_INTERVAL:
+                    updatePreferenceSummary(key, R.string.pref_summary_speed_test_interval);
                     break;
                 // If the user changed the download url, delete the previously downloaded file
                 // and download the new one.

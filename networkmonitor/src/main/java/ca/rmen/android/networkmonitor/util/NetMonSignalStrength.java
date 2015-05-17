@@ -22,7 +22,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.service.datasources;
+package ca.rmen.android.networkmonitor.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -39,17 +39,16 @@ import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * The logic in this class comes from the Android source code. It is copied here because some of this logic is available only on API level 17+.
  */
-class NetMonSignalStrength {
+public class NetMonSignalStrength {
     private static final String TAG = Constants.TAG + NetMonSignalStrength.class.getSimpleName();
 
 
-    static final int UNKNOWN = Integer.MAX_VALUE;
-    static final int SIGNAL_STRENGTH_NONE_OR_UNKNOWN = 0;
+    public static final int UNKNOWN = Integer.MAX_VALUE;
+    public static final int SIGNAL_STRENGTH_NONE_OR_UNKNOWN = 0;
     //Use int max, as -1 is a valid value in signal strength
     private static final int INVALID = 0x7FFFFFFF;
 
@@ -64,14 +63,14 @@ class NetMonSignalStrength {
 
     private final TelephonyManager mTelephonyManager;
 
-    NetMonSignalStrength(Context context) {
+    public NetMonSignalStrength(Context context) {
         mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
     }
 
     /**
      * @return a value between 0 {@link #SIGNAL_STRENGTH_NONE_OR_UNKNOWN} and 4 {@link #SIGNAL_STRENGTH_GREAT}.
      */
-    int getLevel(SignalStrength signalStrength) {
+    public int getLevel(SignalStrength signalStrength) {
         Log.v(TAG, "getLevel " + signalStrength);
         if (signalStrength.isGsm()) {
             return getGSMSignalStrength(signalStrength);
@@ -83,7 +82,7 @@ class NetMonSignalStrength {
     /**
      * @return the signal strength as dBm.
      */
-    int getDbm(SignalStrength signalStrength) {
+    public int getDbm(SignalStrength signalStrength) {
         Log.v(TAG, "getDbm " + signalStrength);
         int dBm;
 

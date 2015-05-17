@@ -34,6 +34,7 @@ import android.telephony.TelephonyManager;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
+import ca.rmen.android.networkmonitor.util.NetMonSignalStrength;
 
 /**
  * Retrieves the cell signal strength in various units.

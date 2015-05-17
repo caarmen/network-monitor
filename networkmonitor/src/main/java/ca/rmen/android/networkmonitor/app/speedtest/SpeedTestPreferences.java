@@ -8,6 +8,7 @@
  * repository.
  *
  * Copyright (C) 2014-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2015 Rasmus Holm
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +24,11 @@
  */
 package ca.rmen.android.networkmonitor.app.speedtest;
 
-import java.io.File;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
+import java.io.File;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.util.FileUtil;
@@ -45,15 +46,21 @@ public class SpeedTestPreferences {
 
     static final String PREF_SPEED_TEST_ENABLED = "PREF_SPEED_TEST_ENABLED";
     static final String PREF_SPEED_TEST_DOWNLOAD_URL = "PREF_SPEED_TEST_DOWNLOAD_URL";
+    static final String PREF_SPEED_TEST_INTERVAL = "PREF_SPEED_TEST_INTERVAL";
     static final String PREF_SPEED_TEST_UPLOAD_SERVER = "PREF_SPEED_TEST_UPLOAD_SERVER";
     static final String PREF_SPEED_TEST_UPLOAD_PORT = "PREF_SPEED_TEST_UPLOAD_PORT";
     static final String PREF_SPEED_TEST_UPLOAD_USER = "PREF_SPEED_TEST_UPLOAD_USER";
     static final String PREF_SPEED_TEST_UPLOAD_PATH = "PREF_SPEED_TEST_UPLOAD_PATH";
+
+    static final int PREF_SPEED_TEST_INTERVAL_NETWORK_CHANGE = -2;
+    static final int PREF_SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE = -1;
+
     private static final String PREF_SPEED_TEST_UPLOAD_PASSWORD = "PREF_SPEED_TEST_UPLOAD_PASSWORD";
     private static final String PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT = "PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT";
 
     private static final String PREF_SPEED_TEST_DEFAULT_UPLOAD_PORT = "21";
     private static final String PREF_SPEED_TEST_DEFAULT_UPLOAD_PATH = "/";
+    private static final String PREF_SPEED_TEST_DEFAULT_INTERVAL = "1";
 
     private static SpeedTestPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
@@ -77,6 +84,10 @@ public class SpeedTestPreferences {
     public void setEnabled(boolean enabled) {
         Log.v(TAG, "setEnabled " + enabled);
         mSharedPrefs.edit().putBoolean(PREF_SPEED_TEST_ENABLED, enabled).apply();
+    }
+
+    public int getSpeedTestInterval() {
+        return Integer.valueOf(mSharedPrefs.getString(PREF_SPEED_TEST_INTERVAL, PREF_SPEED_TEST_DEFAULT_INTERVAL));
     }
 
     public SpeedTestUploadConfig getUploadConfig() {
