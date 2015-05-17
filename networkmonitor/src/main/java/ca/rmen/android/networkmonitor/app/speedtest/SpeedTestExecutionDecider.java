@@ -181,28 +181,12 @@ public class SpeedTestExecutionDecider {
                 + " vs speed test interval: " + mPreferences.getSpeedTestInterval());
         if (numberOfRecordsSinceLastSpeedTest < 0)
             return true;
-        return numberOfRecordsSinceLastSpeedTest >= mPreferences.getSpeedTestInterval();
-    }
-
-    private int readIdOfLatestSpeedTest() {
-        String[] projection = new String[]{BaseColumns._ID};
-        String orderBy = BaseColumns._ID + " DESC";
-        String selection = "CAST(" + NetMonColumns.DOWNLOAD_SPEED + " AS REAL) > 0 OR CAST(" + NetMonColumns.UPLOAD_SPEED + " AS REAL) > 0";
-        Cursor cursor = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, projection, selection, null, orderBy);
-        if (cursor != null) {
-            try {
-                if (cursor.moveToFirst()) {
-                    return cursor.getInt(0);
-                }
-            } finally {
-                cursor.close();
-            }
-        }
-        return -1;
+        return numberOfRecordsSinceLastSpeedTest >= mPreferences.getSpeedTestInterval() - 1;
     }
 
     private int readNumberOfRecordsSinceLastSpeedTest() {
-        int idOfLatestSpeedTest = readIdOfLatestSpeedTest();
+        String idOfLatestSpeedTest = DBUtil.readLastLoggedValue(mContext, BaseColumns._ID, QUERY_FILTER_HAS_SPEED_TEST);
+        if (idOfLatestSpeedTest == null) return 0;
         String orderBy = BaseColumns._ID + " DESC";
         String selection = BaseColumns._ID + " > " + idOfLatestSpeedTest;
         Cursor cursor = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, null, selection, null, orderBy);
