@@ -56,6 +56,31 @@ limitations under the License.
         <item>1800000</item>
         <item>3600000</item>
     </string-array>
+    <!-- Alternative update interval for speed test -->
+    <string-array name="preferences_speed_test_interval_labels">
+        <item>@string/pref_value_advanced_speed_test_logging_interval_network_change</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_signal_change_5dbm</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_2_times</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_5_times</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_10_times</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_20_times</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_30_times</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_60_times</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_100_times</item>
+        <item>@string/pref_value_advanced_speed_test_logging_interval_1000_times</item>
+    </string-array>
+    <string-array name="preferences_speed_test_interval_values" translatable="false">
+        <item>-2</item>
+        <item>-1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>60</item>
+        <item>100</item>
+        <item>1000</item>
+    </string-array>
     <string-array name="export_choices">
         <item>@string/export_choice_csv</item>
         <item>@string/export_choice_html</item>

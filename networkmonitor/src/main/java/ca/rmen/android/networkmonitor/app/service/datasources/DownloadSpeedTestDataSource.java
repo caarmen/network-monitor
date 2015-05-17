@@ -44,12 +44,14 @@ public class DownloadSpeedTestDataSource implements NetMonDataSource {
 
     private SpeedTestPreferences mPreferences;
     private String mDisabledValue;
+    private SpeedTestAdvancedInterval mAdvancedInterval;
 
     @Override
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
         mPreferences = SpeedTestPreferences.getInstance(context);
         mDisabledValue = context.getString(R.string.speed_test_disabled);
+        mAdvancedInterval = new SpeedTestAdvancedInterval(context);
     }
 
     @Override
@@ -60,7 +62,7 @@ public class DownloadSpeedTestDataSource implements NetMonDataSource {
         Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues();
 
-        if (mPreferences.isEnabled()) {
+        if (mPreferences.isEnabled() && mAdvancedInterval.doUpdate()) {
             SpeedTestDownloadConfig downloadConfig = mPreferences.getDownloadConfig();
             if (!downloadConfig.isValid()) return values;
             SpeedTestResult result = SpeedTestDownload.download(downloadConfig);

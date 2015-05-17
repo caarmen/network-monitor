@@ -33,7 +33,6 @@ limitations under the License.
             android:icon="@drawable/ic_pref_enable_service"
             android:key="PREF_SERVICE_ENABLED"
             android:title="@string/pref_title_service_enabled" />
-
         <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
             android:defaultValue="10000"
             android:entries="@array/preferences_updateInterval_labels"

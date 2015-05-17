@@ -106,6 +106,9 @@ public class SpeedTestPreferencesActivity extends AppCompatPreferenceActivity { 
                                 getString(R.string.speed_test_warning_message));
                     }
                     break;
+                case SpeedTestPreferences.PREF_ADVANCED_UPDATE_INTERVAL:
+                    updatePreferenceSummary(key, R.string.pref_summary_advanced_speed_test_logging_interval);
+                    break;
                 // If the user changed the download url, delete the previously downloaded file
                 // and download the new one.
                 case SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL:
