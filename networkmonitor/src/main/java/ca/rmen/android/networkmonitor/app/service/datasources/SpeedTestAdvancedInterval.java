@@ -23,7 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.service.datasources;
 
-import android.app.usage.ConfigurationStats;
 import android.content.Context;
 import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
@@ -75,28 +74,26 @@ public class SpeedTestAdvancedInterval {
     // Need to make sure we do not listen after we are done
     public void onDestroy() {
         Log.v(TAG, "onDestroy");
-        if (mTelephonyManager != null) mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+        if (mTelephonyManager != null)
+            mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
     }
 
     // Determines if the function should do a download test this call
     public boolean doUpdate() {
-        Log.v(TAG, "doUpdate() " + mPreferences.getAdvancedSpeedInterval() + " : " + mIntervalCounter );
+        Log.v(TAG, "doUpdate() " + mPreferences.getAdvancedSpeedInterval() + " : " + mIntervalCounter);
         if (!mPreferences.isAdvancedEnabled()) {
             return true;
-        }
-        else {
+        } else {
             int mode = Integer.parseInt(mPreferences.getAdvancedSpeedInterval());
             if (mode == SPEED_TEST_INTERVAL_NETWORK_CHANGE) {
                 // check for change in network
                 return changedNetwork();
-            }
-            else if (mode == SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE) {
+            } else if (mode == SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE) {
                 // check for change in network and for a difference in dbm by 5
                 if (changedDbm() || changedNetwork()) {
                     return true;
                 }
-            }
-            else {
+            } else {
                 mIntervalCounter++;
                 if (mode <= mIntervalCounter) {
                     mIntervalCounter = 0;
@@ -108,7 +105,7 @@ public class SpeedTestAdvancedInterval {
     }
 
     private boolean changedNetwork() {
-        if (mTelephonyManager.getNetworkType() != mNetworkType ){
+        if (mTelephonyManager.getNetworkType() != mNetworkType) {
             mNetworkType = mTelephonyManager.getNetworkType();
             return true;
         }
@@ -119,8 +116,8 @@ public class SpeedTestAdvancedInterval {
         Log.v(TAG, "changedDbm by: " + SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM + '?');
         if (mLastSignalStrengthDbm != NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
             if (mLastSignalStrengthDbm >= mOldSignalStrength + SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM
-                    || mLastSignalStrengthDbm <= mOldSignalStrength - SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM ) {
-                Log.v(TAG,"mOldSignalStrength has been changed from " + mOldSignalStrength + " to " + mLastSignalStrengthDbm);
+                    || mLastSignalStrengthDbm <= mOldSignalStrength - SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM) {
+                Log.v(TAG, "mOldSignalStrength has been changed from " + mOldSignalStrength + " to " + mLastSignalStrengthDbm);
                 mOldSignalStrength = mLastSignalStrengthDbm;
                 return true;
             }

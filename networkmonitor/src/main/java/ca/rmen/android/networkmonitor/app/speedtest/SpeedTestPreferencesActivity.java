@@ -60,7 +60,8 @@ public class SpeedTestPreferencesActivity extends AppCompatPreferenceActivity { 
         addPreferencesFromResource(R.xml.speed_test_preferences);
         mSpeedTestPrefs = SpeedTestPreferences.getInstance(this);
         Preference prefSpeedTestEnabled = findPreference(SpeedTestPreferences.PREF_SPEED_TEST_ENABLED);
-        if (NetMonPreferences.getInstance(this).isFastPollingEnabled()) prefSpeedTestEnabled.setEnabled(false);
+        if (NetMonPreferences.getInstance(this).isFastPollingEnabled())
+            prefSpeedTestEnabled.setEnabled(false);
         SpeedTestResult result = mSpeedTestPrefs.getLastDownloadResult();
         if (result.status != SpeedTestStatus.SUCCESS) download();
         else
@@ -100,7 +101,7 @@ public class SpeedTestPreferencesActivity extends AppCompatPreferenceActivity { 
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
             // Show a warning when the user enables the speed test.
-            switch(key) {
+            switch (key) {
                 case SpeedTestPreferences.PREF_SPEED_TEST_ENABLED:
                     if (sharedPreferences.getBoolean(key, false)) {
                         PreferenceDialog.showWarningDialog(SpeedTestPreferencesActivity.this, getString(R.string.speed_test_warning_title),

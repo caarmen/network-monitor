@@ -24,11 +24,11 @@
  */
 package ca.rmen.android.networkmonitor.app.speedtest;
 
-import java.io.File;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
+import java.io.File;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.util.FileUtil;
@@ -95,7 +95,7 @@ public class SpeedTestPreferences {
         return mSharedPrefs.getString(PREF_ADVANCED_UPDATE_INTERVAL, "");
     }
 
-    public void setAdvancedSpeedInterval(String speedInterval){
+    public void setAdvancedSpeedInterval(String speedInterval) {
         Log.v(TAG, "setAdvancedSpeedInterval" + speedInterval);
         mSharedPrefs.edit().putString(PREF_ADVANCED_UPDATE_INTERVAL, speedInterval);
     }
