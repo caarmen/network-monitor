@@ -29,7 +29,7 @@ limitations under the License.
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="vertical"
     android:showDividers="middle"
-    tools:ignore="NewApi" >
+    tools:ignore="NewApi,UnusedAttribute" >
 
     <TextView
         android:id="@+id/filter_columns_hint"
@@ -60,7 +60,7 @@ limitations under the License.
         android:divider="?android:attr/dividerVertical"
         android:dividerPadding="12dp"
         android:showDividers="middle"
-        tools:ignore="NewApi" >
+        tools:ignore="NewApi,UnusedAttribute" >
 
         <Button
             android:id="@+id/cancel"

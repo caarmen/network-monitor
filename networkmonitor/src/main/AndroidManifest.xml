@@ -74,7 +74,8 @@ limitations under the License.
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:label="@string/log_title"
-            android:parentActivityName="ca.rmen.android.networkmonitor.app.main.MainActivity" >
+            android:parentActivityName="ca.rmen.android.networkmonitor.app.main.MainActivity"
+            tools:ignore="UnusedAttribute">
             <intent-filter>
                 <action android:name="ca.rmen.android.networkmonitor.app.log.LogActivity" />
 
@@ -89,7 +90,8 @@ limitations under the License.
             android:name="ca.rmen.android.networkmonitor.app.about.AboutActivity"
             android:exported="false"
             android:label="@string/about_title"
-            android:parentActivityName="ca.rmen.android.networkmonitor.app.main.MainActivity" >
+            android:parentActivityName="ca.rmen.android.networkmonitor.app.main.MainActivity"
+            tools:ignore="UnusedAttribute">
             <intent-filter>
                 <action android:name="ca.rmen.android.networkmonitor.app.about.AboutActivity" />
 
@@ -105,7 +107,8 @@ limitations under the License.
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:label="@string/pref_title_advanced"
-            android:parentActivityName="ca.rmen.android.networkmonitor.app.main.MainActivity" >
+            android:parentActivityName="ca.rmen.android.networkmonitor.app.main.MainActivity"
+            tools:ignore="UnusedAttribute">
             <intent-filter>
                 <action android:name="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity" />
 
@@ -121,7 +124,8 @@ limitations under the License.
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:label="@string/pref_title_email"
-            android:parentActivityName="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity" >
+            android:parentActivityName="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity"
+            tools:ignore="UnusedAttribute">
             <intent-filter>
                 <action android:name="ca.rmen.android.networkmonitor.app.email.EmailPreferencesActivity" />
 
@@ -137,7 +141,8 @@ limitations under the License.
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:label="@string/pref_title_speed_test"
-            android:parentActivityName="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity" >
+            android:parentActivityName="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity"
+            tools:ignore="UnusedAttribute">
             <intent-filter>
                 <action android:name="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferencesActivity" />
 
@@ -153,7 +158,8 @@ limitations under the License.
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:label="@string/pref_title_speed_test_about"
-            android:parentActivityName="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferencesActivity" >
+            android:parentActivityName="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferencesActivity"
+            tools:ignore="UnusedAttribute">
             <intent-filter>
                 <action android:name="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestAboutActivity" />
 
@@ -169,7 +175,8 @@ limitations under the License.
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:label="@string/pref_title_select_fields"
-            android:parentActivityName="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity" >
+            android:parentActivityName="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity"
+            tools:ignore="UnusedAttribute">
             <intent-filter>
                 <action android:name="ca.rmen.android.networkmonitor.app.prefs.SelectFieldsActivity" />
 
