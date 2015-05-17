@@ -27,6 +27,20 @@ limitations under the License.
     <!-- Speed test preferences -->
     <string name="pref_category_speed_test_settings">TEST DE VITESSE</string>
     <string name="pref_title_speed_test_enabled">Activer/Désactiver</string>
+    <!-- Speed test interval -->
+    <string name="pref_title_speed_test_interval">Fréquence du test de vitesse</string>
+    <string name="pref_summary_speed_test_interval">%s</string>
+    <string name="pref_value_speed_test_interval_network_change">Quand le réseau change</string>
+    <string name="pref_value_speed_test_interval_signal_change_5dbm">Quand le réseau change ou la force du signal WiFi change par 5 dBm</string>
+    <string name="pref_value_speed_test_interval_1_time">Chaque collecte</string>
+    <string name="pref_value_speed_test_interval_2_times">Chaque 2 collectes</string>
+    <string name="pref_value_speed_test_interval_5_times">Chaque 5 collectes</string>
+    <string name="pref_value_speed_test_interval_10_times">Chaque 10 collectes</string>
+    <string name="pref_value_speed_test_interval_20_times">Chaque 20 collectes</string>
+    <string name="pref_value_speed_test_interval_30_times">Chaque 30 collectes</string>
+    <string name="pref_value_speed_test_interval_60_times">Chaque 60 collectes</string>
+    <string name="pref_value_speed_test_interval_100_times">Chaque 100 collectes</string>
+    <string name="pref_value_speed_test_interval_1000_times">Chaque 1000 collectes</string>
     <!-- Download speed test preferences -->
     <string name="pref_category_speed_test_download_settings">TEST DE RÉCEPTION (HTTP)</string>
     <string name="pref_title_speed_test_download_url">URL du fichier à télécharger</string>
