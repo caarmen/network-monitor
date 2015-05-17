@@ -27,6 +27,10 @@ package ca.rmen.android.networkmonitor.app.speedtest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.telephony.PhoneStateListener;
@@ -36,8 +40,10 @@ import android.telephony.TelephonyManager;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
+import ca.rmen.android.networkmonitor.util.DBUtil;
 import ca.rmen.android.networkmonitor.util.Log;
 import ca.rmen.android.networkmonitor.util.NetMonSignalStrength;
+import ca.rmen.android.networkmonitor.util.TelephonyUtil;
 
 /**
  * Determines if a speed test should be executed or not.
@@ -50,16 +56,23 @@ public class SpeedTestExecutionDecider {
     private final SpeedTestPreferences mPreferences;
 
     private final NetMonSignalStrength mNetMonSignalStrength;
-    private int mCurrentSignalStrengthDbm;
+    private int mCurrentCellSignalStrengthDbm;
 
     // For fetching data regarding the network such as signal strength, network type etc.
     private final TelephonyManager mTelephonyManager;
+    private final WifiManager mWifiManager;
+    private final ConnectivityManager mConnectivityManager;
+
+    // Using this selection in a query will make the query only return results in which a speed test was performed.
+    private static final String QUERY_FILTER_HAS_SPEED_TEST = "CAST(" + NetMonColumns.DOWNLOAD_SPEED + " AS REAL) > 0 OR CAST(" + NetMonColumns.UPLOAD_SPEED + " AS REAL) > 0";
 
     public SpeedTestExecutionDecider(Context context) {
         Log.v(TAG, "onCreate");
         mContext = context;
         mPreferences = SpeedTestPreferences.getInstance(context);
         mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         mNetMonSignalStrength = new NetMonSignalStrength(context);
         if (mPreferences.isEnabled() && mPreferences.getSpeedTestInterval() == SpeedTestPreferences.PREF_SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE) {
             registerPhoneStateListener();
@@ -95,25 +108,63 @@ public class SpeedTestExecutionDecider {
     }
 
     /**
-     * @return true if the current network type is different from the network type of the last network monitor test.
+     * @return true if the current network type is different from the network type during the last speed test.
      */
     private boolean hasNetworkTypeChanged() {
-        int lastLoggedNetworkType = readLastLoggedNetworkType();
-        int currentNetworkType = mTelephonyManager.getNetworkType();
-        return currentNetworkType != lastLoggedNetworkType;
+        String lastLoggedNetworkType = DBUtil.readLastLoggedValue(mContext, NetMonColumns.NETWORK_TYPE, QUERY_FILTER_HAS_SPEED_TEST);
+        String currentNetworkType = TelephonyUtil.getNetworkType(mContext);
+
+        if (currentNetworkType == null) return false;
+
+        Log.v(TAG, "hasNetworkTypeChanged: from " + lastLoggedNetworkType + " to " + currentNetworkType);
+        return !currentNetworkType.equals(lastLoggedNetworkType);
     }
 
     /**
-     * @return true if the current signal strength has changed significantly compared to the last logged signal strength.
+     * @return true if the current wifi or mobile signal strength in dbm has changed significantly compared to the value during the last speed test.
+     * Only checks wifi signal strength if we are on wifi, and cell signal strength, if we are on mobile data.
      */
     private boolean hasSignalStrengthChanged() {
-        Log.v(TAG, "hasSignalStrengthChanged by: " + SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM + '?');
-        if (mCurrentSignalStrengthDbm != NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
-            int lastLoggedSignalStrength = readLastLoggedSignalStrength();
-            if (lastLoggedSignalStrength != NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
-                if (mCurrentSignalStrengthDbm >= lastLoggedSignalStrength + SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM
-                        || mCurrentSignalStrengthDbm <= lastLoggedSignalStrength - SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM) {
-                    Log.v(TAG, "mTelephonyManager has been changed from " + lastLoggedSignalStrength + " to " + mCurrentSignalStrengthDbm);
+        NetworkInfo activeNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo == null) return false;
+        if (activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+            return hasWifiSignalStrengthChanged();
+        } else {
+            return hasCellSignalStrengthChanged();
+        }
+    }
+
+    /**
+     * @return true if the current cell signal strength has changed significantly compared to the cell signal strength during the last speed test.
+     */
+    private boolean hasCellSignalStrengthChanged() {
+        Log.v(TAG, "hasCellSignalStrengthChanged by: " + SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM + '?');
+        String lastLoggedCellSignalStrength = DBUtil.readLastLoggedValue(mContext, NetMonColumns.CELL_SIGNAL_STRENGTH_DBM, QUERY_FILTER_HAS_SPEED_TEST);
+        if (lastLoggedCellSignalStrength == null) return false;
+        return signalStrengthChangeExceedsThreshold(Integer.valueOf(lastLoggedCellSignalStrength), mCurrentCellSignalStrengthDbm);
+    }
+
+    /**
+     * @return true if the current wifi signal strength has changed significantly compared to the wifi signal strength during the last speed test.
+     */
+    private boolean hasWifiSignalStrengthChanged() {
+        Log.v(TAG, "hasWifiSignalStrengthChanged by: " + SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM + '?');
+        WifiInfo connectionInfo = mWifiManager.getConnectionInfo();
+        int currentWifiSignalStrengthDbm = connectionInfo.getRssi();
+        String lastLoggedWifiSignalStrength = DBUtil.readLastLoggedValue(mContext, NetMonColumns.WIFI_RSSI, QUERY_FILTER_HAS_SPEED_TEST);
+        if (lastLoggedWifiSignalStrength == null) return false;
+        return signalStrengthChangeExceedsThreshold(Integer.valueOf(lastLoggedWifiSignalStrength), currentWifiSignalStrengthDbm);
+    }
+
+    /**
+     * @return true if the difference between the two values exceeds the threshold defined by #SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM.
+     */
+    private static boolean signalStrengthChangeExceedsThreshold(int previousValue, int currentValue) {
+        Log.v(TAG, "signal strength has been changed from " + previousValue + " to " + currentValue);
+        if (previousValue != NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
+            if (currentValue != NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
+                if (currentValue >= previousValue + SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM
+                        || currentValue <= previousValue - SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM) {
                     return true;
                 }
             }
@@ -165,44 +216,6 @@ public class SpeedTestExecutionDecider {
         return 0;
     }
 
-    /**
-     * @return the network type we logged to the db in the last network monitor test.
-     */
-    private int readLastLoggedNetworkType() {
-        String[] projection = new String[]{NetMonColumns.NETWORK_TYPE};
-        String orderBy = BaseColumns._ID + " DESC";
-        Cursor cursor = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, projection, null, null, orderBy);
-        if (cursor != null) {
-            try {
-                if (cursor.moveToFirst()) {
-                    return cursor.getInt(0);
-                }
-            } finally {
-                cursor.close();
-            }
-        }
-        return TelephonyManager.NETWORK_TYPE_UNKNOWN;
-    }
-
-    /**
-     * @return the signal strength we logged to the db in the last network monitor test.
-     */
-    private int readLastLoggedSignalStrength() {
-        String[] projection = new String[]{NetMonColumns.CELL_SIGNAL_STRENGTH_DBM};
-        String orderBy = BaseColumns._ID + " DESC";
-        Cursor cursor = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, projection, null, null, orderBy);
-        if (cursor != null) {
-            try {
-                if (cursor.moveToFirst()) {
-                    return cursor.getInt(0);
-                }
-            } finally {
-                cursor.close();
-            }
-        }
-        return NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
-    }
-
     private void registerPhoneStateListener() {
         Log.v(TAG, "registerPhoneStateListener");
         mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_SERVICE_STATE);
@@ -217,17 +230,18 @@ public class SpeedTestExecutionDecider {
         @Override
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
             Log.v(TAG, "onSignalStrengthsChanged: " + signalStrength);
-            mCurrentSignalStrengthDbm = mNetMonSignalStrength.getDbm(signalStrength);
+            mCurrentCellSignalStrengthDbm = mNetMonSignalStrength.getDbm(signalStrength);
         }
 
         @Override
         public void onServiceStateChanged(ServiceState serviceState) {
             Log.v(TAG, "onServiceStateChanged " + serviceState);
             if (serviceState.getState() != ServiceState.STATE_IN_SERVICE) {
-                mCurrentSignalStrengthDbm = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+                mCurrentCellSignalStrengthDbm = NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
             }
         }
     };
+
     private final SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
