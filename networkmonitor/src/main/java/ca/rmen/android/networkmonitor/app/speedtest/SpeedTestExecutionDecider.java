@@ -22,7 +22,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.service.datasources;
+package ca.rmen.android.networkmonitor.app.speedtest;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -35,18 +35,16 @@ import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
+import ca.rmen.android.networkmonitor.util.NetMonSignalStrength;
 
 /**
  * Determines if a speed test should be executed or not.
  */
-class SpeedTestExecutionDecider {
+public class SpeedTestExecutionDecider {
     private static final String TAG = Constants.TAG + SpeedTestExecutionDecider.class.getSimpleName();
     private static final int SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM = 5;
-    private static final int SPEED_TEST_INTERVAL_NETWORK_CHANGE = -2;
-    private static final int SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE = -1;
 
     private final Context mContext;
     private final SpeedTestPreferences mPreferences;
@@ -57,13 +55,13 @@ class SpeedTestExecutionDecider {
     // For fetching data regarding the network such as signal strength, network type etc.
     private final TelephonyManager mTelephonyManager;
 
-    SpeedTestExecutionDecider(Context context) {
+    public SpeedTestExecutionDecider(Context context) {
         Log.v(TAG, "onCreate");
         mContext = context;
         mPreferences = SpeedTestPreferences.getInstance(context);
         mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         mNetMonSignalStrength = new NetMonSignalStrength(context);
-        if (mPreferences.isEnabled() && mPreferences.getSpeedTestInterval() == SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE) {
+        if (mPreferences.isEnabled() && mPreferences.getSpeedTestInterval() == SpeedTestPreferences.PREF_SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE) {
             registerPhoneStateListener();
         }
         PreferenceManager.getDefaultSharedPreferences(mContext).registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
@@ -82,10 +80,10 @@ class SpeedTestExecutionDecider {
     public boolean shouldExecute() {
         Log.v(TAG, "shouldExecute");
         int speedTestInterval = mPreferences.getSpeedTestInterval();
-        if (speedTestInterval == SPEED_TEST_INTERVAL_NETWORK_CHANGE) {
+        if (speedTestInterval == SpeedTestPreferences.PREF_SPEED_TEST_INTERVAL_NETWORK_CHANGE) {
             // check for change in network
             return hasNetworkTypeChanged();
-        } else if (speedTestInterval == SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE) {
+        } else if (speedTestInterval == SpeedTestPreferences.PREF_SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE) {
             // check for change in network and for a difference in dbm by 5
             if (hasSignalStrengthChanged() || hasNetworkTypeChanged()) {
                 return true;
@@ -128,7 +126,7 @@ class SpeedTestExecutionDecider {
      */
     private boolean isIntervalExceeded() {
         int numberOfRecordsSinceLastSpeedTest = readNumberOfRecordsSinceLastSpeedTest();
-        Log.v(TAG, "isIntervalExcceeded: numberOfRecordsSinceLastSpeedTest: " + numberOfRecordsSinceLastSpeedTest
+        Log.v(TAG, "isIntervalExceeded: numberOfRecordsSinceLastSpeedTest: " + numberOfRecordsSinceLastSpeedTest
                 + " vs speed test interval: " + mPreferences.getSpeedTestInterval());
         if (numberOfRecordsSinceLastSpeedTest < 0)
             return true;
@@ -234,7 +232,7 @@ class SpeedTestExecutionDecider {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (SpeedTestPreferences.PREF_SPEED_TEST_ENABLED.equals(key) || SpeedTestPreferences.PREF_SPEED_TEST_INTERVAL.equals(key)) {
-                if (mPreferences.isEnabled() && mPreferences.getSpeedTestInterval() == SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE) {
+                if (mPreferences.isEnabled() && mPreferences.getSpeedTestInterval() == SpeedTestPreferences.PREF_SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE) {
                     registerPhoneStateListener();
                 } else {
                     unregisterPhoneStateListener();
