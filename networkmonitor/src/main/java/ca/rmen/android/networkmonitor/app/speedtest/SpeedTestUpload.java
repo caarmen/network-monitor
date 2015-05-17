@@ -39,6 +39,7 @@ import org.apache.commons.net.ftp.FTP;
 import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
+import ca.rmen.android.networkmonitor.util.IoUtil;
 import ca.rmen.android.networkmonitor.util.Log;
 
 
@@ -84,6 +85,7 @@ public class SpeedTestUpload {
 
             // set the file type to be read as a binary file
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
+            ftp.enterLocalPassiveMode();
             // Upload the file
             is = new FileInputStream(uploadConfig.file);
             long before = System.currentTimeMillis();
@@ -101,6 +103,7 @@ public class SpeedTestUpload {
             long txBytesAfter = TrafficStats.getTotalTxBytes();
             ftp.logout();
             ftp.disconnect();
+            Log.v(TAG, "Upload complete");
             return new SpeedTestResult(txBytesAfter - txBytesBefore, uploadConfig.file.length(), after - before, SpeedTestStatus.SUCCESS);
         } catch (SocketException e) {
             Log.e(TAG, "upload " + e.getMessage(), e);
@@ -109,13 +112,7 @@ public class SpeedTestUpload {
             Log.e(TAG, "upload " + e.getMessage(), e);
             return new SpeedTestResult(0, 0, 0, SpeedTestStatus.FAILURE);
         } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    Log.e(TAG, "upload " + e.getMessage(), e);
-                }
-            }
+            IoUtil.closeSilently(is);
         }
     }
 }
