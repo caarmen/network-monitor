@@ -1,2 +1,0 @@
--dontoptimize
--keep class ca.rmen.android.networkmonitor.** {*;}
