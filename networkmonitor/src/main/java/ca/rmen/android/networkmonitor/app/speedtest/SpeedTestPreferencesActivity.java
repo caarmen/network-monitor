@@ -147,14 +147,15 @@ public class SpeedTestPreferencesActivity extends AppCompatPreferenceActivity { 
         SpeedTestResult result = mSpeedTestPrefs.getLastDownloadResult();
         String size = result.status == SpeedTestStatus.SUCCESS ? String.format("%.3f", (float) result.fileBytes / 1000000) : "?";
         String url = mSpeedTestPrefs.getDownloadConfig().url;
-        url = ellipsize(url, 30);
+        url = ellipsize(url);
         String summary = getString(R.string.pref_summary_speed_test_download_url, url, size);
         @SuppressWarnings("deprecation")
         Preference pref = getPreferenceManager().findPreference(SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL);
         pref.setSummary(summary);
     }
 
-    private static String ellipsize(String text, int maxLength) {
+    private static String ellipsize(String text) {
+        int maxLength = 30;
         if (text.length() <= maxLength) return text;
         String beginning = text.substring(0, maxLength / 2);
         String end = text.substring(text.length() - maxLength / 2);

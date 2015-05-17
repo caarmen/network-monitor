@@ -81,7 +81,7 @@ public class SpeedTestPreferences {
 
     public SpeedTestUploadConfig getUploadConfig() {
         String server = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_SERVER, "").trim();
-        int port = getIntPreference(PREF_SPEED_TEST_UPLOAD_PORT, PREF_SPEED_TEST_DEFAULT_UPLOAD_PORT);
+        int port = Integer.valueOf(mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_PORT, PREF_SPEED_TEST_DEFAULT_UPLOAD_PORT));
         String user = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_USER, "").trim();
         String password = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_PASSWORD, "").trim();
         String path = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_PATH, PREF_SPEED_TEST_DEFAULT_UPLOAD_PATH).trim();
@@ -103,11 +103,6 @@ public class SpeedTestPreferences {
     public void setLastDownloadResult(SpeedTestResult result) {
         Log.v(TAG, "setLastDownloadResult " + result);
         result.write(mSharedPrefs, PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT);
-    }
-
-    private int getIntPreference(String key, String defaultValue) {
-        String valueStr = mSharedPrefs.getString(key, defaultValue);
-        return Integer.valueOf(valueStr);
     }
 
 }
