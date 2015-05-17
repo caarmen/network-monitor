@@ -7,7 +7,6 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2014 Benoit 'BoD' Lubek (BoD@JRAF.org) 
  * Copyright (C) 2014 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
