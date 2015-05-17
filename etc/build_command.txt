@@ -1,3 +1,0 @@
-To build an app for the PlayStore:
-
-ant clean release -Dmanifest.package=<your app package name> -Dkey.store=<path to your keystore file>  -Dkey.alias=<name of the keystore alias> -Dkey.store.password="<key store password>" -Dkey.alias.password="<key alias password>"
