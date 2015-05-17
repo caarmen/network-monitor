@@ -46,19 +46,19 @@ public class UploadSpeedTestDataSource implements NetMonDataSource {
     private SpeedTestPreferences mPreferences;
     private String mDisabledValue;
 
-    private SpeedTestAdvancedInterval mAdvancedInterval;
+    private SpeedTestExecutionDecider mSpeedTestExecutionDecider;
 
     @Override
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
         mPreferences = SpeedTestPreferences.getInstance(context);
         mDisabledValue = context.getString(R.string.speed_test_disabled);
-        mAdvancedInterval = new SpeedTestAdvancedInterval(context);
+        mSpeedTestExecutionDecider = new SpeedTestExecutionDecider(context);
     }
 
     @Override
     public void onDestroy() {
-        mAdvancedInterval.onDestroy();
+        mSpeedTestExecutionDecider.onDestroy();
     }
 
     @Override
@@ -66,7 +66,7 @@ public class UploadSpeedTestDataSource implements NetMonDataSource {
         Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues();
 
-        if (mPreferences.isEnabled() && mAdvancedInterval.doUpdate()) {
+        if (mPreferences.isEnabled() && mSpeedTestExecutionDecider.shouldExecute()) {
             SpeedTestUploadConfig uploadConfig = mPreferences.getUploadConfig();
             if (!uploadConfig.isValid()) return values;
             SpeedTestResult result = SpeedTestUpload.upload(uploadConfig);
