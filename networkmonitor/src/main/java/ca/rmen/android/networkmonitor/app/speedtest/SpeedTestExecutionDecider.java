@@ -92,6 +92,9 @@ public class SpeedTestExecutionDecider {
      */
     public boolean shouldExecute() {
         Log.v(TAG, "shouldExecute");
+
+        if (!mPreferences.isEnabled()) return false;
+
         int speedTestInterval = mPreferences.getSpeedTestInterval();
         if (speedTestInterval == SpeedTestPreferences.PREF_SPEED_TEST_INTERVAL_NETWORK_CHANGE) {
             // check for change in network

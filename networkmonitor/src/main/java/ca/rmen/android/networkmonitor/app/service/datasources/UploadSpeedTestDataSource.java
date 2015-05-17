@@ -67,7 +67,7 @@ public class UploadSpeedTestDataSource implements NetMonDataSource {
         Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues();
 
-        if (mPreferences.isEnabled() && mSpeedTestExecutionDecider.shouldExecute()) {
+        if (mSpeedTestExecutionDecider.shouldExecute()) {
             SpeedTestUploadConfig uploadConfig = mPreferences.getUploadConfig();
             if (!uploadConfig.isValid()) return values;
             SpeedTestResult result = SpeedTestUpload.upload(uploadConfig);

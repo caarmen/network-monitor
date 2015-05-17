@@ -66,7 +66,7 @@ public class DownloadSpeedTestDataSource implements NetMonDataSource {
         Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues();
 
-        if (mPreferences.isEnabled() && mSpeedTestExecutionDecider.shouldExecute()) {
+        if (mSpeedTestExecutionDecider.shouldExecute()) {
             SpeedTestDownloadConfig downloadConfig = mPreferences.getDownloadConfig();
             if (!downloadConfig.isValid()) return values;
             SpeedTestResult result = SpeedTestDownload.download(downloadConfig);
