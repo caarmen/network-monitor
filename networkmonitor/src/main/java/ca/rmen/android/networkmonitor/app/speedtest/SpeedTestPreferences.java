@@ -46,12 +46,12 @@ public class SpeedTestPreferences {
 
     static final String PREF_SPEED_TEST_ENABLED = "PREF_SPEED_TEST_ENABLED";
     static final String PREF_SPEED_TEST_DOWNLOAD_URL = "PREF_SPEED_TEST_DOWNLOAD_URL";
-    static final String PREF_ADVANCED_SPEED_TEST_ENABLED = "PREF_ADVANCED_SPEED_TEST_ENABLED";
     static final String PREF_ADVANCED_UPDATE_INTERVAL = "PREF_ADVANCED_UPDATE_INTERVAL";
     static final String PREF_SPEED_TEST_UPLOAD_SERVER = "PREF_SPEED_TEST_UPLOAD_SERVER";
     static final String PREF_SPEED_TEST_UPLOAD_PORT = "PREF_SPEED_TEST_UPLOAD_PORT";
     static final String PREF_SPEED_TEST_UPLOAD_USER = "PREF_SPEED_TEST_UPLOAD_USER";
     static final String PREF_SPEED_TEST_UPLOAD_PATH = "PREF_SPEED_TEST_UPLOAD_PATH";
+    private static final String PREF_ADVANCED_SPEED_TEST_ENABLED = "PREF_ADVANCED_SPEED_TEST_ENABLED";
     private static final String PREF_SPEED_TEST_UPLOAD_PASSWORD = "PREF_SPEED_TEST_UPLOAD_PASSWORD";
     private static final String PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT = "PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT";
 
@@ -86,18 +86,8 @@ public class SpeedTestPreferences {
         return mSharedPrefs.getBoolean(PREF_ADVANCED_SPEED_TEST_ENABLED, false);
     }
 
-    public void setAdvancedEnabled(boolean enabled) {
-        Log.v(TAG, "setAdvancedEnabled " + enabled);
-        mSharedPrefs.edit().putBoolean(PREF_ADVANCED_SPEED_TEST_ENABLED, enabled).apply();
-    }
-
     public String getAdvancedSpeedInterval() {
         return mSharedPrefs.getString(PREF_ADVANCED_UPDATE_INTERVAL, "");
-    }
-
-    public void setAdvancedSpeedInterval(String speedInterval) {
-        Log.v(TAG, "setAdvancedSpeedInterval" + speedInterval);
-        mSharedPrefs.edit().putString(PREF_ADVANCED_UPDATE_INTERVAL, speedInterval);
     }
 
     public SpeedTestUploadConfig getUploadConfig() {

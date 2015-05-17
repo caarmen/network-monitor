@@ -36,15 +36,15 @@ import ca.rmen.android.networkmonitor.util.Log;
 /**
  * Reason for it being in datasources is that I need access to NetMonSignalStrength, which is not public
  */
-public class SpeedTestAdvancedInterval {
+class SpeedTestAdvancedInterval {
     private static final String TAG = Constants.TAG + SpeedTestAdvancedInterval.class.getSimpleName();
     private static final int SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM = 5;
     private static final int SPEED_TEST_INTERVAL_NETWORK_CHANGE = -2;
     private static final int SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE = -1;
 
-    private SpeedTestPreferences mPreferences;
+    private final SpeedTestPreferences mPreferences;
 
-    private NetMonSignalStrength mNetMonSignalStrength;
+    private final NetMonSignalStrength mNetMonSignalStrength;
     private int mLastSignalStrengthDbm;
 
     // For fetching data regarding the network such as signal strength, network type etc.

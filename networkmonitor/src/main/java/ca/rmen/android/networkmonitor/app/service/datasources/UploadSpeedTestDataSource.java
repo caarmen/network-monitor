@@ -57,7 +57,9 @@ public class UploadSpeedTestDataSource implements NetMonDataSource {
     }
 
     @Override
-    public void onDestroy() {}
+    public void onDestroy() {
+        mAdvancedInterval.onDestroy();
+    }
 
     @Override
     public ContentValues getContentValues() {
