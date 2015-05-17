@@ -46,17 +46,17 @@ public class SpeedTestPreferences {
 
     static final String PREF_SPEED_TEST_ENABLED = "PREF_SPEED_TEST_ENABLED";
     static final String PREF_SPEED_TEST_DOWNLOAD_URL = "PREF_SPEED_TEST_DOWNLOAD_URL";
-    static final String PREF_ADVANCED_UPDATE_INTERVAL = "PREF_ADVANCED_UPDATE_INTERVAL";
+    static final String PREF_SPEED_TEST_INTERVAL = "PREF_SPEED_TEST_INTERVAL";
     static final String PREF_SPEED_TEST_UPLOAD_SERVER = "PREF_SPEED_TEST_UPLOAD_SERVER";
     static final String PREF_SPEED_TEST_UPLOAD_PORT = "PREF_SPEED_TEST_UPLOAD_PORT";
     static final String PREF_SPEED_TEST_UPLOAD_USER = "PREF_SPEED_TEST_UPLOAD_USER";
     static final String PREF_SPEED_TEST_UPLOAD_PATH = "PREF_SPEED_TEST_UPLOAD_PATH";
-    private static final String PREF_ADVANCED_SPEED_TEST_ENABLED = "PREF_ADVANCED_SPEED_TEST_ENABLED";
     private static final String PREF_SPEED_TEST_UPLOAD_PASSWORD = "PREF_SPEED_TEST_UPLOAD_PASSWORD";
     private static final String PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT = "PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT";
 
     private static final String PREF_SPEED_TEST_DEFAULT_UPLOAD_PORT = "21";
     private static final String PREF_SPEED_TEST_DEFAULT_UPLOAD_PATH = "/";
+    private static final String PREF_SPEED_TEST_DEFAULT_INTERVAL = "1";
 
     private static SpeedTestPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
@@ -82,12 +82,8 @@ public class SpeedTestPreferences {
         mSharedPrefs.edit().putBoolean(PREF_SPEED_TEST_ENABLED, enabled).apply();
     }
 
-    public boolean isAdvancedEnabled() {
-        return mSharedPrefs.getBoolean(PREF_ADVANCED_SPEED_TEST_ENABLED, false);
-    }
-
-    public String getAdvancedSpeedInterval() {
-        return mSharedPrefs.getString(PREF_ADVANCED_UPDATE_INTERVAL, "");
+    public int getSpeedTestInterval() {
+        return Integer.valueOf(mSharedPrefs.getString(PREF_SPEED_TEST_INTERVAL, PREF_SPEED_TEST_DEFAULT_INTERVAL));
     }
 
     public SpeedTestUploadConfig getUploadConfig() {

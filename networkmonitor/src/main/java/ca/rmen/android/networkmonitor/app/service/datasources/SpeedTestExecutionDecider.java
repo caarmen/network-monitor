@@ -89,24 +89,13 @@ class SpeedTestExecutionDecider {
                 return true;
             }
         } else {
-            int mode = Integer.parseInt(mPreferences.getAdvancedSpeedInterval());
-            if (mode == SPEED_TEST_INTERVAL_NETWORK_CHANGE) {
-                // check for change in network
-                return hasNetworkTypeChanged();
-            } else if (mode == SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE) {
-                // check for change in network and for a difference in dbm by 5
-                if (hasSignalStrengthChanged() || hasNetworkTypeChanged()) {
-                    return true;
-                }
-            } else {
-                mIntervalCounter++;
-                if (mode <= mIntervalCounter) {
-                    mIntervalCounter = 0;
-                    return true;
-                }
+            mIntervalCounter++;
+            if (speedTestInterval <= mIntervalCounter) {
+                mIntervalCounter = 0;
+                return true;
             }
-            return false;
         }
+        return false;
     }
 
     /**
