@@ -30,6 +30,9 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.telephony.PhoneStateListener;
+import android.telephony.ServiceState;
+import android.telephony.TelephonyManager;
 
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -45,6 +48,7 @@ public class NetworkChangeScheduler implements Scheduler {
     private Handler mHandler;
     private HandlerThread mHandlerThread;
     private long mLastPollTime;
+    private TelephonyManager mTelephonyManager;
 
     @Override
     public void onCreate(Context context) {
@@ -55,12 +59,16 @@ public class NetworkChangeScheduler implements Scheduler {
         mHandlerThread.start();
         mHandler = new Handler(mHandlerThread.getLooper());
         mContext.registerReceiver(mBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION), null, mHandler);
+        mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SERVICE_STATE);
     }
 
     @Override
     public void onDestroy() {
         Log.v(TAG, "onDestroy");
         mContext.unregisterReceiver(mBroadcastReceiver);
+        if (mTelephonyManager != null)
+            mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
         mHandlerThread.quit();
     }
 
@@ -113,6 +121,15 @@ public class NetworkChangeScheduler implements Scheduler {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.v(TAG, "onReceive: intent = " + intent);
+            mHandler.post(mBufferedRunnable);
+        }
+    };
+
+    private final PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
+
+        @Override
+        public void onServiceStateChanged(ServiceState serviceState) {
+            Log.v(TAG, "onServiceStateChanged " + serviceState);
             mHandler.post(mBufferedRunnable);
         }
     };
