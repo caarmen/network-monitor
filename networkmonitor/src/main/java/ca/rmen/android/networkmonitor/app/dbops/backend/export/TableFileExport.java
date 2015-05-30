@@ -23,13 +23,13 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
@@ -47,6 +47,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  */
 abstract class TableFileExport extends FileExport {
     private static final String TAG = Constants.TAG + TableFileExport.class.getSimpleName();
+    private static final int THRESHOLD_LOW_MEMORY_PCT = 20;
     private final FormatterStyle mFormatterStyle;
 
     TableFileExport(Context context, File file, FormatterStyle formatterStyle) {
@@ -92,7 +93,8 @@ abstract class TableFileExport extends FileExport {
         SortPreferences sortPreferences = NetMonPreferences.getInstance(mContext).getSortPreferences();
         Selection selection = FilterPreferences.getSelectionClause(mContext);
         Uri uri = NetMonColumns.CONTENT_URI;
-        if (recordCount > 0) uri = uri.buildUpon().appendQueryParameter(NetMonProvider.QUERY_PARAMETER_LIMIT, String.valueOf(recordCount)).build();
+        if (recordCount > 0)
+            uri = uri.buildUpon().appendQueryParameter(NetMonProvider.QUERY_PARAMETER_LIMIT, String.valueOf(recordCount)).build();
         Cursor c = mContext.getContentResolver().query(uri, usedColumnNames, selection.selectionString, selection.selectionArgs,
                 sortPreferences.getOrderByClause());
         if (c != null) {
@@ -112,6 +114,23 @@ abstract class TableFileExport extends FileExport {
                     writeRow(c.getPosition(), cellValues);
                     // Notify the listener of our progress (progress is 1-based)
                     if (listener != null) listener.onProgress(c.getPosition() + 1, rowsAvailable);
+                    // Some file exports need to create the whole file in memory
+                    // before saving it. (This is currently the case with
+                    // the Excel export, whether we use jexcelapi or poi).
+                    // On some devices, with large exports, we may not
+                    // have enough memory to export the whole file.
+                    // Here we detect a low memory situation, and stop
+                    // creating rows.
+                    long maxMemory = Runtime.getRuntime().maxMemory();
+                    long totalMemory = Runtime.getRuntime().totalMemory();
+                    long pctFreeMemory = ((maxMemory - totalMemory) * 100) / maxMemory;
+                    if (c.getPosition() % 100 == 0)
+                        Log.v(TAG, "pctFreeMemory:" + pctFreeMemory);
+                    if (pctFreeMemory < THRESHOLD_LOW_MEMORY_PCT) {
+                        Log.v(TAG, "Not enough memory to export the whole file");
+                        if (listener != null) listener.onProgress(rowsAvailable, rowsAvailable);
+                        break;
+                    }
                 }
 
                 // Write the footer and clean up the file.
