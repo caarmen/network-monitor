@@ -130,8 +130,7 @@ abstract class TableFileExport extends FileExport {
                     if (pctFreeMemory < THRESHOLD_LOW_MEMORY_PCT) {
                         Log.v(TAG, "Not enough memory to export the whole file");
                         if (listener != null) {
-                            listener.onWarning(mContext.getString(R.string.export_warning_file_too_big_title),
-                                    mContext.getString(R.string.export_warning_file_too_big_message));
+                            listener.onWarning(mContext.getString(R.string.export_warning_file_too_big_message));
                         }
                         break;
                     }

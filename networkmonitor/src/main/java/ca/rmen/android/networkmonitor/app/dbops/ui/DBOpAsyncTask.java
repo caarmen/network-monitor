@@ -27,6 +27,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import java.util.Arrays;
 
@@ -113,12 +114,12 @@ public abstract class DBOpAsyncTask<T> extends AsyncTask<Void, Integer, T> {
         }
 
         @Override
-        public void onWarning(final String title, final String message) {
+        public void onWarning(final String message) {
             Log.v(TAG, "onWarning: " + message);
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    DialogFragmentFactory.showWarningDialog(mActivity, title, message);
+                    Toast.makeText(mActivity, message, Toast.LENGTH_LONG).show();
                 }
             });
         }
