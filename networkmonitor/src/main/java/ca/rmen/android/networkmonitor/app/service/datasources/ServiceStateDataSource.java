@@ -25,47 +25,56 @@ package ca.rmen.android.networkmonitor.app.service.datasources;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.telephony.PhoneStateListener;
+import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
-
-import ca.rmen.android.networkmonitor.util.AndroidConstantsUtil;
-import ca.rmen.android.networkmonitor.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import ca.rmen.android.networkmonitor.util.TelephonyUtil;
+import ca.rmen.android.networkmonitor.util.AndroidConstantsUtil;
+import ca.rmen.android.networkmonitor.util.Log;
 
 /**
- * Retrieves attributes of the SIM card.
+ * Retrieves attributes of the service state.
  */
-public class SIMDataSource implements NetMonDataSource {
+public class ServiceStateDataSource implements NetMonDataSource {
 
-    private static final String TAG = Constants.TAG + SIMDataSource.class.getSimpleName();
+    private static final String TAG = Constants.TAG + ServiceStateDataSource.class.getSimpleName();
     private TelephonyManager mTelephonyManager;
+    private ServiceState mLastServiceState;
 
     @Override
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
         mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SERVICE_STATE);
     }
 
     @Override
-    public void onDestroy() {}
+    public void onDestroy() {
+        Log.v(TAG, "onDestroy");
+        if (mTelephonyManager != null)
+            mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+    }
 
     @Override
     public ContentValues getContentValues() {
         Log.v(TAG, "getContentValues");
-        ContentValues values = new ContentValues(3);
-        values.put(NetMonColumns.SIM_OPERATOR, mTelephonyManager.getSimOperatorName());
-        String[] simMccMnc = TelephonyUtil.getMccMnc(mTelephonyManager.getSimOperator());
-        values.put(NetMonColumns.SIM_MCC, simMccMnc[0]);
-        values.put(NetMonColumns.SIM_MNC, simMccMnc[1]);
-        values.put(NetMonColumns.NETWORK_OPERATOR, mTelephonyManager.getNetworkOperatorName());
-        String[] networkMccMnc = TelephonyUtil.getMccMnc(mTelephonyManager.getNetworkOperator());
-        values.put(NetMonColumns.NETWORK_MCC, networkMccMnc[0]);
-        values.put(NetMonColumns.NETWORK_MNC, networkMccMnc[1]);
-        int simState = mTelephonyManager.getSimState();
-        values.put(NetMonColumns.SIM_STATE, AndroidConstantsUtil.getConstantName(TelephonyManager.class, "SIM_STATE", null, simState));
+        ContentValues values = new ContentValues(1);
+        if (mLastServiceState == null)
+            return values;
+        String lastServiceState = AndroidConstantsUtil.getConstantName(ServiceState.class, "STATE", null, mLastServiceState.getState());
+        values.put(NetMonColumns.SERVICE_STATE, lastServiceState);
         return values;
     }
+
+    private final PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
+
+        @Override
+        public void onServiceStateChanged(ServiceState serviceState) {
+            Log.v(TAG, "onServiceStateChanged " + serviceState);
+            mLastServiceState = serviceState;
+        }
+    };
 
 }

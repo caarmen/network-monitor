@@ -47,6 +47,7 @@ public class NetMonColumns implements BaseColumns {
     public static final String SOCKET_CONNECTION_TEST = "google_connection_test";
     public static final String HTTP_CONNECTION_TEST = "http_connection_test";
     public static final String SIM_STATE = "sim_state";
+    public static final String SERVICE_STATE = "service_state";
     public static final String DETAILED_STATE = "detailed_state";
     public static final String IS_CONNECTED = "is_connected";
     public static final String IS_ROAMING = "is_roaming";

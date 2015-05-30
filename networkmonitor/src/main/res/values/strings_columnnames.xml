@@ -31,6 +31,7 @@ limitations under the License.
     <string name="google_connection_test">Socket Connection Test</string>
     <string name="http_connection_test">HTTP Connection Test</string>
     <string name="sim_state">SIM State</string>
+    <string name="service_state">Service State</string>
     <string name="detailed_state">Detailed State</string>
     <string name="is_connected">Is Connected</string>
     <string name="is_roaming">Is Roaming</string>

@@ -31,6 +31,7 @@ limitations under the License.
         <item>network_type</item>
         <item>mobile_data_network_type</item>
         <item>sim_state</item>
+        <item>service_state</item>
         <item>detailed_state</item>
         <item>is_connected</item>
         <item>is_roaming</item>
@@ -103,6 +104,7 @@ limitations under the License.
         <item>network_type</item>
         <item>mobile_data_network_type</item>
         <item>sim_state</item>
+        <item>service_state</item>
         <item>detailed_state</item>
         <item>is_connected</item>
         <item>is_roaming</item>
@@ -135,6 +137,7 @@ limitations under the License.
         <item>network_type</item>
         <item>mobile_data_network_type</item>
         <item>sim_state</item>
+        <item>service_state</item>
         <item>detailed_state</item>
         <item>is_connected</item>
         <item>is_roaming</item>
@@ -198,6 +201,7 @@ limitations under the License.
         <item>network_type</item>
         <item>mobile_data_network_type</item>
         <item>sim_state</item>
+        <item>service_state</item>
         <item>detailed_state</item>
         <item>is_connected</item>
         <item>is_roaming</item>

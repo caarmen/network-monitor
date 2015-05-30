@@ -30,6 +30,7 @@ limitations under the License.
     <string name="google_connection_test">Test de connexion (socket)</string>
     <string name="http_connection_test">Test de connexion (HTTP)</string>
     <string name="sim_state">État de la carte SIM</string>
+    <string name="service_state">État du service</string>
     <string name="detailed_state">État détaillé</string>
     <string name="is_connected">Connecté</string>
     <string name="is_roaming">En itinérance</string>

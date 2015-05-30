@@ -51,6 +51,7 @@ public class NetMonDataSources {
         DeviceLocationDataSource.class,
         MobileDataConnectionDataSource.class,
         SIMDataSource.class,
+        ServiceStateDataSource.class,
         WiFiDataSource.class,
         NetworkInterfaceDataSource.class,
         DownloadSpeedTestDataSource.class,

@@ -44,7 +44,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
     public static final String DATABASE_NAME = "networkmonitor.db";
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 15;
 
     // @formatter:off
     private static final String SQL_CREATE_TABLE_NETWORKMONITOR = "CREATE TABLE IF NOT EXISTS "
@@ -56,6 +56,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.NETWORK_TYPE + " TEXT, "
             + NetMonColumns.MOBILE_DATA_NETWORK_TYPE + " TEXT, "
             + NetMonColumns.SIM_STATE + " TEXT, "
+            + NetMonColumns.SERVICE_STATE + " TEXT, "
             + NetMonColumns.DETAILED_STATE + " TEXT, "
             + NetMonColumns.IS_CONNECTED + " INTEGER, "
             + NetMonColumns.IS_ROAMING + " INTEGER, "
@@ -155,13 +156,13 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + " = (" + NetMonColumns.GSM_FULL_CELL_ID + " >> 16) & " + 0xFFFF + " WHERE " + NetMonColumns.GSM_FULL_CELL_ID + " > " + 0xFFFF;
 
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V10_NETWORK_INTERFACE = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
-            + NetMonColumns.NETWORK_INTERFACE + " STRING";
+            + NetMonColumns.NETWORK_INTERFACE + " TEXT";
 
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V10_IPV4_ADDRESS = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
-            + NetMonColumns.IPV4_ADDRESS + " STRING";
+            + NetMonColumns.IPV4_ADDRESS + " TEXT";
 
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V10_IPV6_ADDRESS = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
-            + NetMonColumns.IPV6_ADDRESS + " STRING";
+            + NetMonColumns.IPV6_ADDRESS + " TEXT";
 
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V11_BATTERY_LEVEL = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
             + NetMonColumns.BATTERY_LEVEL + " INTEGER";
@@ -186,6 +187,9 @@ public class NetMonDatabase extends SQLiteOpenHelper {
 
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V14_LTE_RSRQ = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
             + NetMonColumns.LTE_RSRQ + " INTEGER";
+
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V15_SERVICE_STATE = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.SERVICE_STATE + " TEXT";
 
     private static final String SQL_CREATE_VIEW_CONNECTION_TEST_STATS = "CREATE VIEW " + ConnectionTestStatsColumns.VIEW_NAME + " AS "
             + buildConnectionTestQuery();
@@ -262,6 +266,10 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V14_GSM_BER);
             //db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V14_EVDO_ECIO);
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V14_LTE_RSRQ);
+        }
+
+        if (oldVersion < 15) {
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V15_SERVICE_STATE);
         }
     }
 

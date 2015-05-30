@@ -23,10 +23,7 @@
  */
 package ca.rmen.android.networkmonitor.util;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -40,45 +37,6 @@ import android.text.TextUtils;
 
 public class TelephonyUtil {
     private static final String TAG = TelephonyUtil.class.getSimpleName();
-
-    private static final Map<String, String> sConstantsCache = new HashMap<>();
-
-    /**
-     * Returns a TelephonyManager int constant as a string. For example, for {@link TelephonyManager#DATA_CONNECTED}, this returns the string "CONNECTED".
-     *
-     * @param fieldPrefix the prefix of the TelephonyManager field name. For example, for {@link TelephonyManager#DATA_CONNECTED}, this should be "DATA"
-     * @param excludePrefix in most cases this can be null. However, in the case of {@link TelephonyManager#DATA_CONNECTED}, we need to set exclude prefix to
-     *            "DATA_ACTIVITY" to make sure we don't return OUT, as DATA_ACTIVITY_OUT has the same value as DATA_CONNECTED.
-     * @param value the value of the constant.
-     * @return the name of the constant having the given fieldPrefix, not having the given excludePrefix, and having the given value.
-     */
-    public static String getConstantName(String fieldPrefix, String excludePrefix, int value) {
-        Log.v(TAG, "getConstantName: fieldPrefix=" + fieldPrefix + ", excludePrefix=" + excludePrefix + ", value=" + value);
-        final String key = fieldPrefix + ":" + value;
-        String result = sConstantsCache.get(key);
-        if (result != null) {
-            Log.v(TAG, "Found " + key + "=" + result + " in the cache");
-            return result;
-        }
-        Field[] fields = TelephonyManager.class.getFields();
-        for (Field field : fields) {
-            try {
-                String fieldName = field.getName();
-                if (fieldName.startsWith(fieldPrefix)) {
-                    if (!TextUtils.isEmpty(excludePrefix) && fieldName.startsWith(excludePrefix)) continue;
-                    if (field.getInt(null) == value) {
-                        result = field.getName().substring(fieldPrefix.length() + 1);
-                        Log.v(TAG, "Adding " + key + "=" + result + " to the cache");
-                        sConstantsCache.put(key, result);
-                        return result;
-                    }
-                }
-            } catch (IllegalArgumentException | IllegalAccessException e) {
-                Log.e(TAG, "getConstantName Could not get constant name for prefix = " + fieldPrefix + " and value = " + value, e);
-            }
-        }
-        return "";
-    }
 
     /**
      * @param mccMnc A string which should be 5 or 6 characters long, containing digits. This string is the concatenation of an MCC and MNC.

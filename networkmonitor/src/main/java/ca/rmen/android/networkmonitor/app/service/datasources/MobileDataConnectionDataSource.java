@@ -26,11 +26,12 @@ package ca.rmen.android.networkmonitor.app.service.datasources;
 import android.content.ContentValues;
 import android.content.Context;
 import android.telephony.TelephonyManager;
+
+import ca.rmen.android.networkmonitor.util.AndroidConstantsUtil;
 import ca.rmen.android.networkmonitor.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import ca.rmen.android.networkmonitor.util.TelephonyUtil;
 
 /**
  * Retrieves attributes of the mobile data connection.
@@ -53,9 +54,9 @@ public class MobileDataConnectionDataSource implements NetMonDataSource {
     public ContentValues getContentValues() {
         Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues(3);
-        values.put(NetMonColumns.MOBILE_DATA_NETWORK_TYPE, TelephonyUtil.getConstantName("NETWORK_TYPE", null, mTelephonyManager.getNetworkType()));
-        values.put(NetMonColumns.DATA_ACTIVITY, TelephonyUtil.getConstantName("DATA_ACTIVITY", null, mTelephonyManager.getDataActivity()));
-        values.put(NetMonColumns.DATA_STATE, TelephonyUtil.getConstantName("DATA", "DATA_ACTIVITY", mTelephonyManager.getDataState()));
+        values.put(NetMonColumns.MOBILE_DATA_NETWORK_TYPE, AndroidConstantsUtil.getConstantName(TelephonyManager.class, "NETWORK_TYPE", null, mTelephonyManager.getNetworkType()));
+        values.put(NetMonColumns.DATA_ACTIVITY, AndroidConstantsUtil.getConstantName(TelephonyManager.class, "DATA_ACTIVITY", null, mTelephonyManager.getDataActivity()));
+        values.put(NetMonColumns.DATA_STATE, AndroidConstantsUtil.getConstantName(TelephonyManager.class, "DATA", "DATA_ACTIVITY", mTelephonyManager.getDataState()));
         return values;
     }
 
