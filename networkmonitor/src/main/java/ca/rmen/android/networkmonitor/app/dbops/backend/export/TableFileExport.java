@@ -48,7 +48,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  */
 abstract class TableFileExport extends FileExport {
     private static final String TAG = Constants.TAG + TableFileExport.class.getSimpleName();
-    private static final int THRESHOLD_LOW_MEMORY_PCT = 20;
+    private static final int THRESHOLD_LOW_MEMORY_PCT = 25;
     private final FormatterStyle mFormatterStyle;
 
     TableFileExport(Context context, File file, FormatterStyle formatterStyle) {
@@ -123,10 +123,11 @@ abstract class TableFileExport extends FileExport {
                     // Here we detect a low memory situation, and stop
                     // creating rows.
                     long maxMemory = Runtime.getRuntime().maxMemory();
-                    long totalMemory = Runtime.getRuntime().totalMemory();
-                    long pctFreeMemory = ((maxMemory - totalMemory) * 100) / maxMemory;
-                    if (c.getPosition() % 100 == 0)
+                    long allocatedMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                    long pctFreeMemory = ((maxMemory - allocatedMemory) * 100) / maxMemory;
+                    if (c.getPosition() % 100 == 0) {
                         Log.v(TAG, "pctFreeMemory:" + pctFreeMemory);
+                    }
                     if (pctFreeMemory < THRESHOLD_LOW_MEMORY_PCT) {
                         Log.v(TAG, "Not enough memory to export the whole file");
                         if (listener != null) {
