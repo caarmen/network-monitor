@@ -43,10 +43,10 @@ public class CellSignalStrengthDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + CellSignalStrengthDataSource.class.getSimpleName();
 
     private NetMonSignalStrength mNetMonSignalStrength;
-    private int mLastSignalStrength;
-    private int mLastSignalStrengthDbm;
-    private int mLastAsuLevel;
-    private int mLastBer = NetMonSignalStrength.UNKNOWN;
+    private volatile int mLastSignalStrength;
+    private volatile int mLastSignalStrengthDbm;
+    private volatile int mLastAsuLevel;
+    private volatile int mLastBer = NetMonSignalStrength.UNKNOWN;
     //private int mLastEvdoEcio = NetMonSignalStrength.UNKNOWN;
     private int mLastLteRsrq = NetMonSignalStrength.UNKNOWN;
     private TelephonyManager mTelephonyManager;

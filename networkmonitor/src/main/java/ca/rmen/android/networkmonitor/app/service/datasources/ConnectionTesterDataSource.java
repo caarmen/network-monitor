@@ -69,7 +69,7 @@ public class ConnectionTesterDataSource implements NetMonDataSource {
     private static final String HTTP_GET = "GET / HTTP/1.1\r\n\r\n";
 
     // The timeout for each connection test, in ms.
-    private int mTimeout;
+    private volatile int mTimeout;
 
     public ConnectionTesterDataSource() {
         Log.v(TAG, "Constructor");

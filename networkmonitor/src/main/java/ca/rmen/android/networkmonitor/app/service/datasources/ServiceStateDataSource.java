@@ -41,7 +41,7 @@ public class ServiceStateDataSource implements NetMonDataSource {
 
     private static final String TAG = Constants.TAG + ServiceStateDataSource.class.getSimpleName();
     private TelephonyManager mTelephonyManager;
-    private ServiceState mLastServiceState;
+    private volatile ServiceState mLastServiceState;
 
     @Override
     public void onCreate(Context context) {

@@ -47,7 +47,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class StandardDeviceLocationDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + StandardDeviceLocationDataSource.class.getSimpleName();
     private LocationManager mLocationManager;
-    private Location mMostRecentLocation;
+    private volatile Location mMostRecentLocation;
     private Context mContext;
 
     StandardDeviceLocationDataSource() {}

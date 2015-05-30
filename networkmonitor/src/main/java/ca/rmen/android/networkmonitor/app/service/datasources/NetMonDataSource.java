@@ -45,7 +45,7 @@ interface NetMonDataSource {
     void onDestroy();
 
     /**
-     * This will be called periodically, according to the interval the user selected in the preferences.
+     * This will be called periodically, on a background thread, according to the interval the user selected in the preferences.
      * 
      * @return the attributes of the particular data source, at the current time.
      */
