@@ -44,6 +44,7 @@ limitations under the License.
 \n%1$s.
 \n\n</string>
     <string name="export_message_text_file_attached">Ci-joint vous trouverez un fichier avec les données complètes de l\'ensemble des tests.\n\n</string>
+    <string name="export_warning_file_too_big_message">Mémoire insuffisante pour exporter le fichier complet.</string>
     <string name="export_value_unknown">N/D</string>
 
 </resources>

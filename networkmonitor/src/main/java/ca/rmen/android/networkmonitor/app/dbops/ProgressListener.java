@@ -37,4 +37,5 @@ import ca.rmen.android.networkmonitor.app.dbops.ui.DBOpAsyncTask;
  */
 public interface ProgressListener {
     void onProgress(int progress, int max);
+    void onWarning(String message);
 }

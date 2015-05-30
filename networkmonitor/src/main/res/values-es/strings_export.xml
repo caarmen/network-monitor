@@ -44,6 +44,7 @@ limitations under the License.
 \n%1$s.
 \n\n</string>
     <string name="export_message_text_file_attached">El fichero adjunto incluye los datos completos del conjunto de las pruebas.\n\n</string>
+    <string name="export_warning_file_too_big_message">Memoria insuficiente para exportar el fichero entero.</string>
     <string name="export_value_unknown">N/D</string>
 
 </resources>
