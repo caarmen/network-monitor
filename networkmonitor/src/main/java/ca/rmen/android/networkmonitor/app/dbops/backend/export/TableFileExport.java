@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.FormatterFactory.FormatterStyle;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences;
@@ -128,7 +129,10 @@ abstract class TableFileExport extends FileExport {
                         Log.v(TAG, "pctFreeMemory:" + pctFreeMemory);
                     if (pctFreeMemory < THRESHOLD_LOW_MEMORY_PCT) {
                         Log.v(TAG, "Not enough memory to export the whole file");
-                        if (listener != null) listener.onProgress(rowsAvailable, rowsAvailable);
+                        if (listener != null) {
+                            listener.onWarning(mContext.getString(R.string.export_warning_file_too_big_title),
+                                    mContext.getString(R.string.export_warning_file_too_big_message));
+                        }
                         break;
                     }
                 }

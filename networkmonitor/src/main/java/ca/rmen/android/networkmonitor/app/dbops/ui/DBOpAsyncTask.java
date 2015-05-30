@@ -23,12 +23,12 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.ui;
 
-import java.util.Arrays;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+
+import java.util.Arrays;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
@@ -110,6 +110,17 @@ public abstract class DBOpAsyncTask<T> extends AsyncTask<Void, Integer, T> {
         public void onProgress(final int progress, final int max) {
             Log.v(TAG, "onProgress: " + progress + "/" + max);
             publishProgress(progress, max);
+        }
+
+        @Override
+        public void onWarning(final String title, final String message) {
+            Log.v(TAG, "onWarning: " + message);
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    DialogFragmentFactory.showWarningDialog(mActivity, title, message);
+                }
+            });
         }
     };
 
