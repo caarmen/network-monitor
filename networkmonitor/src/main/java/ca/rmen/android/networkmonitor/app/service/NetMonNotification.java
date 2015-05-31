@@ -70,6 +70,7 @@ public class NetMonNotification {
                 PendingIntent.getBroadcast(context, 0, new Intent(ACTION_DISABLE), PendingIntent.FLAG_CANCEL_CURRENT));
         builder.addAction(R.drawable.ic_action_logs, context.getString(R.string.service_notification_action_logs),
                 PendingIntent.getActivity(context, 0, new Intent(context, LogActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
+        builder.setColor(context.getResources().getColor(R.color.netmon_color));
         return builder.build();
     }
 
