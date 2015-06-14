@@ -48,7 +48,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  */
 abstract class TableFileExport extends FileExport {
     private static final String TAG = Constants.TAG + TableFileExport.class.getSimpleName();
-    private static final int THRESHOLD_LOW_MEMORY_PCT = 25;
+    private static final int THRESHOLD_LOW_MEMORY_PCT = 40;
     private final FormatterStyle mFormatterStyle;
 
     TableFileExport(Context context, File file, FormatterStyle formatterStyle) {
