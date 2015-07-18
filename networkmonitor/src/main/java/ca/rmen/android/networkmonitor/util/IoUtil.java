@@ -24,11 +24,15 @@
 package ca.rmen.android.networkmonitor.util;
 
 import java.io.Closeable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 public class IoUtil {
+    private static final String TAG = IoUtil.class.getSimpleName();
     private static final int BUFFER_SIZE = 1500;
 
     /**
@@ -67,6 +71,26 @@ public class IoUtil {
             res += read;
         }
         return res;
+    }
+
+    /**
+     * Copy the contents of file in to file out.
+     * @return true if the file could be copied, false if there was an error.
+     */
+    public static boolean copy(File in, File out) {
+        FileInputStream is = null;
+        FileOutputStream os = null;
+        try {
+            is = new FileInputStream(in);
+            os = new FileOutputStream(out);
+            long size = copy(is, os);
+            return size > 0;
+        } catch (IOException e) {
+            Log.w(TAG, "Could not copy " + in + " to " + out, e);
+            return false;
+        } finally {
+            closeSilently(is, os);
+        }
     }
 
 }

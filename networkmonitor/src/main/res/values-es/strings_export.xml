@@ -46,5 +46,8 @@ limitations under the License.
     <string name="export_message_text_file_attached">El fichero adjunto incluye los datos completos del conjunto de las pruebas.\n\n</string>
     <string name="export_warning_file_too_big_message">Memoria insuficiente para exportar el fichero entero.</string>
     <string name="export_value_unknown">N/D</string>
+    <string name="export_save_to_external_storage">Almacenar en memoria</string>
+    <string name="export_save_to_external_storage_fail">Imposible guardar el archivo</string>
+    <string name="export_save_to_external_storage_success">Guardado %s</string>
 
 </resources>

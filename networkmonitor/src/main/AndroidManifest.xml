@@ -58,6 +58,7 @@ limitations under the License.
             android:exported="false" />
 
         <service android:name="ca.rmen.android.networkmonitor.app.service.NetMonService" />
+        <service android:name="ca.rmen.android.networkmonitor.app.savetostorage.SaveToStorageService" />
 
         <activity
             android:name="ca.rmen.android.networkmonitor.app.main.MainActivity"
@@ -238,6 +239,24 @@ limitations under the License.
                 <action android:name="ca.rmen.android.networkmonitor.app.prefs_show_warning_dialog" />
 
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- Save to storage -->
+        <activity
+            android:name="ca.rmen.android.networkmonitor.app.savetostorage.SaveToStorageActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:icon="@drawable/ic_device_sd_storage"
+            android:label="@string/export_save_to_external_storage"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/*" />
+                <data android:mimeType="message/rfc822" />
             </intent-filter>
         </activity>
 
