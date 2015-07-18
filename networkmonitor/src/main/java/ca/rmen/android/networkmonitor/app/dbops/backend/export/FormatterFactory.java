@@ -23,15 +23,15 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.text.TextUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import android.content.Context;
-import android.database.Cursor;
-import android.text.TextUtils;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
@@ -90,7 +90,8 @@ public class FormatterFactory {
             // Format cell ids
             else if (NetMonColumns.CDMA_CELL_BASE_STATION_ID.equals(columnName) || NetMonColumns.CDMA_CELL_NETWORK_ID.equals(columnName)
                     || NetMonColumns.CDMA_CELL_SYSTEM_ID.equals(columnName) || NetMonColumns.GSM_FULL_CELL_ID.equals(columnName)
-                    || NetMonColumns.GSM_SHORT_CELL_ID.equals(columnName) || NetMonColumns.GSM_CELL_LAC.equals(columnName)) {
+                    || NetMonColumns.GSM_SHORT_CELL_ID.equals(columnName) || NetMonColumns.GSM_CELL_LAC.equals(columnName)
+                    || NetMonColumns.GSM_RNC.equals(columnName)) {
                 result = c.getString(columnIndex);
                 if (mCellIdFormat != CellIdFormat.DECIMAL) {
                     if (!TextUtils.isEmpty(result)) {
