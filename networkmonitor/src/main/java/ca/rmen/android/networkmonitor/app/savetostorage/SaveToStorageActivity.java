@@ -7,7 +7,6 @@
  *                              /___/
  * repository.
  * 
- * Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
  * Copyright (C) 2015 Carmen Alvarez (c@rmen.ca)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,67 +25,29 @@
 package ca.rmen.android.networkmonitor.app.savetostorage;
 
 import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
 
-import java.io.File;
-
-import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.util.IoUtil;
 import ca.rmen.android.networkmonitor.util.Log;
 
+/**
+ * Dummy invisible activity which just launches the {@link SaveToStorageService} service
+ * and exits immediately.
+ */
 public class SaveToStorageActivity extends FragmentActivity {
     private static final String TAG = SaveToStorageActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v(TAG, "onCreate: bundle="+savedInstanceState);
+        Log.v(TAG, "onCreate: bundle=" + savedInstanceState);
+        Intent intent = new Intent(this, SaveToStorageService.class);
 
         Parcelable extra = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
-        if (extra == null || !(extra instanceof Uri)) {
-            Toast.makeText(this, getString(R.string.export_save_to_external_storage_fail), Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
-
-        Uri sourceFileUri = (Uri) extra;
-        if (!"file".equals(sourceFileUri.getScheme())) {
-            Toast.makeText(this, getString(R.string.export_save_to_external_storage_fail), Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
-
-        saveFile(new File(sourceFileUri.getPath()));
+        intent.putExtra(Intent.EXTRA_STREAM, extra);
+        startService(intent);
+        finish();
     }
 
-    private void saveFile(File file) {
-        new AsyncTask<File, Void, File>() {
-
-            @Override
-            protected File doInBackground(File... files) {
-                if(!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
-                    return null;
-                File folder = Environment.getExternalStorageDirectory();
-                File src = files[0];
-                File dest = new File(folder, src.getName());
-                if(IoUtil.copy(src, dest)) return dest;
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(File copiedFile) {
-                if(copiedFile != null)
-                    Toast.makeText(getApplicationContext(), getString(R.string.export_save_to_external_storage_success, copiedFile.getAbsolutePath()), Toast.LENGTH_LONG).show();
-                else
-                    Toast.makeText(getApplicationContext(), R.string.export_save_to_external_storage_fail, Toast.LENGTH_LONG).show();
-                finish();
-            }
-        }.execute(file);
-    }
 }

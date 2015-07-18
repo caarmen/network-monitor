@@ -58,6 +58,7 @@ limitations under the License.
             android:exported="false" />
 
         <service android:name="ca.rmen.android.networkmonitor.app.service.NetMonService" />
+        <service android:name="ca.rmen.android.networkmonitor.app.savetostorage.SaveToStorageService" />
 
         <activity
             android:name="ca.rmen.android.networkmonitor.app.main.MainActivity"
