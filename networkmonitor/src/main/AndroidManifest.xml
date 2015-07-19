@@ -249,7 +249,7 @@ limitations under the License.
             android:exported="true"
             android:icon="@drawable/ic_device_sd_storage"
             android:label="@string/export_save_to_external_storage"
-            android:theme="@android:style/Theme.NoDisplay">
+            android:theme="@style/NetMonNoDisplayTheme">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 

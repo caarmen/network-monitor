@@ -23,11 +23,13 @@
  */
 package ca.rmen.android.networkmonitor.app.dialog;
 
-import java.util.Arrays;
-
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+
+import java.io.File;
+import java.util.Arrays;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
@@ -127,6 +129,20 @@ public class DialogFragmentFactory extends DialogFragment {
         result.setArguments(arguments);
         result.setCancelable(false);
         result.show(activity.getSupportFragmentManager(), tag);
+    }
+
+    /**
+     * Show a visible dialog fragment to choose a folder or file
+     */
+    public static void showFileChooserDialog(FragmentActivity activity, File initialFolder, boolean foldersOnly, int actionId) {
+        Log.v(TAG, "showFileChooserDialog");
+        Bundle arguments = new Bundle(3);
+        arguments.putInt(EXTRA_ACTION_ID, actionId);
+        if(initialFolder != null) arguments.putParcelable(FileChooserDialogFragment.EXTRA_FILE_CHOOSER_INITIAL_FOLDER, Uri.fromFile(initialFolder));
+        arguments.putBoolean(FileChooserDialogFragment.EXTRA_FILE_CHOOSER_FOLDERS_ONLY, foldersOnly);
+        FileChooserDialogFragment result = new FileChooserDialogFragment();
+        result.setArguments(arguments);
+        result.show(activity.getSupportFragmentManager(), FileChooserDialogFragment.class.getSimpleName());
     }
 
 }

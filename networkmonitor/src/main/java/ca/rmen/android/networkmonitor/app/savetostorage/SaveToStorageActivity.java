@@ -25,28 +25,66 @@
 package ca.rmen.android.networkmonitor.app.savetostorage;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 
+import java.io.File;
+
+import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
+import ca.rmen.android.networkmonitor.app.dialog.FileChooserDialogFragment;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Dummy invisible activity which just launches the {@link SaveToStorageService} service
  * and exits immediately.
  */
-public class SaveToStorageActivity extends FragmentActivity {
+public class SaveToStorageActivity extends FragmentActivity implements FileChooserDialogFragment.FileChooserDialogListener {
     private static final String TAG = SaveToStorageActivity.class.getSimpleName();
+    private static final int ACTION_SAVE_TO_STORAGE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate: bundle=" + savedInstanceState);
-        Intent intent = new Intent(this, SaveToStorageService.class);
-
         Parcelable extra = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
-        intent.putExtra(Intent.EXTRA_STREAM, extra);
+        if (extra == null || !(extra instanceof Uri)) {
+            SaveToStorage.displayErrorToast(this);
+            return;
+        }
+
+        Uri sourceFileUri = (Uri) extra;
+        if (!"file".equals(sourceFileUri.getScheme())) {
+            SaveToStorage.displayErrorToast(this);
+            return;
+        }
+
+        if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            SaveToStorage.displayErrorToast(this);
+            return;
+        }
+        DialogFragmentFactory.showFileChooserDialog(this, null, true, ACTION_SAVE_TO_STORAGE);
+
+    }
+
+    @Override
+    public void onFileSelected(int actionId, File folder) {
+        Log.v(TAG, "onFileSelected: folder = " + folder);
+        Uri uri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+        File sourceFile = new File(uri.getPath());
+        File destFile = new File(folder, sourceFile.getName());
+        Intent intent = new Intent(this, SaveToStorageService.class);
+        intent.putExtra(SaveToStorageService.EXTRA_SOURCE_FILE, sourceFile);
+        intent.putExtra(SaveToStorageService.EXTRA_DESTINATION_FILE, destFile);
         startService(intent);
+        finish();
+    }
+
+    @Override
+    public void onDismiss(int actionId) {
+        Log.v(TAG, "onDismiss");
         finish();
     }
 

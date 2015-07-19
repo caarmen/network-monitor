@@ -25,37 +25,45 @@
  */
 package ca.rmen.android.networkmonitor.app.savetostorage;
 
-import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
 
 import java.io.File;
 
-import ca.rmen.android.networkmonitor.util.IoUtil;
-import ca.rmen.android.networkmonitor.util.Log;
+import ca.rmen.android.networkmonitor.R;
 
 /**
  * Reads the file in the {@link Intent#EXTRA_STREAM} Uri extra, and saves
  * a copy of that file to the root folder of the external storage.
  */
-public class SaveToStorageService extends IntentService {
-    private static final String TAG = SaveToStorageService.class.getSimpleName();
-    public static final String EXTRA_SOURCE_FILE = "source_file";
-    public static final String EXTRA_DESTINATION_FILE = "destination_file";
+public class SaveToStorage {
+    private static final String TAG = SaveToStorage.class.getSimpleName();
 
-    public SaveToStorageService() {
-        super(TAG);
+    private SaveToStorage() {
+        // utility class
     }
 
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        Log.v(TAG, "onHandleIntent: intent = " + intent);
-
-        File src = (File) intent.getSerializableExtra(EXTRA_SOURCE_FILE);
-        File dest = (File) intent.getSerializableExtra(EXTRA_DESTINATION_FILE);
-        if (IoUtil.copy(src, dest))
-            SaveToStorage.displaySuccessToast(getApplicationContext(), dest);
-        else
-            SaveToStorage.displayErrorToast(getApplicationContext());
+    static void displaySuccessToast(final Context context, final File dest) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, context.getString(R.string.export_save_to_external_storage_success, dest.getAbsolutePath()), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
+    static void displayErrorToast(final Context context) {
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, R.string.export_save_to_external_storage_fail, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 }
