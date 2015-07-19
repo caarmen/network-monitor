@@ -23,14 +23,16 @@
  */
 package ca.rmen.android.networkmonitor.app.service.scheduler;
 
+import android.content.Context;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import android.content.Context;
-import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
+import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -41,7 +43,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  * The wake lock may result in battery drain. For less battery drain, but less accurate scheduling, use {@link AlarmManagerScheduler}.
  */
 public class ExecutorServiceScheduler implements Scheduler {
-    private static final String TAG = ExecutorServiceScheduler.class.getSimpleName();
+    private static final String TAG = Constants.TAG + ExecutorServiceScheduler.class.getSimpleName();
 
     private ScheduledExecutorService mExecutorService;
     private Future<?> mFuture;

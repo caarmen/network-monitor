@@ -23,13 +23,14 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
+import android.content.Context;
+import android.text.TextUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.content.Context;
-import android.text.TextUtils;
-
+import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -39,7 +40,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  */
 public class FilterPreferences {
 
-    private static final String TAG = FilterPreferences.class.getSimpleName();
+    private static final String TAG = Constants.TAG + FilterPreferences.class.getSimpleName();
     static final String EMPTY = "##EMPTY##";
 
     public static class Selection {

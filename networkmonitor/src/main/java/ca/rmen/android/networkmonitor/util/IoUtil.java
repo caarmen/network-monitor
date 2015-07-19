@@ -31,8 +31,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import ca.rmen.android.networkmonitor.Constants;
+
 public class IoUtil {
-    private static final String TAG = IoUtil.class.getSimpleName();
+    private static final String TAG = Constants.TAG + IoUtil.class.getSimpleName();
     private static final int BUFFER_SIZE = 1500;
 
     /**

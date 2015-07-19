@@ -30,6 +30,7 @@ import android.content.Intent;
 
 import java.io.File;
 
+import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.util.IoUtil;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -38,7 +39,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  * a copy of that file to the root folder of the external storage.
  */
 public class SaveToStorageService extends IntentService {
-    private static final String TAG = SaveToStorageService.class.getSimpleName();
+    private static final String TAG = Constants.TAG + SaveToStorageService.class.getSimpleName();
     public static final String EXTRA_SOURCE_FILE = "source_file";
     public static final String EXTRA_DESTINATION_FILE = "destination_file";
 

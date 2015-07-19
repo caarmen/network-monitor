@@ -34,6 +34,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
+
+import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -48,7 +50,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  */
 public class AlarmManagerScheduler implements Scheduler {
 
-    private static final String TAG = AlarmManagerScheduler.class.getSimpleName();
+    private static final String TAG = Constants.TAG + AlarmManagerScheduler.class.getSimpleName();
     private static final String ACTION = TAG + "_action";
     private PendingIntent mPendingIntent;
     private HandlerThread mHandlerThread;

@@ -23,9 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,6 +35,10 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.FilterColumnListFragment.FilterListItem;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
@@ -47,7 +48,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  * Activity which lets the user choose which values for a particular column will appear in the report.
  */
 public class FilterColumnActivity extends AppCompatActivity { // NO_UCD (use default)
-    private static final String TAG = FilterColumnActivity.class.getSimpleName();
+    private static final String TAG = Constants.TAG + FilterColumnActivity.class.getSimpleName();
     public static final String EXTRA_COLUMN_NAME = "column_name";
     private ListView mListView;
 

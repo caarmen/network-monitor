@@ -34,6 +34,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
 
+import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -42,7 +43,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  */
 public class NetworkChangeScheduler implements Scheduler {
 
-    private static final String TAG = NetworkChangeScheduler.class.getSimpleName();
+    private static final String TAG = Constants.TAG + NetworkChangeScheduler.class.getSimpleName();
     private Context mContext;
     private Runnable mRunnableImpl;
     private Handler mHandler;

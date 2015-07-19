@@ -33,6 +33,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 
+import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity;
@@ -55,7 +56,7 @@ public class PreferenceDialog {
         void onCancel();
     }
 
-    private static final String TAG = PreferenceDialog.class.getSimpleName();
+    private static final String TAG = Constants.TAG + PreferenceDialog.class.getSimpleName();
 
     /**
      * Show the user a dialog to select the primary data field for a KML export.

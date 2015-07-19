@@ -23,8 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
@@ -39,6 +37,9 @@ import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.List;
+
+import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences.Selection;
 import ca.rmen.android.networkmonitor.provider.UniqueValuesColumns;
@@ -48,7 +49,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  * A list of the unique values for a particular column.
  */
 public class FilterColumnListFragment extends ListFragment {
-    private static final String TAG = FilterColumnListFragment.class.getSimpleName();
+    private static final String TAG = Constants.TAG + FilterColumnListFragment.class.getSimpleName();
     private static final int URL_LOADER = 0;
 
     private String mColumnName;

@@ -40,7 +40,6 @@ import ca.rmen.android.networkmonitor.R;
  * a copy of that file to the root folder of the external storage.
  */
 public class SaveToStorage {
-    private static final String TAG = SaveToStorage.class.getSimpleName();
 
     private SaveToStorage() {
         // utility class

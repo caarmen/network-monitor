@@ -33,6 +33,7 @@ import android.support.v4.app.FragmentActivity;
 
 import java.io.File;
 
+import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.filechooser.FileChooserDialogFragment;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
@@ -43,7 +44,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  * and exits immediately.
  */
 public class SaveToStorageActivity extends FragmentActivity implements FileChooserDialogFragment.FileChooserDialogListener {
-    private static final String TAG = SaveToStorageActivity.class.getSimpleName();
+    private static final String TAG = Constants.TAG + SaveToStorageActivity.class.getSimpleName();
     private static final int ACTION_SAVE_TO_STORAGE = 1;
 
     @Override

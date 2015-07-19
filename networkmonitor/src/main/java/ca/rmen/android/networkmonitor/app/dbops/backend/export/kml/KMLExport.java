@@ -23,6 +23,9 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend.export.kml;
 
+import android.content.Context;
+import android.database.Cursor;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
@@ -35,9 +38,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import android.content.Context;
-import android.database.Cursor;
-
+import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.FileExport;
@@ -54,7 +55,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  * Export the Network Monitor data to a KML file. The KML file placemark icon label and color depend on the field the user chose to export.
  */
 public class KMLExport extends FileExport {
-    private static final String TAG = KMLExport.class.getSimpleName();
+    private static final String TAG = Constants.TAG + KMLExport.class.getSimpleName();
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss", Locale.US);
     private static final String KML_FILE_PREFIX = "networkmonitor-";
 

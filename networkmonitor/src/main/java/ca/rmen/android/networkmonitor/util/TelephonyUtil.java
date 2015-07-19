@@ -23,8 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.util;
 
-import java.lang.reflect.Method;
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -35,8 +33,12 @@ import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import java.lang.reflect.Method;
+
+import ca.rmen.android.networkmonitor.Constants;
+
 public class TelephonyUtil {
-    private static final String TAG = TelephonyUtil.class.getSimpleName();
+    private static final String TAG = Constants.TAG + TelephonyUtil.class.getSimpleName();
 
     /**
      * @param mccMnc A string which should be 5 or 6 characters long, containing digits. This string is the concatenation of an MCC and MNC.

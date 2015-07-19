@@ -23,9 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,13 +35,17 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.SelectFieldsFragment.SelectFieldsFragmentListener;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
 public class SelectFieldsActivity extends AppCompatActivity implements SelectFieldsFragmentListener { // NO_UCD (use default)
-    private static final String TAG = SelectFieldsActivity.class.getSimpleName();
+    private static final String TAG = Constants.TAG + SelectFieldsActivity.class.getSimpleName();
     private ListView mListView;
 
     @Override
