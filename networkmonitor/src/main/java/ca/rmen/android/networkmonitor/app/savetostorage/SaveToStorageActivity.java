@@ -40,8 +40,10 @@ import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
- * Dummy invisible activity which just launches the {@link SaveToStorageService} service
- * and exits immediately.
+ * Invisible activity which expects a file as a Uri in the {@link Intent#EXTRA_STREAM} extra.
+ * This activity shows a folder chooser dialog to the user. Once the folder is
+ * selected, this launches the {@link SaveToStorageService} service to save the file in
+ * the selected folder, and exits without waiting for the service to complete.
  */
 public class SaveToStorageActivity extends FragmentActivity implements FileChooserDialogFragment.FileChooserDialogListener {
     private static final String TAG = Constants.TAG + SaveToStorageActivity.class.getSimpleName();

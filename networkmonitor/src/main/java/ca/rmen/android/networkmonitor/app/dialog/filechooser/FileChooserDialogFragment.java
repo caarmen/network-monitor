@@ -44,6 +44,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Dialog to pick a file (or folder)
+ * The calling activity must implement the {@link FileChooserDialogFragment.FileChooserDialogListener} interface.
  */
 public class FileChooserDialogFragment extends DialogFragment {
 
@@ -62,9 +63,6 @@ public class FileChooserDialogFragment extends DialogFragment {
 
     private File mSelectedFile = null;
 
-    /**
-     * The calling activity must implement the {@link FileChooserDialogFragment.FileChooserDialogListener} interface.
-     */
     public interface FileChooserDialogListener {
         void onFileSelected(int actionId, File file);
 

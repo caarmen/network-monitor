@@ -35,8 +35,9 @@ import ca.rmen.android.networkmonitor.util.IoUtil;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
- * Reads the file in the {@link Intent#EXTRA_STREAM} Uri extra, and saves
- * a copy of that file to the root folder of the external storage.
+ * Reads the file in the {@link #EXTRA_SOURCE_FILE} File extra, and saves
+ * a copy of that file to the {@link #EXTRA_DESTINATION_FILE} File extra. The destination may
+ * be a file or a folder.
  */
 public class SaveToStorageService extends IntentService {
     private static final String TAG = Constants.TAG + SaveToStorageService.class.getSimpleName();

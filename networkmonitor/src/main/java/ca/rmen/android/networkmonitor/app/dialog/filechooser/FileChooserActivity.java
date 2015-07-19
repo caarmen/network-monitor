@@ -37,7 +37,7 @@ import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
- * This activity handles the action {@link Intent#ACTION_GET_CONTENT}.  It displays a file chooser
+ * This invisible activity handles the action {@link Intent#ACTION_GET_CONTENT}.  It displays a file chooser
  * dialog.  If the user selects a file, this activity sets the selected file as the result Intent data.
  */
 public class FileChooserActivity extends FragmentActivity implements FileChooserDialogFragment.FileChooserDialogListener {
