@@ -38,6 +38,7 @@ import android.support.v7.app.AlertDialog;
 import java.io.File;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -129,8 +130,9 @@ public class FileChooserDialogFragment extends DialogFragment {
                 if (mSelectedFile.isDirectory()) {
                     adapter.load(mSelectedFile);
                     AlertDialog dialog = (AlertDialog) dialogInterface;
-                    dialog.setTitle(FileAdapter.getDisplayName(context, mSelectedFile));
+                    dialog.setTitle(FileAdapter.getFullDisplayName(context, mSelectedFile));
                     dialog.getListView().clearChoices();
+                    dialog.getListView().setSelectionAfterHeaderView();
                 }
             }
         };
@@ -148,6 +150,12 @@ public class FileChooserDialogFragment extends DialogFragment {
         };
 
         // Dismiss/cancel callbacks.
+        OnClickListener negativeListener = new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ((FileChooserDialogListener) getActivity()).onDismiss(actionId);
+            }
+        };
         OnCancelListener cancelListener = new OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
@@ -161,9 +169,10 @@ public class FileChooserDialogFragment extends DialogFragment {
             }
         };
         AlertDialog dialog = new AlertDialog.Builder(context)
-                .setTitle(FileAdapter.getDisplayName(context, mSelectedFile))
+                .setTitle(FileAdapter.getFullDisplayName(context, mSelectedFile))
                 .setSingleChoiceItems(adapter, -1, fileSelectionListener)
-                .setPositiveButton(android.R.string.ok, positiveListener)
+                .setPositiveButton(R.string.file_chooser_choose, positiveListener)
+                .setNegativeButton(android.R.string.cancel, negativeListener)
                 .setOnCancelListener(cancelListener)
                 .create();
         dialog.setOnDismissListener(dismissListener);

@@ -25,4 +25,5 @@ limitations under the License.
 <resources>
     <string name="file_chooser_sdcard">SD card</string>
     <string name="file_chooser_root">/</string>
+    <string name="file_chooser_choose">Choose</string>
 </resources>

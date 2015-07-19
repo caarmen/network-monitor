@@ -27,6 +27,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -40,7 +41,9 @@ import java.util.Comparator;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.util.Log;
 
-
+/**
+ * An adapter to display a list of files at a given folder.
+ */
 class FileAdapter extends ArrayAdapter<File> {
     private static final String TAG = FileAdapter.class.getSimpleName();
 
@@ -49,7 +52,7 @@ class FileAdapter extends ArrayAdapter<File> {
     private File mSelectedFolder;
 
     FileAdapter(Context context, File initialFolder, boolean foldersOnly) {
-        super(context, R.layout.select_dialog_item_material);
+        super(context, R.layout.select_dialog_singlechoice_material);
         mFileFilter = new MyFileFilter(foldersOnly);
         load(initialFolder);
     }
@@ -70,34 +73,72 @@ class FileAdapter extends ArrayAdapter<File> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View result = super.getView(position, convertView, parent);
-        TextView label = (TextView) result.findViewById(android.R.id.text1);
+        final TextView result;
         File file = getItem(position);
-        final int iconId;
-        if (position == 0 && mSelectedFolder.getParentFile() != null) {
-            label.setText("(" + getDisplayName(getContext(), file) + ")");
-            iconId = R.drawable.ic_action_navigation_arrow_back;
-            label.setTypeface(null, Typeface.ITALIC);
+        if(convertView == null) {
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            if(file.isDirectory()) result = (TextView) inflater.inflate(R.layout.select_dialog_item_material, parent, false);
+            else result = (TextView) inflater.inflate(R.layout.select_dialog_singlechoice_material, parent, false);
         } else {
-            label.setText(getDisplayName(getContext(), file));
-            label.setTypeface(null, Typeface.NORMAL);
-            if (file.isDirectory()) {
-                iconId = R.drawable.ic_folder;
-            } else {
-                iconId = 0;
-            }
+            result = (TextView) convertView;
         }
-        label.setCompoundDrawablesWithIntrinsicBounds(iconId, 0, 0, 0);
+        // The first item is the parent directory (if there is one).
+        if (position == 0 && mSelectedFolder.getParentFile() != null) {
+            updateViewBackFolder(result, file);
+        } else if(file.isDirectory()){
+            updateViewFolder(result, file);
+        } else {
+            updateViewFile(result, file);
+        }
         return result;
     }
 
-    static final String getDisplayName(Context context, File file) {
+    private void updateViewFile(TextView view, File file) {
+        view.setText(getShortDisplayName(getContext(), file));
+        view.setTypeface(null, Typeface.NORMAL);
+        view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file, 0, 0, 0);
+    }
+
+    private void updateViewFolder(TextView view, File folder) {
+        view.setText(getShortDisplayName(getContext(), folder));
+        view.setTypeface(null, Typeface.NORMAL);
+        view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_folder, 0, 0, 0);
+    }
+
+    private void updateViewBackFolder(TextView view, File backFolder) {
+        view.setText("(" + getShortDisplayName(getContext(), backFolder) + ")");
+        view.setTypeface(null, Typeface.ITALIC);
+        view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_navigation_arrow_back, 0, 0, 0);
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        File file = getItem(position);
+        if(file.isDirectory()) return 0;
+        return 1;
+    }
+
+    static final String getShortDisplayName(Context context, File file) {
         if (file.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getAbsolutePath()))
             return context.getString(R.string.file_chooser_sdcard);
         else if (TextUtils.isEmpty(file.getName()))
             return context.getString(R.string.file_chooser_root);
         else
             return file.getName();
+    }
+
+    static final String getFullDisplayName(Context context, File file) {
+        if (file.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getAbsolutePath()))
+            return context.getString(R.string.file_chooser_sdcard);
+        else if (TextUtils.isEmpty(file.getName()))
+            return context.getString(R.string.file_chooser_root);
+        else
+            return file.getAbsolutePath();
     }
 
     private static class MyFileFilter implements FileFilter {
@@ -119,14 +160,10 @@ class FileAdapter extends ArrayAdapter<File> {
 
         @Override
         public int compare(File file1, File file2) {
-            if (file1.getParent() == null && file2.getParent() != null)
-                return 1;
-            if (file1.getParent() != null && file2.getParent() == null)
-                return -1;
             if (file1.isDirectory() && !file2.isDirectory())
-                return 1;
-            if (!file1.isDirectory() && file2.isDirectory())
                 return -1;
+            if (!file1.isDirectory() && file2.isDirectory())
+                return 1;
             return file1.getName().compareTo(file2.getName());
         }
     }

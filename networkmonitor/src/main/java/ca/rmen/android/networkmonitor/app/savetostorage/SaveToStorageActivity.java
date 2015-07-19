@@ -68,7 +68,7 @@ public class SaveToStorageActivity extends FragmentActivity implements FileChoos
                 return;
             }
             File initialFolder = NetMonPreferences.getInstance(this).getExportFolder();
-            DialogFragmentFactory.showFileChooserDialog(this, initialFolder, true, ACTION_SAVE_TO_STORAGE);
+            DialogFragmentFactory.showFileChooserDialog(this, initialFolder, false, ACTION_SAVE_TO_STORAGE);
         }
 
     }
