@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.dialog;
+package ca.rmen.android.networkmonitor.app.dialog.filechooser;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -39,6 +39,7 @@ import java.io.File;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -49,7 +50,8 @@ public class FileChooserDialogFragment extends DialogFragment {
     private static final String TAG = Constants.TAG + FileChooserDialogFragment.class.getSimpleName();
 
     /**
-     * Optional.  Must be a folder. If provided, the file browser will open at this folder.
+     * Optional.  Must be a folder. If provided, the file browser will open at this folder. If
+     * the value is not a folder, the parent folder will be used.
      */
     public static final String EXTRA_FILE_CHOOSER_INITIAL_FOLDER = "initial_folder";
 
@@ -61,7 +63,7 @@ public class FileChooserDialogFragment extends DialogFragment {
     private File mSelectedFile = null;
 
     /**
-     * The calling activity must implement the {@link ca.rmen.android.networkmonitor.app.dialog.FileChooserDialogFragment.FileChooserDialogListener} interface.
+     * The calling activity must implement the {@link FileChooserDialogFragment.FileChooserDialogListener} interface.
      */
     public interface FileChooserDialogListener {
         void onFileSelected(int actionId, File file);
@@ -122,7 +124,8 @@ public class FileChooserDialogFragment extends DialogFragment {
         final Context context = getActivity();
         final FileAdapter adapter = new FileAdapter(context, mSelectedFile, foldersOnly);
 
-        // Save the file the user selected.
+        // Save the file the user selected. Reload the dialog with the new folder
+        // contents.
         OnClickListener fileSelectionListener = new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -130,7 +133,7 @@ public class FileChooserDialogFragment extends DialogFragment {
                 if (mSelectedFile.isDirectory()) {
                     adapter.load(mSelectedFile);
                     AlertDialog dialog = (AlertDialog) dialogInterface;
-                    dialog.setTitle(FileAdapter.getFullDisplayName(context, mSelectedFile));
+                    dialog.setTitle(FileChooser.getFullDisplayName(context, mSelectedFile));
                     dialog.getListView().clearChoices();
                     dialog.getListView().setSelectionAfterHeaderView();
                 }
@@ -149,7 +152,7 @@ public class FileChooserDialogFragment extends DialogFragment {
             }
         };
 
-        // Dismiss/cancel callbacks.
+        // Dismiss/cancel callbacks: Are all of these needed?
         OnClickListener negativeListener = new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -169,7 +172,7 @@ public class FileChooserDialogFragment extends DialogFragment {
             }
         };
         AlertDialog dialog = new AlertDialog.Builder(context)
-                .setTitle(FileAdapter.getFullDisplayName(context, mSelectedFile))
+                .setTitle(FileChooser.getFullDisplayName(context, mSelectedFile))
                 .setSingleChoiceItems(adapter, -1, fileSelectionListener)
                 .setPositiveButton(R.string.file_chooser_choose, positiveListener)
                 .setNegativeButton(android.R.string.cancel, negativeListener)

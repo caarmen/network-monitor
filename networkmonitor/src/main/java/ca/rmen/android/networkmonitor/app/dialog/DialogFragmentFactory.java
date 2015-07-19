@@ -34,6 +34,7 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.ChoiceDialogFragment.DialogItemListener;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
+import ca.rmen.android.networkmonitor.app.dialog.filechooser.FileChooserDialogFragment;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -45,9 +46,9 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class DialogFragmentFactory extends DialogFragment {
 
     private static final String TAG = Constants.TAG + DialogFragmentFactory.class.getSimpleName();
+    public static final String EXTRA_ACTION_ID = "action_id";
     static final String EXTRA_TITLE = "title";
     static final String EXTRA_MESSAGE = "message";
-    static final String EXTRA_ACTION_ID = "action_id";
     static final String EXTRA_ICON_ID = "icon_id";
     static final String EXTRA_EXTRAS = "extras";
     static final String EXTRA_SELECTED_ITEM = "selected_item";

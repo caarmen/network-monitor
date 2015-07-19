@@ -21,12 +21,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.dialog;
+package ca.rmen.android.networkmonitor.app.dialog.filechooser;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.os.Environment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,12 +46,16 @@ class FileAdapter extends ArrayAdapter<File> {
     private static final String TAG = FileAdapter.class.getSimpleName();
 
     private final FileFilter mFileFilter;
+    private final LayoutInflater mInflater;
     private final FileComparator mFileComparator = new FileComparator();
     private File mSelectedFolder;
 
     FileAdapter(Context context, File initialFolder, boolean foldersOnly) {
+        // Actually, the layout we provide here is ignored: we override
+        // getView() and specify the layouts there.
         super(context, R.layout.select_dialog_singlechoice_material);
         mFileFilter = new MyFileFilter(foldersOnly);
+        mInflater = LayoutInflater.from(getContext());
         load(initialFolder);
     }
 
@@ -76,9 +78,11 @@ class FileAdapter extends ArrayAdapter<File> {
         final TextView result;
         File file = getItem(position);
         if(convertView == null) {
-            LayoutInflater inflater = LayoutInflater.from(getContext());
-            if(file.isDirectory()) result = (TextView) inflater.inflate(R.layout.select_dialog_item_material, parent, false);
-            else result = (TextView) inflater.inflate(R.layout.select_dialog_singlechoice_material, parent, false);
+            if(file.isDirectory()) {
+                result = (TextView) mInflater.inflate(R.layout.select_dialog_item_material, parent, false);
+            } else {
+                result = (TextView) mInflater.inflate(R.layout.select_dialog_singlechoice_material, parent, false);
+            }
         } else {
             result = (TextView) convertView;
         }
@@ -94,19 +98,19 @@ class FileAdapter extends ArrayAdapter<File> {
     }
 
     private void updateViewFile(TextView view, File file) {
-        view.setText(getShortDisplayName(getContext(), file));
+        view.setText(FileChooser.getShortDisplayName(getContext(), file));
         view.setTypeface(null, Typeface.NORMAL);
         view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file, 0, 0, 0);
     }
 
     private void updateViewFolder(TextView view, File folder) {
-        view.setText(getShortDisplayName(getContext(), folder));
+        view.setText(FileChooser.getShortDisplayName(getContext(), folder));
         view.setTypeface(null, Typeface.NORMAL);
         view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_folder, 0, 0, 0);
     }
 
     private void updateViewBackFolder(TextView view, File backFolder) {
-        view.setText("(" + getShortDisplayName(getContext(), backFolder) + ")");
+        view.setText("(" + FileChooser.getShortDisplayName(getContext(), backFolder) + ")");
         view.setTypeface(null, Typeface.ITALIC);
         view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_navigation_arrow_back, 0, 0, 0);
     }
@@ -123,24 +127,6 @@ class FileAdapter extends ArrayAdapter<File> {
         return 1;
     }
 
-    static final String getShortDisplayName(Context context, File file) {
-        if (file.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getAbsolutePath()))
-            return context.getString(R.string.file_chooser_sdcard);
-        else if (TextUtils.isEmpty(file.getName()))
-            return context.getString(R.string.file_chooser_root);
-        else
-            return file.getName();
-    }
-
-    static final String getFullDisplayName(Context context, File file) {
-        if (file.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getAbsolutePath()))
-            return context.getString(R.string.file_chooser_sdcard);
-        else if (TextUtils.isEmpty(file.getName()))
-            return context.getString(R.string.file_chooser_root);
-        else
-            return file.getAbsolutePath();
-    }
-
     private static class MyFileFilter implements FileFilter {
         private final boolean mFoldersOnly;
 
@@ -150,12 +136,13 @@ class FileAdapter extends ArrayAdapter<File> {
 
         @Override
         public boolean accept(File file) {
-            if (file.isDirectory()) return true;
-            if (file.isFile() && !mFoldersOnly) return true;
-            return false;
+            return file.isDirectory() || (file.isFile() && !mFoldersOnly);
         }
     }
 
+    /**
+     * Folders are first, then files.  Each are sorted alphabetically.
+     */
     private static class FileComparator implements Comparator<File> {
 
         @Override
