@@ -31,12 +31,17 @@ import android.support.v4.app.FragmentActivity;
 
 import java.io.File;
 
+import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.util.Log;
 
+/**
+ * This activity handles the action {@link Intent#ACTION_GET_CONTENT}.  It displays a file chooser
+ * dialog.  If the user selects a file, this activity sets the selected file as the result Intent data.
+ */
 public class FileChooserActivity extends FragmentActivity implements FileChooserDialogFragment.FileChooserDialogListener {
-    private static final String TAG = FileChooserActivity.class.getSimpleName();
+    private static final String TAG = Constants.TAG + FileChooserActivity.class.getSimpleName();
     private static final int ACTION_CHOOSE_FILE = 1;
 
     @Override
