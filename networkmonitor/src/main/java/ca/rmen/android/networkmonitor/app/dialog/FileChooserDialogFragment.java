@@ -29,25 +29,15 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import java.io.File;
-import java.io.FileFilter;
-import java.util.Arrays;
-import java.util.Comparator;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -78,6 +68,42 @@ public class FileChooserDialogFragment extends DialogFragment {
         void onDismiss(int actionId);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(EXTRA_FILE_CHOOSER_INITIAL_FOLDER, mSelectedFile);
+        super.onSaveInstanceState(outState);
+        Log.v(TAG, "onSavedInstanceState, outState=" + outState);
+    }
+
+    /**
+     * Returns the initial folder to open in the file chooser dialog.
+     * First we look in the savedInstanceState, if any, to see if the user selected a folder before
+     * rotating the screen.
+     * Then we look in the arguments given when creating this dialog.
+     * Then we fall back to the SD card folder.
+     */
+    private File getInitialFolder(Bundle savedInstanceState) {
+        File initialFolder = null;
+
+        if (savedInstanceState != null) {
+            initialFolder = (File) savedInstanceState.getSerializable(EXTRA_FILE_CHOOSER_INITIAL_FOLDER);
+        }
+
+        if (initialFolder == null) {
+            initialFolder = (File) getArguments().getSerializable(EXTRA_FILE_CHOOSER_INITIAL_FOLDER);
+        }
+
+        if (initialFolder == null) {
+            initialFolder = Environment.getExternalStorageDirectory();
+        }
+
+        // We need a folder to start with.
+        if (!initialFolder.isDirectory()) {
+            initialFolder = initialFolder.getParentFile();
+        }
+        return initialFolder;
+    }
+
     /**
      * @return a Dialog to browse files and folders
      */
@@ -88,17 +114,14 @@ public class FileChooserDialogFragment extends DialogFragment {
 
         Bundle arguments = getArguments();
         final int actionId = arguments.getInt(DialogFragmentFactory.EXTRA_ACTION_ID);
-        File initialFolder = (File) arguments.getSerializable(FileChooserDialogFragment.EXTRA_FILE_CHOOSER_INITIAL_FOLDER);
         boolean foldersOnly = arguments.getBoolean(FileChooserDialogFragment.EXTRA_FILE_CHOOSER_FOLDERS_ONLY);
 
-        if (initialFolder == null || !initialFolder.isDirectory()) {
-            initialFolder = Environment.getExternalStorageDirectory();
-        }
+        mSelectedFile = getInitialFolder(savedInstanceState);
 
         final Context context = getActivity();
-        final FileAdapter adapter = new FileAdapter(context, initialFolder, foldersOnly);
+        final FileAdapter adapter = new FileAdapter(context, mSelectedFile, foldersOnly);
 
-         // Save the file the user selected.
+        // Save the file the user selected.
         OnClickListener fileSelectionListener = new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -106,7 +129,7 @@ public class FileChooserDialogFragment extends DialogFragment {
                 if (mSelectedFile.isDirectory()) {
                     adapter.load(mSelectedFile);
                     AlertDialog dialog = (AlertDialog) dialogInterface;
-                    dialog.setTitle(getDisplayName(context, mSelectedFile));
+                    dialog.setTitle(FileAdapter.getDisplayName(context, mSelectedFile));
                     dialog.getListView().clearChoices();
                 }
             }
@@ -138,7 +161,7 @@ public class FileChooserDialogFragment extends DialogFragment {
             }
         };
         AlertDialog dialog = new AlertDialog.Builder(context)
-                .setTitle(getDisplayName(context, initialFolder))
+                .setTitle(FileAdapter.getDisplayName(context, mSelectedFile))
                 .setSingleChoiceItems(adapter, -1, fileSelectionListener)
                 .setPositiveButton(android.R.string.ok, positiveListener)
                 .setOnCancelListener(cancelListener)
@@ -154,95 +177,6 @@ public class FileChooserDialogFragment extends DialogFragment {
         Bundle arguments = getArguments();
         int actionId = arguments.getInt(DialogFragmentFactory.EXTRA_ACTION_ID);
         FileChooserDialogListener listener = (FileChooserDialogListener) getActivity();
-        if(listener != null) listener.onDismiss(actionId);
-    }
-
-    private static final String getDisplayName(Context context, File file) {
-        if(file.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getAbsolutePath()))
-            return context.getString(R.string.file_chooser_sdcard);
-        else if(TextUtils.isEmpty(file.getName()))
-            return context.getString(R.string.file_chooser_root);
-        else
-            return file.getName();
-    }
-
-    private static class FileAdapter extends ArrayAdapter<File> {
-        private final FileFilter mFileFilter;
-        private final FileComparator mFileComparator = new FileComparator();
-        private File mSelectedFolder;
-
-        public FileAdapter(Context context, File initialFolder, boolean foldersOnly) {
-            super(context, R.layout.select_dialog_item_material);
-            mFileFilter = new MyFileFilter(foldersOnly);
-            load(initialFolder);
-        }
-
-        void load(File selectedFolder) {
-            Log.v(TAG, "load " + selectedFolder);
-            mSelectedFolder = selectedFolder;
-            clear();
-            File[] files = selectedFolder.listFiles(mFileFilter);
-            Arrays.sort(files, mFileComparator);
-            if (selectedFolder.getParentFile() != null) {
-                add(selectedFolder.getParentFile());
-            }
-            for (File file : files) {
-                add(file);
-            }
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View result = super.getView(position, convertView, parent);
-            TextView label = (TextView) result.findViewById(android.R.id.text1);
-            File file = getItem(position);
-            final int iconId;
-            if (position == 0 && mSelectedFolder.getParentFile() != null) {
-                label.setText("(" + getDisplayName(getContext(), file) + ")");
-                iconId = R.drawable.ic_action_navigation_arrow_back;
-                label.setTypeface(null, Typeface.ITALIC);
-            } else {
-                label.setText(getDisplayName(getContext(), file));
-                label.setTypeface(null, Typeface.NORMAL);
-                if(file.isDirectory()) {
-                    iconId = R.drawable.ic_folder;
-                } else {
-                    iconId = 0;
-                }
-            }
-            label.setCompoundDrawablesWithIntrinsicBounds(iconId, 0, 0, 0);
-            return result;
-        }
-    }
-
-    private static class MyFileFilter implements FileFilter {
-        private final boolean mFoldersOnly;
-
-        private MyFileFilter(boolean foldersOnly) {
-            mFoldersOnly = foldersOnly;
-        }
-
-        @Override
-        public boolean accept(File file) {
-            if(file.isDirectory()) return true;
-            if(file.isFile() && !mFoldersOnly) return true;
-            return false;
-        }
-    }
-
-    private static class FileComparator implements Comparator<File> {
-
-        @Override
-        public int compare(File file1, File file2) {
-            if (file1.getParent() == null && file2.getParent() != null)
-                return 1;
-            if (file1.getParent() != null && file2.getParent() == null)
-                return -1;
-            if (file1.isDirectory() && !file2.isDirectory())
-                return 1;
-            if (!file1.isDirectory() && file2.isDirectory())
-                return -1;
-            return file1.getName().compareTo(file2.getName());
-        }
+        if (listener != null) listener.onDismiss(actionId);
     }
 }

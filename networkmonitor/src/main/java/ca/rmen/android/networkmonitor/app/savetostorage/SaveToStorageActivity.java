@@ -49,32 +49,46 @@ public class SaveToStorageActivity extends FragmentActivity implements FileChoos
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate: bundle=" + savedInstanceState);
-        Parcelable extra = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
-        if (extra == null || !(extra instanceof Uri)) {
-            SaveToStorage.displayErrorToast(this);
-            return;
-        }
+        if(savedInstanceState == null) {
+            Parcelable extra = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+            if (extra == null || !(extra instanceof Uri)) {
+                SaveToStorage.displayErrorToast(this);
+                return;
+            }
 
-        Uri sourceFileUri = (Uri) extra;
-        if (!"file".equals(sourceFileUri.getScheme())) {
-            SaveToStorage.displayErrorToast(this);
-            return;
-        }
+            Uri sourceFileUri = (Uri) extra;
+            if (!"file".equals(sourceFileUri.getScheme())) {
+                SaveToStorage.displayErrorToast(this);
+                return;
+            }
 
-        if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            SaveToStorage.displayErrorToast(this);
-            return;
+            if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+                SaveToStorage.displayErrorToast(this);
+                return;
+            }
+            DialogFragmentFactory.showFileChooserDialog(this, null, true, ACTION_SAVE_TO_STORAGE);
         }
-        DialogFragmentFactory.showFileChooserDialog(this, null, true, ACTION_SAVE_TO_STORAGE);
 
     }
 
     @Override
-    public void onFileSelected(int actionId, File folder) {
-        Log.v(TAG, "onFileSelected: folder = " + folder);
+    protected void onNewIntent(Intent intent) {
+        Log.v(TAG, "onNewIntent");
+        super.onNewIntent(intent);
+    }
+
+    @Override
+    public void onFileSelected(int actionId, File file) {
+        Log.v(TAG, "onFileSelected: file = " + file);
         Uri uri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
         File sourceFile = new File(uri.getPath());
-        File destFile = new File(folder, sourceFile.getName());
+
+        // If the user picked a file, we'll save to that file.
+        // If the user picked a folder, we'll save in that folder, with the original file name.
+        final File destFile;
+        if(file.isDirectory()) destFile = new File(file, sourceFile.getName());
+        else destFile = file;
+
         Intent intent = new Intent(this, SaveToStorageService.class);
         intent.putExtra(SaveToStorageService.EXTRA_SOURCE_FILE, sourceFile);
         intent.putExtra(SaveToStorageService.EXTRA_DESTINATION_FILE, destFile);
