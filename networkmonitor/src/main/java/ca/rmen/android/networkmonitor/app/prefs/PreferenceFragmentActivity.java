@@ -23,8 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
-import java.util.Arrays;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -36,6 +34,9 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 
+import java.io.File;
+import java.util.Arrays;
+
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ui.Clear;
@@ -46,6 +47,7 @@ import ca.rmen.android.networkmonitor.app.dialog.ChoiceDialogFragment.DialogItem
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.InfoDialogFragment.InfoDialogListener;
+import ca.rmen.android.networkmonitor.app.dialog.filechooser.FileChooserDialogFragment;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -54,9 +56,10 @@ import ca.rmen.android.networkmonitor.util.Log;
  * This activity has a transparent theme. The only thing the user will see will be alert dialogs that this activity creates.
  */
 public class PreferenceFragmentActivity extends AppCompatActivity implements DialogItemListener, DialogButtonListener, OnDismissListener, OnCancelListener,
-        InfoDialogListener { // NO_UCD (use default)
+        InfoDialogListener, FileChooserDialogFragment.FileChooserDialogListener {
     public static final String ACTION_SHARE = PreferenceFragmentActivity.class.getPackage().getName() + "_share";
     public static final String ACTION_CLEAR = PreferenceFragmentActivity.class.getPackage().getName() + "_clear";
+    public static final String ACTION_IMPORT_CHOOSE_FILE = PreferenceFragmentActivity.class.getPackage().getName() + "_import_choose_file";
     public static final String ACTION_IMPORT = PreferenceFragmentActivity.class.getPackage().getName() + "_import";
     public static final String ACTION_COMPRESS = PreferenceFragmentActivity.class.getPackage().getName() + "_compress";
     public static final String ACTION_CLEAR_OLD = PreferenceFragmentActivity.class.getPackage().getName() + "_clear_old";
@@ -70,9 +73,10 @@ public class PreferenceFragmentActivity extends AppCompatActivity implements Dia
     private static final String TAG = Constants.TAG + PreferenceFragmentActivity.class.getSimpleName();
     private static final int ID_ACTION_SHARE = 1;
     private static final int ID_ACTION_CLEAR = 2;
-    private static final int ID_ACTION_IMPORT = 3;
-    private static final int ID_ACTION_LOCATION_SETTINGS = 4;
-    private static final int ID_ACTION_COMPRESS = 5;
+    private static final int ID_ACTION_IMPORT_CHOOSE_FILE = 3;
+    private static final int ID_ACTION_IMPORT = 4;
+    private static final int ID_ACTION_LOCATION_SETTINGS = 5;
+    private static final int ID_ACTION_COMPRESS = 6;
 
     // True if the user interacted with a dialog other than to dismiss it.
     // IE: they clicked "ok" or selected an item from the list.
@@ -100,6 +104,8 @@ public class PreferenceFragmentActivity extends AppCompatActivity implements Dia
                     ID_ACTION_SHARE);
         } else if (ACTION_CLEAR.equals(action)) {
             DialogFragmentFactory.showConfirmDialog(this, getString(R.string.action_clear), getString(R.string.confirm_logs_clear), ID_ACTION_CLEAR, null);
+        } else if (ACTION_IMPORT_CHOOSE_FILE.equals(action)) {
+            DialogFragmentFactory.showFileChooserDialog(this, null, false, ID_ACTION_IMPORT_CHOOSE_FILE);
         } else if (ACTION_IMPORT.equals(action)) {
             // Get the file the user selected, and show a dialog asking for confirmation to import the file.
             Uri importFile = intent.getExtras().getParcelable(EXTRA_IMPORT_URI);
@@ -184,6 +190,17 @@ public class PreferenceFragmentActivity extends AppCompatActivity implements Dia
     }
 
     @Override
+    public void onFileSelected(int actionId, File file) {
+        Log.v(TAG, "onFileSelected, actionId=" + actionId + ", file = " + file);
+        if (actionId == ID_ACTION_IMPORT_CHOOSE_FILE) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(EXTRA_IMPORT_URI, Uri.fromFile(file));
+            DialogFragmentFactory.showConfirmDialog(this, getString(R.string.import_confirm_title),
+                    getString(R.string.import_confirm_message, file.getAbsolutePath()), ID_ACTION_IMPORT, bundle);
+        }
+    }
+
+    @Override
     public void onCancelClicked(int actionId, Bundle extras) {
         Log.v(TAG, "onCancelClicked, actionId=" + actionId + ", extras = " + extras);
         // If the user dismissed the dialog, let's close this transparent activity.
@@ -232,4 +249,14 @@ public class PreferenceFragmentActivity extends AppCompatActivity implements Dia
         Log.v(TAG, "onNeutralClicked, actionId = " + actionId + ", extras = " + extras);
         dismiss();
     }
+
+    @Override
+    public void onDismiss(int actionId) {
+        Log.v(TAG, "onDismiss, actionId = " + actionId);
+        // Nothing: this is from the file chooser interface.
+        // Don't finish here, because we need to continue to prompt the user with a confirm
+        // dialog.
+    }
+
+
 }

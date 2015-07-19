@@ -216,6 +216,11 @@ limitations under the License.
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
+                <action android:name="ca.rmen.android.networkmonitor.app.prefs_import_choose_file" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
                 <action android:name="ca.rmen.android.networkmonitor.app.prefs_clear_old" />
 
                 <category android:name="android.intent.category.DEFAULT" />

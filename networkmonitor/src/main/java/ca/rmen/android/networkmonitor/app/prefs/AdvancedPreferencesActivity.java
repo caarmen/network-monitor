@@ -52,6 +52,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class AdvancedPreferencesActivity extends AppCompatPreferenceActivity { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + AdvancedPreferencesActivity.class.getSimpleName();
     private static final int ACTIVITY_REQUEST_CODE_IMPORT = 1;
+    private static final int ACTION_IMPORT = 1;
     private static final String PREF_IMPORT = "PREF_IMPORT";
     private static final String PREF_COMPRESS = "PREF_COMPRESS";
 
@@ -164,7 +165,16 @@ public class AdvancedPreferencesActivity extends AppCompatPreferenceActivity { /
 
                 Intent importIntent = new Intent(Intent.ACTION_GET_CONTENT);
                 importIntent.setType("file/*");
-                startActivityForResult(Intent.createChooser(importIntent, getResources().getText(R.string.pref_summary_import)), ACTIVITY_REQUEST_CODE_IMPORT);
+                Intent intentChooser = Intent.createChooser(importIntent, getResources().getText(R.string.pref_summary_import));
+                if (!getPackageManager().queryIntentActivities(importIntent, 0).isEmpty()) {
+                    Log.v(TAG, "using external file chooser");
+                    startActivityForResult(intentChooser, ACTIVITY_REQUEST_CODE_IMPORT);
+                } else {
+                    Log.v(TAG, "using internal file chooser");
+                    Intent intent = new Intent(PreferenceFragmentActivity.ACTION_IMPORT_CHOOSE_FILE);
+                    startActivity(intent);
+                }
+
             } else if (PREF_COMPRESS.equals(preference.getKey())) {
                 Intent intent = new Intent(PreferenceFragmentActivity.ACTION_COMPRESS);
                 startActivity(intent);
