@@ -35,6 +35,7 @@ import java.io.File;
 
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.FileChooserDialogFragment;
+import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -66,7 +67,8 @@ public class SaveToStorageActivity extends FragmentActivity implements FileChoos
                 SaveToStorage.displayErrorToast(this);
                 return;
             }
-            DialogFragmentFactory.showFileChooserDialog(this, null, true, ACTION_SAVE_TO_STORAGE);
+            File initialFolder = NetMonPreferences.getInstance(this).getExportFolder();
+            DialogFragmentFactory.showFileChooserDialog(this, initialFolder, true, ACTION_SAVE_TO_STORAGE);
         }
 
     }
@@ -80,6 +82,7 @@ public class SaveToStorageActivity extends FragmentActivity implements FileChoos
     @Override
     public void onFileSelected(int actionId, File file) {
         Log.v(TAG, "onFileSelected: file = " + file);
+        NetMonPreferences.getInstance(this).setExportFolder(file);
         Uri uri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
         File sourceFile = new File(uri.getPath());
 

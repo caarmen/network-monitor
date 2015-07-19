@@ -23,7 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.dialog;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -138,7 +137,7 @@ public class DialogFragmentFactory extends DialogFragment {
         Log.v(TAG, "showFileChooserDialog");
         Bundle arguments = new Bundle(3);
         arguments.putInt(EXTRA_ACTION_ID, actionId);
-        if(initialFolder != null) arguments.putParcelable(FileChooserDialogFragment.EXTRA_FILE_CHOOSER_INITIAL_FOLDER, Uri.fromFile(initialFolder));
+        if(initialFolder != null) arguments.putSerializable(FileChooserDialogFragment.EXTRA_FILE_CHOOSER_INITIAL_FOLDER, initialFolder);
         arguments.putBoolean(FileChooserDialogFragment.EXTRA_FILE_CHOOSER_FOLDERS_ONLY, foldersOnly);
         FileChooserDialogFragment result = new FileChooserDialogFragment();
         result.setArguments(arguments);

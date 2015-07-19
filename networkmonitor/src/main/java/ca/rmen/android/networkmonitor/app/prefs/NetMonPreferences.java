@@ -23,17 +23,19 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences.SortOrder;
@@ -90,6 +92,8 @@ public class NetMonPreferences {
     private static final String PREF_SORT_COLUMN_NAME_DEFAULT = NetMonColumns.TIMESTAMP;
     private static final String PREF_SORT_ORDER_DEFAULT = SortOrder.DESC.name();
     private static final String PREF_FILTER_PREFIX = "PREF_FILTERED_VALUES_";
+
+    private static final String PREF_EXPORT_FOLDER = "PREF_EXPORT_FOLDER";
 
     private static NetMonPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
@@ -312,6 +316,16 @@ public class NetMonPreferences {
     public void setDefaultNotificationSoundUri() {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         if (defaultSoundUri != null) setStringPreference(PREF_NOTIFICATION_RINGTONE, defaultSoundUri.toString());
+    }
+
+    public File getExportFolder() {
+        String folder = mSharedPrefs.getString(PREF_EXPORT_FOLDER, null);
+        if(folder != null) return new File(folder);
+        return Environment.getExternalStorageDirectory();
+    }
+
+    public void setExportFolder(File folder) {
+        setStringPreference(PREF_EXPORT_FOLDER, folder.getAbsolutePath());
     }
 
     private int getIntPreference(String key, String defaultValue) {
