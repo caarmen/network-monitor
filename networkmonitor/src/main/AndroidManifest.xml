@@ -265,6 +265,22 @@ limitations under the License.
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".app.dialog.filechooser.FileChooserActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:icon="@drawable/ic_device_sd_storage"
+            android:label="@string/file_chooser_sdcard"
+            android:theme="@style/NetMonNoDisplayTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="file/*" />
+
+            </intent-filter>
+        </activity>
+
         <receiver android:name="ca.rmen.android.networkmonitor.app.service.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

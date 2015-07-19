@@ -94,6 +94,7 @@ public class NetMonPreferences {
     private static final String PREF_FILTER_PREFIX = "PREF_FILTERED_VALUES_";
 
     private static final String PREF_EXPORT_FOLDER = "PREF_EXPORT_FOLDER";
+    private static final String PREF_IMPORT_FOLDER = "PREF_IMPORT_FOLDER";
 
     private static NetMonPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
@@ -326,6 +327,16 @@ public class NetMonPreferences {
 
     public void setExportFolder(File folder) {
         setStringPreference(PREF_EXPORT_FOLDER, folder.getAbsolutePath());
+    }
+
+    public File getImportFolder() {
+        String folder = mSharedPrefs.getString(PREF_IMPORT_FOLDER, null);
+        if(folder != null) return new File(folder);
+        return Environment.getExternalStorageDirectory();
+    }
+
+    public void setImportFolder(File folder) {
+        setStringPreference(PREF_IMPORT_FOLDER, folder.getAbsolutePath());
     }
 
     private int getIntPreference(String key, String defaultValue) {
