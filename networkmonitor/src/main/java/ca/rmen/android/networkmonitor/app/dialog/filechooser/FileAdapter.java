@@ -36,6 +36,7 @@ import java.io.FileFilter;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -43,7 +44,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  * An adapter to display a list of files at a given folder.
  */
 class FileAdapter extends ArrayAdapter<File> {
-    private static final String TAG = FileAdapter.class.getSimpleName();
+    private static final String TAG = Constants.TAG + FileAdapter.class.getSimpleName();
 
     private final FileFilter mFileFilter;
     private final LayoutInflater mInflater;
