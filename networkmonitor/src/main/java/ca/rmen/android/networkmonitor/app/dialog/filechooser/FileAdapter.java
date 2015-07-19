@@ -65,12 +65,14 @@ class FileAdapter extends ArrayAdapter<File> {
         mSelectedFolder = selectedFolder;
         clear();
         File[] files = selectedFolder.listFiles(mFileFilter);
-        Arrays.sort(files, mFileComparator);
         if (selectedFolder.getParentFile() != null) {
             add(selectedFolder.getParentFile());
         }
-        for (File file : files) {
-            add(file);
+        if(files != null) { // will be null if we don't have permission to read this folder
+            Arrays.sort(files, mFileComparator);
+            for (File file : files) {
+                add(file);
+            }
         }
     }
 
