@@ -32,8 +32,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-
-import com.afollestad.materialdialogs.AlertDialogWrapper;
+import android.support.v7.app.AlertDialog;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -66,7 +65,7 @@ public class ConfirmDialogFragment extends DialogFragment { // NO_UCD (use defau
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.v(TAG, "onCreateDialog: savedInstanceState = " + savedInstanceState);
 
-        AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         Bundle arguments = getArguments();
         builder.setTitle(arguments.getString(DialogFragmentFactory.EXTRA_TITLE));
         builder.setMessage(arguments.getString(DialogFragmentFactory.EXTRA_MESSAGE));

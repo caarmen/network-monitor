@@ -33,8 +33,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-
-import com.afollestad.materialdialogs.AlertDialogWrapper;
+import android.support.v7.app.AlertDialog;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -62,7 +61,7 @@ public class InfoDialogFragment extends DialogFragment { // NO_UCD (use default)
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.v(TAG, "onCreateDialog: savedInstanceState = " + savedInstanceState);
         Context context = getActivity();
-        AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         Bundle arguments = getArguments();
         final int actionId = arguments.getInt(DialogFragmentFactory.EXTRA_ACTION_ID);
         final int iconId = arguments.getInt(DialogFragmentFactory.EXTRA_ICON_ID);
