@@ -26,7 +26,6 @@
 package ca.rmen.android.networkmonitor.app.savetostorage;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
@@ -35,10 +34,6 @@ import java.io.File;
 
 import ca.rmen.android.networkmonitor.R;
 
-/**
- * Reads the file in the {@link Intent#EXTRA_STREAM} Uri extra, and saves
- * a copy of that file to the root folder of the external storage.
- */
 public class SaveToStorage {
 
     private SaveToStorage() {
