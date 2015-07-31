@@ -42,6 +42,10 @@ import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 public class CellLocationDataSource implements NetMonDataSource {
 
     private static final String TAG = Constants.TAG + CellLocationDataSource.class.getSimpleName();
+    /**
+     * @see {@link CdmaCellLocation#getBaseStationLatitude()}
+     */
+    private static final int CDMA_COORDINATE_DIVISOR = 3600 * 4;
     private TelephonyManager mTelephonyManager;
 
     @Override
@@ -74,8 +78,14 @@ public class CellLocationDataSource implements NetMonDataSource {
         } else if (cellLocation instanceof CdmaCellLocation) {
             CdmaCellLocation cdmaCellLocation = (CdmaCellLocation) cellLocation;
             values.put(NetMonColumns.CDMA_CELL_BASE_STATION_ID, cdmaCellLocation.getBaseStationId());
-            values.put(NetMonColumns.CDMA_CELL_LATITUDE, cdmaCellLocation.getBaseStationLatitude());
-            values.put(NetMonColumns.CDMA_CELL_LONGITUDE, cdmaCellLocation.getBaseStationLongitude());
+            int latitude = cdmaCellLocation.getBaseStationLatitude();
+            if (latitude < Integer.MAX_VALUE) {
+                values.put(NetMonColumns.CDMA_CELL_LATITUDE, (double) latitude / CDMA_COORDINATE_DIVISOR);
+            }
+            int longitude = cdmaCellLocation.getBaseStationLongitude();
+            if (longitude < Integer.MAX_VALUE) {
+                values.put(NetMonColumns.CDMA_CELL_LONGITUDE, (double) longitude / CDMA_COORDINATE_DIVISOR);
+            }
             values.put(NetMonColumns.CDMA_CELL_NETWORK_ID, cdmaCellLocation.getNetworkId());
             values.put(NetMonColumns.CDMA_CELL_SYSTEM_ID, cdmaCellLocation.getSystemId());
         }
