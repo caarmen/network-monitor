@@ -57,6 +57,7 @@ limitations under the License.
     <string name="device_latitude">Device Latitude</string>
     <string name="device_longitude">Device Longitude</string>
     <string name="device_position_accuracy">Device Position Accuracy (m)</string>
+    <string name="device_speed">Device Speed (m/s)</string>
     <string name="cell_signal_strength">Cell Signal Strength (0&#8211;4)</string>
     <string name="cell_signal_strength_dbm">Cell Signal Strength (dBm)</string>
     <string name="cell_asu_level">ASU Level</string>

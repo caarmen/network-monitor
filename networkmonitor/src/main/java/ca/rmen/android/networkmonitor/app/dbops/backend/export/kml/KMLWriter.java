@@ -73,13 +73,13 @@ class KMLWriter extends PrintWriter {
 
     /**
      * Write a single Placemark
-     * 
+     *
      * @param values map of field name to value
      */
-    public void writePlacemark(String name, Map<String, String> values, String latitude, String longitude, long timestamp) {
+    public void writePlacemark(String name, Map<String, String> values, String latitude, String longitude, String speed, long timestamp) {
         println("    <Placemark>");
         writePlacemarkName(name);
-        writePlacemarkCoordinates(longitude, latitude);
+        writePlacemarkCoordinates(longitude, latitude, speed);
         if (timestamp > 0) writePlacemarkTimestamp(timestamp);
         writePlacemarkStyleUrl(values);
         writePlacemarkExtendedData(values);
@@ -105,7 +105,7 @@ class KMLWriter extends PrintWriter {
 
     /**
      * Write the style xml for the given color.
-     * 
+     *
      * @param colorName the name of the color: used for the name of the kml style and stylemap
      * @param colorCode the aabbggrr color code for this color.
      */
@@ -172,12 +172,13 @@ class KMLWriter extends PrintWriter {
     /**
      * Write the device coordinates for this record.
      */
-    private void writePlacemarkCoordinates(String longitude, String latitude) {
+    private void writePlacemarkCoordinates(String longitude, String latitude, String speed) {
         // Write the device coordinates.
         println("      <Point>");
         print("        <coordinates>");
         print(longitude + "," + latitude);
         println("</coordinates>");
+        println("        <speed>" + speed + "</speed>");
         println("      </Point>");
     }
 

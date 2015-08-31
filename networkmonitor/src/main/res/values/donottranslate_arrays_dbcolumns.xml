@@ -57,6 +57,7 @@ limitations under the License.
         <item>device_latitude</item>
         <item>device_longitude</item>
         <item>device_position_accuracy</item>
+        <item>device_speed</item>
         <item>cell_signal_strength</item>
         <item>cell_signal_strength_dbm</item>
         <item>cell_asu_level</item>
@@ -171,6 +172,7 @@ limitations under the License.
         <item>device_latitude</item>
         <item>device_longitude</item>
         <item>device_position_accuracy</item>
+        <item>device_speed</item>
         <item>cdma_cell_base_station_id</item>
         <item>cdma_cell_latitude</item>
         <item>cdma_cell_longitude</item>

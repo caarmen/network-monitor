@@ -81,6 +81,7 @@ public class StandardDeviceLocationDataSource implements NetMonDataSource {
             values.put(NetMonColumns.DEVICE_LATITUDE, mostRecentLocation.getLatitude());
             values.put(NetMonColumns.DEVICE_LONGITUDE, mostRecentLocation.getLongitude());
             values.put(NetMonColumns.DEVICE_POSITION_ACCURACY, mostRecentLocation.getAccuracy());
+            values.put(NetMonColumns.DEVICE_SPEED, mostRecentLocation.getSpeed());
         }
         mMostRecentLocation = mostRecentLocation;
         return values;

@@ -82,6 +82,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.DEVICE_LATITUDE + " REAL, "
             + NetMonColumns.DEVICE_LONGITUDE + " REAL, "
             + NetMonColumns.DEVICE_POSITION_ACCURACY + " REAL, "
+            + NetMonColumns.DEVICE_SPEED + " REAL, "
             + NetMonColumns.CELL_SIGNAL_STRENGTH + " INTEGER, "
             + NetMonColumns.CELL_SIGNAL_STRENGTH_DBM + " INTEGER, "
             + NetMonColumns.CELL_ASU_LEVEL + " INTEGER, "
