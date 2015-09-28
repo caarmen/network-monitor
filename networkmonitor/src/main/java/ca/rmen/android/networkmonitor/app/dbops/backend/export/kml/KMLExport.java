@@ -80,7 +80,6 @@ public class KMLExport extends FileExport {
         List<String> selectedColumns = new ArrayList<>(NetMonPreferences.getInstance(mContext).getSelectedColumns());
         if (!selectedColumns.contains(NetMonColumns.DEVICE_LATITUDE)) selectedColumns.add(NetMonColumns.DEVICE_LATITUDE);
         if (!selectedColumns.contains(NetMonColumns.DEVICE_LONGITUDE)) selectedColumns.add(NetMonColumns.DEVICE_LONGITUDE);
-        if (!selectedColumns.contains(NetMonColumns.DEVICE_SPEED)) selectedColumns.add(NetMonColumns.DEVICE_SPEED);
         if (!selectedColumns.contains(mPlacemarkNameColumn)) selectedColumns.add(mPlacemarkNameColumn);
         final String[] columnsToExport = new String[selectedColumns.size()];
         selectedColumns.toArray(columnsToExport);
@@ -109,7 +108,6 @@ public class KMLExport extends FileExport {
                 int rowCount = c.getCount();
                 int latitudeIndex = c.getColumnIndex(NetMonColumns.DEVICE_LATITUDE);
                 int longitudeIndex = c.getColumnIndex(NetMonColumns.DEVICE_LONGITUDE);
-                int speedIndex = c.getColumnIndex(NetMonColumns.DEVICE_SPEED);
                 int timestampIndex = c.getColumnIndex(NetMonColumns.TIMESTAMP);
 
                 // Start writing to the file.
@@ -127,7 +125,7 @@ public class KMLExport extends FileExport {
                         cellValues.put(c.getColumnName(i), cellValue);
                     }
                     String placemarkName = formatter.format(c, placemarkNameColumnId);
-                    kmlWriter.writePlacemark(placemarkName, cellValues, c.getString(latitudeIndex), c.getString(longitudeIndex), c.getString(speedIndex), timestamp);
+                    kmlWriter.writePlacemark(placemarkName, cellValues, c.getString(latitudeIndex), c.getString(longitudeIndex), timestamp);
 
                     // Notify the listener of our progress (progress is 1-based)
                     if (listener != null) listener.onProgress(c.getPosition() + 1, rowCount);

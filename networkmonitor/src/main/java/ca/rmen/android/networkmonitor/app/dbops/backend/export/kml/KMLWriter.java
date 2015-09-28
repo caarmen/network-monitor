@@ -76,10 +76,10 @@ class KMLWriter extends PrintWriter {
      *
      * @param values map of field name to value
      */
-    public void writePlacemark(String name, Map<String, String> values, String latitude, String longitude, String speed, long timestamp) {
+    public void writePlacemark(String name, Map<String, String> values, String latitude, String longitude, long timestamp) {
         println("    <Placemark>");
         writePlacemarkName(name);
-        writePlacemarkCoordinates(longitude, latitude, speed);
+        writePlacemarkCoordinates(longitude, latitude);
         if (timestamp > 0) writePlacemarkTimestamp(timestamp);
         writePlacemarkStyleUrl(values);
         writePlacemarkExtendedData(values);
@@ -172,13 +172,12 @@ class KMLWriter extends PrintWriter {
     /**
      * Write the device coordinates for this record.
      */
-    private void writePlacemarkCoordinates(String longitude, String latitude, String speed) {
+    private void writePlacemarkCoordinates(String longitude, String latitude) {
         // Write the device coordinates.
         println("      <Point>");
         print("        <coordinates>");
         print(longitude + "," + latitude);
         println("</coordinates>");
-        println("        <speed>" + speed + "</speed>");
         println("      </Point>");
     }
 
