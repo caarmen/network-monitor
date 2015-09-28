@@ -44,7 +44,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
     public static final String DATABASE_NAME = "networkmonitor.db";
-    private static final int DATABASE_VERSION = 15;
+    private static final int DATABASE_VERSION = 16;
 
     // @formatter:off
     private static final String SQL_CREATE_TABLE_NETWORKMONITOR = "CREATE TABLE IF NOT EXISTS "
@@ -191,6 +191,9 @@ public class NetMonDatabase extends SQLiteOpenHelper {
 
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V15_SERVICE_STATE = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
             + NetMonColumns.SERVICE_STATE + " TEXT";
+
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V15_DEVICE_SPEED = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.DEVICE_SPEED + " REAL";
 
     private static final String SQL_CREATE_VIEW_CONNECTION_TEST_STATS = "CREATE VIEW " + ConnectionTestStatsColumns.VIEW_NAME + " AS "
             + buildConnectionTestQuery();
