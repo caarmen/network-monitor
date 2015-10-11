@@ -54,7 +54,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (
     private static final String PREF_IMPORT = "PREF_IMPORT";
     private static final String PREF_COMPRESS = "PREF_COMPRESS";
 
-    private NetMonPreferenceFragment mPreferenceFragment;
+    private NetMonPreferenceFragmentCompat mPreferenceFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +67,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (
         if (!sharedPrefs.contains(NetMonPreferences.PREF_NOTIFICATION_RINGTONE)) NetMonPreferences.getInstance(this).setDefaultNotificationSoundUri();
 
         PreferenceManager.setDefaultValues(this, R.xml.adv_preferences, false);
-        mPreferenceFragment = NetMonPreferenceFragment.newInstance(R.xml.adv_preferences);
+        mPreferenceFragment = NetMonPreferenceFragmentCompat.newInstance(R.xml.adv_preferences);
         getSupportFragmentManager().
                 beginTransaction().
                 replace(android.R.id.content, mPreferenceFragment).

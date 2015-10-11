@@ -35,13 +35,13 @@ import ca.rmen.android.networkmonitor.app.prefs.hack.PasswordPreference;
 import ca.rmen.android.networkmonitor.app.prefs.hack.PasswordPreferenceDialogFragmentCompat;
 
 
-public class NetMonPreferenceFragment extends PreferenceFragmentCompat {
+public class NetMonPreferenceFragmentCompat extends PreferenceFragmentCompat {
 
     private static final String FRAGMENT_TAG_DIALOG = "android.support.v7.preference.PreferenceFragment.DIALOG";
-    private static final String EXTRA_PREFERENCE_FILE_RES_ID = NetMonPreferenceFragment.class.getPackage().getName() + "_preference_file_res_id";
+    private static final String EXTRA_PREFERENCE_FILE_RES_ID = NetMonPreferenceFragmentCompat.class.getPackage().getName() + "_preference_file_res_id";
 
-    public static NetMonPreferenceFragment newInstance(int preferenceFileResId) {
-        NetMonPreferenceFragment result = new NetMonPreferenceFragment();
+    public static NetMonPreferenceFragmentCompat newInstance(int preferenceFileResId) {
+        NetMonPreferenceFragmentCompat result = new NetMonPreferenceFragmentCompat();
         Bundle arguments = new Bundle(1);
         arguments.putInt(EXTRA_PREFERENCE_FILE_RES_ID, preferenceFileResId);
         result.setArguments(arguments);

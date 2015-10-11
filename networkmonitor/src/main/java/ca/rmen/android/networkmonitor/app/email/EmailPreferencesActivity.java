@@ -44,21 +44,21 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailConfig;
-import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragment;
+import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
 import ca.rmen.android.networkmonitor.util.Log;
 
 @TargetApi(14)
 public class EmailPreferencesActivity extends AppCompatActivity { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + EmailPreferencesActivity.class.getSimpleName();
 
-    private NetMonPreferenceFragment mPreferenceFragment;
+    private NetMonPreferenceFragmentCompat mPreferenceFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mPreferenceFragment = NetMonPreferenceFragment.newInstance(R.xml.email_preferences);
+        mPreferenceFragment = NetMonPreferenceFragmentCompat.newInstance(R.xml.email_preferences);
         getSupportFragmentManager().
                 beginTransaction().
                 replace(android.R.id.content, mPreferenceFragment).

@@ -38,7 +38,7 @@ import android.support.v7.preference.SwitchPreferenceCompat;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
-import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragment;
+import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.service.NetMonService;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
@@ -48,12 +48,12 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = Constants.TAG + MainActivity.class.getSimpleName();
     private GPSVerifier mGPSVerifier;
-    private NetMonPreferenceFragment mPreferenceFragment;
+    private NetMonPreferenceFragmentCompat mPreferenceFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPreferenceFragment = NetMonPreferenceFragment.newInstance(R.xml.preferences);
+        mPreferenceFragment = NetMonPreferenceFragmentCompat.newInstance(R.xml.preferences);
         getSupportFragmentManager().
                 beginTransaction().
                 replace(android.R.id.content, mPreferenceFragment).

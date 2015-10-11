@@ -37,7 +37,7 @@ import android.support.v7.preference.PreferenceManager;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
-import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragment;
+import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
 import ca.rmen.android.networkmonitor.util.FileUtil;
@@ -50,14 +50,14 @@ public class SpeedTestPreferencesActivity extends AppCompatActivity { // NO_UCD 
     private static final String TAG = Constants.TAG + SpeedTestPreferencesActivity.class.getSimpleName();
 
     private SpeedTestPreferences mSpeedTestPrefs;
-    private NetMonPreferenceFragment mPreferenceFragment;
+    private NetMonPreferenceFragmentCompat mPreferenceFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mPreferenceFragment = NetMonPreferenceFragment.newInstance(R.xml.speed_test_preferences);
+        mPreferenceFragment = NetMonPreferenceFragmentCompat.newInstance(R.xml.speed_test_preferences);
         getSupportFragmentManager().
                 beginTransaction().
                 replace(android.R.id.content, mPreferenceFragment).
