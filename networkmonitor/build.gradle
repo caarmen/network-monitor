@@ -97,12 +97,7 @@ dependencies {
     compile 'org.jraf:android-switch-backport:2.0.1'
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:support-v4:22.2.1'
-    compile('com.afollestad.material-dialogs:core:0.8.2.0@aar') {
-        transitive = true
-    }
-    compile('com.afollestad.material-dialogs:commons:0.8.2.0@aar') {
-        transitive = true
-    }
+    compile 'com.afollestad:material-dialogs:0.7.9.1'
     compile ('net.sourceforge.jexcelapi:jxl:2.6.12') {
         exclude group: "log4j"
     }
