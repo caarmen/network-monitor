@@ -73,7 +73,7 @@ class KMLWriter extends PrintWriter {
 
     /**
      * Write a single Placemark
-     *
+     * 
      * @param values map of field name to value
      */
     public void writePlacemark(String name, Map<String, String> values, String latitude, String longitude, long timestamp) {
@@ -105,7 +105,7 @@ class KMLWriter extends PrintWriter {
 
     /**
      * Write the style xml for the given color.
-     *
+     * 
      * @param colorName the name of the color: used for the name of the kml style and stylemap
      * @param colorCode the aabbggrr color code for this color.
      */
