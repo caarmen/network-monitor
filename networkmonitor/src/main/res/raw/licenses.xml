@@ -24,12 +24,6 @@ limitations under the License.
 -->
 <notices>
     <notice>
-        <name>Android Switch Preference Backport</name>
-        <url>https://github.com/BoD/android-switch-backport</url>
-        <copyright>Copyright Benoit 'BoD' Lubek (BoD@JRAF.org)</copyright>
-        <license>Apache Software License 2.0</license>
-    </notice>
-    <notice>
         <name>Android Support Library</name>
         <url>http://developer.android.com/tools/support-library/index.html</url>
         <copyright>Copyright (c) The Android Open Source Project</copyright>

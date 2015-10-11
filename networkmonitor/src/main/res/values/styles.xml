@@ -36,7 +36,7 @@ limitations under the License.
     </style>
 
     <style name="NetMonPreferenceCategoryStyle">
-        <item name="android:layout">@layout/preference_category</item>
+        <item name="android:layout">@layout/netmon_preference_category</item>
     </style>
 
     <style name="ListViewNetMon" parent="android:Widget.ListView">
