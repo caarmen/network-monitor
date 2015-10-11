@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.prefs;
+package ca.rmen.android.networkmonitor.app.prefs.hack;
 
 import android.os.Bundle;
 import android.support.v7.preference.EditTextPreferenceDialogFragmentCompat;

@@ -74,7 +74,7 @@ limitations under the License.
             android:key="PREF_SPEED_TEST_UPLOAD_USER"
             android:summary="@string/pref_summary_speed_test_upload_user"
             android:title="@string/pref_title_speed_test_upload_user" />
-        <ca.rmen.android.networkmonitor.app.prefs.PasswordPreference
+        <ca.rmen.android.networkmonitor.app.prefs.hack.PasswordPreference
             android:defaultValue=""
             android:icon="@drawable/ic_pref_email_password"
             android:inputType="textPassword"

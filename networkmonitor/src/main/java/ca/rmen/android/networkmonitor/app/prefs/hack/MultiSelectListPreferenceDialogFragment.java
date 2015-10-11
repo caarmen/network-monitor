@@ -1,4 +1,4 @@
-package ca.rmen.android.networkmonitor.app.dialog;
+package ca.rmen.android.networkmonitor.app.prefs.hack;
 
 import android.annotation.TargetApi;
 import android.content.DialogInterface;

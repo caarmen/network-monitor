@@ -30,7 +30,9 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 
-import ca.rmen.android.networkmonitor.app.dialog.MultiSelectListPreferenceDialogFragment;
+import ca.rmen.android.networkmonitor.app.prefs.hack.MultiSelectListPreferenceDialogFragment;
+import ca.rmen.android.networkmonitor.app.prefs.hack.PasswordPreference;
+import ca.rmen.android.networkmonitor.app.prefs.hack.PasswordPreferenceDialogFragmentCompat;
 
 
 public class NetMonPreferenceFragment extends PreferenceFragmentCompat {
