@@ -137,7 +137,7 @@ public class EmailPreferencesActivity extends AppCompatActivity { // NO_UCD (use
     }
 
     private void updatePreferenceSummary(CharSequence key, int summaryResId) {
-        Preference pref = mPreferenceFragment.getPreferenceManager().findPreference(key);
+        Preference pref = mPreferenceFragment.findPreference(key);
         CharSequence value;
         if (key.equals(EmailPreferences.PREF_EMAIL_LAST_EMAIL_SENT)) {
             long lastEmailSent = EmailPreferences.getInstance(this).getLastEmailSent();

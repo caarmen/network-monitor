@@ -141,8 +141,7 @@ public class SpeedTestPreferencesActivity extends AppCompatActivity { // NO_UCD 
     };
 
     private void updatePreferenceSummary(CharSequence key, int summaryResId) {
-        @SuppressWarnings("deprecation")
-        Preference pref = mPreferenceFragment.getPreferenceManager().findPreference(key);
+        Preference pref = mPreferenceFragment.findPreference(key);
         if (pref instanceof EditTextPreference) {
             CharSequence value = ((EditTextPreference) pref).getText();
             String summary = getString(summaryResId, value);
@@ -159,8 +158,7 @@ public class SpeedTestPreferencesActivity extends AppCompatActivity { // NO_UCD 
         String url = mSpeedTestPrefs.getDownloadConfig().url;
         url = ellipsize(url);
         String summary = getString(R.string.pref_summary_speed_test_download_url, url, size);
-        @SuppressWarnings("deprecation")
-        Preference pref = mPreferenceFragment.getPreferenceManager().findPreference(SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL);
+        Preference pref = mPreferenceFragment.findPreference(SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL);
         pref.setSummary(summary);
     }
 
@@ -182,9 +180,8 @@ public class SpeedTestPreferencesActivity extends AppCompatActivity { // NO_UCD 
 
 
             @Override
-            @SuppressWarnings("deprecation")
             protected void onPreExecute() {
-                Preference pref = mPreferenceFragment.getPreferenceManager().findPreference(SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL);
+                Preference pref = mPreferenceFragment.findPreference(SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL);
                 String summary = getString(R.string.pref_summary_speed_test_download_url, config.url, "?");
                 pref.setSummary(summary);
             }

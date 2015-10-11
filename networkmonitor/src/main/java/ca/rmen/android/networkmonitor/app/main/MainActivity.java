@@ -33,6 +33,7 @@ import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
+import android.support.v7.preference.SwitchPreferenceCompat;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
@@ -47,13 +48,15 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = Constants.TAG + MainActivity.class.getSimpleName();
     private GPSVerifier mGPSVerifier;
+    private NetMonPreferenceFragment mPreferenceFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPreferenceFragment = NetMonPreferenceFragment.newInstance(R.xml.preferences);
         getSupportFragmentManager().
                 beginTransaction().
-                replace(android.R.id.content, NetMonPreferenceFragment.newInstance(R.xml.preferences)).
+                replace(android.R.id.content, mPreferenceFragment).
                 commit();
         getSupportFragmentManager().executePendingTransactions();
         mGPSVerifier = new GPSVerifier(this);
@@ -80,17 +83,14 @@ public class MainActivity extends AppCompatActivity {
         mGPSVerifier.dismissGPSDialog();
     }
 
-    /*
     @Override
-    @SuppressWarnings("deprecation")
     public void onWindowFocusChanged(boolean hasFocus) {
         if (hasFocus) {
             // Refresh the 'enabled' preference view
             boolean enabled = NetMonPreferences.getInstance(this).isServiceEnabled();
-            ((SwitchPreference) findPreference(NetMonPreferences.PREF_SERVICE_ENABLED)).setChecked(enabled);
+            ((SwitchPreferenceCompat) mPreferenceFragment.findPreference(NetMonPreferences.PREF_SERVICE_ENABLED)).setChecked(enabled);
         }
     }
-    */
 
     @Override
     public void onBackPressed() {

@@ -56,7 +56,6 @@ public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (
 
     private NetMonPreferenceFragment mPreferenceFragment;
 
-    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,7 +136,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (
     };
 
     private void updatePreferenceSummary(final String key, final int summaryResId) {
-        final Preference pref = mPreferenceFragment.getPreferenceManager().findPreference(key);
+        final Preference pref = mPreferenceFragment.findPreference(key);
         // RingtoneManager.getRingtone() actually does some disk reads.
         // Discovered this with StrictMode and monkey.
         // Ugly code (async task) to make it easier to find real StrictMode violations...
