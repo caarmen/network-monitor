@@ -25,6 +25,7 @@ package ca.rmen.android.networkmonitor.app.prefs.hack;
 
 import android.os.Build;
 import android.support.v14.preference.MultiSelectListPreference;
+import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
@@ -57,6 +58,16 @@ public class PreferenceFragmentCompatHack {
                 dialogFragment.show(preferenceFragmentCompat.getFragmentManager(), FRAGMENT_TAG_DIALOG);
             }
             return true;
+        }
+        // Hack to make the EditTextPreference themed.
+        else if (preference instanceof EditTextPreference) {
+            if (preferenceFragmentCompat.getFragmentManager().findFragmentByTag(FRAGMENT_TAG_DIALOG) == null) {
+                EditTextPreferenceDialogFragmentCompat dialogFragment = EditTextPreferenceDialogFragmentCompat.newInstance(preference.getKey());
+                dialogFragment.setTargetFragment(preferenceFragmentCompat, 0);
+                dialogFragment.show(preferenceFragmentCompat.getFragmentManager(), FRAGMENT_TAG_DIALOG);
+            }
+            return true;
+
         }
         return false;
     }
