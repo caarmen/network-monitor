@@ -28,7 +28,7 @@ limitations under the License.
     <string name="pref_category_email_sending_settings">AJUSTES E-MAIL</string>
     <string name="pref_category_email_server_settings">AUTENTICACIÓN DEL SERVIDOR SMTP</string>
     <string name="pref_category_email_status">ESTADO</string>
-    <string name="pref_email_unavailable">Disponible enn Android 3.x y posteriores</string>
+    <string name="pref_email_unavailable">Disponible enn Android 4.x y posteriores</string>
     <string name="pref_title_email_report_interval">Frecuencia del informe por correo</string>
     <string name="pref_summary_email_report_interval">%s</string>
     <string name="pref_value_email_report_interval_never">Nunca</string>
