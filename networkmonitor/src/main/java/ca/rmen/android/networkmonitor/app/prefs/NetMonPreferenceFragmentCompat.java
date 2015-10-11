@@ -23,21 +23,16 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v14.preference.MultiSelectListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 
-import ca.rmen.android.networkmonitor.app.prefs.hack.MultiSelectListPreferenceDialogFragmentCompat;
-import ca.rmen.android.networkmonitor.app.prefs.hack.PasswordPreference;
-import ca.rmen.android.networkmonitor.app.prefs.hack.PasswordPreferenceDialogFragmentCompat;
+import ca.rmen.android.networkmonitor.app.prefs.hack.PreferenceFragmentCompatHack;
 
 
 public class NetMonPreferenceFragmentCompat extends PreferenceFragmentCompat {
 
-    private static final String FRAGMENT_TAG_DIALOG = "android.support.v7.preference.PreferenceFragment.DIALOG";
     private static final String EXTRA_PREFERENCE_FILE_RES_ID = NetMonPreferenceFragmentCompat.class.getPackage().getName() + "_preference_file_res_id";
 
     public static NetMonPreferenceFragmentCompat newInstance(int preferenceFileResId) {
@@ -57,21 +52,7 @@ public class NetMonPreferenceFragmentCompat extends PreferenceFragmentCompat {
 
     @Override
     public void onDisplayPreferenceDialog(Preference preference) {
-        // Hack to allow a MultiSelectListPreference
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH
-                && preference instanceof MultiSelectListPreference) {
-            if (getFragmentManager().findFragmentByTag(FRAGMENT_TAG_DIALOG) == null) {
-                MultiSelectListPreferenceDialogFragmentCompat dialogFragment = MultiSelectListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
-                dialogFragment.setTargetFragment(this, 0);
-                dialogFragment.show(getFragmentManager(), FRAGMENT_TAG_DIALOG);
-            }
-        } else if (preference instanceof PasswordPreference) {
-            if (getFragmentManager().findFragmentByTag(FRAGMENT_TAG_DIALOG) == null) {
-                PasswordPreferenceDialogFragmentCompat dialogFragment = PasswordPreferenceDialogFragmentCompat.newInstance(preference.getKey());
-                dialogFragment.setTargetFragment(this, 0);
-                dialogFragment.show(getFragmentManager(), FRAGMENT_TAG_DIALOG);
-            }
-        } else {
+        if (!PreferenceFragmentCompatHack.onDisplayPreferenceDialog(this, preference)) {
             super.onDisplayPreferenceDialog(preference);
         }
     }
