@@ -63,6 +63,12 @@ public class NetMonPreferenceFragment extends PreferenceFragmentCompat {
                 dialogFragment.setTargetFragment(this, 0);
                 dialogFragment.show(getFragmentManager(), FRAGMENT_TAG_DIALOG);
             }
+        } else if (preference instanceof PasswordPreference) {
+            if (getFragmentManager().findFragmentByTag(FRAGMENT_TAG_DIALOG) == null) {
+                PasswordPreferenceDialogFragmentCompat dialogFragment = PasswordPreferenceDialogFragmentCompat.newInstance(preference.getKey());
+                dialogFragment.setTargetFragment(this, 0);
+                dialogFragment.show(getFragmentManager(), FRAGMENT_TAG_DIALOG);
+            }
         } else {
             super.onDisplayPreferenceDialog(preference);
         }
