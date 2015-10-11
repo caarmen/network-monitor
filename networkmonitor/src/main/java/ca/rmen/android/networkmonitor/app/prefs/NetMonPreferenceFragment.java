@@ -24,11 +24,11 @@
 package ca.rmen.android.networkmonitor.app.prefs;
 
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceFragmentCompatFix;
 import android.support.v7.preference.PreferenceManager;
 
 
-public class NetMonPreferenceFragment extends PreferenceFragmentCompat {
+public class NetMonPreferenceFragment extends PreferenceFragmentCompatFix {
 
     private static final String EXTRA_PREFERENCE_FILE_RES_ID = NetMonPreferenceFragment.class.getPackage().getName() + "_preference_file_res_id";
 
