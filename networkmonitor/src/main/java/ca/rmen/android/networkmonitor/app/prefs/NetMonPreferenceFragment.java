@@ -30,7 +30,7 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 
-import ca.rmen.android.networkmonitor.app.prefs.hack.MultiSelectListPreferenceDialogFragment;
+import ca.rmen.android.networkmonitor.app.prefs.hack.MultiSelectListPreferenceDialogFragmentCompat;
 import ca.rmen.android.networkmonitor.app.prefs.hack.PasswordPreference;
 import ca.rmen.android.networkmonitor.app.prefs.hack.PasswordPreferenceDialogFragmentCompat;
 
@@ -61,7 +61,7 @@ public class NetMonPreferenceFragment extends PreferenceFragmentCompat {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH
                 && preference instanceof MultiSelectListPreference) {
             if (getFragmentManager().findFragmentByTag(FRAGMENT_TAG_DIALOG) == null) {
-                MultiSelectListPreferenceDialogFragment dialogFragment = MultiSelectListPreferenceDialogFragment.newInstance(preference.getKey());
+                MultiSelectListPreferenceDialogFragmentCompat dialogFragment = MultiSelectListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
                 dialogFragment.setTargetFragment(this, 0);
                 dialogFragment.show(getFragmentManager(), FRAGMENT_TAG_DIALOG);
             }

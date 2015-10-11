@@ -28,16 +28,16 @@ import java.util.Set;
  * MultiSelectListPreferenceDialogFragment.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class MultiSelectListPreferenceDialogFragment extends PreferenceDialogFragmentCompat
+public class MultiSelectListPreferenceDialogFragmentCompat extends PreferenceDialogFragmentCompat
         implements DialogPreference.TargetFragment {
     private Set<String> mNewValues = new HashSet();
     private boolean mPreferenceChanged;
 
-    public MultiSelectListPreferenceDialogFragment() {
+    public MultiSelectListPreferenceDialogFragmentCompat() {
     }
 
-    public static MultiSelectListPreferenceDialogFragment newInstance(String key) {
-        MultiSelectListPreferenceDialogFragment fragment = new MultiSelectListPreferenceDialogFragment();
+    public static MultiSelectListPreferenceDialogFragmentCompat newInstance(String key) {
+        MultiSelectListPreferenceDialogFragmentCompat fragment = new MultiSelectListPreferenceDialogFragmentCompat();
         Bundle b = new Bundle(1);
         b.putString("key", key);
         fragment.setArguments(b);
