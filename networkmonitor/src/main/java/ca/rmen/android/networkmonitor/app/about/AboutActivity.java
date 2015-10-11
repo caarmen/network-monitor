@@ -24,8 +24,6 @@
  */
 package ca.rmen.android.networkmonitor.app.about;
 
-import java.io.File;
-
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -42,12 +40,18 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+
+import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.util.Log;
 import de.psdev.licensesdialog.LicensesDialogFragment;
 
 public class AboutActivity extends AppCompatActivity {
-@Override
+
+    private static final String TAG = Constants.TAG + AboutActivity.class.getSimpleName();
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about);
@@ -117,7 +121,19 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     public void onLibrariesClicked(View v) {
-        final LicensesDialogFragment fragment = LicensesDialogFragment.newInstance(R.raw.licenses, false, true, R.style.AppCompatAlertDialogStyle, R.color.netmon_color, this);
-        fragment.show(getSupportFragmentManager(), null);
+        try {
+            final LicensesDialogFragment fragment = new LicensesDialogFragment.Builder(this)
+                    .setNotices(R.raw.licenses)
+                    .setThemeResourceId(R.style.AppCompatAlertDialogStyle)
+                    .setShowFullLicenseText(false)
+                    .setUseAppCompat(true)
+                    .setIncludeOwnLicense(true)
+                    .setDividerColorRes(R.color.netmon_color)
+                    .build();
+
+            fragment.show(getSupportFragmentManager(), null);
+        } catch (Exception e) {
+            Log.w(TAG, "Couldn't show license dialog", e);
+        }
     }
 }

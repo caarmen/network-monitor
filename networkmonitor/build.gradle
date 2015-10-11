@@ -51,8 +51,8 @@ android {
     } else  {
         android.buildTypes.release.signingConfig = null
     }
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         applicationId "ca.rmen.android.networkmonitor"
@@ -89,17 +89,17 @@ android {
 
 dependencies {
 
-    compile 'de.psdev.licensesdialog:licensesdialog:1.7.0'
+    compile 'de.psdev.licensesdialog:licensesdialog:1.8.0'
     compile 'org.jraf:android-switch-backport:2.0.1'
-    compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'com.android.support:support-v4:22.2.1'
-    compile 'com.afollestad:material-dialogs:0.7.6.0'
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:support-v4:23.0.1'
+    compile 'com.afollestad:material-dialogs:0.7.9.1'
     compile ('net.sourceforge.jexcelapi:jxl:2.6.12') {
         exclude group: "log4j"
     }
     compile 'commons-net:commons-net:3.3'
 
     if (!gradle.isFoss) {
-        proprietaryCompile 'com.google.android.gms:play-services-location:7.5.0'
+        proprietaryCompile 'com.google.android.gms:play-services-location:8.1.0'
     }
 }
