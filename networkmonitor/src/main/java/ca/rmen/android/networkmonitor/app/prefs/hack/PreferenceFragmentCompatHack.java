@@ -25,50 +25,48 @@ package ca.rmen.android.networkmonitor.app.prefs.hack;
 
 import android.os.Build;
 import android.support.v14.preference.MultiSelectListPreference;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
 public class PreferenceFragmentCompatHack {
     private static final String FRAGMENT_TAG_DIALOG = "android.support.v7.preference.PreferenceFragment.DIALOG";
+
     private PreferenceFragmentCompatHack() {
         // prevent instantiation
     }
 
     /**
      * Displays preference dialogs which aren't supported by default in PreferenceFragmentCompat.
+     *
      * @return true if we managed a preference which isn't supported by default, false otherwise.
      */
     public static boolean onDisplayPreferenceDialog(PreferenceFragmentCompat preferenceFragmentCompat, Preference preference) {
+        DialogFragment dialogFragment = (DialogFragment) preferenceFragmentCompat.getFragmentManager().findFragmentByTag(FRAGMENT_TAG_DIALOG);
+        if (dialogFragment != null) return false;
+
         // Hack to allow a MultiSelectListPreference
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH
                 && preference instanceof MultiSelectListPreference) {
-            if (preferenceFragmentCompat.getFragmentManager().findFragmentByTag(FRAGMENT_TAG_DIALOG) == null) {
-                MultiSelectListPreferenceDialogFragmentCompat dialogFragment = MultiSelectListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
-                dialogFragment.setTargetFragment(preferenceFragmentCompat, 0);
-                dialogFragment.show(preferenceFragmentCompat.getFragmentManager(), FRAGMENT_TAG_DIALOG);
-            }
-            return true;
+            dialogFragment = MultiSelectListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
         }
         // Hack to allow a PasswordPreference
         else if (preference instanceof PasswordPreference) {
-            if (preferenceFragmentCompat.getFragmentManager().findFragmentByTag(FRAGMENT_TAG_DIALOG) == null) {
-                PasswordPreferenceDialogFragmentCompat dialogFragment = PasswordPreferenceDialogFragmentCompat.newInstance(preference.getKey());
-                dialogFragment.setTargetFragment(preferenceFragmentCompat, 0);
-                dialogFragment.show(preferenceFragmentCompat.getFragmentManager(), FRAGMENT_TAG_DIALOG);
-            }
-            return true;
+            dialogFragment = PasswordPreferenceDialogFragmentCompat.newInstance(preference.getKey());
         }
         // Hack to make the EditTextPreference themed.
         else if (preference instanceof EditTextPreference) {
-            if (preferenceFragmentCompat.getFragmentManager().findFragmentByTag(FRAGMENT_TAG_DIALOG) == null) {
-                EditTextPreferenceDialogFragmentCompat dialogFragment = EditTextPreferenceDialogFragmentCompat.newInstance(preference.getKey());
-                dialogFragment.setTargetFragment(preferenceFragmentCompat, 0);
-                dialogFragment.show(preferenceFragmentCompat.getFragmentManager(), FRAGMENT_TAG_DIALOG);
-            }
-            return true;
-
+            dialogFragment = EditTextPreferenceDialogFragmentCompat.newInstance(preference.getKey());
         }
+
+        // We've created our own fragment:
+        if (dialogFragment != null) {
+            dialogFragment.setTargetFragment(preferenceFragmentCompat, 0);
+            dialogFragment.show(preferenceFragmentCompat.getFragmentManager(), FRAGMENT_TAG_DIALOG);
+            return true;
+        }
+
         return false;
     }
 }
