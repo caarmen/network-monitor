@@ -225,9 +225,11 @@ public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (
                 startActivity(intent);
             }
         } else if (requestCode == ACTIVITY_REQUEST_CODE_RINGTONE) {
-            Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-            NetMonPreferences.getInstance(this).setNotificationSoundUri(uri);
-            updatePreferenceSummary(NetMonPreferences.PREF_NOTIFICATION_RINGTONE, R.string.pref_summary_notification_ringtone);
+            if (resultCode == Activity.RESULT_OK) {
+                Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                NetMonPreferences.getInstance(this).setNotificationSoundUri(uri);
+                updatePreferenceSummary(NetMonPreferences.PREF_NOTIFICATION_RINGTONE, R.string.pref_summary_notification_ringtone);
+            }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
