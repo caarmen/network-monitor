@@ -54,7 +54,6 @@ limitations under the License.
             android:summary="@string/pref_summary_cell_id_format"
             android:title="@string/pref_title_cell_id_format" />
 
-        <!--suppress AndroidElementNotAllowed -->
         <EditTextPreference
             android:defaultValue="173.194.45.41"
             android:hint="173.194.45.41"
@@ -98,14 +97,14 @@ limitations under the License.
             android:summary="@string/pref_summary_notification_enabled"
             android:title="@string/pref_title_notification_enabled" />
 
-        <!--RingtonePreference
+        <Preference
             android:icon="@drawable/ic_pref_notification_ringtone"
             android:key="PREF_NOTIFICATION_RINGTONE"
             android:ringtoneType="notification"
             android:showDefault="true"
             android:showSilent="true"
             android:summary="@string/pref_summary_notification_ringtone"
-            android:title="@string/pref_title_notification_ringtone" /-->
+            android:title="@string/pref_title_notification_ringtone"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_database" >
         <Preference
