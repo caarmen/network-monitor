@@ -56,6 +56,7 @@ limitations under the License.
     <string name="device_latitude">Latitude de l\'appareil</string>
     <string name="device_longitude">Longitude de l\'appareil</string>
     <string name="device_position_accuracy">Précision de la position de l\'appareil (m)</string>
+    <string name="device_speed">Vitesse de l\'appareil (m/s)</string>
     <string name="cell_signal_strength">Force du signal mobile (0&#8211;4)</string>
     <string name="cell_signal_strength_dbm">Force du signal mobile (dBm)</string>
     <string name="cell_asu_level">Niveau ASU</string>

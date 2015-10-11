@@ -24,16 +24,16 @@
  */
 package ca.rmen.android.networkmonitor.provider;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.Constants.ConnectionType;
@@ -44,7 +44,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
     public static final String DATABASE_NAME = "networkmonitor.db";
-    private static final int DATABASE_VERSION = 15;
+    private static final int DATABASE_VERSION = 16;
 
     // @formatter:off
     private static final String SQL_CREATE_TABLE_NETWORKMONITOR = "CREATE TABLE IF NOT EXISTS "
@@ -82,6 +82,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.DEVICE_LATITUDE + " REAL, "
             + NetMonColumns.DEVICE_LONGITUDE + " REAL, "
             + NetMonColumns.DEVICE_POSITION_ACCURACY + " REAL, "
+            + NetMonColumns.DEVICE_SPEED + " REAL, "
             + NetMonColumns.CELL_SIGNAL_STRENGTH + " INTEGER, "
             + NetMonColumns.CELL_SIGNAL_STRENGTH_DBM + " INTEGER, "
             + NetMonColumns.CELL_ASU_LEVEL + " INTEGER, "
@@ -191,6 +192,9 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V15_SERVICE_STATE = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
             + NetMonColumns.SERVICE_STATE + " TEXT";
 
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V16_DEVICE_SPEED = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.DEVICE_SPEED + " REAL";
+
     private static final String SQL_CREATE_VIEW_CONNECTION_TEST_STATS = "CREATE VIEW " + ConnectionTestStatsColumns.VIEW_NAME + " AS "
             + buildConnectionTestQuery();
 
@@ -270,6 +274,10 @@ public class NetMonDatabase extends SQLiteOpenHelper {
 
         if (oldVersion < 15) {
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V15_SERVICE_STATE);
+        }
+
+        if (oldVersion < 16) {
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V16_DEVICE_SPEED);
         }
     }
 

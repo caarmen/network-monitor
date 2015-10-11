@@ -81,6 +81,7 @@ public class GmsDeviceLocationDataSource implements NetMonDataSource {
             values.put(NetMonColumns.DEVICE_LATITUDE, mMostRecentLocation.getLatitude());
             values.put(NetMonColumns.DEVICE_LONGITUDE, mMostRecentLocation.getLongitude());
             values.put(NetMonColumns.DEVICE_POSITION_ACCURACY, mMostRecentLocation.getAccuracy());
+            values.put(NetMonColumns.DEVICE_SPEED, mMostRecentLocation.getSpeed());
         }
         return values;
     }
