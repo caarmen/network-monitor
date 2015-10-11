@@ -76,7 +76,7 @@ limitations under the License.
             android:key="PREF_EMAIL_USER"
             android:summary="@string/pref_summary_email_user"
             android:title="@string/pref_title_email_user" />
-        <EditTextPreferenceFix
+        <EditTextPreference
             android:defaultValue=""
             android:icon="@drawable/ic_pref_email_password"
             android:inputType="textPassword"
