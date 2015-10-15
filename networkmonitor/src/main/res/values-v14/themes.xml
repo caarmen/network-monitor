@@ -35,7 +35,7 @@ limitations under the License.
             backward-compatibility can go here.
         -->
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-        <item name="android:activatedBackgroundIndicator">@drawable/netmon_list_selector_holo_light</item>
+        <item name="android:selectableItemBackground">@drawable/netmon_list_selector_holo_light</item>
     </style>
 
 </resources>
