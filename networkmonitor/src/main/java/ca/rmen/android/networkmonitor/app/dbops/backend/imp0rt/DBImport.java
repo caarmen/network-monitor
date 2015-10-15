@@ -23,20 +23,21 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend.imp0rt;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderOperation.Builder;
 import android.content.Context;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.RemoteException;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
@@ -82,7 +83,7 @@ public class DBImport implements Task<Boolean> {
                     tempDb.delete();
                 }
             }
-        } catch (RemoteException | OperationApplicationException | IOException e) {
+        } catch (RemoteException | OperationApplicationException | SQLException | IOException e) {
             Log.w(TAG, "Error importing the db: " + e.getMessage(), e);
             return false;
         }
