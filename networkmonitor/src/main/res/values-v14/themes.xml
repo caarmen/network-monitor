@@ -8,8 +8,7 @@ This source is part of the
                              /___/
 repository.
 
-Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
-Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+Copyright (C) 2015 Carmen Alvarez (c@rmen.ca)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -35,14 +34,8 @@ limitations under the License.
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         -->
-        <item name="android:listChoiceBackgroundIndicator">@drawable/netmon_list_selector_holo_light</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="android:activatedBackgroundIndicator">@drawable/netmon_list_selector_holo_light</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-    </style>
-
-    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">@color/netmon_color</item>
-        <item name="android:listChoiceBackgroundIndicator">@drawable/netmon_list_selector_holo_light</item>
     </style>
 
 </resources>

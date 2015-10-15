@@ -23,8 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
-import java.util.Arrays;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -35,6 +33,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
+
+import java.util.Arrays;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
@@ -52,6 +52,8 @@ import ca.rmen.android.networkmonitor.util.Log;
  * Since AdvancedPreferencesActivity is a PreferenceActivity, which extends Activity instead of FragmentActivity, we need this "helper" activity for preference
  * functions which require a FragmentActivity.
  * This activity has a transparent theme. The only thing the user will see will be alert dialogs that this activity creates.
+ *
+ * TODO: We no longer use PreferenceActivities, so we should be able to remove this class.
  */
 public class PreferenceFragmentActivity extends AppCompatActivity implements DialogItemListener, DialogButtonListener, OnDismissListener, OnCancelListener,
         InfoDialogListener { // NO_UCD (use default)

@@ -21,18 +21,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.3.1'
-    }
-}
+package ca.rmen.android.networkmonitor.app.prefs.hack;
 
-allprojects {
-    repositories {
-        jcenter()
+import android.content.Context;
+import android.support.v7.preference.EditTextPreference;
+import android.util.AttributeSet;
+
+
+public class PasswordPreference extends EditTextPreference {
+    public PasswordPreference(Context context) {
+        super(context);
+    }
+
+    public PasswordPreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public PasswordPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    public PasswordPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
     }
 }

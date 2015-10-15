@@ -24,49 +24,53 @@
  */
 package ca.rmen.android.networkmonitor.app.email;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.MultiSelectListPreference;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.PreferenceManager;
+import android.support.v14.preference.MultiSelectListPreference;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.EditTextPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailConfig;
-import ca.rmen.android.networkmonitor.app.prefs.AppCompatPreferenceActivity;
+import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
 import ca.rmen.android.networkmonitor.util.Log;
 
-@TargetApi(11)
-public class EmailPreferencesActivity extends AppCompatPreferenceActivity { // NO_UCD (use default)
+@TargetApi(14)
+public class EmailPreferencesActivity extends AppCompatActivity { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + EmailPreferencesActivity.class.getSimpleName();
 
+    private NetMonPreferenceFragmentCompat mPreferenceFragment;
 
-    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        PreferenceManager.setDefaultValues(this, R.xml.email_preferences, false);
-        addPreferencesFromResource(R.xml.email_preferences);
+        mPreferenceFragment = NetMonPreferenceFragmentCompat.newInstance(R.xml.email_preferences);
+        getSupportFragmentManager().
+                beginTransaction().
+                replace(android.R.id.content, mPreferenceFragment).
+                commit();
+        getSupportFragmentManager().executePendingTransactions();
         updatePreferenceSummary(EmailPreferences.PREF_EMAIL_REPORT_FORMATS, R.string.pref_summary_email_report_formats);
         updatePreferenceSummary(EmailPreferences.PREF_EMAIL_RECIPIENTS, R.string.pref_summary_email_recipients);
         updatePreferenceSummary(EmailPreferences.PREF_EMAIL_SERVER, R.string.pref_summary_email_server);
         updatePreferenceSummary(EmailPreferences.PREF_EMAIL_PORT, R.string.pref_summary_email_port);
         updatePreferenceSummary(EmailPreferences.PREF_EMAIL_USER, R.string.pref_summary_email_user);
         updatePreferenceSummary(EmailPreferences.PREF_EMAIL_LAST_EMAIL_SENT, R.string.pref_summary_email_last_email_sent);
-        findPreference(EmailPreferences.PREF_EMAIL_REPORT_FORMATS).setOnPreferenceChangeListener(mOnPreferenceChangeListener);
+        mPreferenceFragment.findPreference(EmailPreferences.PREF_EMAIL_REPORT_FORMATS).setOnPreferenceChangeListener(mOnPreferenceChangeListener);
     }
 
     @Override
@@ -133,8 +137,7 @@ public class EmailPreferencesActivity extends AppCompatPreferenceActivity { // N
     }
 
     private void updatePreferenceSummary(CharSequence key, int summaryResId) {
-        @SuppressWarnings("deprecation")
-        Preference pref = getPreferenceManager().findPreference(key);
+        Preference pref = mPreferenceFragment.findPreference(key);
         CharSequence value;
         if (key.equals(EmailPreferences.PREF_EMAIL_LAST_EMAIL_SENT)) {
             long lastEmailSent = EmailPreferences.getInstance(this).getLastEmailSent();
@@ -155,7 +158,7 @@ public class EmailPreferencesActivity extends AppCompatPreferenceActivity { // N
      * Because of this, we set a listener directly on the MultiSelectListPreference.
      * http://stackoverflow.com/questions/22388683/multiselectlistpreference-onsharedpreferencechanged-not-called-after-first-time
      */
-    private final OnPreferenceChangeListener mOnPreferenceChangeListener = new OnPreferenceChangeListener() {
+    private final Preference.OnPreferenceChangeListener mOnPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
 
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {

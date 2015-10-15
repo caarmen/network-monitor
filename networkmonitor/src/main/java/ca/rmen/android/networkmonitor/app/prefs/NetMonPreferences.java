@@ -312,6 +312,14 @@ public class NetMonPreferences {
     }
 
     /**
+     * Set the Uri of the sound to play when a notification is created.
+     */
+    public void setNotificationSoundUri(Uri uri) {
+        if (uri == null) setStringPreference(PREF_NOTIFICATION_RINGTONE, null);
+        else setStringPreference(PREF_NOTIFICATION_RINGTONE, uri.toString());
+    }
+
+    /**
      * Set the ringtone Uri to the default ringtone Uri.
      */
     public void setDefaultNotificationSoundUri() {

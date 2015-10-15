@@ -29,14 +29,15 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.Preference;
-import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.EditTextPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceManager;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
-import ca.rmen.android.networkmonitor.app.prefs.AppCompatPreferenceActivity;
+import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
 import ca.rmen.android.networkmonitor.util.FileUtil;
@@ -45,21 +46,25 @@ import ca.rmen.android.networkmonitor.util.Log;
 /**
  * Preferences for the speed test.
  */
-public class SpeedTestPreferencesActivity extends AppCompatPreferenceActivity { // NO_UCD (use default)
+public class SpeedTestPreferencesActivity extends AppCompatActivity { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + SpeedTestPreferencesActivity.class.getSimpleName();
 
     private SpeedTestPreferences mSpeedTestPrefs;
+    private NetMonPreferenceFragmentCompat mPreferenceFragment;
 
-    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        PreferenceManager.setDefaultValues(this, R.xml.speed_test_preferences, false);
-        addPreferencesFromResource(R.xml.speed_test_preferences);
+        mPreferenceFragment = NetMonPreferenceFragmentCompat.newInstance(R.xml.speed_test_preferences);
+        getSupportFragmentManager().
+                beginTransaction().
+                replace(android.R.id.content, mPreferenceFragment).
+                commit();
+        getSupportFragmentManager().executePendingTransactions();
         mSpeedTestPrefs = SpeedTestPreferences.getInstance(this);
-        Preference prefSpeedTestEnabled = findPreference(SpeedTestPreferences.PREF_SPEED_TEST_ENABLED);
+        Preference prefSpeedTestEnabled = mPreferenceFragment.findPreference(SpeedTestPreferences.PREF_SPEED_TEST_ENABLED);
         if (NetMonPreferences.getInstance(this).isFastPollingEnabled())
             prefSpeedTestEnabled.setEnabled(false);
         SpeedTestResult result = mSpeedTestPrefs.getLastDownloadResult();
@@ -136,8 +141,7 @@ public class SpeedTestPreferencesActivity extends AppCompatPreferenceActivity { 
     };
 
     private void updatePreferenceSummary(CharSequence key, int summaryResId) {
-        @SuppressWarnings("deprecation")
-        Preference pref = getPreferenceManager().findPreference(key);
+        Preference pref = mPreferenceFragment.findPreference(key);
         if (pref instanceof EditTextPreference) {
             CharSequence value = ((EditTextPreference) pref).getText();
             String summary = getString(summaryResId, value);
@@ -154,8 +158,7 @@ public class SpeedTestPreferencesActivity extends AppCompatPreferenceActivity { 
         String url = mSpeedTestPrefs.getDownloadConfig().url;
         url = ellipsize(url);
         String summary = getString(R.string.pref_summary_speed_test_download_url, url, size);
-        @SuppressWarnings("deprecation")
-        Preference pref = getPreferenceManager().findPreference(SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL);
+        Preference pref = mPreferenceFragment.findPreference(SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL);
         pref.setSummary(summary);
     }
 
@@ -177,9 +180,8 @@ public class SpeedTestPreferencesActivity extends AppCompatPreferenceActivity { 
 
 
             @Override
-            @SuppressWarnings("deprecation")
             protected void onPreExecute() {
-                Preference pref = getPreferenceManager().findPreference(SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL);
+                Preference pref = mPreferenceFragment.findPreference(SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL);
                 String summary = getString(R.string.pref_summary_speed_test_download_url, config.url, "?");
                 pref.setSummary(summary);
             }

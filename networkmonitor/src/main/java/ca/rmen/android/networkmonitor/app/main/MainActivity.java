@@ -31,33 +31,37 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
-import android.preference.PreferenceManager;
-
-import org.jraf.android.backport.switchwidget.SwitchPreference;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
+import android.support.v7.preference.SwitchPreferenceCompat;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
-import ca.rmen.android.networkmonitor.app.prefs.AppCompatPreferenceActivity;
+import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.service.NetMonService;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
 import ca.rmen.android.networkmonitor.util.Log;
 
 
-public class MainActivity extends AppCompatPreferenceActivity {
+public class MainActivity extends AppCompatActivity {
     private static final String TAG = Constants.TAG + MainActivity.class.getSimpleName();
     private GPSVerifier mGPSVerifier;
+    private NetMonPreferenceFragmentCompat mPreferenceFragment;
 
-    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPreferenceFragment = NetMonPreferenceFragmentCompat.newInstance(R.xml.preferences);
+        getSupportFragmentManager().
+                beginTransaction().
+                replace(android.R.id.content, mPreferenceFragment).
+                commit();
+        getSupportFragmentManager().executePendingTransactions();
         mGPSVerifier = new GPSVerifier(this);
         getSupportActionBar().setIcon(R.drawable.ic_launcher);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        addPreferencesFromResource(R.xml.preferences);
         if (NetMonPreferences.getInstance(this).isServiceEnabled()) startService(new Intent(MainActivity.this, NetMonService.class));
         // Use strict mode for monkey tests. We can't enable strict mode for normal use
         // because, when sharing (exporting), the mail app may read the attachment in
@@ -80,12 +84,11 @@ public class MainActivity extends AppCompatPreferenceActivity {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void onWindowFocusChanged(boolean hasFocus) {
         if (hasFocus) {
             // Refresh the 'enabled' preference view
             boolean enabled = NetMonPreferences.getInstance(this).isServiceEnabled();
-            ((SwitchPreference) findPreference(NetMonPreferences.PREF_SERVICE_ENABLED)).setChecked(enabled);
+            ((SwitchPreferenceCompat) mPreferenceFragment.findPreference(NetMonPreferences.PREF_SERVICE_ENABLED)).setChecked(enabled);
         }
     }
 

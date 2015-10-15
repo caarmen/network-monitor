@@ -34,12 +34,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.EditTextPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import ca.rmen.android.networkmonitor.Constants;
@@ -49,13 +47,15 @@ import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.LocationFetchi
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
 import ca.rmen.android.networkmonitor.util.Log;
 
-public class AdvancedPreferencesActivity extends AppCompatPreferenceActivity { // NO_UCD (use default)
+public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + AdvancedPreferencesActivity.class.getSimpleName();
     private static final int ACTIVITY_REQUEST_CODE_IMPORT = 1;
+    private static final int ACTIVITY_REQUEST_CODE_RINGTONE = 2;
     private static final String PREF_IMPORT = "PREF_IMPORT";
     private static final String PREF_COMPRESS = "PREF_COMPRESS";
 
-    @SuppressWarnings("deprecation")
+    private NetMonPreferenceFragmentCompat mPreferenceFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,21 +67,36 @@ public class AdvancedPreferencesActivity extends AppCompatPreferenceActivity { /
         if (!sharedPrefs.contains(NetMonPreferences.PREF_NOTIFICATION_RINGTONE)) NetMonPreferences.getInstance(this).setDefaultNotificationSoundUri();
 
         PreferenceManager.setDefaultValues(this, R.xml.adv_preferences, false);
-        addPreferencesFromResource(R.xml.adv_preferences);
+        mPreferenceFragment = NetMonPreferenceFragmentCompat.newInstance(R.xml.adv_preferences);
+        getSupportFragmentManager().
+                beginTransaction().
+                replace(android.R.id.content, mPreferenceFragment).
+                commit();
+        getSupportFragmentManager().executePendingTransactions();
         updatePreferenceSummary(NetMonPreferences.PREF_TEST_SERVER, R.string.pref_summary_test_server);
         updatePreferenceSummary(NetMonPreferences.PREF_NOTIFICATION_RINGTONE, R.string.pref_summary_notification_ringtone);
-        Preference enableConnectionTest = getPreferenceManager().findPreference(NetMonPreferences.PREF_ENABLE_CONNECTION_TEST);
+        Preference enableConnectionTest = mPreferenceFragment.findPreference(NetMonPreferences.PREF_ENABLE_CONNECTION_TEST);
         if (prefs.isFastPollingEnabled()) enableConnectionTest.setEnabled(false);
-        Preference testServerPreference = getPreferenceManager().findPreference(NetMonPreferences.PREF_TEST_SERVER);
-        testServerPreference.setOnPreferenceChangeListener(mOnPreferenceChangeListener);
-        Preference importPreference = getPreferenceManager().findPreference(PREF_IMPORT);
-        importPreference.setOnPreferenceClickListener(mOnPreferenceClickListener);
-        Preference compressPreference = getPreferenceManager().findPreference(PREF_COMPRESS);
-        compressPreference.setOnPreferenceClickListener(mOnPreferenceClickListener);
-        Preference emailPreference = findPreference(EmailPreferences.PREF_EMAIL_REPORTS);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+        setOnPreferenceChangeListeners(NetMonPreferences.PREF_TEST_SERVER);
+        setOnPreferenceClickListeners(PREF_IMPORT, PREF_COMPRESS, NetMonPreferences.PREF_NOTIFICATION_RINGTONE);
+        Preference emailPreference = mPreferenceFragment.findPreference(EmailPreferences.PREF_EMAIL_REPORTS);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             emailPreference.setEnabled(false);
             emailPreference.setSummary(R.string.pref_email_unavailable);
+        }
+    }
+
+    private void setOnPreferenceClickListeners(String... keys) {
+        for (String key : keys) {
+            Preference preference = mPreferenceFragment.findPreference(key);
+            preference.setOnPreferenceClickListener(mOnPreferenceClickListener);
+        }
+    }
+
+    private void setOnPreferenceChangeListeners(String... keys) {
+        for (String key : keys) {
+            Preference preference = mPreferenceFragment.findPreference(key);
+            preference.setOnPreferenceChangeListener(mOnPreferenceChangeListener);
         }
     }
 
@@ -121,8 +136,7 @@ public class AdvancedPreferencesActivity extends AppCompatPreferenceActivity { /
     };
 
     private void updatePreferenceSummary(final String key, final int summaryResId) {
-        @SuppressWarnings("deprecation")
-        final Preference pref = getPreferenceManager().findPreference(key);
+        final Preference pref = mPreferenceFragment.findPreference(key);
         // RingtoneManager.getRingtone() actually does some disk reads.
         // Discovered this with StrictMode and monkey.
         // Ugly code (async task) to make it easier to find real StrictMode violations...
@@ -132,7 +146,7 @@ public class AdvancedPreferencesActivity extends AppCompatPreferenceActivity { /
             protected CharSequence doInBackground(Void... params) {
                 if (pref instanceof EditTextPreference) {
                     return ((EditTextPreference) pref).getText();
-                } else if (pref instanceof RingtonePreference) {
+                } else if (pref.getKey().equals(NetMonPreferences.PREF_NOTIFICATION_RINGTONE)) {
                     Uri ringtoneUri = NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getNotificationSoundUri();
                     if (ringtoneUri == null) {
                         return getString(R.string.pref_value_notification_ringtone_silent);
@@ -155,7 +169,7 @@ public class AdvancedPreferencesActivity extends AppCompatPreferenceActivity { /
         }.execute();
     }
 
-    private final OnPreferenceClickListener mOnPreferenceClickListener = new OnPreferenceClickListener() {
+    private final Preference.OnPreferenceClickListener mOnPreferenceClickListener = new Preference.OnPreferenceClickListener() {
 
         @Override
         public boolean onPreferenceClick(Preference preference) {
@@ -169,12 +183,23 @@ public class AdvancedPreferencesActivity extends AppCompatPreferenceActivity { /
                 Intent intent = new Intent(PreferenceFragmentActivity.ACTION_COMPRESS);
                 startActivity(intent);
 
+            } else if (NetMonPreferences.PREF_NOTIFICATION_RINGTONE.equals(preference.getKey())) {
+                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, NetMonPreferences.getInstance(getApplicationContext()).getNotificationSoundUri());
+
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.pref_title_notification_ringtone));
+                startActivityForResult(intent, ACTIVITY_REQUEST_CODE_RINGTONE);
             }
             return false;
         }
     };
 
-    private final OnPreferenceChangeListener mOnPreferenceChangeListener = new OnPreferenceChangeListener() {
+    private final Preference.OnPreferenceChangeListener mOnPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
 
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -198,6 +223,12 @@ public class AdvancedPreferencesActivity extends AppCompatPreferenceActivity { /
                 Intent intent = new Intent(PreferenceFragmentActivity.ACTION_IMPORT);
                 intent.putExtra(PreferenceFragmentActivity.EXTRA_IMPORT_URI, data.getData());
                 startActivity(intent);
+            }
+        } else if (requestCode == ACTIVITY_REQUEST_CODE_RINGTONE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                NetMonPreferences.getInstance(this).setNotificationSoundUri(uri);
+                updatePreferenceSummary(NetMonPreferences.PREF_NOTIFICATION_RINGTONE, R.string.pref_summary_notification_ringtone);
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);

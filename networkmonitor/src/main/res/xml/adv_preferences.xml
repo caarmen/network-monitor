@@ -26,8 +26,7 @@ limitations under the License.
     android:key="preferenceScreen" >
 
     <PreferenceCategory android:title="@string/pref_category_report_content" >
-        <!--suppress AndroidElementNotAllowed -->
-        <org.jraf.android.backport.switchwidget.SwitchPreference
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:icon="@drawable/ic_pref_enable_connection_test"
             android:key="PREF_ENABLE_CONNECTION_TEST"
@@ -46,7 +45,7 @@ limitations under the License.
             <intent android:action="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferencesActivity" />
         </Preference>
 
-        <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
+        <ListPreference
             android:defaultValue="decimal"
             android:entries="@array/preferences_cell_id_format_labels"
             android:entryValues="@array/preferences_cell_id_format_values"
@@ -55,8 +54,7 @@ limitations under the License.
             android:summary="@string/pref_summary_cell_id_format"
             android:title="@string/pref_title_cell_id_format" />
 
-        <!--suppress AndroidElementNotAllowed -->
-        <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
+        <EditTextPreference
             android:defaultValue="173.194.45.41"
             android:hint="173.194.45.41"
             android:icon="@drawable/ic_pref_server"
@@ -66,7 +64,7 @@ limitations under the License.
             android:title="@string/pref_title_test_server" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_performance" >
-        <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
+        <ListPreference
             android:defaultValue="0"
             android:entries="@array/preferences_wake_interval_labels"
             android:entryValues="@array/preferences_wake_interval_values"
@@ -74,7 +72,7 @@ limitations under the License.
             android:key="PREF_WAKE_INTERVAL"
             android:summary="@string/pref_summary_wake_interval"
             android:title="@string/pref_title_wake_interval" />
-        <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
+        <ListPreference
             android:defaultValue="ExecutorServiceScheduler"
             android:entries="@array/preferences_scheduler_labels"
             android:entryValues="@array/preferences_scheduler_values"
@@ -82,7 +80,7 @@ limitations under the License.
             android:key="PREF_SCHEDULER"
             android:summary="@string/pref_summary_scheduler"
             android:title="@string/pref_title_scheduler" />
-        <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
+        <ListPreference
             android:defaultValue="SAVE_POWER"
             android:entries="@array/preferences_location_fetching_strategy_labels"
             android:entryValues="@array/preferences_location_fetching_strategy_values"
@@ -92,22 +90,21 @@ limitations under the License.
             android:title="@string/pref_title_location_fetching_strategy" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_notifications" >
-        <!--suppress AndroidElementNotAllowed -->
-        <org.jraf.android.backport.switchwidget.SwitchPreference
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:icon="@drawable/ic_pref_notification_enabled"
             android:key="PREF_NOTIFICATION_ENABLED"
             android:summary="@string/pref_summary_notification_enabled"
             android:title="@string/pref_title_notification_enabled" />
 
-        <RingtonePreference
+        <Preference
             android:icon="@drawable/ic_pref_notification_ringtone"
             android:key="PREF_NOTIFICATION_RINGTONE"
             android:ringtoneType="notification"
             android:showDefault="true"
             android:showSilent="true"
             android:summary="@string/pref_summary_notification_ringtone"
-            android:title="@string/pref_title_notification_ringtone" />
+            android:title="@string/pref_title_notification_ringtone"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_database" >
         <Preference
@@ -122,7 +119,7 @@ limitations under the License.
             android:summary="@string/pref_summary_compress"
             android:title="@string/pref_title_compress" >
         </Preference>
-        <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
+        <ListPreference
             android:defaultValue="-1"
             android:entries="@array/preferences_filter_record_count_labels"
             android:entryValues="@array/preferences_filter_record_count_values"

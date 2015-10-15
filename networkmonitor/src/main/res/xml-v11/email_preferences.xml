@@ -26,7 +26,7 @@ limitations under the License.
     android:key="preferenceScreen" >
 
     <PreferenceCategory android:title="@string/pref_category_email_sending_settings" >
-        <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
+        <ListPreference
             android:defaultValue="0"
             android:entries="@array/preferences_email_report_interval_labels"
             android:entryValues="@array/preferences_email_report_interval_values"
@@ -35,8 +35,7 @@ limitations under the License.
             android:summary="@string/pref_summary_email_report_interval"
             android:title="@string/pref_title_email_report_interval" />
 
-        <!--suppress AndroidElementNotAllowed -->
-        <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
+        <EditTextPreference
             android:defaultValue=""
             android:hint="@string/pref_hint_email_recipients"
             android:icon="@drawable/ic_pref_email_recipients"
@@ -45,8 +44,7 @@ limitations under the License.
             android:summary="@string/pref_summary_email_recipients"
             android:title="@string/pref_title_email_recipients" />
 
-        <!--suppress AndroidElementNotAllowed -->
-        <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference
+        <android.support.v14.preference.MultiSelectListPreference
             android:defaultValue="@array/empty_array"
             android:entries="@array/preferences_email_report_formats_labels"
             android:entryValues="@array/preferences_email_report_formats_values"
@@ -56,24 +54,21 @@ limitations under the License.
             android:title="@string/pref_title_email_report_formats" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_email_server_settings" >
-        <!--suppress AndroidElementNotAllowed -->
-        <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
+        <EditTextPreference
             android:defaultValue="smtp.gmail.com"
             android:hint="@string/pref_hint_email_server"
             android:icon="@drawable/ic_pref_server"
             android:key="PREF_EMAIL_SERVER"
             android:summary="@string/pref_summary_email_server"
             android:title="@string/pref_title_email_server" />
-        <!--suppress AndroidElementNotAllowed -->
-        <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
+        <EditTextPreference
             android:defaultValue="587"
             android:hint="@string/pref_hint_email_port"
             android:icon="@drawable/ic_pref_server"
             android:key="PREF_EMAIL_PORT"
             android:summary="@string/pref_summary_email_port"
             android:title="@string/pref_title_email_port" />
-        <!--suppress AndroidElementNotAllowed -->
-        <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
+        <EditTextPreference
             android:defaultValue=""
             android:hint="@string/pref_hint_email_user"
             android:icon="@drawable/ic_pref_email_user"
@@ -81,15 +76,13 @@ limitations under the License.
             android:key="PREF_EMAIL_USER"
             android:summary="@string/pref_summary_email_user"
             android:title="@string/pref_title_email_user" />
-        <!--suppress AndroidElementNotAllowed -->
-        <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
+        <ca.rmen.android.networkmonitor.app.prefs.hack.PasswordPreference
             android:defaultValue=""
             android:icon="@drawable/ic_pref_email_password"
-            android:inputType="textPassword"
             android:key="PREF_EMAIL_PASSWORD"
             android:title="@string/pref_title_email_password" />
 
-        <ca.rmen.android.networkmonitor.app.prefs.ThemedListPreference
+        <ListPreference
             android:defaultValue="TLS"
             android:entries="@array/preferences_email_security_labels"
             android:entryValues="@array/preferences_email_security_values"
