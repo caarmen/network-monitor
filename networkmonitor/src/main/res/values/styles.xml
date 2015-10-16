@@ -35,7 +35,7 @@ limitations under the License.
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="NetMonPreferenceCategoryStyle">
+    <style name="NetMonPreferenceCategoryStyle" parent="Preference.Category">
         <item name="android:layout">@layout/netmon_preference_category</item>
     </style>
 

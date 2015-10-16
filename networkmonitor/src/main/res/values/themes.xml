@@ -35,8 +35,7 @@ limitations under the License.
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         -->
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-        <item name="android:preferenceCategoryStyle">@style/NetMonPreferenceCategoryStyle</item>
+        <item name="preferenceTheme">@style/NetMonPreferenceThemeOverlay</item>
     </style>
 
     <!-- Application theme. -->
@@ -83,6 +82,10 @@ limitations under the License.
     </style>
 
     <style name="NetMonNoDisplayTheme" parent="@style/NetMonNoDisplayBaseTheme">
+    </style>
+
+    <style name="NetMonPreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
+        <item name="preferenceCategoryStyle">@style/NetMonPreferenceCategoryStyle</item>
     </style>
 
 </resources>
