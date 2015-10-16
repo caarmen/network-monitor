@@ -26,7 +26,6 @@ package ca.rmen.android.networkmonitor.app.prefs.hack;
 import android.os.Build;
 import android.support.v14.preference.MultiSelectListPreference;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
@@ -54,10 +53,6 @@ public class PreferenceFragmentCompatHack {
         // Hack to allow a PasswordPreference
         else if (preference instanceof PasswordPreference) {
             dialogFragment = PasswordPreferenceDialogFragmentCompat.newInstance(preference.getKey());
-        }
-        // Hack to make the EditTextPreference themed.
-        else if (preference instanceof EditTextPreference) {
-            dialogFragment = EditTextPreferenceDialogFragmentCompat.newInstance(preference.getKey());
         }
 
         // We've created our own fragment:

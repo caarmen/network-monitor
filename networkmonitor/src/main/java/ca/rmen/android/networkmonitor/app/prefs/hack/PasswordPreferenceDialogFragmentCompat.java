@@ -24,6 +24,7 @@
 package ca.rmen.android.networkmonitor.app.prefs.hack;
 
 import android.os.Bundle;
+import android.support.v7.preference.EditTextPreferenceDialogFragmentCompat;
 import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
@@ -42,9 +43,11 @@ public class PasswordPreferenceDialogFragmentCompat extends EditTextPreferenceDi
         fragment.setArguments(b);
         return fragment;
     }
+
     @Override
-    protected void onAddEditTextToDialogView(View dialogView, EditText editText) {
-        super.onAddEditTextToDialogView(dialogView, editText);
+    protected void onBindDialogView(View view) {
+        super.onBindDialogView(view);
+        EditText editText = (EditText) view.findViewById(android.R.id.edit);
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
     }
 }
