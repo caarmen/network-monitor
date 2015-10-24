@@ -123,6 +123,11 @@ public abstract class DBOpAsyncTask<T> extends AsyncTask<Void, Integer, T> {
                 }
             });
         }
+
+        @Override
+        public void onComplete(int total) {
+
+        }
     };
 
 }

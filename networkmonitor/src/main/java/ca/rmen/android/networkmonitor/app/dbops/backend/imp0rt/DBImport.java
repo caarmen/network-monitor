@@ -131,14 +131,17 @@ public class DBImport implements Task<Boolean> {
                         if (operations.size() >= 100) {
                             mContext.getContentResolver().applyBatch(NetMonProvider.AUTHORITY, operations);
                             operations.clear();
-                            if (listener != null) listener.onProgress(c.getPosition(), count);
                         }
+                        if (listener != null) listener.onProgress(c.getPosition(), count);
                     } while (c.moveToNext());
                     if (operations.size() > 0) mContext.getContentResolver().applyBatch(NetMonProvider.AUTHORITY, operations);
                 }
+                if (listener != null) listener.onComplete(count);
+                return;
             } finally {
                 c.close();
             }
         }
+        if (listener != null) listener.onComplete(0);
     }
 }

@@ -139,6 +139,7 @@ abstract class TableFileExport extends FileExport {
 
                 // Write the footer and clean up the file.
                 writeFooter();
+                if (listener != null) listener.onComplete(rowsAvailable);
                 return mFile;
             } catch (IOException e) {
                 Log.e(TAG, "export Could not export file " + mFile + ": " + e.getMessage(), e);
@@ -146,6 +147,7 @@ abstract class TableFileExport extends FileExport {
                 c.close();
             }
         }
+        if (listener != null) listener.onComplete(0);
         return null;
     }
 

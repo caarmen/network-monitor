@@ -23,12 +23,10 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.ui;
 
-import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
+import android.content.Context;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.dbops.backend.clean.DBCompress;
+import ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService;
 import ca.rmen.android.networkmonitor.util.Log;
 
 public class Compress {
@@ -38,20 +36,9 @@ public class Compress {
     /**
      * Compress the database. The progress will be shown in a progress dialog on the given activity.
      */
-    public static void compress(final FragmentActivity activity) {
+    public static void compress(final Context context) {
         Log.v(TAG, "compress");
-        DBCompress dbCompress = new DBCompress(activity);
-        DBOpAsyncTask<Integer> task = new DBOpAsyncTask<Integer>(activity, dbCompress, null) {
-
-            @Override
-            protected void onPostExecute(Integer result) {
-                String toastText = result >= 0 ? activity.getString(R.string.compress_successful, result) : activity.getString(R.string.compress_failed);
-                Toast.makeText(activity, toastText, Toast.LENGTH_SHORT).show();
-                super.onPostExecute(result);
-            }
-        };
-        task.execute();
-
+        DBOpIntentService.startActionCompress(context);
     }
 
 }

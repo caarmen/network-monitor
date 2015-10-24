@@ -133,7 +133,7 @@ public class KMLExport extends FileExport {
                 // Write the footer and clean up the file.
                 kmlWriter.writeFooter();
                 kmlWriter.close();
-
+                if (listener != null) listener.onComplete(rowCount);
                 return mFile;
             } catch (FileNotFoundException e) {
                 Log.e(TAG, "Could not export to file " + mFile + ": " + e.getMessage(), e);
@@ -141,6 +141,7 @@ public class KMLExport extends FileExport {
                 c.close();
             }
         }
+        if (listener != null) listener.onComplete(0);
         return null;
     }
 }

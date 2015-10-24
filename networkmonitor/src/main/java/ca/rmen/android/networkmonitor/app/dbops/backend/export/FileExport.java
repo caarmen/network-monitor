@@ -23,11 +23,14 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+
 import java.io.File;
 
-import android.content.Context;
-
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 import ca.rmen.android.networkmonitor.app.dbops.Task;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -53,4 +56,30 @@ public abstract class FileExport implements Task<File> {
      */
     @Override
     abstract public File execute(ProgressListener listener);
+
+    /**
+     * @return a chooser intent to share a report summary text, with an optional attached exported file.
+     */
+    public static Intent getShareIntent(Context context, File exportedFile) {
+        String reportSummary = SummaryExport.getSummary(context);
+
+        // Bring up the chooser to share the file.
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.export_subject_send_log));
+
+        String dateRange = SummaryExport.getDataCollectionDateRange(context);
+
+        String messageBody = context.getString(R.string.export_message_text, dateRange);
+        if (exportedFile != null) {
+            sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + exportedFile.getAbsolutePath()));
+            sendIntent.setType("message/rfc822");
+            messageBody += context.getString(R.string.export_message_text_file_attached);
+        } else {
+            sendIntent.setType("text/plain");
+        }
+        messageBody += reportSummary;
+        sendIntent.putExtra(Intent.EXTRA_TEXT, messageBody);
+        return Intent.createChooser(sendIntent, context.getResources().getText(R.string.action_share));
+    }
 }

@@ -23,25 +23,12 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.ui;
 
-import java.io.File;
-
 import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.dbops.backend.export.CSVExport;
-import ca.rmen.android.networkmonitor.app.dbops.backend.export.DBExport;
-import ca.rmen.android.networkmonitor.app.dbops.backend.export.ExcelExport;
-import ca.rmen.android.networkmonitor.app.dbops.backend.export.FileExport;
-import ca.rmen.android.networkmonitor.app.dbops.backend.export.HTMLExport;
-import ca.rmen.android.networkmonitor.app.dbops.backend.export.SummaryExport;
-import ca.rmen.android.networkmonitor.app.dbops.backend.export.kml.KMLExport;
+import ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -59,23 +46,23 @@ public class Share {
      */
     public static void share(FragmentActivity activity, String selectedShareFormat) {
         Log.v(TAG, "share " + selectedShareFormat);
-        FileExport fileExport = null;
+        DBOpIntentService.ExportFormat exportFormat;
         if (activity.getString(R.string.export_choice_csv).equals(selectedShareFormat)) {
-            fileExport = new CSVExport(activity);
+            exportFormat = DBOpIntentService.ExportFormat.CSV;
         } else if (activity.getString(R.string.export_choice_html).equals(selectedShareFormat)) {
-            fileExport = new HTMLExport(activity, true);
+            exportFormat = DBOpIntentService.ExportFormat.HTML;
         } else if (activity.getString(R.string.export_choice_kml).equals(selectedShareFormat)) {
             // The KML export requires a second dialog before we can share, so we return here.
             shareKml(activity);
             return;
         } else if (activity.getString(R.string.export_choice_excel).equals(selectedShareFormat)) {
-            fileExport = new ExcelExport(activity);
+            exportFormat = DBOpIntentService.ExportFormat.EXCEL;
         } else if (activity.getString(R.string.export_choice_db).equals(selectedShareFormat)) {
-            fileExport = new DBExport(activity);
+            exportFormat = DBOpIntentService.ExportFormat.DB;
         } else {
-            // Text summary only
+            exportFormat = DBOpIntentService.ExportFormat.SUMMARY;
         }
-        shareFile(activity, fileExport);
+        DBOpIntentService.startActionExport(activity, exportFormat);
     }
 
     /**
@@ -88,8 +75,7 @@ public class Share {
 
             @Override
             public void onPreferenceValueSelected(String value) {
-                KMLExport kmlExport = new KMLExport(activity, value);
-                shareFile(activity, kmlExport);
+                DBOpIntentService.startActionKMLExport(activity, value);
             }
 
             @Override
@@ -100,59 +86,5 @@ public class Share {
         });
     }
 
-    /**
-     * Run the given file export, then bring up the chooser intent to share the exported file.
-     * The progress will be displayed in a progress dialog on the given activity.
-     */
-    private static void shareFile(final FragmentActivity activity, final FileExport fileExport) {
-        Log.v(TAG, "shareFile " + fileExport);
-
-        Bundle bundle = new Bundle(1);
-        bundle.putString(DBOpAsyncTask.EXTRA_DIALOG_MESSAGE, activity.getString(R.string.export_progress_preparing_export));
-        new DBOpAsyncTask<File>(activity, fileExport, bundle) {
-
-
-            @Override
-            protected File doInBackground(Void... params) {
-                Log.v(TAG, "doInBackground");
-                File file = null;
-                if (fileExport != null) {
-                    if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) return null;
-                    file = super.doInBackground(params);
-                    if (file == null) return null;
-                }
-
-                String reportSummary = SummaryExport.getSummary(activity);
-                // Bring up the chooser to share the file.
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_SUBJECT, activity.getString(R.string.export_subject_send_log));
-
-                String dateRange = SummaryExport.getDataCollectionDateRange(activity);
-
-                String messageBody = activity.getString(R.string.export_message_text, dateRange);
-                if (file != null) {
-                    sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getAbsolutePath()));
-                    sendIntent.setType("message/rfc822");
-                    messageBody += activity.getString(R.string.export_message_text_file_attached);
-                } else {
-                    sendIntent.setType("text/plain");
-                }
-                messageBody += reportSummary;
-                sendIntent.putExtra(Intent.EXTRA_TEXT, messageBody);
-
-                activity.startActivity(Intent.createChooser(sendIntent, activity.getResources().getText(R.string.action_share)));
-                return file;
-            }
-
-            @Override
-            protected void onPostExecute(File result) {
-                Log.v(TAG, "onPostExecute");
-                // Show a toast if we failed to export a file.
-                if (fileExport != null && result == null) Toast.makeText(activity, R.string.export_error_sdcard_unmounted, Toast.LENGTH_LONG).show();
-                super.onPostExecute(result);
-            }
-        }.execute();
-    }
 
 }

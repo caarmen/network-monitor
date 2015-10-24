@@ -23,14 +23,14 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend.clean;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.provider.BaseColumns;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import android.content.Context;
-import android.database.Cursor;
-import android.provider.BaseColumns;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
@@ -110,6 +110,7 @@ public class DBCompress implements Task<Integer> {
                 inClause.append(",");
             }
         }
+        if (listener != null) listener.onComplete(numRowsDeleted);
         return numRowsDeleted;
     }
 

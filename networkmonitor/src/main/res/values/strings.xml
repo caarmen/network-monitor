@@ -108,4 +108,23 @@ limitations under the License.
     <string name="warning_fast_polling_title">Warning!</string>
     <string name="warning_fast_polling_message">You have selected a very fast polling frequency. Data tests have been disabled, and a maximum limit to the database size has been set. You can re-enable data tests by selecting a slower polling frequency, and going to the advanced options.</string>
 
+    <!-- DB operation strings -->
+    <string name="db_op_compress_progress_title">Data base compression</string>
+    <string name="db_op_compress_progress_content">Processing %1$d of %2$d</string>
+    <string name="db_op_compress_complete_title">Data base compression complete</string>
+    <string name="db_op_compress_complete_content">Deleted %1$d rows</string>
+    <string name="db_op_purge_progress_title">Data base deletion</string>
+    <string name="db_op_purge_progress_content">Deleting %1$d of %2$d</string>
+    <string name="db_op_purge_complete_title">Data base deletion</string>
+    <string name="db_op_purge_complete_content">Deleted %1$d rows</string>
+    <string name="db_op_export_progress_title">Exporting database</string>
+    <string name="db_op_export_progress_content">Exporting %1$d of %2$d</string>
+    <string name="db_op_export_complete">Export complete</string>
+    <string name="db_op_export_complete_title">Export complete</string>
+    <string name="db_op_export_complete_content">Tap here to share the exported file</string>
+    <string name="db_op_import_progress_title">Importing database</string>
+    <string name="db_op_import_progress_content">Importing %1$d of %2$d</string>
+    <string name="db_op_import_complete_title">Import complete</string>
+    <string name="db_op_import_complete_content">Imported %1$d records</string>
+
 </resources>

@@ -23,13 +23,10 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.ui;
 
-import android.app.Activity;
-import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
+import android.content.Context;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.dbops.backend.clean.DBPurge;
+import ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -42,23 +39,11 @@ public class Clear {
     /**
      * Deletes rows from the database, keeping only the given number of rows.
      *
-     * @param activity a progress dialog will be displayed in this activity
      * @param numRowsToKeep delete all but the most recent numRowToKeep rows. 0 to delete all rows.
      */
-    public static void clear(final FragmentActivity activity, int numRowsToKeep) {
+    public static void clear(final Context context, int numRowsToKeep) {
         Log.v(TAG, "clear, keeping " + numRowsToKeep + " records");
-        DBPurge dbPurge = new DBPurge(activity, numRowsToKeep);
-        new DBOpAsyncTask<Integer>(activity, dbPurge, null) {
-
-            @Override
-            protected void onPostExecute(Integer result) {
-                // Once the DB is deleted, reload the WebView.
-                if (result > 0) Toast.makeText(activity, activity.getString(R.string.compress_successful, result), Toast.LENGTH_LONG).show();
-                activity.setResult(Activity.RESULT_OK);
-                super.onPostExecute(result);
-            }
-        }.execute();
-
+        DBOpIntentService.startActionPurge(context, numRowsToKeep);
     }
 
 }

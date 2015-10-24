@@ -23,13 +23,11 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.ui;
 
+import android.content.Context;
 import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.dbops.backend.imp0rt.DBImport;
+import ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -41,23 +39,10 @@ public class Import {
     /**
      * Import a database file.
      *
-     * @param activity A progress dialog will appear on the activity during the import
      * @param uri the location of the db to import
      */
-    public static void importDb(final FragmentActivity activity, final Uri uri) {
+    public static void importDb(final Context context, final Uri uri) {
         Log.v(TAG, "importDb: uri = " + uri);
-        DBImport dbImport = new DBImport(activity, uri);
-        DBOpAsyncTask<Boolean> task = new DBOpAsyncTask<Boolean>(activity, dbImport, null) {
-
-            @Override
-            protected void onPostExecute(Boolean result) {
-                String toastText = result ? activity.getString(R.string.import_successful, uri.getPath()) : activity.getString(R.string.import_failed,
-                        uri.getPath());
-                Toast.makeText(activity, toastText, Toast.LENGTH_SHORT).show();
-                super.onPostExecute(result);
-            }
-        };
-        task.execute();
-
+        DBOpIntentService.startActionImport(context, uri);
     }
 }
