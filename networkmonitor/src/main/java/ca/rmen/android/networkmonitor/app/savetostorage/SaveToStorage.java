@@ -34,7 +34,7 @@ import java.io.File;
 
 import ca.rmen.android.networkmonitor.R;
 
-public class SaveToStorage {
+class SaveToStorage {
 
     private SaveToStorage() {
         // utility class

@@ -32,13 +32,12 @@ import java.io.File;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
-import ca.rmen.android.networkmonitor.app.dbops.Task;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Export the Network Monitor data from the DB to a file.
  */
-public abstract class FileExport implements Task<File> {
+public abstract class FileExport {
     private static final String TAG = Constants.TAG + FileExport.class.getSimpleName();
 
 
@@ -54,7 +53,6 @@ public abstract class FileExport implements Task<File> {
     /**
      * @return the file if it was correctly exported, null otherwise.
      */
-    @Override
     abstract public File execute(ProgressListener listener);
 
     /**

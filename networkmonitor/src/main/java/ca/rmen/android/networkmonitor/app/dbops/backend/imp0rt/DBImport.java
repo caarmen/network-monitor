@@ -41,7 +41,6 @@ import java.util.ArrayList;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
-import ca.rmen.android.networkmonitor.app.dbops.Task;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.provider.NetMonProvider;
 import ca.rmen.android.networkmonitor.util.IoUtil;
@@ -51,7 +50,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  * Replace the contents of the current database with the contents of another database.
  * This is based on DBImport from the scrum chatter project.
  */
-public class DBImport implements Task<Boolean> {
+public class DBImport {
     private static final String TAG = Constants.TAG + DBImport.class.getSimpleName();
 
     private final Context mContext;
@@ -67,8 +66,7 @@ public class DBImport implements Task<Boolean> {
      *
      * @return true if the DB import was successful.
      */
-    @Override
-    public Boolean execute(ProgressListener listener) {
+    public void execute(ProgressListener listener) {
         try {
             if (mUri.getScheme().equals("file")) {
                 File db = new File(mUri.getEncodedPath());
@@ -85,9 +83,8 @@ public class DBImport implements Task<Boolean> {
             }
         } catch (RemoteException | OperationApplicationException | SQLException | IOException e) {
             Log.w(TAG, "Error importing the db: " + e.getMessage(), e);
-            return false;
+            return;
         }
-        return true;
     }
 
     /**

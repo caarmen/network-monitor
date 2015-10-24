@@ -24,9 +24,6 @@
 package ca.rmen.android.networkmonitor.app.dbops;
 
 /**
- * Implementations of {@link Task} should notify {@link ProgressListener} of their
- * progress.
- *
  * This is currently used by the {@link ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService} to execute the long task in
  * the background while showing progress in a notification.
  *

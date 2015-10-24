@@ -114,6 +114,7 @@ public class DBOpIntentService extends IntentService {
         context.startService(intent);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public DBOpIntentService() {
         super("DBOpIntentService");
     }
@@ -177,13 +178,13 @@ public class DBOpIntentService extends IntentService {
     private void handleActionCompress() {
         Log.d(TAG, "handleActionCompress()");
         DBCompress dbCompress = new DBCompress(this);
-        int numRowsDeleted = dbCompress.execute(mCompressProgressListener);
+        dbCompress.execute(mCompressProgressListener);
     }
 
     private void handleActionPurge(int numRowsToKeep) {
         Log.d(TAG, "handleActionPurge() called with " + "numRowsToKeep = [" + numRowsToKeep + "]");
         DBPurge dbPurge = new DBPurge(this, numRowsToKeep);
-        int numRowsDeleted = dbPurge.execute(mPurgeProgressListener);
+        dbPurge.execute(mPurgeProgressListener);
     }
 
     private void handleActionExport(ExportFormat exportFileFormat, Bundle extras) {
@@ -231,14 +232,12 @@ public class DBOpIntentService extends IntentService {
     private void handleActionImport(Uri uri) {
         Log.d(TAG, "handleActionImport() called with " + "uri = [" + uri + "]");
         DBImport dbImport = new DBImport(this, uri);
-        if (dbImport.execute(mImportProgressListener)) {
-
-        }
+        dbImport.execute(mImportProgressListener);
     }
 
     private static class NotificationProgressListener implements ProgressListener {
         private final Context mContext;
-        private NotificationManager mNotificationManager;
+        private final NotificationManager mNotificationManager;
         private final int mNotificationId;
         private final int mNotificationIcon;
         private final int mNotificationProgressTitleId;

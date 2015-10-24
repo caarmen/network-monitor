@@ -30,7 +30,7 @@ import java.util.Set;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MultiSelectListPreferenceDialogFragmentCompat extends PreferenceDialogFragmentCompat
         implements DialogPreference.TargetFragment {
-    private Set<String> mNewValues = new HashSet();
+    private final Set<String> mNewValues = new HashSet<>();
     private boolean mPreferenceChanged;
 
     public MultiSelectListPreferenceDialogFragmentCompat() {
@@ -78,7 +78,7 @@ public class MultiSelectListPreferenceDialogFragmentCompat extends PreferenceDia
     public void onDialogClosed(boolean positiveResult) {
         MultiSelectListPreference preference = getListPreference();
         if (positiveResult && mPreferenceChanged) {
-            Set values = mNewValues;
+            Set<String> values = mNewValues;
             if (preference.callChangeListener(values)) {
                 preference.setValues(values);
             }

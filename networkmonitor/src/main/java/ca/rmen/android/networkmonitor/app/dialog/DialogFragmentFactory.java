@@ -118,20 +118,6 @@ public class DialogFragmentFactory extends DialogFragment {
     }
 
     /**
-     * Show a visible dialog fragment with the given message.
-     * @param tag should be used by the calling activity, when the background task is complete, to find the fragment and dismiss it.
-     */
-    public static void showProgressDialog(FragmentActivity activity, String message, String tag) {
-        Log.v(TAG, "showProgressDialog: message = " + message);
-        Bundle arguments = new Bundle(2);
-        arguments.putString(EXTRA_MESSAGE, message);
-        ProgressDialogFragment result = new ProgressDialogFragment();
-        result.setArguments(arguments);
-        result.setCancelable(false);
-        result.show(activity.getSupportFragmentManager(), tag);
-    }
-
-    /**
      * Show a visible dialog fragment to choose a folder or file
      */
     public static void showFileChooserDialog(FragmentActivity activity, File initialFolder, boolean foldersOnly, int actionId) {
