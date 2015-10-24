@@ -78,6 +78,7 @@ class NotificationProgressListener implements ProgressListener {
         builder.setSmallIcon(mNotificationIcon);
         builder.setTicker(mContext.getString(mNotificationProgressTitleId));
         builder.setContentTitle(mContext.getString(mNotificationProgressTitleId));
+        builder.setProgress(max, progress, false);
         builder.setContentText(mContext.getString(mNotificationProgressContentId, progress, max));
         builder.setAutoCancel(false);
         builder.setContentIntent(getMainActivityPendingIntent(mContext));
@@ -94,6 +95,7 @@ class NotificationProgressListener implements ProgressListener {
         builder.setTicker(mContext.getString(mNotificationCompleteTitleId));
         builder.setContentTitle(mContext.getString(mNotificationCompleteTitleId));
         builder.setContentText(message);
+        builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
         builder.setAutoCancel(true);
         builder.setContentIntent(getMainActivityPendingIntent(mContext));
         Notification notification = builder.build();

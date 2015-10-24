@@ -134,7 +134,7 @@ public class DBImport {
                     } while (c.moveToNext());
                     if (operations.size() > 0) mContext.getContentResolver().applyBatch(NetMonProvider.AUTHORITY, operations);
                 }
-                if (listener != null) listener.onComplete(mContext.getString(R.string.import_successful, mUri.toString()));
+                if (listener != null) listener.onComplete(mContext.getString(R.string.import_successful, mUri.getPath()));
                 return;
             } finally {
                 c.close();
