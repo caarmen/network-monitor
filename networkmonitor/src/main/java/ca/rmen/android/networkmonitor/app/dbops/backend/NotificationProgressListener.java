@@ -70,7 +70,7 @@ class NotificationProgressListener implements ProgressListener {
     public void onProgress(int progress, int max) {
         // Only update in increments of 5%
         int notifUpdateIncrement = (int) (max * 0.05);
-        boolean updateNotification = progress == 0 || progress % notifUpdateIncrement == 0;
+        boolean updateNotification = progress <= 1 || progress % notifUpdateIncrement == 0;
         if (!updateNotification) return;
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
         builder.setSmallIcon(mNotificationIcon);
@@ -78,6 +78,8 @@ class NotificationProgressListener implements ProgressListener {
         builder.setContentTitle(mContext.getString(mNotificationProgressTitleId));
         builder.setProgress(max, progress, false);
         builder.setOngoing(true);
+        builder.addAction(R.drawable.ic_action_stop, mContext.getString(R.string.service_notification_action_stop),
+                PendingIntent.getBroadcast(mContext, 0, new Intent(DBOpIntentService.ACTION_STOP_DB_OP), PendingIntent.FLAG_CANCEL_CURRENT));
         builder.setColor(ActivityCompat.getColor(mContext, R.color.netmon_color));
         builder.setContentText(mContext.getString(mNotificationProgressContentId, progress, max));
         builder.setAutoCancel(false);

@@ -28,6 +28,7 @@ limitations under the License.
     <string name="import_confirm_message">Delete the current database and replace with %s?</string>
     <string name="import_successful">Successfully imported %s.</string>
     <string name="import_failed">Failed to import %s.</string>
+    <string name="import_canceled">The import was canceled.</string>
 
     <string name="db_op_import_start">Importing database</string>
     <string name="db_op_import_progress_title">Importing database</string>

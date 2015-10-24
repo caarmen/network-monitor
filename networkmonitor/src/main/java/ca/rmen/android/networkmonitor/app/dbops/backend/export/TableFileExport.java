@@ -77,9 +77,9 @@ abstract class TableFileExport extends FileExport {
      * @return the file if it was correctly exported, null otherwise.
      */
     @Override
-    public File execute(ProgressListener listener) {
+    public void execute(ProgressListener listener) {
         Log.v(TAG, "export");
-        return export(0, listener);
+        export(0, listener);
     }
 
     /**
@@ -108,7 +108,7 @@ abstract class TableFileExport extends FileExport {
                 int rowsAvailable = c.getCount();
                 // Start writing to the file.
                 writeHeader(usedColumnNames);
-                while (c.moveToNext()) {
+                while (c.moveToNext() && !isCanceled()) {
                     String[] cellValues = new String[c.getColumnCount()];
                     for (int i = 0; i < c.getColumnCount(); i++)
                         cellValues[i] = formatter.format(c, i);
@@ -139,7 +139,13 @@ abstract class TableFileExport extends FileExport {
 
                 // Write the footer and clean up the file.
                 writeFooter();
-                if (listener != null) listener.onComplete(mContext.getString(R.string.export_save_to_external_storage_success, mFile.getAbsolutePath()));
+                if (listener != null) {
+                    if (isCanceled()) {
+                        listener.onComplete(mContext.getString(R.string.export_save_to_external_storage_partial_success, mFile.getAbsolutePath()));
+                    } else {
+                        listener.onComplete(mContext.getString(R.string.export_save_to_external_storage_success, mFile.getAbsolutePath()));
+                    }
+                }
                 return mFile;
             } catch (IOException e) {
                 Log.e(TAG, "export Could not export file " + mFile + ": " + e.getMessage(), e);

@@ -28,6 +28,7 @@ limitations under the License.
     <string name="compress_confirm_message">This will merge consecutive rows with identical data.</string>
     <string name="compress_successful">%1$s rows deleted from the database.</string>
     <string name="compress_failed">Failed to compress the database.</string>
+    <string name="compress_canceled">The database compression was canceled.</string>
 
     <string name="db_op_compress_start">Compressing the database</string>
     <string name="db_op_compress_progress_title">Data base compression</string>

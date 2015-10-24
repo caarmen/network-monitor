@@ -28,21 +28,24 @@ import android.content.Intent;
 import android.net.Uri;
 
 import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
+import ca.rmen.android.networkmonitor.app.dbops.backend.DBOperation;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Export the Network Monitor data from the DB to a file.
  */
-public abstract class FileExport {
+public abstract class FileExport implements DBOperation {
     private static final String TAG = Constants.TAG + FileExport.class.getSimpleName();
 
 
     protected final Context mContext;
     protected final File mFile;
+    private final AtomicBoolean mIsCanceled = new AtomicBoolean(false);
 
     protected FileExport(Context context, File file) {
         Log.v(TAG, "FileExport: file " + file);
@@ -53,7 +56,21 @@ public abstract class FileExport {
     /**
      * @return the file if it was correctly exported, null otherwise.
      */
-    abstract public File execute(ProgressListener listener);
+    @Override
+    abstract public void execute(ProgressListener listener);
+
+    @Override
+    public void cancel() {
+        mIsCanceled.set(true);
+    }
+
+    public boolean isCanceled() {
+        return mIsCanceled.get();
+    }
+
+    public File getFile() {
+        return mFile;
+    }
 
     /**
      * @return a chooser intent to share a report summary text, with an optional attached exported file.
@@ -69,7 +86,7 @@ public abstract class FileExport {
         String dateRange = SummaryExport.getDataCollectionDateRange(context);
 
         String messageBody = context.getString(R.string.export_message_text, dateRange);
-        if (exportedFile != null) {
+        if (exportedFile != null && exportedFile.exists()) {
             sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + exportedFile.getAbsolutePath()));
             sendIntent.setType("message/rfc822");
             messageBody += context.getString(R.string.export_message_text_file_attached);

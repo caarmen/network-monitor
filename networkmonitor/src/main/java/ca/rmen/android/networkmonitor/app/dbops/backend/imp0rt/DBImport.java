@@ -38,10 +38,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
+import ca.rmen.android.networkmonitor.app.dbops.backend.DBOperation;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.provider.NetMonProvider;
 import ca.rmen.android.networkmonitor.util.IoUtil;
@@ -51,11 +53,12 @@ import ca.rmen.android.networkmonitor.util.Log;
  * Replace the contents of the current database with the contents of another database.
  * This is based on DBImport from the scrum chatter project.
  */
-public class DBImport {
+public class DBImport implements DBOperation {
     private static final String TAG = Constants.TAG + DBImport.class.getSimpleName();
 
     private final Context mContext;
     private final Uri mUri;
+    private final AtomicBoolean mIsCanceled = new AtomicBoolean(false);
 
     public DBImport(Context context, Uri uri) {
         mContext = context;
@@ -64,9 +67,8 @@ public class DBImport {
 
     /**
      * Replace the database of our app with the contents of the database found at the given uri.
-     *
-     * @return true if the DB import was successful.
      */
+    @Override
     public void execute(ProgressListener listener) {
         try {
             if (mUri.getScheme().equals("file")) {
@@ -86,6 +88,16 @@ public class DBImport {
             Log.w(TAG, "Error importing the db: " + e.getMessage(), e);
             return;
         }
+    }
+
+    @Override
+    public void cancel() {
+        mIsCanceled.set(true);
+    }
+
+    @Override
+    public boolean isCanceled() {
+        return mIsCanceled.get();
     }
 
     /**
@@ -131,10 +143,15 @@ public class DBImport {
                             operations.clear();
                         }
                         if (listener != null) listener.onProgress(c.getPosition(), count);
-                    } while (c.moveToNext());
-                    if (operations.size() > 0) mContext.getContentResolver().applyBatch(NetMonProvider.AUTHORITY, operations);
+                    } while (c.moveToNext() && !mIsCanceled.get());
+                    if (operations.size() > 0 && !mIsCanceled.get()) mContext.getContentResolver().applyBatch(NetMonProvider.AUTHORITY, operations);
                 }
-                if (listener != null) listener.onComplete(mContext.getString(R.string.import_successful, mUri.getPath()));
+                if (listener != null) {
+                    if (mIsCanceled.get())
+                        listener.onError(mContext.getString(R.string.import_canceled));
+                    else
+                        listener.onComplete(mContext.getString(R.string.import_successful, mUri.getPath()));
+                }
                 return;
             } finally {
                 c.close();

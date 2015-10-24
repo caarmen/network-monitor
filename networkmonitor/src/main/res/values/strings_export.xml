@@ -47,10 +47,13 @@ limitations under the License.
     <string name="export_value_unknown">N/A</string>
     <string name="export_save_to_external_storage">Save to storage</string>
     <string name="export_save_to_external_storage_fail">Error saving to external storage</string>
+    <string name="export_save_to_external_storage_cancel">Canceled saving to external storage</string>
     <string name="export_save_to_external_storage_success">Saved %s</string>
+    <string name="export_save_to_external_storage_partial_success">Saved partial file %s</string>
 
     <string name="db_op_export_progress_title">Exporting database</string>
     <string name="db_op_export_progress_content">Exporting %1$d of %2$d</string>
+    <string name="db_op_export_canceled_title">Export was canceled</string>
     <string name="db_op_export_complete_title">Export complete</string>
     <string name="db_op_export_complete_content">Tap here to share the exported file</string>
 </resources>

@@ -27,8 +27,10 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -75,6 +77,8 @@ public class DBOpIntentService extends IntentService {
         SUMMARY
     }
 
+    public static final String ACTION_STOP_DB_OP = "ca.rmen.android.networkmonitor.app.dbops.backend.action.STOP_DB_OP";
+
     private static final String ACTION_COMPRESS = "ca.rmen.android.networkmonitor.app.dbops.backend.action.COMPRESS";
     private static final String ACTION_PURGE = "ca.rmen.android.networkmonitor.app.dbops.backend.action.PURGE";
     private static final String ACTION_EXPORT = "ca.rmen.android.networkmonitor.app.dbops.backend.action.EXPORT";
@@ -83,6 +87,8 @@ public class DBOpIntentService extends IntentService {
     private static final String EXTRA_PURGE_NUM_ROWS_TO_KEEP = "ca.rmen.android.networkmonitor.app.dbops.backend.extra.PURGE_NUM_ROWS_TO_KEEP";
     private static final String EXTRA_EXPORT_FORMAT = "ca.rmen.android.networkmonitor.app.dbops.backend.extra.EXPORT_FILE_FORMAT";
     private static final String EXTRA_EXPORT_KML_PLACEMARK_COLUMN_NAME = "ca.rmen.android.networkmonitor.app.dbops.backend.extra.EXPORT_KML_PLACEMARK_COLUMN_NAME";
+
+    private DBOperation mDBOperation = null;
 
 
     public static void startActionCompress(Context context) {
@@ -163,6 +169,7 @@ public class DBOpIntentService extends IntentService {
                         R.string.db_op_import_complete_title);
         NetMonBus.getBus().register(this);
         NetMonBus.getBus().post(new NetMonBus.DBOperationStarted());
+        registerReceiver(mStopSelfReceiver, new IntentFilter(ACTION_STOP_DB_OP));
     }
 
     @Override
@@ -181,6 +188,7 @@ public class DBOpIntentService extends IntentService {
                 final Uri uri = intent.getData();
                 handleActionImport(uri);
             }
+            mDBOperation = null;
         }
     }
 
@@ -188,6 +196,7 @@ public class DBOpIntentService extends IntentService {
     public void onDestroy() {
         NetMonBus.getBus().post(new NetMonBus.DBOperationEnded());
         NetMonBus.getBus().unregister(this);
+        unregisterReceiver(mStopSelfReceiver);
         super.onDestroy();
     }
 
@@ -198,19 +207,20 @@ public class DBOpIntentService extends IntentService {
 
     private void handleActionCompress() {
         Log.d(TAG, "handleActionCompress()");
-        DBCompress dbCompress = new DBCompress(this);
-        dbCompress.execute(mCompressProgressListener);
+
+        mDBOperation = new DBCompress(this);
+        mDBOperation.execute(mCompressProgressListener);
     }
 
     private void handleActionPurge(int numRowsToKeep) {
         Log.d(TAG, "handleActionPurge() called with " + "numRowsToKeep = [" + numRowsToKeep + "]");
-        DBPurge dbPurge = new DBPurge(this, numRowsToKeep);
-        dbPurge.execute(mPurgeProgressListener);
+        mDBOperation = new DBPurge(this, numRowsToKeep);
+        mDBOperation.execute(mPurgeProgressListener);
     }
 
     private void handleActionExport(ExportFormat exportFileFormat, Bundle extras) {
         Log.d(TAG, "handleActionExport() called with exportFileFormat = [" + exportFileFormat + "]");
-        final FileExport fileExport;
+        FileExport fileExport;
         switch (exportFileFormat) {
             case CSV:
                 fileExport = new CSVExport(this);
@@ -232,27 +242,33 @@ public class DBOpIntentService extends IntentService {
             default:
                 fileExport = null;
         }
+        mDBOperation = fileExport;
         File file = null;
         if (fileExport != null) {
-            file = fileExport.execute(mExportProgressListener);
+            fileExport.execute(mExportProgressListener);
+            file = fileExport.getFile();
         }
 
         // Start the summary report
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-        updateFileExportNotification(getString(R.string.export_progress_finalizing_export), pendingIntent, false);
+        updateFileExportNotification(getString(R.string.db_op_export_progress_title), getString(R.string.export_progress_finalizing_export), pendingIntent, false);
 
         Intent shareIntent = FileExport.getShareIntent(this, file);
 
         // All done
         pendingIntent = PendingIntent.getActivity(this, 0, shareIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        updateFileExportNotification(getString(R.string.db_op_export_complete_content), pendingIntent, true);
+        if(fileExport != null && fileExport.isCanceled()) {
+            updateFileExportNotification(getString(R.string.db_op_export_canceled_title), getString(R.string.db_op_export_complete_content), pendingIntent, true);
+        } else {
+            updateFileExportNotification(getString(R.string.db_op_export_complete_title), getString(R.string.db_op_export_complete_content), pendingIntent, true);
+        }
     }
 
-    private void updateFileExportNotification(String contentText, PendingIntent pendingIntent, boolean autoCancel) {
+    private void updateFileExportNotification(String titleText, String contentText, PendingIntent pendingIntent, boolean autoCancel) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setSmallIcon(R.drawable.ic_stat_db_op_export);
-        builder.setTicker(getString(R.string.db_op_export_progress_title));
-        builder.setContentTitle(getString(R.string.db_op_export_progress_title));
+        builder.setTicker(titleText);
+        builder.setContentTitle(titleText);
         builder.setContentText(contentText);
         builder.setAutoCancel(autoCancel);
         builder.setOngoing(!autoCancel);
@@ -265,8 +281,8 @@ public class DBOpIntentService extends IntentService {
 
     private void handleActionImport(Uri uri) {
         Log.d(TAG, "handleActionImport() called with " + "uri = [" + uri + "]");
-        DBImport dbImport = new DBImport(this, uri);
-        dbImport.execute(mImportProgressListener);
+        mDBOperation = new DBImport(this, uri);
+        mDBOperation.execute(mImportProgressListener);
     }
 
     private static void showToast(final Context context, final String message) {
@@ -279,4 +295,13 @@ public class DBOpIntentService extends IntentService {
     }
 
 
+    private final BroadcastReceiver mStopSelfReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "onReceive() called with " + "context = [" + context + "], intent = [" + intent + "]");
+            if (ACTION_STOP_DB_OP.equals(intent.getAction())) {
+                if (mDBOperation != null) mDBOperation.cancel();
+            }
+        }
+    };
 }

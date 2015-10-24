@@ -49,7 +49,7 @@ public class DBExport extends FileExport {
     }
 
     @Override
-    public File execute(ProgressListener listener) {
+    public void execute(ProgressListener listener) {
         File db = mContext.getDatabasePath(NetMonDatabase.DATABASE_NAME);
         try {
             InputStream is = new FileInputStream(db);
@@ -58,7 +58,7 @@ public class DBExport extends FileExport {
             byte[] buffer = new byte[1024];
             int len;
             int bytesWritten = 0;
-            while ((len = is.read(buffer)) > 0) {
+            while ((len = is.read(buffer)) > 0 && !isCanceled()) {
                 os.write(buffer, 0, len);
                 bytesWritten += len;
                 // Notify the listener about the number of kb written.
@@ -66,12 +66,16 @@ public class DBExport extends FileExport {
             }
             is.close();
             os.close();
-            if (listener != null) listener.onComplete(mContext.getString(R.string.export_save_to_external_storage_success));
-            return mFile;
+            if (listener != null){
+                if(isCanceled()) {
+                    listener.onError(mContext.getString(R.string.export_save_to_external_storage_cancel));
+                } else {
+                    listener.onComplete(mContext.getString(R.string.export_save_to_external_storage_success));
+                }
+            }
         } catch (IOException e) {
             Log.v(TAG, "Could not copy DB file: " + e.getMessage(), e);
             if (listener != null) listener.onError(mContext.getString(R.string.export_save_to_external_storage_fail));
-            return null;
         }
     }
 

@@ -31,20 +31,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
+import ca.rmen.android.networkmonitor.app.dbops.backend.DBOperation;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Reduces groups of 3 or more consecutive rows with identical data (except the timestamp) into a single row.
  */
-public class DBCompress {
+public class DBCompress implements DBOperation {
     private static final String TAG = Constants.TAG + DBCompress.class.getSimpleName();
 
     private final Context mContext;
+    private final AtomicBoolean mIsCanceled = new AtomicBoolean(false);
 
     public DBCompress(Context context) {
         mContext = context;
@@ -53,6 +56,7 @@ public class DBCompress {
     /**
      * @return the number of rows deleted from the database
      */
+    @Override
     public void execute(ProgressListener listener) {
         Log.v(TAG, "compress DB");
         Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, null, null, null, BaseColumns._ID);
@@ -67,7 +71,7 @@ public class DBCompress {
                 // We will not include the _id and _timestamp fields when comparing rows.
                 int timestampIndex = c.getColumnIndex(NetMonColumns.TIMESTAMP);
                 int idIndex = c.getColumnIndex(BaseColumns._ID);
-                while (c.moveToNext()) {
+                while (c.moveToNext() && !mIsCanceled.get()) {
                     int position = c.getPosition();
                     int id = c.getInt(idIndex);
                     Map<Integer, String> currentRow = readRow(c, columnCount, timestampIndex, idIndex);
@@ -110,9 +114,26 @@ public class DBCompress {
             }
         }
         if (listener != null) {
-            if (numRowsToDelete >= 0) listener.onComplete(mContext.getString(R.string.compress_successful, numRowsDeleted));
-            else listener.onComplete(mContext.getString(R.string.compress_failed));
+            if (numRowsToDelete >= 0) {
+                if(mIsCanceled.get())
+                    listener.onError(mContext.getString(R.string.compress_canceled));
+                else
+                    listener.onComplete(mContext.getString(R.string.compress_successful, numRowsDeleted));
+            }
+            else {
+                listener.onComplete(mContext.getString(R.string.compress_failed));
+            }
         }
+    }
+
+    @Override
+    public void cancel() {
+        mIsCanceled.set(true);
+    }
+
+    @Override
+    public boolean isCanceled() {
+        return mIsCanceled.get();
     }
 
     /**

@@ -32,6 +32,7 @@ import android.provider.BaseColumns;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
+import ca.rmen.android.networkmonitor.app.dbops.backend.DBOperation;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.provider.NetMonProvider;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -40,7 +41,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  * Only keep the most recent X records: where X is determined by the
  * preference set by the user.
  */
-public class DBPurge {
+public class DBPurge implements DBOperation {
     private static final String TAG = Constants.TAG + DBPurge.class.getSimpleName();
 
     private final Context mContext;
@@ -61,9 +62,8 @@ public class DBPurge {
     /**
      * Only keep the most recent X records: where X is determined by the
      * preference set by the user.
-     *
-     * @return the number of deleted rows.
      */
+    @Override
     public void execute(ProgressListener listener) {
         Log.v(TAG, "purgeDB");
 
@@ -99,5 +99,15 @@ public class DBPurge {
             Log.v(TAG, "Deleted " + result + " rows");
             if (listener != null) listener.onComplete(mContext.getString(R.string.db_op_purge_complete_content, result));
         }
+    }
+
+    @Override
+    public void cancel() {
+        // nothing
+    }
+
+    @Override
+    public boolean isCanceled() {
+        return false;
     }
 }
