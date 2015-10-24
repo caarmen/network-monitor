@@ -27,6 +27,8 @@ limitations under the License.
 
     <string name="purge_toast_start">Limpieza de la base de datos</string>
 
+    <string name="purge_feature_name">Limpieza de la base de datos</string>
+
     <string name="purge_notif_progress_title">Limpieza de la base de datos</string>
     <string name="purge_notif_progress_content">%1$d de %2$d registros procesados</string>
     <string name="purge_notif_complete_title">Base de datos limpiada</string>

@@ -117,7 +117,9 @@ public class MainActivity extends AppCompatActivity {
     public void onDBOperationStarted(NetMonBus.DBOperationStarted event) {
         Log.d(TAG, "onDBOperationStarted() called with " + "event = [" + event + "]");
         mPreferenceFragment.findPreference(PREF_SHARE).setEnabled(false);
+        mPreferenceFragment.findPreference(PREF_SHARE).setSummary(event.name);
         mPreferenceFragment.findPreference(PREF_CLEAR_LOG_FILE).setEnabled(false);
+        mPreferenceFragment.findPreference(PREF_CLEAR_LOG_FILE).setSummary(event.name);
     }
 
     @SuppressWarnings("unused")
@@ -125,7 +127,9 @@ public class MainActivity extends AppCompatActivity {
     public void onDBOperationEnded(NetMonBus.DBOperationEnded event) {
         Log.d(TAG, "onDBOperationEnded() called with " + "event = [" + event + "]");
         mPreferenceFragment.findPreference(PREF_SHARE).setEnabled(true);
+        mPreferenceFragment.findPreference(PREF_SHARE).setSummary("");
         mPreferenceFragment.findPreference(PREF_CLEAR_LOG_FILE).setEnabled(true);
+        mPreferenceFragment.findPreference(PREF_CLEAR_LOG_FILE).setSummary(null);
     }
 
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {

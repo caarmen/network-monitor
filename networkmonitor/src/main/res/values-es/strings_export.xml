@@ -47,6 +47,7 @@ limitations under the License.
     <string name="export_save_to_external_storage">Almacenar en memoria</string>
     <string name="export_save_to_external_storage_success">Guardado %s</string>
 
+    <string name="export_feature_name">Exportación de la base de datos</string>
 
     <string name="export_notif_progress_title">Exportando la base de datos</string>
     <string name="export_notif_progress_content">%1$d de %2$d archivos exportados</string>

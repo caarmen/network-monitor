@@ -37,7 +37,12 @@ public class NetMonBus {
     }
 
     // region bus events
-    public static class DBOperationStarted {}
+    public static class DBOperationStarted {
+        public final String name;
+        public DBOperationStarted(String name) {
+            this.name = name;
+        }
+    }
 
     public static class DBOperationEnded {}
     // endregion

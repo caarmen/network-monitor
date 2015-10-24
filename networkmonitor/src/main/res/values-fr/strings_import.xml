@@ -30,6 +30,8 @@ limitations under the License.
 
     <string name="import_toast_start">Importation de la base de données</string>
 
+    <string name="import_feature_name">Importation de la base de données</string>
+
     <string name="import_notif_progress_title">Importation de la base de données</string>
     <string name="import_notif_progress_content">%1$d sur %2$d elements importés</string>
     <string name="import_notif_complete_title">Importation terminée</string>

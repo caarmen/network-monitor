@@ -47,6 +47,8 @@ limitations under the License.
     <string name="export_save_to_external_storage">Save to storage</string>
     <string name="export_save_to_external_storage_success">Saved %s</string>
 
+    <string name="export_feature_name">Database export</string>
+
     <string name="export_notif_progress_title">Exporting database</string>
     <string name="export_notif_progress_content">Exporting %1$d of %2$d</string>
     <string name="export_notif_complete_title">Export complete</string>

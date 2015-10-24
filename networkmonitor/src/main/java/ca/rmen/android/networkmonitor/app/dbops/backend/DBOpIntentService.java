@@ -88,14 +88,18 @@ public class DBOpIntentService extends IntentService {
     private static final String EXTRA_PURGE_NUM_ROWS_TO_KEEP = "ca.rmen.android.networkmonitor.app.dbops.backend.extra.PURGE_NUM_ROWS_TO_KEEP";
     private static final String EXTRA_EXPORT_FORMAT = "ca.rmen.android.networkmonitor.app.dbops.backend.extra.EXPORT_FILE_FORMAT";
     private static final String EXTRA_EXPORT_KML_PLACEMARK_COLUMN_NAME = "ca.rmen.android.networkmonitor.app.dbops.backend.extra.EXPORT_KML_PLACEMARK_COLUMN_NAME";
+    private static final String EXTRA_DB_OP_TOAST = "ca.rmen.android.networkmonitor.app.dbops.backend.extra.DP_OP_TOAST";
+    private static final String EXTRA_DB_OP_NAME = "ca.rmen.android.networkmonitor.app.dbops.backend.extra.DP_OP_NAME";
 
     private DBOperation mDBOperation = null;
+    private NetMonBus.DBOperationStarted mDBOperationStarted;
 
 
     public static void startActionCompress(Context context) {
         Intent intent = new Intent(context, DBOpIntentService.class);
         intent.setAction(ACTION_COMPRESS);
-        showToast(context, context.getString(R.string.compress_toast_start));
+        intent.putExtra(EXTRA_DB_OP_TOAST, context.getString(R.string.compress_toast_start));
+        intent.putExtra(EXTRA_DB_OP_NAME, context.getString(R.string.compress_feature_name));
         context.startService(intent);
     }
 
@@ -103,7 +107,8 @@ public class DBOpIntentService extends IntentService {
         Intent intent = new Intent(context, DBOpIntentService.class);
         intent.setAction(ACTION_PURGE);
         intent.putExtra(EXTRA_PURGE_NUM_ROWS_TO_KEEP, numRowsToKeep);
-        showToast(context, context.getString(R.string.purge_toast_start));
+        intent.putExtra(EXTRA_DB_OP_TOAST, context.getString(R.string.purge_toast_start));
+        intent.putExtra(EXTRA_DB_OP_NAME, context.getString(R.string.purge_feature_name));
         context.startService(intent);
     }
 
@@ -111,7 +116,8 @@ public class DBOpIntentService extends IntentService {
         Intent intent = new Intent(context, DBOpIntentService.class);
         intent.setAction(ACTION_EXPORT);
         intent.putExtra(EXTRA_EXPORT_FORMAT, exportFormat);
-        showToast(context, context.getString(R.string.export_progress_preparing_export));
+        intent.putExtra(EXTRA_DB_OP_TOAST, context.getString(R.string.export_progress_preparing_export));
+        intent.putExtra(EXTRA_DB_OP_NAME, context.getString(R.string.export_feature_name));
         context.startService(intent);
     }
 
@@ -120,7 +126,8 @@ public class DBOpIntentService extends IntentService {
         intent.setAction(ACTION_EXPORT);
         intent.putExtra(EXTRA_EXPORT_FORMAT, ExportFormat.KML);
         intent.putExtra(EXTRA_EXPORT_KML_PLACEMARK_COLUMN_NAME, placemarkNameColumn);
-        showToast(context, context.getString(R.string.export_progress_preparing_export));
+        intent.putExtra(EXTRA_DB_OP_TOAST, context.getString(R.string.export_progress_preparing_export));
+        intent.putExtra(EXTRA_DB_OP_NAME, context.getString(R.string.export_feature_name));
         context.startService(intent);
     }
 
@@ -128,7 +135,8 @@ public class DBOpIntentService extends IntentService {
         Intent intent = new Intent(context, DBOpIntentService.class);
         intent.setAction(ACTION_IMPORT);
         intent.setData(uri);
-        showToast(context, context.getString(R.string.import_toast_start));
+        intent.putExtra(EXTRA_DB_OP_TOAST, context.getString(R.string.import_toast_start));
+        intent.putExtra(EXTRA_DB_OP_NAME, context.getString(R.string.import_feature_name));
         context.startService(intent);
     }
 
@@ -173,9 +181,23 @@ public class DBOpIntentService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleIntent(final Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
+            String dbOp = intent.getStringExtra(EXTRA_DB_OP_NAME);
+            mDBOperationStarted = new NetMonBus.DBOperationStarted(getString(R.string.db_op_in_progress, dbOp));
+
+            // Show a toast
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    String toast = intent.getStringExtra(EXTRA_DB_OP_TOAST);
+                    Toast.makeText(DBOpIntentService.this, toast, Toast.LENGTH_LONG).show();
+                    NetMonBus.getBus().post(mDBOperationStarted);
+                }
+            });
+
+            // Do the db operation
             if (ACTION_COMPRESS.equals(action)) {
                 handleActionCompress();
             } else if (ACTION_PURGE.equals(action)) {
@@ -189,6 +211,7 @@ public class DBOpIntentService extends IntentService {
                 handleActionImport(uri);
             }
             mDBOperation = null;
+            mDBOperationStarted = null;
         }
     }
 
@@ -203,7 +226,7 @@ public class DBOpIntentService extends IntentService {
     @SuppressWarnings("unused")
     @Produce
     public NetMonBus.DBOperationStarted produceDBOperationStarted() {
-        return new NetMonBus.DBOperationStarted();
+        return mDBOperationStarted;
     }
 
     private void handleActionCompress() {
@@ -286,16 +309,6 @@ public class DBOpIntentService extends IntentService {
         mDBOperation = new DBImport(this, uri);
         mDBOperation.execute(mImportProgressListener);
     }
-
-    private static void showToast(final Context context, final String message) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
 
     private final BroadcastReceiver mStopSelfReceiver = new BroadcastReceiver() {
         @Override

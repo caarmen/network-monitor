@@ -103,4 +103,7 @@ limitations under the License.
     <string name="warning_fast_polling_title">¡Aviso!</string>
     <string name="warning_fast_polling_message">Has activado una frecuencia de pruebas muy rápida. Las pruebas de conexión han sido desactivadas, y el número de filas en la base de datos ha sido limitado.  Puedes reactivar las pruebas de conexión si escoges una frecuencia más lenta y abres las opciones avanzadas.</string>
 
+    <!-- Strings about db operations -->
+    <string name="db_op_in_progress">(%s en curso)</string>
+
 </resources>

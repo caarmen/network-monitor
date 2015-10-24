@@ -28,9 +28,11 @@ limitations under the License.
     <string name="compress_confirm_title">¿Comprimir la base de datos?</string>
     <string name="compress_confirm_message">Fusionará líneas consecutivas con datos idénticos.</string>
 
-    <string name="compress_toast_start">Compressing the database</string>
+    <string name="compress_toast_start">Compresión de la base de datos</string>
 
-    <string name="compress_notif_progress_title">Compression de la base de données</string>
+    <string name="compress_feature_name">Compresión de la base de datos</string>
+
+    <string name="compress_notif_progress_title">Compresión de la base de datos</string>
     <string name="compress_notif_progress_content">Registro %1$d de %2$d</string>
     <string name="compress_notif_complete_title">Base de datos comprimida</string>
     <string name="compress_notif_complete_content">%1$s registros borrados de la base de datos.</string>
