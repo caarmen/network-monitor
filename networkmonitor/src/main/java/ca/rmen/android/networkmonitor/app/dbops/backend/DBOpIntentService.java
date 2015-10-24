@@ -169,7 +169,6 @@ public class DBOpIntentService extends IntentService {
                         R.string.import_notif_progress_content,
                         R.string.import_notif_complete_title);
         NetMonBus.getBus().register(this);
-        NetMonBus.getBus().post(new NetMonBus.DBOperationStarted());
         registerReceiver(mStopSelfReceiver, new IntentFilter(ACTION_STOP_DB_OP));
     }
 
