@@ -106,8 +106,4 @@ public class DBPurge implements DBOperation {
         // nothing
     }
 
-    @Override
-    public boolean isCanceled() {
-        return false;
-    }
 }

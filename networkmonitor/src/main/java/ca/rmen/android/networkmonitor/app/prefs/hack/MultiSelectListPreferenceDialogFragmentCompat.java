@@ -22,9 +22,9 @@ import java.util.Set;
  * It may be possible to avoid this hack, and to use only v14 preference classes (ie
  * PreferenceFragment instead of PreferenceFragmentCompat), but they may be more difficult
  * to theme.  I noticed that the "ok" and "cancel" buttons of the preference dialogs
- * were not in my app's theme.  The theming works with PreferenceFragmentCompat (v7).
+ * were not in my app's theme.  The theme works with PreferenceFragmentCompat (v7).
  * <p/>
- * This code was partially obtained from Android Studio's decompilation of
+ * This code was partially obtained from Android Studio's decompiling of
  * MultiSelectListPreferenceDialogFragment.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -46,7 +46,7 @@ public class MultiSelectListPreferenceDialogFragmentCompat extends PreferenceDia
 
     /**
      * We set the AlertDialog to display a multi-choice list.  We register a listener: when the user
-     * checks or unchecks values, we store the list of all selected values.
+     * checks or un-checks values, we store the list of all selected values.
      */
     protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
         super.onPrepareDialogBuilder(builder);

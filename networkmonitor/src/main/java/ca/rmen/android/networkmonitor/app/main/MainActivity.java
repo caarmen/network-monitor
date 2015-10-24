@@ -65,8 +65,10 @@ public class MainActivity extends AppCompatActivity {
                 commit();
         getSupportFragmentManager().executePendingTransactions();
         mGPSVerifier = new GPSVerifier(this);
-        getSupportActionBar().setIcon(R.drawable.ic_launcher);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setIcon(R.drawable.ic_launcher);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
         if (NetMonPreferences.getInstance(this).isServiceEnabled()) startService(new Intent(MainActivity.this, NetMonService.class));
         // Use strict mode for monkey tests. We can't enable strict mode for normal use
         // because, when sharing (exporting), the mail app may read the attachment in
@@ -110,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    @SuppressWarnings("unused")
     @Subscribe
     public void onDBOperationStarted(NetMonBus.DBOperationStarted event) {
         Log.d(TAG, "onDBOperationStarted() called with " + "event = [" + event + "]");
@@ -117,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         mPreferenceFragment.findPreference(PREF_CLEAR_LOG_FILE).setEnabled(false);
     }
 
+    @SuppressWarnings("unused")
     @Subscribe
     public void onDBOperationEnded(NetMonBus.DBOperationEnded event) {
         Log.d(TAG, "onDBOperationEnded() called with " + "event = [" + event + "]");

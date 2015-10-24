@@ -72,10 +72,6 @@ abstract class TableFileExport extends FileExport {
      */
     abstract void writeFooter() throws IOException;
 
-
-    /**
-     * @return the file if it was correctly exported, null otherwise.
-     */
     @Override
     public void execute(ProgressListener listener) {
         Log.v(TAG, "export");

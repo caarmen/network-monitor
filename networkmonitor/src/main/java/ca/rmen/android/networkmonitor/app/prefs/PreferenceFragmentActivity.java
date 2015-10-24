@@ -212,11 +212,10 @@ public class PreferenceFragmentActivity extends AppCompatActivity implements Dia
     @Override
     public void onDismiss(DialogInterface dialog) {
         Log.v(TAG, "onDismiss");
-        if (mUserInput) {
-            // Ignore, the dialog was dismissed because the user tapped ok on the dialog or selected an item from the list in the dialog.
-        } else {
+        if (!mUserInput) {
             dismiss();
         }
+        // If mUserInput is true: Ignore, the dialog was dismissed because the user tapped ok on the dialog or selected an item from the list in the dialog.
     }
 
     private void dismiss() {

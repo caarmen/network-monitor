@@ -82,7 +82,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         Log.v(TAG, "onCreate " + savedInstanceState);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.log);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         loadHTMLFile();
     }
 
@@ -278,6 +278,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
                 && resultCode == RESULT_OK) loadHTMLFile();
     }
 
+    @SuppressWarnings("unused")
     @Subscribe
     public void onDBOperationStarted(NetMonBus.DBOperationStarted event) {
         Log.d(TAG, "onDBOperationStarted() called with " + "event = [" + event + "]");
@@ -285,6 +286,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         supportInvalidateOptionsMenu();
     }
 
+    @SuppressWarnings("unused")
     @Subscribe
     public void onDBOperationEnded(NetMonBus.DBOperationEnded event) {
         Log.d(TAG, "onDBOperationEnded() called with " + "event = [" + event + "]");

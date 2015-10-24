@@ -53,9 +53,6 @@ public class DBCompress implements DBOperation {
         mContext = context;
     }
 
-    /**
-     * @return the number of rows deleted from the database
-     */
     @Override
     public void execute(ProgressListener listener) {
         Log.v(TAG, "compress DB");
@@ -129,11 +126,6 @@ public class DBCompress implements DBOperation {
     @Override
     public void cancel() {
         mIsCanceled.set(true);
-    }
-
-    @Override
-    public boolean isCanceled() {
-        return mIsCanceled.get();
     }
 
     /**

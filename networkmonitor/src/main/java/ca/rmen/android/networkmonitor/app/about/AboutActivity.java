@@ -70,7 +70,7 @@ public class AboutActivity extends AppCompatActivity {
         SpannableString content = new SpannableString(getString(R.string.about_libraries));
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         tvLibraries.setText(content);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -120,6 +120,7 @@ public class AboutActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressWarnings("UnusedParameters")
     public void onLibrariesClicked(View v) {
         try {
             final LicensesDialogFragment fragment = new LicensesDialogFragment.Builder(this)

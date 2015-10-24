@@ -200,6 +200,7 @@ public class DBOpIntentService extends IntentService {
         super.onDestroy();
     }
 
+    @SuppressWarnings("unused")
     @Produce
     public NetMonBus.DBOperationStarted produceDBOperationStarted() {
         return new NetMonBus.DBOperationStarted();

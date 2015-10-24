@@ -86,18 +86,12 @@ public class DBImport implements DBOperation {
             }
         } catch (RemoteException | OperationApplicationException | SQLException | IOException e) {
             Log.w(TAG, "Error importing the db: " + e.getMessage(), e);
-            return;
         }
     }
 
     @Override
     public void cancel() {
         mIsCanceled.set(true);
-    }
-
-    @Override
-    public boolean isCanceled() {
-        return mIsCanceled.get();
     }
 
     /**

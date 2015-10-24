@@ -43,7 +43,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 class NotificationProgressListener implements ProgressListener {
     private static final String TAG = Constants.TAG + NotificationProgressListener.class.getSimpleName();
 
-    protected final Context mContext;
+    private final Context mContext;
     private final NotificationManager mNotificationManager;
     private final int mNotificationId;
     private final int mNotificationIcon;

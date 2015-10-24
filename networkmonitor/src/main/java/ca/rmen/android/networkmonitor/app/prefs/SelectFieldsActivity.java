@@ -112,12 +112,14 @@ public class SelectFieldsActivity extends AppCompatActivity implements SelectFie
         }
     }
 
-    public void onCancel(@SuppressWarnings("UnusedParameters") View v) {
+    @SuppressWarnings("UnusedParameters")
+    public void onCancel(View v) {
         Log.v(TAG, "onCancel");
         finish();
     }
 
-    public void onOk(@SuppressWarnings("UnusedParameters") View v) {
+    @SuppressWarnings("UnusedParameters")
+    public void onOk(View v) {
         Log.v(TAG, "onOk");
         SparseBooleanArray checkedPositions = mListView.getCheckedItemPositions();
         String[] dbColumns = NetMonColumns.getColumnNames(this);

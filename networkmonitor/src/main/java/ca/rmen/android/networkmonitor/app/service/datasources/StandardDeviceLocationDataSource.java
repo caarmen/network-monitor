@@ -23,8 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.service.datasources;
 
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -34,6 +32,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+
+import java.util.List;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
@@ -115,9 +115,9 @@ public class StandardDeviceLocationDataSource implements NetMonDataSource {
      */
     private boolean isBetter(Location location1, Location location2) {
         if (location1 == null && location2 == null) return false;
-        if (location1 == null && location2 != null) return true;
+        if (location1 == null) return true;
         //noinspection SimplifiableIfStatement
-        if (location1 != null && location2 == null) return false;
+        if (location2 == null) return false;
         return location2.getTime() > location1.getTime();
     }
 

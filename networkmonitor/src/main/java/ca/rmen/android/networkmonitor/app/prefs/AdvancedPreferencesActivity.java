@@ -62,7 +62,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         NetMonPreferences prefs = NetMonPreferences.getInstance(this);
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         // The first time the user sees the notification preferences, we'll set the ringtone preference
@@ -241,6 +241,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (
         }
     }
 
+    @SuppressWarnings("unused")
     @Subscribe
     public void onDBOperationStarted(NetMonBus.DBOperationStarted event) {
         Log.d(TAG, "onDBOperationStarted() called with " + "event = [" + event + "]");
@@ -249,6 +250,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (
         mPreferenceFragment.findPreference(NetMonPreferences.PREF_DB_RECORD_COUNT).setEnabled(false);
     }
 
+    @SuppressWarnings("unused")
     @Subscribe
     public void onDBOperationEnded(NetMonBus.DBOperationEnded event) {
         Log.d(TAG, "onDBOperationEnded() called with " + "event = [" + event + "]");

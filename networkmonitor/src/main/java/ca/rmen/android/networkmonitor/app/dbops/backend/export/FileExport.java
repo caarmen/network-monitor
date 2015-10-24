@@ -53,9 +53,6 @@ public abstract class FileExport implements DBOperation {
         mFile = file;
     }
 
-    /**
-     * @return the file if it was correctly exported, null otherwise.
-     */
     @Override
     abstract public void execute(ProgressListener listener);
 

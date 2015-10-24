@@ -51,12 +51,14 @@ public class SpeedTestAboutActivity extends AppCompatActivity {
         }
     }
 
-    public void okClicked(@SuppressWarnings("UnusedParameters") View view) {
+    @SuppressWarnings("UnusedParameters")
+    public void okClicked(View view) {
         Log.v(TAG, "okClicked");
         finish();
     }
 
-    public void playStoreClicked(@SuppressWarnings("UnusedParameters") View view) {
+    @SuppressWarnings("UnusedParameters")
+    public void playStoreClicked(View view) {
         Log.v(TAG, "playStoreClicked");
         String playStoreUrl = "https://play.google.com/store/search?c=apps&q=speed test";
         final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(playStoreUrl));

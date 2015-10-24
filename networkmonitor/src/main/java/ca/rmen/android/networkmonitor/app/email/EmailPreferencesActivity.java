@@ -57,7 +57,7 @@ public class EmailPreferencesActivity extends AppCompatActivity { // NO_UCD (use
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mPreferenceFragment = NetMonPreferenceFragmentCompat.newInstance(R.xml.email_preferences);
         getSupportFragmentManager().
                 beginTransaction().
@@ -141,12 +141,15 @@ public class EmailPreferencesActivity extends AppCompatActivity { // NO_UCD (use
         CharSequence value;
         if (key.equals(EmailPreferences.PREF_EMAIL_LAST_EMAIL_SENT)) {
             long lastEmailSent = EmailPreferences.getInstance(this).getLastEmailSent();
-            if (lastEmailSent > 0) value = DateUtils.formatDateTime(this, lastEmailSent, DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME
-                    | DateUtils.FORMAT_SHOW_YEAR);
+            if (lastEmailSent > 0)
+                value = DateUtils.formatDateTime(this, lastEmailSent, DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME
+                        | DateUtils.FORMAT_SHOW_YEAR);
             else
                 value = getString(R.string.pref_value_email_report_interval_never);
-        } else if (pref instanceof EditTextPreference) value = ((EditTextPreference) pref).getText();
-        else if (pref instanceof MultiSelectListPreference) value = getSummary((MultiSelectListPreference) pref, ((MultiSelectListPreference) pref).getValues());
+        } else if (pref instanceof EditTextPreference)
+            value = ((EditTextPreference) pref).getText();
+        else if (pref instanceof MultiSelectListPreference)
+            value = getSummary((MultiSelectListPreference) pref, ((MultiSelectListPreference) pref).getValues());
         else
             return;
         String summary = getString(summaryResId, value);

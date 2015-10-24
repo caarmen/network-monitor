@@ -28,5 +28,4 @@ import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 public interface DBOperation {
     void execute(ProgressListener listener);
     void cancel();
-    boolean isCanceled();
 }
