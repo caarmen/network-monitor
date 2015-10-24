@@ -144,7 +144,7 @@ public class SpeedTestExecutionDecider {
         Log.v(TAG, "hasCellSignalStrengthChanged by: " + SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM + '?');
         String lastLoggedCellSignalStrength = DBUtil.readLastLoggedValue(mContext, NetMonColumns.CELL_SIGNAL_STRENGTH_DBM, QUERY_FILTER_HAS_SPEED_TEST);
         return lastLoggedCellSignalStrength != null &&
-            signalStrengthChangeExceedsThreshold(Integer.valueOf(lastLoggedCellSignalStrength), mCurrentCellSignalStrengthDbm);
+                signalStrengthChangeExceedsThreshold(Integer.valueOf(lastLoggedCellSignalStrength), mCurrentCellSignalStrengthDbm);
     }
 
     /**
@@ -156,7 +156,7 @@ public class SpeedTestExecutionDecider {
         int currentWifiSignalStrengthDbm = connectionInfo.getRssi();
         String lastLoggedWifiSignalStrength = DBUtil.readLastLoggedValue(mContext, NetMonColumns.WIFI_RSSI, QUERY_FILTER_HAS_SPEED_TEST);
         return lastLoggedWifiSignalStrength != null &&
-            signalStrengthChangeExceedsThreshold(Integer.valueOf(lastLoggedWifiSignalStrength), currentWifiSignalStrengthDbm);
+                signalStrengthChangeExceedsThreshold(Integer.valueOf(lastLoggedWifiSignalStrength), currentWifiSignalStrengthDbm);
     }
 
     /**
@@ -182,9 +182,8 @@ public class SpeedTestExecutionDecider {
         int numberOfRecordsSinceLastSpeedTest = readNumberOfRecordsSinceLastSpeedTest();
         Log.v(TAG, "isIntervalExceeded: numberOfRecordsSinceLastSpeedTest: " + numberOfRecordsSinceLastSpeedTest
                 + " vs speed test interval: " + mPreferences.getSpeedTestInterval());
-        if (numberOfRecordsSinceLastSpeedTest < 0)
-            return true;
-        return numberOfRecordsSinceLastSpeedTest >= mPreferences.getSpeedTestInterval() - 1;
+        return (numberOfRecordsSinceLastSpeedTest < 0)
+                || (numberOfRecordsSinceLastSpeedTest >= mPreferences.getSpeedTestInterval() - 1);
     }
 
     private int readNumberOfRecordsSinceLastSpeedTest() {
