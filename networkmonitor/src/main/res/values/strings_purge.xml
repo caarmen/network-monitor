@@ -25,9 +25,9 @@ limitations under the License.
 <resources>
     <!-- Strings for deleting/purging a database -->
 
-    <string name="db_op_purge_start">Deleting the database</string>
-    <string name="db_op_purge_progress_title">Data base deletion</string>
+    <string name="db_op_purge_start">Cleaning up the database</string>
+    <string name="db_op_purge_progress_title">Cleaning up the database</string>
     <string name="db_op_purge_progress_content">Deleting %1$d of %2$d</string>
-    <string name="db_op_purge_complete_title">Data base deleted</string>
-    <string name="db_op_purge_complete_content">Deleted %1$d records from the data base</string>
+    <string name="db_op_purge_complete_title">Database cleaned</string>
+    <string name="db_op_purge_complete_content">Deleted %1$d records from the database</string>
 </resources>
