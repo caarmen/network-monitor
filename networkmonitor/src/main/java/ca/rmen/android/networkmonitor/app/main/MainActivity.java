@@ -35,8 +35,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.SwitchPreferenceCompat;
 
+import com.squareup.otto.Subscribe;
+
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.bus.NetMonBus;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
@@ -49,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = Constants.TAG + MainActivity.class.getSimpleName();
     private GPSVerifier mGPSVerifier;
     private NetMonPreferenceFragmentCompat mPreferenceFragment;
+    private static final String PREF_SHARE = "PREF_SHARE";
+    private static final String PREF_CLEAR_LOG_FILE = "PREF_CLEAR_LOG_FILE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +79,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
+        NetMonBus.getBus().register(this);
     }
 
     @Override
     protected void onStop() {
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
+        NetMonBus.getBus().unregister(this);
         super.onStop();
         mGPSVerifier.dismissGPSDialog();
     }
@@ -101,6 +108,20 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         super.onBackPressed();
+    }
+
+    @Subscribe
+    public void onDBOperationStarted(NetMonBus.DBOperationStarted event) {
+        Log.d(TAG, "onDBOperationStarted() called with " + "event = [" + event + "]");
+        mPreferenceFragment.findPreference(PREF_SHARE).setEnabled(false);
+        mPreferenceFragment.findPreference(PREF_CLEAR_LOG_FILE).setEnabled(false);
+    }
+
+    @Subscribe
+    public void onDBOperationEnded(NetMonBus.DBOperationEnded event) {
+        Log.d(TAG, "onDBOperationEnded() called with " + "event = [" + event + "]");
+        mPreferenceFragment.findPreference(PREF_SHARE).setEnabled(true);
+        mPreferenceFragment.findPreference(PREF_CLEAR_LOG_FILE).setEnabled(true);
     }
 
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {

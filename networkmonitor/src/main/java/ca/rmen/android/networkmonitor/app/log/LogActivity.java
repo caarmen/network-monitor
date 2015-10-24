@@ -24,8 +24,6 @@
  */
 package ca.rmen.android.networkmonitor.app.log;
 
-import java.io.File;
-
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
@@ -50,8 +48,13 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.squareup.otto.Subscribe;
+
+import java.io.File;
+
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.bus.NetMonBus;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.HTMLExport;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
@@ -69,6 +72,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
     private WebView mWebView;
     private Dialog mDialog;
     private Menu mMenu;
+    private boolean mDBOpInProgress;
     private static final int REQUEST_CODE_CLEAR = 1;
     private static final int REQUEST_CODE_SELECT_FIELDS = 2;
     private static final int REQUEST_CODE_FILTER_COLUMN = 3;
@@ -86,8 +90,9 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
     protected void onPause() {
         Log.v(TAG, "onPause");
         if (mDialog != null) mDialog.dismiss();
-        super.onPause();
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
+        NetMonBus.getBus().unregister(this);
+        super.onPause();
     }
 
     @Override
@@ -96,6 +101,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         super.onResume();
         if (mDialog != null) mDialog.show();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
+        NetMonBus.getBus().register(this);
     }
 
     @Override
@@ -110,6 +116,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
     public boolean onPrepareOptionsMenu(Menu menu) {
         // Only show the menu item to clear filters if we have filters.
         menu.findItem(R.id.action_reset_filters).setVisible(NetMonPreferences.getInstance(this).hasColumnFilters());
+        menu.findItem(R.id.action_clear).setEnabled(!mDBOpInProgress);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -269,6 +276,20 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         super.onActivityResult(requestCode, resultCode, data);
         if ((requestCode == REQUEST_CODE_CLEAR || requestCode == REQUEST_CODE_SELECT_FIELDS || requestCode == REQUEST_CODE_FILTER_COLUMN)
                 && resultCode == RESULT_OK) loadHTMLFile();
+    }
+
+    @Subscribe
+    public void onDBOperationStarted(NetMonBus.DBOperationStarted event) {
+        Log.d(TAG, "onDBOperationStarted() called with " + "event = [" + event + "]");
+        mDBOpInProgress = true;
+        supportInvalidateOptionsMenu();
+    }
+
+    @Subscribe
+    public void onDBOperationEnded(NetMonBus.DBOperationEnded event) {
+        Log.d(TAG, "onDBOperationEnded() called with " + "event = [" + event + "]");
+        mDBOpInProgress = false;
+        supportInvalidateOptionsMenu();
     }
 
     /**

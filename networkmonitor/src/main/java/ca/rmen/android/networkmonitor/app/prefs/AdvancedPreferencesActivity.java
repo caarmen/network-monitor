@@ -40,8 +40,11 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import com.squareup.otto.Subscribe;
+
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.bus.NetMonBus;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.LocationFetchingStrategy;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
@@ -104,13 +107,16 @@ public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (
     protected void onStart() {
         super.onStart();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
+        NetMonBus.getBus().register(this);
     }
 
     @Override
     protected void onStop() {
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
+        NetMonBus.getBus().unregister(this);
         super.onStop();
     }
+
 
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
         @Override
@@ -233,6 +239,22 @@ public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Subscribe
+    public void onDBOperationStarted(NetMonBus.DBOperationStarted event) {
+        Log.d(TAG, "onDBOperationStarted() called with " + "event = [" + event + "]");
+        mPreferenceFragment.findPreference(PREF_IMPORT).setEnabled(false);
+        mPreferenceFragment.findPreference(PREF_COMPRESS).setEnabled(false);
+        mPreferenceFragment.findPreference(NetMonPreferences.PREF_DB_RECORD_COUNT).setEnabled(false);
+    }
+
+    @Subscribe
+    public void onDBOperationEnded(NetMonBus.DBOperationEnded event) {
+        Log.d(TAG, "onDBOperationEnded() called with " + "event = [" + event + "]");
+        mPreferenceFragment.findPreference(PREF_IMPORT).setEnabled(true);
+        mPreferenceFragment.findPreference(PREF_COMPRESS).setEnabled(true);
+        mPreferenceFragment.findPreference(NetMonPreferences.PREF_DB_RECORD_COUNT).setEnabled(true);
     }
 
 }

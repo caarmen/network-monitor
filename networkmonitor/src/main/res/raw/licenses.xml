@@ -41,4 +41,10 @@ limitations under the License.
         <copyright>Copyright (c) The Apache Software Foundation</copyright>
         <license>Apache Software License 2.0</license>
     </notice>
+    <notice>
+        <name>Otto</name>
+        <url>http://square.github.io/otto/</url>
+        <copyright>Copyright (c) Square, Inc.</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
 </notices>

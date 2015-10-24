@@ -37,10 +37,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
+import com.squareup.otto.Produce;
+
 import java.io.File;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.bus.NetMonBus;
 import ca.rmen.android.networkmonitor.app.dbops.backend.clean.DBCompress;
 import ca.rmen.android.networkmonitor.app.dbops.backend.clean.DBPurge;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.CSVExport;
@@ -158,6 +161,8 @@ public class DBOpIntentService extends IntentService {
                         R.string.db_op_import_progress_title,
                         R.string.db_op_import_progress_content,
                         R.string.db_op_import_complete_title);
+        NetMonBus.getBus().register(this);
+        NetMonBus.getBus().post(new NetMonBus.DBOperationStarted());
     }
 
     @Override
@@ -177,6 +182,18 @@ public class DBOpIntentService extends IntentService {
                 handleActionImport(uri);
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        NetMonBus.getBus().post(new NetMonBus.DBOperationEnded());
+        NetMonBus.getBus().unregister(this);
+        super.onDestroy();
+    }
+
+    @Produce
+    public NetMonBus.DBOperationStarted produceDBOperationStarted() {
+        return new NetMonBus.DBOperationStarted();
     }
 
     private void handleActionCompress() {
