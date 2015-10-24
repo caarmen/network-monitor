@@ -258,7 +258,7 @@ public class DBOpIntentService extends IntentService {
 
         // All done
         pendingIntent = PendingIntent.getActivity(this, 0, shareIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        if(fileExport != null && fileExport.isCanceled()) {
+        if (fileExport != null && fileExport.isCanceled()) {
             updateFileExportNotification(getString(R.string.export_notif_canceled_title), getString(R.string.export_notif_canceled_content), pendingIntent, true);
         } else {
             updateFileExportNotification(getString(R.string.export_notif_complete_title), getString(R.string.export_notif_complete_content), pendingIntent, true);
@@ -266,16 +266,16 @@ public class DBOpIntentService extends IntentService {
     }
 
     private void updateFileExportNotification(String titleText, String contentText, PendingIntent pendingIntent, boolean autoCancel) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setSmallIcon(R.drawable.ic_stat_db_op_export);
-        builder.setTicker(titleText);
-        builder.setContentTitle(titleText);
-        builder.setContentText(contentText);
-        builder.setAutoCancel(autoCancel);
-        builder.setOngoing(!autoCancel);
-        builder.setContentIntent(pendingIntent);
-        builder.setColor(ActivityCompat.getColor(this, R.color.netmon_color));
-        Notification notification = builder.build();
+        Notification notification = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_stat_db_op_export)
+                .setTicker(titleText)
+                .setContentTitle(titleText)
+                .setContentText(contentText)
+                .setAutoCancel(autoCancel)
+                .setOngoing(!autoCancel)
+                .setContentIntent(pendingIntent)
+                .setColor(ActivityCompat.getColor(this, R.color.netmon_color))
+                .build();
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(FileExport.class.hashCode(), notification);
     }

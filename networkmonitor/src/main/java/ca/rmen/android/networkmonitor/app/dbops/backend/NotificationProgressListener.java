@@ -72,35 +72,37 @@ class NotificationProgressListener implements ProgressListener {
         int notifUpdateIncrement = (int) (max * 0.05);
         boolean updateNotification = progress <= 1 || progress % notifUpdateIncrement == 0;
         if (!updateNotification) return;
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
-        builder.setSmallIcon(mNotificationIcon);
-        builder.setTicker(mContext.getString(mNotificationProgressTitleId));
-        builder.setContentTitle(mContext.getString(mNotificationProgressTitleId));
-        builder.setProgress(max, progress, false);
-        builder.setOngoing(true);
-        builder.addAction(R.drawable.ic_action_stop, mContext.getString(R.string.service_notification_action_stop),
-                PendingIntent.getBroadcast(mContext, 0, new Intent(DBOpIntentService.ACTION_STOP_DB_OP), PendingIntent.FLAG_CANCEL_CURRENT));
-        builder.setColor(ActivityCompat.getColor(mContext, R.color.netmon_color));
-        builder.setContentText(mContext.getString(mNotificationProgressContentId, progress, max));
-        builder.setAutoCancel(false);
-        builder.setContentIntent(getMainActivityPendingIntent(mContext));
-        Notification notification = builder.build();
+        Notification notification = new NotificationCompat.Builder(mContext)
+                .setSmallIcon(mNotificationIcon)
+                .setTicker(mContext.getString(mNotificationProgressTitleId))
+                .setContentTitle(mContext.getString(mNotificationProgressTitleId))
+                .setProgress(max, progress, false)
+                .setOngoing(true)
+                .addAction(R.drawable.ic_action_stop, mContext.getString(R.string.service_notification_action_stop),
+                        PendingIntent.getBroadcast(mContext, 0, new Intent(DBOpIntentService.ACTION_STOP_DB_OP), PendingIntent.FLAG_CANCEL_CURRENT))
+                .setColor(ActivityCompat.getColor(mContext, R.color.netmon_color))
+                .setContentText(mContext.getString(mNotificationProgressContentId, progress, max))
+                .setAutoCancel(false)
+                .setContentIntent(getMainActivityPendingIntent(mContext))
+                .build();
+
         mNotificationManager.notify(mNotificationId, notification);
     }
 
     @Override
     public void onComplete(String message) {
         Log.d(TAG, "onComplete() called with " + "message = [" + message + "]");
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
-        builder.setSmallIcon(R.drawable.ic_stat_action_done);
-        builder.setTicker(mContext.getString(mNotificationCompleteTitleId));
-        builder.setContentTitle(mContext.getString(mNotificationCompleteTitleId));
-        builder.setContentText(message);
-        builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-        builder.setColor(ActivityCompat.getColor(mContext, R.color.netmon_color));
-        builder.setAutoCancel(true);
-        builder.setContentIntent(getMainActivityPendingIntent(mContext));
-        Notification notification = builder.build();
+        Notification notification = new NotificationCompat.Builder(mContext)
+                .setSmallIcon(R.drawable.ic_stat_action_done)
+                .setTicker(mContext.getString(mNotificationCompleteTitleId))
+                .setContentTitle(mContext.getString(mNotificationCompleteTitleId))
+                .setContentText(message)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                .setColor(ActivityCompat.getColor(mContext, R.color.netmon_color))
+                .setAutoCancel(true)
+                .setContentIntent(getMainActivityPendingIntent(mContext))
+                .build();
+
         mNotificationManager.notify(mNotificationId, notification);
     }
 
@@ -108,32 +110,32 @@ class NotificationProgressListener implements ProgressListener {
     @Override
     public void onWarning(String message) {
         Log.d(TAG, "onWarning() called with " + "message = [" + message + "]");
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
-        builder.setSmallIcon(R.drawable.ic_stat_warning);
-        builder.setTicker(mContext.getString(mNotificationProgressTitleId));
-        builder.setContentTitle(mContext.getString(mNotificationProgressTitleId));
-        builder.setContentText(message);
-        builder.setAutoCancel(true);
-        builder.setContentIntent(getMainActivityPendingIntent(mContext));
-        builder.setColor(ActivityCompat.getColor(mContext, R.color.netmon_color));
-        Notification notification = builder.build();
+        Notification notification = new NotificationCompat.Builder(mContext)
+                .setSmallIcon(R.drawable.ic_stat_warning)
+                .setTicker(mContext.getString(mNotificationProgressTitleId))
+                .setContentTitle(mContext.getString(mNotificationProgressTitleId))
+                .setContentText(message)
+                .setAutoCancel(true)
+                .setContentIntent(getMainActivityPendingIntent(mContext))
+                .setColor(ActivityCompat.getColor(mContext, R.color.netmon_color))
+                .build();
+
         mNotificationManager.notify(mNotificationId, notification);
     }
 
     @Override
     public void onError(String message) {
         Log.d(TAG, "onError() called with " + "message = [" + message + "]");
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
-        builder.setSmallIcon(R.drawable.ic_stat_warning);
-        builder.setTicker(mContext.getString(mNotificationProgressTitleId));
-        builder.setContentTitle(mContext.getString(mNotificationProgressTitleId));
-        builder.setContentText(message);
-        builder.setAutoCancel(true);
-        builder.setContentIntent(getMainActivityPendingIntent(mContext));
-        builder.setColor(ActivityCompat.getColor(mContext, R.color.netmon_color));
-        Notification notification = builder.build();
+        Notification notification = new NotificationCompat.Builder(mContext)
+                .setSmallIcon(R.drawable.ic_stat_warning)
+                .setTicker(mContext.getString(mNotificationProgressTitleId))
+                .setContentTitle(mContext.getString(mNotificationProgressTitleId))
+                .setContentText(message)
+                .setAutoCancel(true)
+                .setContentIntent(getMainActivityPendingIntent(mContext))
+                .setColor(ActivityCompat.getColor(mContext, R.color.netmon_color))
+                .build();
         mNotificationManager.notify(mNotificationId, notification);
-
     }
 
     private static PendingIntent getMainActivityPendingIntent(Context context) {
