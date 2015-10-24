@@ -30,6 +30,7 @@ import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.RemoteException;
 
@@ -118,39 +119,44 @@ public class DBImport implements DBOperation {
     private void buildInsertOperations(SQLiteDatabase dbImport, Uri uri, ArrayList<ContentProviderOperation> operations, ProgressListener listener)
             throws RemoteException, OperationApplicationException {
         Log.v(TAG, "buildInsertOperations: uri = " + uri);
-        Cursor c = dbImport.query(false, NetMonColumns.TABLE_NAME, null, null, null, null, null, null, null);
-        if (c != null) {
-            try {
-                int count = c.getCount();
-                if (c.moveToFirst()) {
-                    int columnCount = c.getColumnCount();
-                    do {
-                        Builder builder = ContentProviderOperation.newInsert(uri);
-                        for (int i = 0; i < columnCount; i++) {
-                            String columnName = c.getColumnName(i);
-                            Object value = c.getString(i);
-                            builder.withValue(columnName, value);
-                        }
-                        operations.add(builder.build());
-                        if (operations.size() >= 100) {
+        try {
+            Cursor c = dbImport.query(false, NetMonColumns.TABLE_NAME, null, null, null, null, null, null, null);
+            if (c != null) {
+                try {
+                    int count = c.getCount();
+                    if (c.moveToFirst()) {
+                        int columnCount = c.getColumnCount();
+                        do {
+                            Builder builder = ContentProviderOperation.newInsert(uri);
+                            for (int i = 0; i < columnCount; i++) {
+                                String columnName = c.getColumnName(i);
+                                Object value = c.getString(i);
+                                builder.withValue(columnName, value);
+                            }
+                            operations.add(builder.build());
+                            if (operations.size() >= 100) {
+                                mContext.getContentResolver().applyBatch(NetMonProvider.AUTHORITY, operations);
+                                operations.clear();
+                            }
+                            if (listener != null) listener.onProgress(c.getPosition(), count);
+                        } while (c.moveToNext() && !mIsCanceled.get());
+                        if (operations.size() > 0 && !mIsCanceled.get())
                             mContext.getContentResolver().applyBatch(NetMonProvider.AUTHORITY, operations);
-                            operations.clear();
-                        }
-                        if (listener != null) listener.onProgress(c.getPosition(), count);
-                    } while (c.moveToNext() && !mIsCanceled.get());
-                    if (operations.size() > 0 && !mIsCanceled.get()) mContext.getContentResolver().applyBatch(NetMonProvider.AUTHORITY, operations);
+                    }
+                    if (listener != null) {
+                        if (mIsCanceled.get())
+                            listener.onError(mContext.getString(R.string.import_notif_canceled_content));
+                        else
+                            listener.onComplete(mContext.getString(R.string.import_notif_complete_content, mUri.getPath()));
+                    }
+                    return;
+                } finally {
+                    c.close();
                 }
-                if (listener != null) {
-                    if (mIsCanceled.get())
-                        listener.onError(mContext.getString(R.string.import_notif_canceled_content));
-                    else
-                        listener.onComplete(mContext.getString(R.string.import_notif_complete_content, mUri.getPath()));
-                }
-                return;
-            } finally {
-                c.close();
             }
+        } catch (SQLiteException e) {
+           Log.w(TAG, "Couldn't import database " + mUri, e);
         }
-        if (listener != null) listener.onError(mContext.getString(R.string.import_notif_error_content, mUri.toString()));
+        if (listener != null) listener.onError(mContext.getString(R.string.import_notif_error_content, mUri.getPath()));
     }
 }
