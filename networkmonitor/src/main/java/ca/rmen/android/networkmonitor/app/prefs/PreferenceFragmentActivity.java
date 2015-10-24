@@ -112,6 +112,7 @@ public class PreferenceFragmentActivity extends AppCompatActivity implements Dia
                     ID_ACTION_COMPRESS, intent.getExtras());
         } else if (ACTION_CLEAR_OLD.equals(action)) {
             DBOpIntentService.startActionPurge(this, NetMonPreferences.getInstance(this).getDBRecordCount());
+            finish();
         } else if (ACTION_SHOW_INFO_DIALOG.equals(action)) {
             DialogFragmentFactory.showInfoDialog(this, intent.getExtras().getString(EXTRA_DIALOG_TITLE), intent.getExtras().getString(EXTRA_DIALOG_MESSAGE));
         } else if (ACTION_SHOW_WARNING_DIALOG.equals(action)) {
@@ -167,15 +168,18 @@ public class PreferenceFragmentActivity extends AppCompatActivity implements Dia
         if (actionId == ID_ACTION_CLEAR) {
             Log.v(TAG, "Clicked ok to clear log");
             DBOpIntentService.startActionPurge(this, 0);
+            finish();
         }
         // Import the database in a background thread.
         else if (actionId == ID_ACTION_IMPORT) {
             final Uri uri = extras.getParcelable(EXTRA_IMPORT_URI);
             DBOpIntentService.startActionImport(this, uri);
+            finish();
         }
         // Compress the database in a background thread
         else if (actionId == ID_ACTION_COMPRESS) {
             DBOpIntentService.startActionCompress(this);
+            finish();
         } else if (actionId == ID_ACTION_LOCATION_SETTINGS) {
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intent);
