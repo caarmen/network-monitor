@@ -28,10 +28,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
@@ -79,6 +77,8 @@ class NotificationProgressListener implements ProgressListener {
         builder.setTicker(mContext.getString(mNotificationProgressTitleId));
         builder.setContentTitle(mContext.getString(mNotificationProgressTitleId));
         builder.setProgress(max, progress, false);
+        builder.setOngoing(true);
+        builder.setColor(ActivityCompat.getColor(mContext, R.color.netmon_color));
         builder.setContentText(mContext.getString(mNotificationProgressContentId, progress, max));
         builder.setAutoCancel(false);
         builder.setContentIntent(getMainActivityPendingIntent(mContext));
@@ -89,13 +89,13 @@ class NotificationProgressListener implements ProgressListener {
     @Override
     public void onComplete(String message) {
         Log.d(TAG, "onComplete() called with " + "message = [" + message + "]");
-        showToast(mContext, message);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
-        builder.setSmallIcon(mNotificationIcon);
+        builder.setSmallIcon(R.drawable.ic_stat_action_done);
         builder.setTicker(mContext.getString(mNotificationCompleteTitleId));
         builder.setContentTitle(mContext.getString(mNotificationCompleteTitleId));
         builder.setContentText(message);
         builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+        builder.setColor(ActivityCompat.getColor(mContext, R.color.netmon_color));
         builder.setAutoCancel(true);
         builder.setContentIntent(getMainActivityPendingIntent(mContext));
         Notification notification = builder.build();
@@ -113,6 +113,7 @@ class NotificationProgressListener implements ProgressListener {
         builder.setContentText(message);
         builder.setAutoCancel(true);
         builder.setContentIntent(getMainActivityPendingIntent(mContext));
+        builder.setColor(ActivityCompat.getColor(mContext, R.color.netmon_color));
         Notification notification = builder.build();
         mNotificationManager.notify(mNotificationId, notification);
     }
@@ -127,18 +128,10 @@ class NotificationProgressListener implements ProgressListener {
         builder.setContentText(message);
         builder.setAutoCancel(true);
         builder.setContentIntent(getMainActivityPendingIntent(mContext));
+        builder.setColor(ActivityCompat.getColor(mContext, R.color.netmon_color));
         Notification notification = builder.build();
         mNotificationManager.notify(mNotificationId, notification);
 
-    }
-
-    private static void showToast(final Context context, final String message) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     private static PendingIntent getMainActivityPendingIntent(Context context) {

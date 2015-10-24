@@ -33,6 +33,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
@@ -237,7 +238,9 @@ public class DBOpIntentService extends IntentService {
         builder.setContentTitle(getString(R.string.db_op_export_progress_title));
         builder.setContentText(contentText);
         builder.setAutoCancel(autoCancel);
+        builder.setOngoing(!autoCancel);
         builder.setContentIntent(pendingIntent);
+        builder.setColor(ActivityCompat.getColor(this, R.color.netmon_color));
         Notification notification = builder.build();
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(FileExport.class.hashCode(), notification);
