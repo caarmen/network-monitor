@@ -26,6 +26,6 @@ limitations under the License.
     <!-- Strings for compressing a database -->
     <string name="compress_confirm_title">Compresser la base de données ?</string>
     <string name="compress_confirm_message">Fusionner les lignes consecutives avec données identiques.</string>
-    <string name="compress_successful">%1$s lignes supprimées de la base de données.</string>
-    <string name="compress_failed">Echec de la compression de la base de données.</string>
+    <string name="compress_notif_complete_content">%1$s lignes supprimées de la base de données.</string>
+    <string name="compress_notif_error_content">Echec de la compression de la base de données.</string>
 </resources>

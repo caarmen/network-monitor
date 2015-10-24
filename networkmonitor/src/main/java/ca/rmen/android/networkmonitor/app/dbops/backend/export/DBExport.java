@@ -75,7 +75,7 @@ public class DBExport extends FileExport {
             }
         } catch (IOException e) {
             Log.v(TAG, "Could not copy DB file: " + e.getMessage(), e);
-            if (listener != null) listener.onError(mContext.getString(R.string.export_save_to_external_storage_fail));
+            if (listener != null) listener.onError(mContext.getString(R.string.export_notif_error_content));
         }
     }
 

@@ -26,12 +26,14 @@ limitations under the License.
     <!-- Strings for importing a database -->
     <string name="import_confirm_title">Confirm import</string>
     <string name="import_confirm_message">Delete the current database and replace with %s?</string>
-    <string name="import_successful">Successfully imported %s.</string>
-    <string name="import_failed">Failed to import %s.</string>
-    <string name="import_canceled">The import was canceled.</string>
 
-    <string name="db_op_import_start">Importing database</string>
-    <string name="db_op_import_progress_title">Importing database</string>
-    <string name="db_op_import_progress_content">Importing %1$d of %2$d</string>
-    <string name="db_op_import_complete_title">Import complete</string>
+    <string name="import_toast_start">Importing database</string>
+
+    <string name="import_notif_progress_title">Importing database</string>
+    <string name="import_notif_progress_content">Importing %1$d of %2$d</string>
+    <string name="import_notif_complete_title">Import complete</string>
+    <string name="import_notif_complete_content">Successfully imported %s.</string>
+    <string name="import_notif_canceled_content">The import was canceled.</string>
+    <string name="import_notif_error_content">Failed to import %s.</string>
+
 </resources>

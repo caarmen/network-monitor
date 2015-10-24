@@ -56,7 +56,7 @@ class SaveToStorage {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(context, R.string.export_save_to_external_storage_fail, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.export_notif_error_content, Toast.LENGTH_LONG).show();
             }
         });
     }

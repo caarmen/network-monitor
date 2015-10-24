@@ -26,6 +26,6 @@ limitations under the License.
     <!-- Strings for importing a database -->
     <string name="import_confirm_title">Confirmer l\'import</string>
     <string name="import_confirm_message">Supprimer toutes les données et les remplacer par %s?</string>
-    <string name="import_successful">L\'importation de %s a réussi.</string>
-    <string name="import_failed">Echec de l\'importation de %s.</string>
+    <string name="import_notif_complete_content">L\'importation de %s a réussi.</string>
+    <string name="import_notif_error_content">Echec de l\'importation de %s.</string>
 </resources>

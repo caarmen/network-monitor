@@ -111,7 +111,8 @@ public class PreferenceFragmentActivity extends AppCompatActivity implements Dia
             DialogFragmentFactory.showConfirmDialog(this, getString(R.string.compress_confirm_title), getString(R.string.compress_confirm_message),
                     ID_ACTION_COMPRESS, intent.getExtras());
         } else if (ACTION_CLEAR_OLD.equals(action)) {
-            DBOpIntentService.startActionPurge(this, NetMonPreferences.getInstance(this).getDBRecordCount());
+            int rowsToKeep = NetMonPreferences.getInstance(this).getDBRecordCount();
+            if (rowsToKeep > 0) DBOpIntentService.startActionPurge(this, rowsToKeep);
             finish();
         } else if (ACTION_SHOW_INFO_DIALOG.equals(action)) {
             DialogFragmentFactory.showInfoDialog(this, intent.getExtras().getString(EXTRA_DIALOG_TITLE), intent.getExtras().getString(EXTRA_DIALOG_MESSAGE));

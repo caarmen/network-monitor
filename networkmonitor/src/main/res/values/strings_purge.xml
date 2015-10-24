@@ -22,12 +22,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Strings for deleting/purging a database -->
 
-    <string name="db_op_purge_start">Cleaning up the database</string>
-    <string name="db_op_purge_progress_title">Cleaning up the database</string>
-    <string name="db_op_purge_progress_content">Deleting %1$d of %2$d</string>
-    <string name="db_op_purge_complete_title">Database cleaned</string>
-    <string name="db_op_purge_complete_content">Deleted %1$d records from the database</string>
+    <string name="purge_toast_start">Cleaning up the database</string>
+
+    <string name="purge_notif_progress_title">Cleaning up the database</string>
+    <string name="purge_notif_progress_content">Deleting %1$d of %2$d</string>
+    <string name="purge_notif_complete_title">Database cleaned</string>
+    <string name="purge_notif_complete_content" tools:ignore="PluralsCandidate">Deleted %1$d records from the database</string>
 </resources>

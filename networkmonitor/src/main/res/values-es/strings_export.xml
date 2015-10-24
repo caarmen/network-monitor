@@ -25,7 +25,6 @@ limitations under the License.
 <resources>
     <!-- Strings for exporting the log file -->
     <string name="export_subject_send_log">Archivo log de Network Monitor</string>
-    <string name="export_error_sdcard_unmounted">Imposible crear el archivo log. Verifica que la tarjeta SD esté disponible.</string>
     <string name="export_choice_title">Escoge un formato</string>
     <string name="export_choice_csv">CSV</string>
     <string name="export_choice_html">HTML</string>
@@ -46,7 +45,7 @@ limitations under the License.
     <string name="export_warning_file_too_big_message">Memoria insuficiente para exportar el fichero entero.</string>
     <string name="export_value_unknown">N/D</string>
     <string name="export_save_to_external_storage">Almacenar en memoria</string>
-    <string name="export_save_to_external_storage_fail">Imposible guardar el archivo</string>
+    <string name="export_notif_error_content">Imposible guardar el archivo</string>
     <string name="export_save_to_external_storage_success">Guardado %s</string>
 
 </resources>

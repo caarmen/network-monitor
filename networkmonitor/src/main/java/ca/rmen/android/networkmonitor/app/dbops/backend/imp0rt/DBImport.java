@@ -142,15 +142,15 @@ public class DBImport implements DBOperation {
                 }
                 if (listener != null) {
                     if (mIsCanceled.get())
-                        listener.onError(mContext.getString(R.string.import_canceled));
+                        listener.onError(mContext.getString(R.string.import_notif_canceled_content));
                     else
-                        listener.onComplete(mContext.getString(R.string.import_successful, mUri.getPath()));
+                        listener.onComplete(mContext.getString(R.string.import_notif_complete_content, mUri.getPath()));
                 }
                 return;
             } finally {
                 c.close();
             }
         }
-        if (listener != null) listener.onError(mContext.getString(R.string.import_failed, mUri.toString()));
+        if (listener != null) listener.onError(mContext.getString(R.string.import_notif_error_content, mUri.toString()));
     }
 }

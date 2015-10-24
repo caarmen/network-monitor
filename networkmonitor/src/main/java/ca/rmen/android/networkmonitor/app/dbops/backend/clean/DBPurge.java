@@ -69,7 +69,7 @@ public class DBPurge implements DBOperation {
 
         if (mNumRowsToKeep == 0) {
             int result = mContext.getContentResolver().delete(NetMonColumns.CONTENT_URI, null, null);
-            if (listener != null) listener.onComplete(mContext.getString(R.string.db_op_purge_complete_content, result));
+            if (listener != null) listener.onComplete(mContext.getString(R.string.purge_notif_complete_content, result));
             return;
         }
 
@@ -97,7 +97,7 @@ public class DBPurge implements DBOperation {
             int result = mContext.getContentResolver().delete(NetMonColumns.CONTENT_URI, BaseColumns._ID + " < ?",
                     new String[] { String.valueOf(oldestIdToKeep) });
             Log.v(TAG, "Deleted " + result + " rows");
-            if (listener != null) listener.onComplete(mContext.getString(R.string.db_op_purge_complete_content, result));
+            if (listener != null) listener.onComplete(mContext.getString(R.string.purge_notif_complete_content, result));
         }
     }
 

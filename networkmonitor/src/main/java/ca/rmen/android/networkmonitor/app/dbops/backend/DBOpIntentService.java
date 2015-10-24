@@ -94,7 +94,7 @@ public class DBOpIntentService extends IntentService {
     public static void startActionCompress(Context context) {
         Intent intent = new Intent(context, DBOpIntentService.class);
         intent.setAction(ACTION_COMPRESS);
-        showToast(context, context.getString(R.string.db_op_compress_start));
+        showToast(context, context.getString(R.string.compress_toast_start));
         context.startService(intent);
     }
 
@@ -102,7 +102,7 @@ public class DBOpIntentService extends IntentService {
         Intent intent = new Intent(context, DBOpIntentService.class);
         intent.setAction(ACTION_PURGE);
         intent.putExtra(EXTRA_PURGE_NUM_ROWS_TO_KEEP, numRowsToKeep);
-        showToast(context, context.getString(R.string.db_op_purge_start));
+        showToast(context, context.getString(R.string.purge_toast_start));
         context.startService(intent);
     }
 
@@ -127,7 +127,7 @@ public class DBOpIntentService extends IntentService {
         Intent intent = new Intent(context, DBOpIntentService.class);
         intent.setAction(ACTION_IMPORT);
         intent.setData(uri);
-        showToast(context, context.getString(R.string.db_op_import_start));
+        showToast(context, context.getString(R.string.import_toast_start));
         context.startService(intent);
     }
 
@@ -143,30 +143,30 @@ public class DBOpIntentService extends IntentService {
                 new NotificationProgressListener(this,
                         DBCompress.class.hashCode(),
                         R.drawable.ic_stat_db_op_compress,
-                        R.string.db_op_compress_progress_title,
-                        R.string.db_op_compress_progress_content,
-                        R.string.db_op_compress_complete_title);
+                        R.string.compress_notif_progress_title,
+                        R.string.compress_notif_progress_content,
+                        R.string.compress_notif_complete_title);
         mPurgeProgressListener =
                 new NotificationProgressListener(this,
                         DBPurge.class.hashCode(),
                         R.drawable.ic_stat_db_op_delete,
-                        R.string.db_op_purge_progress_title,
-                        R.string.db_op_purge_progress_content,
-                        R.string.db_op_purge_complete_title);
+                        R.string.purge_notif_progress_title,
+                        R.string.purge_notif_progress_content,
+                        R.string.purge_notif_complete_title);
         mExportProgressListener =
                 new NotificationProgressListener(this,
                         FileExport.class.hashCode(),
                         R.drawable.ic_stat_db_op_export,
-                        R.string.db_op_export_progress_title,
-                        R.string.db_op_export_progress_content,
-                        R.string.db_op_export_complete_title);
+                        R.string.export_notif_progress_title,
+                        R.string.export_notif_progress_content,
+                        R.string.export_notif_complete_title);
         mImportProgressListener =
                 new NotificationProgressListener(this,
                         DBImport.class.hashCode(),
                         R.drawable.ic_stat_db_op_import,
-                        R.string.db_op_import_progress_title,
-                        R.string.db_op_import_progress_content,
-                        R.string.db_op_import_complete_title);
+                        R.string.import_notif_progress_title,
+                        R.string.import_notif_progress_content,
+                        R.string.import_notif_complete_title);
         NetMonBus.getBus().register(this);
         NetMonBus.getBus().post(new NetMonBus.DBOperationStarted());
         registerReceiver(mStopSelfReceiver, new IntentFilter(ACTION_STOP_DB_OP));
@@ -252,16 +252,16 @@ public class DBOpIntentService extends IntentService {
 
         // Start the summary report
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-        updateFileExportNotification(getString(R.string.db_op_export_progress_title), getString(R.string.export_progress_finalizing_export), pendingIntent, false);
+        updateFileExportNotification(getString(R.string.export_notif_progress_title), getString(R.string.export_progress_finalizing_export), pendingIntent, false);
 
         Intent shareIntent = FileExport.getShareIntent(this, file);
 
         // All done
         pendingIntent = PendingIntent.getActivity(this, 0, shareIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         if(fileExport != null && fileExport.isCanceled()) {
-            updateFileExportNotification(getString(R.string.db_op_export_canceled_title), getString(R.string.db_op_export_complete_content), pendingIntent, true);
+            updateFileExportNotification(getString(R.string.export_notif_canceled_title), getString(R.string.export_notif_canceled_content), pendingIntent, true);
         } else {
-            updateFileExportNotification(getString(R.string.db_op_export_complete_title), getString(R.string.db_op_export_complete_content), pendingIntent, true);
+            updateFileExportNotification(getString(R.string.export_notif_complete_title), getString(R.string.export_notif_complete_content), pendingIntent, true);
         }
     }
 
