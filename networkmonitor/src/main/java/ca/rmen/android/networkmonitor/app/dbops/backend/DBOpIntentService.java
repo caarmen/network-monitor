@@ -35,6 +35,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.DrawableRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
@@ -252,25 +253,26 @@ public class DBOpIntentService extends IntentService {
 
         // Start the summary report
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-        updateFileExportNotification(getString(R.string.export_notif_progress_title), getString(R.string.export_progress_finalizing_export), pendingIntent, false);
+        updateFileExportNotification(R.drawable.ic_stat_db_op_export, getString(R.string.export_notif_progress_title), getString(R.string.export_progress_finalizing_export), pendingIntent, false);
 
         Intent shareIntent = FileExport.getShareIntent(this, file);
 
         // All done
         pendingIntent = PendingIntent.getActivity(this, 0, shareIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         if (fileExport != null && fileExport.isCanceled()) {
-            updateFileExportNotification(getString(R.string.export_notif_canceled_title), getString(R.string.export_notif_canceled_content), pendingIntent, true);
+            updateFileExportNotification(R.drawable.ic_stat_action_done, getString(R.string.export_notif_canceled_title), getString(R.string.export_notif_canceled_content), pendingIntent, true);
         } else {
-            updateFileExportNotification(getString(R.string.export_notif_complete_title), getString(R.string.export_notif_complete_content), pendingIntent, true);
+            updateFileExportNotification(R.drawable.ic_stat_action_done, getString(R.string.export_notif_complete_title), getString(R.string.export_notif_complete_content), pendingIntent, true);
         }
     }
 
-    private void updateFileExportNotification(String titleText, String contentText, PendingIntent pendingIntent, boolean autoCancel) {
+    private void updateFileExportNotification(@DrawableRes int iconId, String titleText, String contentText, PendingIntent pendingIntent, boolean autoCancel) {
         Notification notification = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_stat_db_op_export)
+                .setSmallIcon(iconId)
                 .setTicker(titleText)
                 .setContentTitle(titleText)
                 .setContentText(contentText)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText))
                 .setAutoCancel(autoCancel)
                 .setOngoing(!autoCancel)
                 .setContentIntent(pendingIntent)
