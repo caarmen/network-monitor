@@ -92,7 +92,7 @@ class NotificationProgressListener implements ProgressListener {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
         builder.setSmallIcon(mNotificationIcon);
         builder.setTicker(mContext.getString(mNotificationCompleteTitleId));
-        builder.setContentTitle(message);
+        builder.setContentTitle(mContext.getString(mNotificationCompleteTitleId));
         builder.setContentText(message);
         builder.setAutoCancel(true);
         builder.setContentIntent(getMainActivityPendingIntent(mContext));
