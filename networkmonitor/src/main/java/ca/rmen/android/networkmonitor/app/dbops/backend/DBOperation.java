@@ -23,9 +23,23 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend;
 
+import android.support.annotation.Nullable;
+
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 
+/**
+ * Performs a long-running, cancelable task (currently reading/writing on the DB).
+ */
 public interface DBOperation {
-    void execute(ProgressListener listener);
+
+    /**
+     * Execute the long-running operation.  This should be called on a background thread.
+     * @param listener if given, must be notified of the progress of the task.
+     */
+    void execute(@Nullable ProgressListener listener);
+
+    /**
+     * Cancel the long-running operation.  If it is in progress, it should finish as soon as possible.
+     */
     void cancel();
 }

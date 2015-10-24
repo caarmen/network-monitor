@@ -28,6 +28,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 
@@ -53,10 +55,10 @@ class NotificationProgressListener implements ProgressListener {
 
     public NotificationProgressListener(Context context,
                                         int notificationId,
-                                        int notificationIcon,
-                                        int notificationProgressTitleId,
-                                        int notificationProgressContentId,
-                                        int notificationCompleteTitleId) {
+                                        @DrawableRes int notificationIcon,
+                                        @StringRes int notificationProgressTitleId,
+                                        @StringRes int notificationProgressContentId,
+                                        @StringRes int notificationCompleteTitleId) {
         mContext = context;
         mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationId = notificationId;
@@ -68,11 +70,12 @@ class NotificationProgressListener implements ProgressListener {
 
     @Override
     public void onProgress(int progress, int max) {
-        // Only update in increments of 5%
+        // Only update in increments of 5%, or 100 items, whichever is more frequent.
         int notifUpdateIncrement = (int) (max * 0.05);
         if (notifUpdateIncrement > 100) notifUpdateIncrement = 100;
         boolean updateNotification = progress <= 1 || progress % notifUpdateIncrement == 0;
         if (!updateNotification) return;
+
         Notification notification = new NotificationCompat.Builder(mContext)
                 .setSmallIcon(mNotificationIcon)
                 .setTicker(mContext.getString(mNotificationProgressTitleId))
