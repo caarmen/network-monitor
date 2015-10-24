@@ -36,7 +36,7 @@ class FileChooser {
         // utility class
     }
 
-    static final String getShortDisplayName(Context context, File file) {
+    static String getShortDisplayName(Context context, File file) {
         if (file.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getAbsolutePath()))
             return context.getString(R.string.file_chooser_sdcard);
         else if (TextUtils.isEmpty(file.getName()))
@@ -45,7 +45,7 @@ class FileChooser {
             return file.getName();
     }
 
-    static final String getFullDisplayName(Context context, File file) {
+    static String getFullDisplayName(Context context, File file) {
         if (file.getAbsolutePath().equals(Environment.getExternalStorageDirectory().getAbsolutePath()))
             return context.getString(R.string.file_chooser_sdcard);
         else if (TextUtils.isEmpty(file.getName()))

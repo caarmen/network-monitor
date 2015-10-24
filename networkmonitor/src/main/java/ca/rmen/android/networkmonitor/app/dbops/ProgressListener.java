@@ -23,14 +23,9 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops;
 
-import ca.rmen.android.networkmonitor.app.dbops.ui.DBOpAsyncTask;
-
 /**
- * Implementations of {@link Task} should notify {@link ProgressListener} of their
- * progress.
- *
- * This is currently used by the {@link DBOpAsyncTask} to execute the long task in
- * the background while showing a progress dialog.
+ * This is currently used by the {@link ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService} to execute the long task in
+ * the background while showing progress in a notification.
  *
  * If we find we need other long tasks not related to db operations, requiring a
  * progress dialog, we may move this interface to another package.
@@ -38,4 +33,6 @@ import ca.rmen.android.networkmonitor.app.dbops.ui.DBOpAsyncTask;
 public interface ProgressListener {
     void onProgress(int progress, int max);
     void onWarning(String message);
+    void onComplete(String message);
+    void onError(String message);
 }

@@ -70,11 +70,8 @@ public class KMLExport extends FileExport {
         mPlacemarkNameColumn = placemarkNameColumn;
     }
 
-    /**
-     * @return the file if it was correctly exported, null otherwise.
-     */
     @Override
-    public File execute(ProgressListener listener) {
+    public void execute(ProgressListener listener) {
         Log.v(TAG, "export");
         Formatter formatter = FormatterFactory.getFormatter(FormatterStyle.XML, mContext);
         List<String> selectedColumns = new ArrayList<>(NetMonPreferences.getInstance(mContext).getSelectedColumns());
@@ -114,7 +111,7 @@ public class KMLExport extends FileExport {
                 kmlWriter.writeHeader();
 
                 // Write one KML placemark for each row in the DB.
-                while (c.moveToNext()) {
+                while (c.moveToNext() && !isCanceled()) {
                     Map<String, String> cellValues = new LinkedHashMap<>(c.getColumnCount());
                     long timestamp = -1;
                     if (timestampIndex >= 0) {
@@ -133,14 +130,20 @@ public class KMLExport extends FileExport {
                 // Write the footer and clean up the file.
                 kmlWriter.writeFooter();
                 kmlWriter.close();
-
-                return mFile;
+                if (listener != null) {
+                    if (isCanceled()) {
+                        listener.onComplete(mContext.getString(R.string.export_notif_canceled_content));
+                    } else {
+                        listener.onComplete(mContext.getString(R.string.export_save_to_external_storage_success, mFile.getAbsolutePath()));
+                    }
+                }
             } catch (FileNotFoundException e) {
                 Log.e(TAG, "Could not export to file " + mFile + ": " + e.getMessage(), e);
             } finally {
                 c.close();
             }
         }
-        return null;
+        if (listener != null) listener.onError(mContext.getString(R.string.export_notif_error_content));
     }
+
 }

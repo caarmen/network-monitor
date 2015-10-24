@@ -56,7 +56,8 @@ public class SpeedTestPreferencesActivity extends AppCompatActivity { // NO_UCD 
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mPreferenceFragment = NetMonPreferenceFragmentCompat.newInstance(R.xml.speed_test_preferences);
         getSupportFragmentManager().
                 beginTransaction().

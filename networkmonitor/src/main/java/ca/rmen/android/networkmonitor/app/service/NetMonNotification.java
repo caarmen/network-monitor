@@ -32,6 +32,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 
 import ca.rmen.android.networkmonitor.Constants;
@@ -70,7 +71,7 @@ public class NetMonNotification {
                 PendingIntent.getBroadcast(context, 0, new Intent(ACTION_DISABLE), PendingIntent.FLAG_CANCEL_CURRENT));
         builder.addAction(R.drawable.ic_action_logs, context.getString(R.string.service_notification_action_logs),
                 PendingIntent.getActivity(context, 0, new Intent(context, LogActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
-        builder.setColor(context.getResources().getColor(R.color.netmon_color));
+        builder.setColor(ActivityCompat.getColor(context, R.color.netmon_color));
         return builder.build();
     }
 

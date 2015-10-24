@@ -23,12 +23,12 @@
  */
 package ca.rmen.android.networkmonitor.app.email;
 
+import android.content.Context;
+import android.text.TextUtils;
+
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
-
-import android.content.Context;
-import android.text.TextUtils;
 
 import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
@@ -178,7 +178,8 @@ public class ReportEmailer {
                 fileExport = new DBExport(mContext);
                 break;
         }
-        return fileExport.execute(null);
+        fileExport.execute(null);
+        return fileExport.getFile();
     }
 
     /**

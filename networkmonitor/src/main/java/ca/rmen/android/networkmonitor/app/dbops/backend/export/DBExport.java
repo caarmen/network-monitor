@@ -23,6 +23,8 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
+import android.content.Context;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -30,9 +32,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import android.content.Context;
-
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 import ca.rmen.android.networkmonitor.provider.NetMonDatabase;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -48,7 +49,7 @@ public class DBExport extends FileExport {
     }
 
     @Override
-    public File execute(ProgressListener listener) {
+    public void execute(ProgressListener listener) {
         File db = mContext.getDatabasePath(NetMonDatabase.DATABASE_NAME);
         try {
             InputStream is = new FileInputStream(db);
@@ -57,7 +58,7 @@ public class DBExport extends FileExport {
             byte[] buffer = new byte[1024];
             int len;
             int bytesWritten = 0;
-            while ((len = is.read(buffer)) > 0) {
+            while ((len = is.read(buffer)) > 0 && !isCanceled()) {
                 os.write(buffer, 0, len);
                 bytesWritten += len;
                 // Notify the listener about the number of kb written.
@@ -65,10 +66,16 @@ public class DBExport extends FileExport {
             }
             is.close();
             os.close();
-            return mFile;
+            if (listener != null){
+                if(isCanceled()) {
+                    listener.onError(mContext.getString(R.string.export_notif_canceled_content));
+                } else {
+                    listener.onComplete(mContext.getString(R.string.export_save_to_external_storage_success));
+                }
+            }
         } catch (IOException e) {
             Log.v(TAG, "Could not copy DB file: " + e.getMessage(), e);
-            return null;
+            if (listener != null) listener.onError(mContext.getString(R.string.export_notif_error_content));
         }
     }
 

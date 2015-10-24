@@ -23,24 +23,29 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
-import java.io.File;
-
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+
+import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
-import ca.rmen.android.networkmonitor.app.dbops.Task;
+import ca.rmen.android.networkmonitor.app.dbops.backend.DBOperation;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
  * Export the Network Monitor data from the DB to a file.
  */
-public abstract class FileExport implements Task<File> {
+public abstract class FileExport implements DBOperation {
     private static final String TAG = Constants.TAG + FileExport.class.getSimpleName();
 
 
     protected final Context mContext;
     protected final File mFile;
+    private final AtomicBoolean mIsCanceled = new AtomicBoolean(false);
 
     protected FileExport(Context context, File file) {
         Log.v(TAG, "FileExport: file " + file);
@@ -48,9 +53,45 @@ public abstract class FileExport implements Task<File> {
         mFile = file;
     }
 
-    /**
-     * @return the file if it was correctly exported, null otherwise.
-     */
     @Override
-    abstract public File execute(ProgressListener listener);
+    abstract public void execute(ProgressListener listener);
+
+    @Override
+    public void cancel() {
+        mIsCanceled.set(true);
+    }
+
+    public boolean isCanceled() {
+        return mIsCanceled.get();
+    }
+
+    public File getFile() {
+        return mFile;
+    }
+
+    /**
+     * @return a chooser intent to share a report summary text, with an optional attached exported file.
+     */
+    public static Intent getShareIntent(Context context, File exportedFile) {
+        String reportSummary = SummaryExport.getSummary(context);
+
+        // Bring up the chooser to share the file.
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.export_subject_send_log));
+
+        String dateRange = SummaryExport.getDataCollectionDateRange(context);
+
+        String messageBody = context.getString(R.string.export_message_text, dateRange);
+        if (exportedFile != null && exportedFile.exists()) {
+            sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + exportedFile.getAbsolutePath()));
+            sendIntent.setType("message/rfc822");
+            messageBody += context.getString(R.string.export_message_text_file_attached);
+        } else {
+            sendIntent.setType("text/plain");
+        }
+        messageBody += reportSummary;
+        sendIntent.putExtra(Intent.EXTRA_TEXT, messageBody);
+        return Intent.createChooser(sendIntent, context.getResources().getText(R.string.action_share));
+    }
 }

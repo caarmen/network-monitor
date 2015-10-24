@@ -29,7 +29,7 @@ limitations under the License.
     android:versionCode="12301"
     android:versionName="1.23.1" >
 
-    <uses-sdk tools:overrideLibrary="android.support.v14.preference"/>
+    <uses-sdk tools:overrideLibrary="android.support.v14.preference" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -39,19 +39,30 @@ limitations under the License.
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.BATTERY_STATS"/>
-    <uses-feature android:required="false" android:name="android.hardware.location"/>
-    <uses-feature android:required="false" android:name="android.hardware.location.gps"/>
-    <uses-feature android:required="false" android:name="android.hardware.location.network"/>
-    <uses-feature android:required="false" android:name="android.hardware.touchscreen"/>
-    <uses-feature android:required="false" android:name="android.hardware.wifi"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.BATTERY_STATS" />
+
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.network"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.wifi"
+        android:required="false" />
 
     <application
-        android:name="ca.rmen.android.networkmonitor.app.NetMonApplication"
+        android:name=".app.NetMonApplication"
         android:allowBackup="true"
-        android:installLocation="preferExternal"
         android:icon="@drawable/ic_launcher"
+        android:installLocation="preferExternal"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <provider
@@ -59,13 +70,13 @@ limitations under the License.
             android:authorities="ca.rmen.android.networkmonitor.provider"
             android:exported="false" />
 
-        <service android:name="ca.rmen.android.networkmonitor.app.service.NetMonService" />
-        <service android:name="ca.rmen.android.networkmonitor.app.savetostorage.SaveToStorageService" />
+        <service android:name=".app.service.NetMonService" />
+        <service android:name=".app.savetostorage.SaveToStorageService" />
 
         <activity
-            android:name="ca.rmen.android.networkmonitor.app.main.MainActivity"
+            android:name=".app.main.MainActivity"
             android:label="@string/app_name"
-            tools:ignore="ExportedPreferenceActivity">
+            tools:ignore="ExportedPreferenceActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -73,12 +84,12 @@ limitations under the License.
             </intent-filter>
         </activity>
         <activity
-            android:name="ca.rmen.android.networkmonitor.app.log.LogActivity"
+            android:name=".app.log.LogActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:label="@string/log_title"
-            android:parentActivityName="ca.rmen.android.networkmonitor.app.main.MainActivity"
-            tools:ignore="UnusedAttribute">
+            android:parentActivityName=".app.main.MainActivity"
+            tools:ignore="UnusedAttribute" >
             <intent-filter>
                 <action android:name="ca.rmen.android.networkmonitor.app.log.LogActivity" />
 
@@ -90,11 +101,11 @@ limitations under the License.
                 android:value="ca.rmen.android.networkmonitor.app.main.MainActivity" />
         </activity>
         <activity
-            android:name="ca.rmen.android.networkmonitor.app.about.AboutActivity"
+            android:name=".app.about.AboutActivity"
             android:exported="false"
             android:label="@string/about_title"
-            android:parentActivityName="ca.rmen.android.networkmonitor.app.main.MainActivity"
-            tools:ignore="UnusedAttribute">
+            android:parentActivityName=".app.main.MainActivity"
+            tools:ignore="UnusedAttribute" >
             <intent-filter>
                 <action android:name="ca.rmen.android.networkmonitor.app.about.AboutActivity" />
 
@@ -106,12 +117,12 @@ limitations under the License.
                 android:value="ca.rmen.android.networkmonitor.app.main.MainActivity" />
         </activity>
         <activity
-            android:name="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity"
+            android:name=".app.prefs.AdvancedPreferencesActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:label="@string/pref_title_advanced"
-            android:parentActivityName="ca.rmen.android.networkmonitor.app.main.MainActivity"
-            tools:ignore="UnusedAttribute">
+            android:parentActivityName=".app.main.MainActivity"
+            tools:ignore="UnusedAttribute" >
             <intent-filter>
                 <action android:name="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity" />
 
@@ -123,12 +134,12 @@ limitations under the License.
                 android:value="ca.rmen.android.networkmonitor.app.main.MainActivity" />
         </activity>
         <activity
-            android:name="ca.rmen.android.networkmonitor.app.email.EmailPreferencesActivity"
+            android:name=".app.email.EmailPreferencesActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:label="@string/pref_title_email"
-            android:parentActivityName="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity"
-            tools:ignore="UnusedAttribute">
+            android:parentActivityName=".app.prefs.AdvancedPreferencesActivity"
+            tools:ignore="UnusedAttribute" >
             <intent-filter>
                 <action android:name="ca.rmen.android.networkmonitor.app.email.EmailPreferencesActivity" />
 
@@ -140,12 +151,12 @@ limitations under the License.
                 android:value="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity" />
         </activity>
         <activity
-            android:name="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferencesActivity"
+            android:name=".app.speedtest.SpeedTestPreferencesActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:label="@string/pref_title_speed_test"
-            android:parentActivityName="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity"
-            tools:ignore="UnusedAttribute">
+            android:parentActivityName=".app.prefs.AdvancedPreferencesActivity"
+            tools:ignore="UnusedAttribute" >
             <intent-filter>
                 <action android:name="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferencesActivity" />
 
@@ -157,12 +168,12 @@ limitations under the License.
                 android:value="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity" />
         </activity>
         <activity
-            android:name="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestAboutActivity"
+            android:name=".app.speedtest.SpeedTestAboutActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:label="@string/pref_title_speed_test_about"
-            android:parentActivityName="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferencesActivity"
-            tools:ignore="UnusedAttribute">
+            android:parentActivityName=".app.speedtest.SpeedTestPreferencesActivity"
+            tools:ignore="UnusedAttribute" >
             <intent-filter>
                 <action android:name="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestAboutActivity" />
 
@@ -174,12 +185,12 @@ limitations under the License.
                 android:value="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferencesActivity" />
         </activity>
         <activity
-            android:name="ca.rmen.android.networkmonitor.app.prefs.SelectFieldsActivity"
+            android:name=".app.prefs.SelectFieldsActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:label="@string/pref_title_select_fields"
-            android:parentActivityName="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity"
-            tools:ignore="UnusedAttribute">
+            android:parentActivityName=".app.prefs.AdvancedPreferencesActivity"
+            tools:ignore="UnusedAttribute" >
             <intent-filter>
                 <action android:name="ca.rmen.android.networkmonitor.app.prefs.SelectFieldsActivity" />
 
@@ -191,13 +202,13 @@ limitations under the License.
                 android:value="ca.rmen.android.networkmonitor.app.prefs.AdvancedPreferencesActivity" />
         </activity>
         <activity
-            android:name="ca.rmen.android.networkmonitor.app.prefs.FilterColumnActivity"
+            android:name=".app.prefs.FilterColumnActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
-            android:label="@string/filter_columns_title">
+            android:label="@string/filter_columns_title" >
         </activity>
         <activity
-            android:name="ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity"
+            android:name=".app.prefs.PreferenceFragmentActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
             android:launchMode="singleTop"
@@ -246,12 +257,12 @@ limitations under the License.
 
         <!-- Save to storage -->
         <activity
-            android:name="ca.rmen.android.networkmonitor.app.savetostorage.SaveToStorageActivity"
+            android:name=".app.savetostorage.SaveToStorageActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:icon="@drawable/ic_device_sd_storage"
             android:label="@string/export_save_to_external_storage"
-            android:theme="@style/NetMonNoDisplayTheme">
+            android:theme="@style/NetMonNoDisplayTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -261,28 +272,32 @@ limitations under the License.
                 <data android:mimeType="message/rfc822" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".app.dialog.filechooser.FileChooserActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:icon="@drawable/ic_device_sd_storage"
             android:label="@string/file_chooser_sdcard"
-            android:theme="@style/NetMonNoDisplayTheme">
+            android:theme="@style/NetMonNoDisplayTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="file/*" />
 
+                <data android:mimeType="file/*" />
             </intent-filter>
         </activity>
 
-        <receiver android:name="ca.rmen.android.networkmonitor.app.service.BootReceiver">
+        <receiver android:name=".app.service.BootReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".app.dbops.backend.DBOpIntentService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

@@ -92,12 +92,14 @@ public class FilterColumnActivity extends AppCompatActivity { // NO_UCD (use def
         return true;
     }
 
-    public void onCancel(@SuppressWarnings("UnusedParameters") View v) {
+    @SuppressWarnings("UnusedParameters")
+    public void onCancel(View v) {
         Log.v(TAG, "onCancel");
         finish();
     }
 
-    public void onOk(@SuppressWarnings("UnusedParameters") View v) {
+    @SuppressWarnings("UnusedParameters")
+    public void onOk(View v) {
         Log.v(TAG, "onOk");
         // Update the preference for values to filter, for this particular column.
 

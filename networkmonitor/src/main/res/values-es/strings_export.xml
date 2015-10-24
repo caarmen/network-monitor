@@ -25,7 +25,6 @@ limitations under the License.
 <resources>
     <!-- Strings for exporting the log file -->
     <string name="export_subject_send_log">Archivo log de Network Monitor</string>
-    <string name="export_error_sdcard_unmounted">Imposible crear el archivo log. Verifica que la tarjeta SD esté disponible.</string>
     <string name="export_choice_title">Escoge un formato</string>
     <string name="export_choice_csv">CSV</string>
     <string name="export_choice_html">HTML</string>
@@ -35,7 +34,6 @@ limitations under the License.
     <string name="export_choice_text">Resumen en texto</string>
     <string name="export_kml_choice_title">Escoge un campo</string>
     <string name="export_progress_preparing_export">Preparación de la exportación&#8230;</string>
-    <string name="export_progress_processing_data">Tratamiento de datos&#8230;</string>
     <string name="export_progress_finalizing_export">Finalización&#8230;</string>
     <string name="export_error_no_mobile_tests">Ninguna prueba ha sido realizada con una conexión de datos móviles.</string>
     <string name="export_message_text">El siguiente resumen enumera las estaciones base y puntos de acceso WiFi y los resultados de sus pruebas de conexión. Para cada estación o punto de acceso, puedes ver el %% de las pruebas de conexión que pasaron, y el número total de pruebas de conexión. 
@@ -47,7 +45,16 @@ limitations under the License.
     <string name="export_warning_file_too_big_message">Memoria insuficiente para exportar el fichero entero.</string>
     <string name="export_value_unknown">N/D</string>
     <string name="export_save_to_external_storage">Almacenar en memoria</string>
-    <string name="export_save_to_external_storage_fail">Imposible guardar el archivo</string>
     <string name="export_save_to_external_storage_success">Guardado %s</string>
+
+    <string name="export_feature_name">Exportación de la base de datos</string>
+
+    <string name="export_notif_progress_title">Exportando la base de datos</string>
+    <string name="export_notif_progress_content">%1$d de %2$d archivos exportados</string>
+    <string name="export_notif_complete_title">Exportación terminada.</string>
+    <string name="export_notif_complete_content">Puntear aquí para compartir el fichero exportado.</string>
+    <string name="export_notif_canceled_title">La exportación fue cancelada.</string>
+    <string name="export_notif_canceled_content">Puntear aquí para compartir el fichero parcialmente exportado</string>
+    <string name="export_notif_error_content">Imposible guardar el archivo</string>
 
 </resources>

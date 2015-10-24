@@ -24,8 +24,18 @@ limitations under the License.
 -->
 <resources>
     <!-- Strings for compressing a database -->
+
     <string name="compress_confirm_title">¿Comprimir la base de datos?</string>
     <string name="compress_confirm_message">Fusionará líneas consecutivas con datos idénticos.</string>
-    <string name="compress_successful">%1$s filas borradas de la base de datos.</string>
-    <string name="compress_failed">Error en la compresión de la base de datos.</string>
+
+    <string name="compress_toast_start">Compresión de la base de datos</string>
+
+    <string name="compress_feature_name">Compresión de la base de datos</string>
+
+    <string name="compress_notif_progress_title">Compresión de la base de datos</string>
+    <string name="compress_notif_progress_content">Registro %1$d de %2$d</string>
+    <string name="compress_notif_complete_title">Base de datos comprimida</string>
+    <string name="compress_notif_complete_content">%1$s registros borrados de la base de datos.</string>
+    <string name="compress_notif_canceled_content">La compresión de la base de datos ha sido cancelada.</string>
+    <string name="compress_notif_error_content">Error en la compresión de la base de datos.</string>
 </resources>

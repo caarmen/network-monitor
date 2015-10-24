@@ -34,7 +34,6 @@ limitations under the License.
     <string name="action_filter">Nombre de lignes</string>
     <string name="action_cell_id_format">Format des ids d\'antenne</string>
     <string name="action_reset_filters">Supprimer les filtres</string>
-    <string name="progress_dialog_message">Veuillez patienter&#8230;</string>
     <string name="error_reading_log">Impossible de lire le fichier journal.</string>
     <string name="confirm_logs_clear">Êtes-vous sur de vouloir supprimer les données enregistrées ?</string>
     <string name="clear_filters_confirm_dialog_title">Supprimer les filtres?</string>
@@ -103,5 +102,8 @@ limitations under the License.
     <!-- Polling frequency strings -->
     <string name="warning_fast_polling_title">Attention !</string>
     <string name="warning_fast_polling_message">Vous avez choisi une fréquence de test très rapide. Les tests de connexion ont été desactivés, et le nombre de lignes dans la base de données est maintenant limité. Vous pouvez reactiver les tests de connexion si vous choisissez une frequence plus lente et vous ouvrez les options avancées.</string>
+
+    <!-- Strings about db operations -->
+    <string name="db_op_in_progress">(%s en cours)</string>
 
 </resources>

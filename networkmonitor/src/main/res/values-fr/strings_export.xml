@@ -25,7 +25,6 @@ limitations under the License.
 <resources>
     <!-- Strings for exporting the log file -->
     <string name="export_subject_send_log">Fichier journal du Network Monitor</string>
-    <string name="export_error_sdcard_unmounted">Impossible de créer le fichier journal.  Vérifiez que la carte SD soit disponible.</string>
     <string name="export_choice_title">Choisissez le format</string>
     <string name="export_choice_csv">CSV</string>
     <string name="export_choice_html">HTML</string>
@@ -35,7 +34,6 @@ limitations under the License.
     <string name="export_choice_text">Résumé en texte</string>
     <string name="export_kml_choice_title">Choisissez un champ</string>
     <string name="export_progress_preparing_export">Préparation de l\'export&#8230;</string>
-    <string name="export_progress_processing_data">Traitement des données&#8230;</string>
     <string name="export_progress_finalizing_export">Finalisation&#8230;</string>
     <string name="export_error_no_mobile_tests">Aucun test n\'a été effectué avec une connexion data mobile.</string>
     <string name="export_message_text">Le résumé suivant énumère les antennes relais et points d\'accès WiFi, et les résultats de leurs tests. Pour chaque antenne relais ou point d\'accès WiFi, vous pouvez voir le %% de tests de connexion qui ont réussi, et le nombre total de tests effectués. 
@@ -47,7 +45,17 @@ limitations under the License.
     <string name="export_warning_file_too_big_message">Mémoire insuffisante pour exporter le fichier complet.</string>
     <string name="export_value_unknown">N/D</string>
     <string name="export_save_to_external_storage">Enregistrer sur stockage</string>
-    <string name="export_save_to_external_storage_fail">Impossible de sauvegarder le fichier</string>
+
     <string name="export_save_to_external_storage_success">Sauvegardé %s</string>
+
+    <string name="export_feature_name">Export de la base de données</string>
+
+    <string name="export_notif_progress_title">Export de la base de données</string>
+    <string name="export_notif_progress_content">%1$d sur %2$d elements exportés</string>
+    <string name="export_notif_complete_title">Export terminé.</string>
+    <string name="export_notif_complete_content">Appuyer ici pour partager le fichier exporté.</string>
+    <string name="export_notif_canceled_title">L\'export a été annulé</string>
+    <string name="export_notif_canceled_content">Appuyer ici pour partager le fichier partiellement exporté</string>
+    <string name="export_notif_error_content">Impossible de sauvegarder le fichier</string>
 
 </resources>

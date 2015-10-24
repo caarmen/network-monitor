@@ -30,8 +30,9 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
-import ca.rmen.android.networkmonitor.app.dbops.Task;
+import ca.rmen.android.networkmonitor.app.dbops.backend.DBOperation;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.provider.NetMonProvider;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -40,7 +41,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  * Only keep the most recent X records: where X is determined by the
  * preference set by the user.
  */
-public class DBPurge implements Task<Integer> {
+public class DBPurge implements DBOperation {
     private static final String TAG = Constants.TAG + DBPurge.class.getSimpleName();
 
     private final Context mContext;
@@ -61,19 +62,19 @@ public class DBPurge implements Task<Integer> {
     /**
      * Only keep the most recent X records: where X is determined by the
      * preference set by the user.
-     *
-     * @return the number of deleted rows.
      */
     @Override
-    public Integer execute(ProgressListener listener) {
+    public void execute(ProgressListener listener) {
         Log.v(TAG, "purgeDB");
 
         if (mNumRowsToKeep == 0) {
-            return mContext.getContentResolver().delete(NetMonColumns.CONTENT_URI, null, null);
+            int result = mContext.getContentResolver().delete(NetMonColumns.CONTENT_URI, null, null);
+            if (listener != null) listener.onComplete(mContext.getString(R.string.purge_notif_complete_content, result));
+            return;
         }
 
         if (mNumRowsToKeep < 0) {
-            return 0;
+            return;
         }
 
         // Query the most recent X ids.
@@ -96,8 +97,13 @@ public class DBPurge implements Task<Integer> {
             int result = mContext.getContentResolver().delete(NetMonColumns.CONTENT_URI, BaseColumns._ID + " < ?",
                     new String[] { String.valueOf(oldestIdToKeep) });
             Log.v(TAG, "Deleted " + result + " rows");
-            return result;
+            if (listener != null) listener.onComplete(mContext.getString(R.string.purge_notif_complete_content, result));
         }
-        return 0;
     }
+
+    @Override
+    public void cancel() {
+        // nothing
+    }
+
 }

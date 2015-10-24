@@ -21,18 +21,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.dbops;
+package ca.rmen.android.networkmonitor.app.dbops.backend;
 
-import ca.rmen.android.networkmonitor.app.dbops.ui.DBOpAsyncTask;
+import android.support.annotation.Nullable;
+
+import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 
 /**
- * A blocking task. Currently this is implemented for db operations (import, export, ...).
- * It is currently used by the {@link DBOpAsyncTask} to execute the long task in
- * the background while showing a progress dialog.
- *
- * If we find we need other long tasks not related to db operations, requiring a
- * progress dialog, we may move this interface to another package.
+ * Performs a long-running, cancelable task (currently reading/writing on the DB).
  */
-public interface Task<T> {
-    T execute(ProgressListener listener);
+public interface DBOperation {
+
+    /**
+     * Execute the long-running operation.  This should be called on a background thread.
+     * @param listener if given, must be notified of the progress of the task.
+     */
+    void execute(@Nullable ProgressListener listener);
+
+    /**
+     * Cancel the long-running operation.  If it is in progress, it should finish as soon as possible.
+     */
+    void cancel();
 }

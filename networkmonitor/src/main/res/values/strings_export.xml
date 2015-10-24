@@ -25,7 +25,6 @@ limitations under the License.
 <resources>
     <!-- Strings for exporting the log file -->
     <string name="export_subject_send_log">Network Monitor Log</string>
-    <string name="export_error_sdcard_unmounted">Could not create log file. Make sure the SD card is available.</string>
     <string name="export_choice_title">Choose the format to export</string>
     <string name="export_choice_csv">CSV</string>
     <string name="export_choice_html">HTML</string>
@@ -35,7 +34,6 @@ limitations under the License.
     <string name="export_choice_text">Text summary only</string>
     <string name="export_kml_choice_title">Choose a field to export to KML</string>
     <string name="export_progress_preparing_export">Preparing export&#8230;</string>
-    <string name="export_progress_processing_data">Processing data&#8230;</string>
     <string name="export_progress_finalizing_export">Finalizing export&#8230;</string>
     <string name="export_error_no_mobile_tests">No connection tests have been done on a mobile connection.</string>
     <string name="export_message_text">The following summary lists the mobile cells and wifi access points, and their connection test results.  For each cell or access point, you can see the %% of connection tests which succeeded, and the number of attempted connection tests. 
@@ -47,6 +45,16 @@ limitations under the License.
     <string name="export_warning_file_too_big_message">Not enough memory to export the entire file.</string>
     <string name="export_value_unknown">N/A</string>
     <string name="export_save_to_external_storage">Save to storage</string>
-    <string name="export_save_to_external_storage_fail">Error saving to external storage</string>
     <string name="export_save_to_external_storage_success">Saved %s</string>
+
+    <string name="export_feature_name">Database export</string>
+
+    <string name="export_notif_progress_title">Exporting database</string>
+    <string name="export_notif_progress_content">Exporting %1$d of %2$d</string>
+    <string name="export_notif_complete_title">Export complete</string>
+    <string name="export_notif_complete_content">Tap here to share the exported file</string>
+    <string name="export_notif_canceled_title">Export was canceled</string>
+    <string name="export_notif_canceled_content">Tap here to share the partially exported file</string>
+    <string name="export_notif_error_content">Error saving to external storage</string>
+
 </resources>

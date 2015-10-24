@@ -38,9 +38,7 @@ import java.util.Arrays;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.dbops.ui.Clear;
-import ca.rmen.android.networkmonitor.app.dbops.ui.Compress;
-import ca.rmen.android.networkmonitor.app.dbops.ui.Import;
+import ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService;
 import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 import ca.rmen.android.networkmonitor.app.dialog.ChoiceDialogFragment.DialogItemListener;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
@@ -113,7 +111,9 @@ public class PreferenceFragmentActivity extends AppCompatActivity implements Dia
             DialogFragmentFactory.showConfirmDialog(this, getString(R.string.compress_confirm_title), getString(R.string.compress_confirm_message),
                     ID_ACTION_COMPRESS, intent.getExtras());
         } else if (ACTION_CLEAR_OLD.equals(action)) {
-            Clear.clear(this, NetMonPreferences.getInstance(this).getDBRecordCount());
+            int rowsToKeep = NetMonPreferences.getInstance(this).getDBRecordCount();
+            if (rowsToKeep > 0) DBOpIntentService.startActionPurge(this, rowsToKeep);
+            finish();
         } else if (ACTION_SHOW_INFO_DIALOG.equals(action)) {
             DialogFragmentFactory.showInfoDialog(this, intent.getExtras().getString(EXTRA_DIALOG_TITLE), intent.getExtras().getString(EXTRA_DIALOG_MESSAGE));
         } else if (ACTION_SHOW_WARNING_DIALOG.equals(action)) {
@@ -168,16 +168,19 @@ public class PreferenceFragmentActivity extends AppCompatActivity implements Dia
         // The user confirmed to clear the logs.
         if (actionId == ID_ACTION_CLEAR) {
             Log.v(TAG, "Clicked ok to clear log");
-            Clear.clear(this, 0);
+            DBOpIntentService.startActionPurge(this, 0);
+            finish();
         }
         // Import the database in a background thread.
         else if (actionId == ID_ACTION_IMPORT) {
             final Uri uri = extras.getParcelable(EXTRA_IMPORT_URI);
-            Import.importDb(this, uri);
+            DBOpIntentService.startActionImport(this, uri);
+            finish();
         }
         // Compress the database in a background thread
         else if (actionId == ID_ACTION_COMPRESS) {
-            Compress.compress(this);
+            DBOpIntentService.startActionCompress(this);
+            finish();
         } else if (actionId == ID_ACTION_LOCATION_SETTINGS) {
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intent);
@@ -210,11 +213,10 @@ public class PreferenceFragmentActivity extends AppCompatActivity implements Dia
     @Override
     public void onDismiss(DialogInterface dialog) {
         Log.v(TAG, "onDismiss");
-        if (mUserInput) {
-            // Ignore, the dialog was dismissed because the user tapped ok on the dialog or selected an item from the list in the dialog.
-        } else {
+        if (!mUserInput) {
             dismiss();
         }
+        // If mUserInput is true: Ignore, the dialog was dismissed because the user tapped ok on the dialog or selected an item from the list in the dialog.
     }
 
     private void dismiss() {

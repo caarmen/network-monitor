@@ -30,6 +30,7 @@ import android.app.Activity;
  */
 class GPSVerifier {
 
+    @SuppressWarnings("UnusedParameters")
     GPSVerifier(Activity activity) {
     }
 

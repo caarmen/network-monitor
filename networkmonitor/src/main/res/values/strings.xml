@@ -35,7 +35,6 @@ limitations under the License.
     <string name="action_filter">Number of rows</string>
     <string name="action_cell_id_format">Cell id format</string>
     <string name="action_reset_filters">Clear all filters</string>
-    <string name="progress_dialog_message">Please wait&#8230;</string>
     <string name="error_reading_log">Could not read log file.</string>
     <string name="confirm_logs_clear">Do you really want to clear all the logs?</string>
     <string name="clear_filters_confirm_dialog_title">Clear filters?</string>
@@ -107,5 +106,11 @@ limitations under the License.
     <!-- Polling frequency strings -->
     <string name="warning_fast_polling_title">Warning!</string>
     <string name="warning_fast_polling_message">You have selected a very fast polling frequency. Data tests have been disabled, and a maximum limit to the database size has been set. You can re-enable data tests by selecting a slower polling frequency, and going to the advanced options.</string>
+
+    <!-- Strings about db operations -->
+    <string name="db_op_in_progress">(%s in progress)</string>
+
+
+
 
 </resources>

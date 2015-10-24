@@ -54,7 +54,7 @@ class FileAdapter extends ArrayAdapter<File> {
     FileAdapter(Context context, File initialFolder, boolean foldersOnly) {
         // Actually, the layout we provide here is ignored: we override
         // getView() and specify the layouts there.
-        super(context, ca.rmen.android.networkmonitor.R.layout.select_dialog_singlechoice_material);
+        super(context, ca.rmen.android.networkmonitor.R.layout.netmon_select_dialog_singlechoice_material);
         mFileFilter = new MyFileFilter(foldersOnly);
         mInflater = LayoutInflater.from(getContext());
         load(initialFolder);
@@ -84,7 +84,7 @@ class FileAdapter extends ArrayAdapter<File> {
             if(file.isDirectory()) {
                 result = (TextView) mInflater.inflate(R.layout.select_dialog_item_material, parent, false);
             } else {
-                result = (TextView) mInflater.inflate(ca.rmen.android.networkmonitor.R.layout.select_dialog_singlechoice_material, parent, false);
+                result = (TextView) mInflater.inflate(ca.rmen.android.networkmonitor.R.layout.netmon_select_dialog_singlechoice_material, parent, false);
             }
         } else {
             result = (TextView) convertView;
