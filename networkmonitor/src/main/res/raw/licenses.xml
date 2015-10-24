@@ -30,12 +30,6 @@ limitations under the License.
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
-        <name>Material Dialogs</name>
-        <url>https://github.com/afollestad/material-dialogs</url>
-        <copyright>Copyright (c) Aidan Michael Follestad</copyright>
-        <license>MIT License</license>
-    </notice>
-    <notice>
         <name>Java Excel API</name>
         <url>http://sourceforge.net/projects/jexcelapi/files/jexcelapi/</url>
         <copyright>Copyright (c) Andy Khan</copyright>
