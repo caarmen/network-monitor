@@ -133,6 +133,7 @@ class NotificationProgressListener implements ProgressListener {
                 .setTicker(mContext.getString(mNotificationProgressTitleId))
                 .setContentTitle(mContext.getString(mNotificationProgressTitleId))
                 .setContentText(message)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                 .setAutoCancel(true)
                 .setContentIntent(getMainActivityPendingIntent(mContext))
                 .setColor(ActivityCompat.getColor(mContext, R.color.netmon_color))
