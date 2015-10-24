@@ -33,5 +33,6 @@ package ca.rmen.android.networkmonitor.app.dbops;
 public interface ProgressListener {
     void onProgress(int progress, int max);
     void onWarning(String message);
-    void onComplete(int total);
+    void onComplete(String message);
+    void onError(String message);
 }

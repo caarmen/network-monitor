@@ -35,7 +35,6 @@ limitations under the License.
     <string name="export_choice_text">Text summary only</string>
     <string name="export_kml_choice_title">Choose a field to export to KML</string>
     <string name="export_progress_preparing_export">Preparing export&#8230;</string>
-    <string name="export_progress_processing_data">Processing data&#8230;</string>
     <string name="export_progress_finalizing_export">Finalizing export&#8230;</string>
     <string name="export_error_no_mobile_tests">No connection tests have been done on a mobile connection.</string>
     <string name="export_message_text">The following summary lists the mobile cells and wifi access points, and their connection test results.  For each cell or access point, you can see the %% of connection tests which succeeded, and the number of attempted connection tests. 
@@ -49,4 +48,9 @@ limitations under the License.
     <string name="export_save_to_external_storage">Save to storage</string>
     <string name="export_save_to_external_storage_fail">Error saving to external storage</string>
     <string name="export_save_to_external_storage_success">Saved %s</string>
+
+    <string name="db_op_export_progress_title">Exporting database</string>
+    <string name="db_op_export_progress_content">Exporting %1$d of %2$d</string>
+    <string name="db_op_export_complete_title">Export complete</string>
+    <string name="db_op_export_complete_content">Tap here to share the exported file</string>
 </resources>

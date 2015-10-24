@@ -40,6 +40,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.provider.NetMonProvider;
@@ -133,12 +134,12 @@ public class DBImport {
                     } while (c.moveToNext());
                     if (operations.size() > 0) mContext.getContentResolver().applyBatch(NetMonProvider.AUTHORITY, operations);
                 }
-                if (listener != null) listener.onComplete(count);
+                if (listener != null) listener.onComplete(mContext.getString(R.string.import_successful, mUri.toString()));
                 return;
             } finally {
                 c.close();
             }
         }
-        if (listener != null) listener.onComplete(0);
+        if (listener != null) listener.onError(mContext.getString(R.string.import_failed, mUri.toString()));
     }
 }

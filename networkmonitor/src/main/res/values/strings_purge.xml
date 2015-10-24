@@ -8,7 +8,7 @@ This source is part of the
                              /___/
 repository.
 
-Copyright (C) 2015 Carmen Alvarez (c@rmen.ca)
+Copyright (C) 2014-2015 Carmen Alvarez (c@rmen.ca)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,14 +23,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <resources>
-    <!-- Strings for compressing a database -->
-    <string name="compress_confirm_title">Compress the database?</string>
-    <string name="compress_confirm_message">This will merge consecutive rows with identical data.</string>
-    <string name="compress_successful">%1$s rows deleted from the database.</string>
-    <string name="compress_failed">Failed to compress the database.</string>
+    <!-- Strings for deleting/purging a database -->
 
-    <string name="db_op_compress_start">Compressing the database</string>
-    <string name="db_op_compress_progress_title">Data base compression</string>
-    <string name="db_op_compress_progress_content">Processing %1$d of %2$d</string>
-    <string name="db_op_compress_complete_title">Data base compressed</string>
+    <string name="db_op_purge_start">Deleting the database</string>
+    <string name="db_op_purge_progress_title">Data base deletion</string>
+    <string name="db_op_purge_progress_content">Deleting %1$d of %2$d</string>
+    <string name="db_op_purge_complete_title">Data base deleted</string>
+    <string name="db_op_purge_complete_content">Deleted %1$d records from the data base</string>
 </resources>

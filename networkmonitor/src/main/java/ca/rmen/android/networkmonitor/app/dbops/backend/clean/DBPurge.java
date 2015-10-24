@@ -30,6 +30,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.provider.NetMonProvider;
@@ -67,7 +68,8 @@ public class DBPurge {
         Log.v(TAG, "purgeDB");
 
         if (mNumRowsToKeep == 0) {
-            mContext.getContentResolver().delete(NetMonColumns.CONTENT_URI, null, null);
+            int result = mContext.getContentResolver().delete(NetMonColumns.CONTENT_URI, null, null);
+            if (listener != null) listener.onComplete(mContext.getString(R.string.db_op_purge_complete_content, result));
             return;
         }
 
@@ -95,7 +97,7 @@ public class DBPurge {
             int result = mContext.getContentResolver().delete(NetMonColumns.CONTENT_URI, BaseColumns._ID + " < ?",
                     new String[] { String.valueOf(oldestIdToKeep) });
             Log.v(TAG, "Deleted " + result + " rows");
-            if (listener != null) listener.onComplete(result);
+            if (listener != null) listener.onComplete(mContext.getString(R.string.db_op_purge_complete_content, result));
         }
     }
 }

@@ -1,0 +1,146 @@
+/*
+ * This source is part of the
+ *      _____  ___   ____
+ *  __ / / _ \/ _ | / __/___  _______ _
+ * / // / , _/ __ |/ _/_/ _ \/ __/ _ `/
+ * \___/_/|_/_/ |_/_/ (_)___/_/  \_, /
+ *                              /___/
+ * repository.
+ *
+ * Copyright (C) 2015 Carmen Alvarez (c@rmen.ca)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package ca.rmen.android.networkmonitor.app.dbops.backend;
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
+
+import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
+import ca.rmen.android.networkmonitor.app.main.MainActivity;
+import ca.rmen.android.networkmonitor.util.Log;
+
+/**
+ * Displays task progress in a system notification.
+ */
+class NotificationProgressListener implements ProgressListener {
+    private static final String TAG = Constants.TAG + NotificationProgressListener.class.getSimpleName();
+
+    protected final Context mContext;
+    private final NotificationManager mNotificationManager;
+    private final int mNotificationId;
+    private final int mNotificationIcon;
+    private final int mNotificationProgressTitleId;
+    private final int mNotificationProgressContentId;
+    private final int mNotificationCompleteTitleId;
+
+    public NotificationProgressListener(Context context,
+                                        int notificationId,
+                                        int notificationIcon,
+                                        int notificationProgressTitleId,
+                                        int notificationProgressContentId,
+                                        int notificationCompleteTitleId) {
+        mContext = context;
+        mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationId = notificationId;
+        mNotificationIcon = notificationIcon;
+        mNotificationProgressTitleId = notificationProgressTitleId;
+        mNotificationProgressContentId = notificationProgressContentId;
+        mNotificationCompleteTitleId = notificationCompleteTitleId;
+    }
+
+    @Override
+    public void onProgress(int progress, int max) {
+        // Only update in increments of 5%
+        int notifUpdateIncrement = (int) (max * 0.05);
+        boolean updateNotification = progress == 0 || progress % notifUpdateIncrement == 0;
+        if (!updateNotification) return;
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
+        builder.setSmallIcon(mNotificationIcon);
+        builder.setTicker(mContext.getString(mNotificationProgressTitleId));
+        builder.setContentTitle(mContext.getString(mNotificationProgressTitleId));
+        builder.setContentText(mContext.getString(mNotificationProgressContentId, progress, max));
+        builder.setAutoCancel(false);
+        builder.setContentIntent(getMainActivityPendingIntent(mContext));
+        Notification notification = builder.build();
+        mNotificationManager.notify(mNotificationId, notification);
+    }
+
+    @Override
+    public void onComplete(String message) {
+        Log.d(TAG, "onComplete() called with " + "message = [" + message + "]");
+        showToast(mContext, message);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
+        builder.setSmallIcon(mNotificationIcon);
+        builder.setTicker(mContext.getString(mNotificationCompleteTitleId));
+        builder.setContentTitle(message);
+        builder.setContentText(message);
+        builder.setAutoCancel(true);
+        builder.setContentIntent(getMainActivityPendingIntent(mContext));
+        Notification notification = builder.build();
+        mNotificationManager.notify(mNotificationId, notification);
+    }
+
+
+    @Override
+    public void onWarning(String message) {
+        Log.d(TAG, "onWarning() called with " + "message = [" + message + "]");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
+        builder.setSmallIcon(R.drawable.ic_stat_warning);
+        builder.setTicker(mContext.getString(mNotificationProgressTitleId));
+        builder.setContentTitle(mContext.getString(mNotificationProgressTitleId));
+        builder.setContentText(message);
+        builder.setAutoCancel(true);
+        builder.setContentIntent(getMainActivityPendingIntent(mContext));
+        Notification notification = builder.build();
+        mNotificationManager.notify(mNotificationId, notification);
+    }
+
+    @Override
+    public void onError(String message) {
+        Log.d(TAG, "onError() called with " + "message = [" + message + "]");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
+        builder.setSmallIcon(R.drawable.ic_stat_warning);
+        builder.setTicker(mContext.getString(mNotificationProgressTitleId));
+        builder.setContentTitle(mContext.getString(mNotificationProgressTitleId));
+        builder.setContentText(message);
+        builder.setAutoCancel(true);
+        builder.setContentIntent(getMainActivityPendingIntent(mContext));
+        Notification notification = builder.build();
+        mNotificationManager.notify(mNotificationId, notification);
+
+    }
+
+    private static void showToast(final Context context, final String message) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private static PendingIntent getMainActivityPendingIntent(Context context) {
+        return PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+}

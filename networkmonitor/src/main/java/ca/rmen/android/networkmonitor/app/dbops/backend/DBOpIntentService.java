@@ -31,13 +31,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 import java.io.File;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 import ca.rmen.android.networkmonitor.app.dbops.backend.clean.DBCompress;
 import ca.rmen.android.networkmonitor.app.dbops.backend.clean.DBPurge;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.CSVExport;
@@ -82,6 +84,7 @@ public class DBOpIntentService extends IntentService {
     public static void startActionCompress(Context context) {
         Intent intent = new Intent(context, DBOpIntentService.class);
         intent.setAction(ACTION_COMPRESS);
+        showToast(context, context.getString(R.string.db_op_compress_start));
         context.startService(intent);
     }
 
@@ -89,6 +92,7 @@ public class DBOpIntentService extends IntentService {
         Intent intent = new Intent(context, DBOpIntentService.class);
         intent.setAction(ACTION_PURGE);
         intent.putExtra(EXTRA_PURGE_NUM_ROWS_TO_KEEP, numRowsToKeep);
+        showToast(context, context.getString(R.string.db_op_purge_start));
         context.startService(intent);
     }
 
@@ -96,6 +100,7 @@ public class DBOpIntentService extends IntentService {
         Intent intent = new Intent(context, DBOpIntentService.class);
         intent.setAction(ACTION_EXPORT);
         intent.putExtra(EXTRA_EXPORT_FORMAT, exportFormat);
+        showToast(context, context.getString(R.string.export_progress_preparing_export));
         context.startService(intent);
     }
 
@@ -104,6 +109,7 @@ public class DBOpIntentService extends IntentService {
         intent.setAction(ACTION_EXPORT);
         intent.putExtra(EXTRA_EXPORT_FORMAT, ExportFormat.KML);
         intent.putExtra(EXTRA_EXPORT_KML_PLACEMARK_COLUMN_NAME, placemarkNameColumn);
+        showToast(context, context.getString(R.string.export_progress_preparing_export));
         context.startService(intent);
     }
 
@@ -111,6 +117,7 @@ public class DBOpIntentService extends IntentService {
         Intent intent = new Intent(context, DBOpIntentService.class);
         intent.setAction(ACTION_IMPORT);
         intent.setData(uri);
+        showToast(context, context.getString(R.string.db_op_import_start));
         context.startService(intent);
     }
 
@@ -128,32 +135,28 @@ public class DBOpIntentService extends IntentService {
                         R.drawable.ic_stat_db_op_compress,
                         R.string.db_op_compress_progress_title,
                         R.string.db_op_compress_progress_content,
-                        R.string.db_op_compress_complete_title,
-                        R.string.db_op_compress_complete_content);
+                        R.string.db_op_compress_complete_title);
         mPurgeProgressListener =
                 new NotificationProgressListener(this,
                         DBPurge.class.hashCode(),
                         R.drawable.ic_stat_db_op_delete,
                         R.string.db_op_purge_progress_title,
                         R.string.db_op_purge_progress_content,
-                        R.string.db_op_purge_complete_title,
-                        R.string.db_op_purge_complete_content);
+                        R.string.db_op_purge_complete_title);
         mExportProgressListener =
                 new NotificationProgressListener(this,
                         FileExport.class.hashCode(),
                         R.drawable.ic_stat_db_op_export,
                         R.string.db_op_export_progress_title,
                         R.string.db_op_export_progress_content,
-                        R.string.db_op_export_complete_title,
-                        R.string.db_op_export_complete_content);
+                        R.string.db_op_export_complete_title);
         mImportProgressListener =
                 new NotificationProgressListener(this,
                         DBImport.class.hashCode(),
                         R.drawable.ic_stat_db_op_import,
                         R.string.db_op_import_progress_title,
                         R.string.db_op_import_progress_content,
-                        R.string.db_op_import_complete_title,
-                        R.string.db_op_import_complete_content);
+                        R.string.db_op_import_complete_title);
     }
 
     @Override
@@ -215,14 +218,25 @@ public class DBOpIntentService extends IntentService {
         if (fileExport != null) {
             file = fileExport.execute(mExportProgressListener);
         }
+
+        // Start the summary report
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        updateFileExportNotification(getString(R.string.export_progress_finalizing_export), pendingIntent, false);
+
         Intent shareIntent = FileExport.getShareIntent(this, file);
+
+        // All done
+        pendingIntent = PendingIntent.getActivity(this, 0, shareIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        updateFileExportNotification(getString(R.string.db_op_export_complete_content), pendingIntent, true);
+    }
+
+    private void updateFileExportNotification(String contentText, PendingIntent pendingIntent, boolean autoCancel) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setSmallIcon(R.drawable.ic_stat_db_op_export);
-        builder.setTicker(getString(R.string.db_op_export_complete_title));
-        builder.setContentTitle(getString(R.string.db_op_export_complete_title));
-        builder.setContentText(getString(R.string.db_op_export_complete_content));
-        builder.setAutoCancel(true);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, shareIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setTicker(getString(R.string.db_op_export_progress_title));
+        builder.setContentTitle(getString(R.string.db_op_export_progress_title));
+        builder.setContentText(contentText);
+        builder.setAutoCancel(autoCancel);
         builder.setContentIntent(pendingIntent);
         Notification notification = builder.build();
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -235,75 +249,13 @@ public class DBOpIntentService extends IntentService {
         dbImport.execute(mImportProgressListener);
     }
 
-    private static class NotificationProgressListener implements ProgressListener {
-        private final Context mContext;
-        private final NotificationManager mNotificationManager;
-        private final int mNotificationId;
-        private final int mNotificationIcon;
-        private final int mNotificationProgressTitleId;
-        private final int mNotificationProgressContentId;
-        private final int mNotificationCompleteTitleId;
-        private final int mNotificationCompleteContentId;
-
-        public NotificationProgressListener(Context context,
-                                            int notificationId,
-                                            int notificationIcon,
-                                            int notificationProgressTitleId,
-                                            int notificationProgressContentId,
-                                            int notificationCompleteTitleId,
-                                            int notificationCompleteContentId) {
-            mContext = context;
-            mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationId = notificationId;
-            mNotificationIcon = notificationIcon;
-            mNotificationProgressTitleId = notificationProgressTitleId;
-            mNotificationProgressContentId = notificationProgressContentId;
-            mNotificationCompleteTitleId = notificationCompleteTitleId;
-            mNotificationCompleteContentId = notificationCompleteContentId;
-        }
-
-        @Override
-        public void onProgress(int progress, int max) {
-            // Only update in increments of 5%
-            int notifUpdateIncrement = (int) (max * 0.05);
-            boolean updateNotification = progress == 0 || progress % notifUpdateIncrement == 0;
-            if (!updateNotification) return;
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
-            builder.setSmallIcon(mNotificationIcon);
-            builder.setTicker(mContext.getString(mNotificationProgressTitleId));
-            builder.setContentTitle(mContext.getString(mNotificationProgressTitleId));
-            builder.setContentText(mContext.getString(mNotificationProgressContentId, progress, max));
-            builder.setAutoCancel(false);
-            builder.setContentIntent(PendingIntent.getActivity(mContext, 0, new Intent(mContext, MainActivity.class), progress == 0 ? 0 : PendingIntent.FLAG_UPDATE_CURRENT));
-            Notification notification = builder.build();
-            mNotificationManager.notify(mNotificationId, notification);
-        }
-
-        @Override
-        public void onWarning(String message) {
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
-            builder.setSmallIcon(R.drawable.ic_stat_warning);
-            builder.setTicker(mContext.getString(mNotificationProgressTitleId));
-            builder.setContentTitle(mContext.getString(mNotificationProgressTitleId));
-            builder.setContentText(message);
-            builder.setAutoCancel(false);
-            builder.setContentIntent(PendingIntent.getActivity(mContext, 0, new Intent(mContext, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
-            Notification notification = builder.build();
-            mNotificationManager.notify(mNotificationId, notification);
-        }
-
-        @Override
-        public void onComplete(int total) {
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
-            builder.setSmallIcon(mNotificationIcon);
-            builder.setTicker(mContext.getString(mNotificationCompleteTitleId));
-            builder.setContentTitle(mContext.getString(mNotificationCompleteTitleId));
-            builder.setContentText(mContext.getString(mNotificationCompleteContentId, total));
-            builder.setAutoCancel(true);
-            builder.setContentIntent(PendingIntent.getActivity(mContext, 0, new Intent(mContext, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
-            Notification notification = builder.build();
-            mNotificationManager.notify(mNotificationId, notification);
-        }
+    private static void showToast(final Context context, final String message) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 

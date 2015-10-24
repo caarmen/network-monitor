@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -108,7 +109,10 @@ public class DBCompress {
                 inClause.append(",");
             }
         }
-        if (listener != null) listener.onComplete(numRowsDeleted);
+        if (listener != null) {
+            if (numRowsToDelete >= 0) listener.onComplete(mContext.getString(R.string.compress_successful, numRowsDeleted));
+            else listener.onComplete(mContext.getString(R.string.compress_failed));
+        }
     }
 
     /**

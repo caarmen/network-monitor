@@ -139,7 +139,7 @@ abstract class TableFileExport extends FileExport {
 
                 // Write the footer and clean up the file.
                 writeFooter();
-                if (listener != null) listener.onComplete(rowsAvailable);
+                if (listener != null) listener.onComplete(mContext.getString(R.string.export_save_to_external_storage_success, mFile.getAbsolutePath()));
                 return mFile;
             } catch (IOException e) {
                 Log.e(TAG, "export Could not export file " + mFile + ": " + e.getMessage(), e);
@@ -147,7 +147,7 @@ abstract class TableFileExport extends FileExport {
                 c.close();
             }
         }
-        if (listener != null) listener.onComplete(0);
+        if (listener != null) listener.onError(mContext.getString(R.string.export_save_to_external_storage_fail));
         return null;
     }
 

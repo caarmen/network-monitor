@@ -33,6 +33,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 import ca.rmen.android.networkmonitor.provider.NetMonDatabase;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -65,11 +66,11 @@ public class DBExport extends FileExport {
             }
             is.close();
             os.close();
-            if (listener != null) listener.onComplete(fileSize / 1000);
+            if (listener != null) listener.onComplete(mContext.getString(R.string.export_save_to_external_storage_success));
             return mFile;
         } catch (IOException e) {
             Log.v(TAG, "Could not copy DB file: " + e.getMessage(), e);
-            if (listener != null) listener.onComplete(0);
+            if (listener != null) listener.onError(mContext.getString(R.string.export_save_to_external_storage_fail));
             return null;
         }
     }
