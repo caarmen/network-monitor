@@ -31,9 +31,9 @@ limitations under the License.
 
     <string name="compress_feature_name">Database compression</string>
 
-    <string name="compress_notif_progress_title">Data base compression</string>
+    <string name="compress_notif_progress_title">Database compression</string>
     <string name="compress_notif_progress_content">Processing %1$d of %2$d</string>
-    <string name="compress_notif_complete_title">Data base compressed</string>
+    <string name="compress_notif_complete_title">Database compressed</string>
     <string name="compress_notif_complete_content">%1$s rows deleted from the database.</string>
     <string name="compress_notif_canceled_content">The database compression was canceled.</string>
     <string name="compress_notif_error_content">Failed to compress the database.</string>

@@ -25,12 +25,12 @@ limitations under the License.
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Strings for deleting/purging a database -->
 
-    <string name="purge_toast_start">Limpieza de la base de datos</string>
+    <string name="purge_toast_start">Nettoyage de la base de données</string>
 
-    <string name="purge_feature_name">Limpieza de la base de datos</string>
+    <string name="purge_feature_name">Nettoyage de la base de données</string>
 
-    <string name="purge_notif_progress_title">Limpieza de la base de datos</string>
-    <string name="purge_notif_progress_content">%1$d de %2$d registros procesados</string>
-    <string name="purge_notif_complete_title">Base de datos limpiada</string>
-    <string name="purge_notif_complete_content" tools:ignore="PluralsCandidate">%1$d registros borrados de la base de datos</string>
+    <string name="purge_notif_progress_title">Nettoyage de la base de données</string>
+    <string name="purge_notif_progress_content">%1$d sur %2$d elements traités</string>
+    <string name="purge_notif_complete_title">Base de données nettoyée</string>
+    <string name="purge_notif_complete_content" tools:ignore="PluralsCandidate">%1$d elements supprimés de la base de données</string>
 </resources>
