@@ -137,7 +137,7 @@ abstract class TableFileExport extends FileExport {
                 writeFooter();
                 if (listener != null) {
                     if (isCanceled()) {
-                        listener.onComplete(mContext.getString(R.string.export_save_to_external_storage_partial_success, mFile.getAbsolutePath()));
+                        listener.onComplete(mContext.getString(R.string.export_notif_canceled_content));
                     } else {
                         listener.onComplete(mContext.getString(R.string.export_save_to_external_storage_success, mFile.getAbsolutePath()));
                     }

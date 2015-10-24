@@ -24,8 +24,16 @@ limitations under the License.
 -->
 <resources>
     <!-- Strings for importing a database -->
+
     <string name="import_confirm_title">Confirmar la importación</string>
     <string name="import_confirm_message">¿Borrar todos los datos y reemplazarlos con %s?</string>
+
+    <string name="import_toast_start">Importación de la base de datos</string>
+
+    <string name="import_notif_progress_title">Importación</string>
+    <string name="import_notif_progress_content">%1$d de %2$d registros importados</string>
+    <string name="import_notif_complete_title">Importación terminada</string>
     <string name="import_notif_complete_content">Importación de %s realizada correctamente</string>
+    <string name="import_notif_canceled_content">La importación ha sido cancelada</string>
     <string name="import_notif_error_content">Error en la importación de %s.</string>
 </resources>

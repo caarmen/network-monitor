@@ -45,7 +45,15 @@ limitations under the License.
     <string name="export_warning_file_too_big_message">Memoria insuficiente para exportar el fichero entero.</string>
     <string name="export_value_unknown">N/D</string>
     <string name="export_save_to_external_storage">Almacenar en memoria</string>
-    <string name="export_notif_error_content">Imposible guardar el archivo</string>
     <string name="export_save_to_external_storage_success">Guardado %s</string>
+
+
+    <string name="export_notif_progress_title">Exportando la base de datos</string>
+    <string name="export_notif_progress_content">%1$d de %2$d archivos exportados</string>
+    <string name="export_notif_complete_title">Exportación terminada.</string>
+    <string name="export_notif_complete_content">Puntear aquí para compartir el fichero exportado.</string>
+    <string name="export_notif_canceled_title">La exportación fue cancelada.</string>
+    <string name="export_notif_canceled_content">Puntear aquí para compartir el fichero parcialmente exportado</string>
+    <string name="export_notif_error_content">Imposible guardar el archivo</string>
 
 </resources>
