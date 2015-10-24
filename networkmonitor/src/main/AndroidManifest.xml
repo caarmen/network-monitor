@@ -26,8 +26,8 @@ limitations under the License.
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="ca.rmen.android.networkmonitor"
-    android:versionCode="12301"
-    android:versionName="1.23.1" >
+    android:versionCode="12400"
+    android:versionName="1.24.0" >
 
     <uses-sdk tools:overrideLibrary="android.support.v14.preference" />
 
