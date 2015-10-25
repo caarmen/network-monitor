@@ -53,6 +53,8 @@ class NotificationProgressListener implements ProgressListener {
     private final int mNotificationProgressContentId;
     private final int mNotificationCompleteTitleId;
 
+    private long mLastProgressUpdateTimestamp;
+
     public NotificationProgressListener(Context context,
                                         int notificationId,
                                         @DrawableRes int notificationIcon,
@@ -70,11 +72,9 @@ class NotificationProgressListener implements ProgressListener {
 
     @Override
     public void onProgress(int progress, int max) {
-        // Only update in increments of 5%, or 100 items, whichever is more frequent.
-        int notifUpdateIncrement = (int) (max * 0.05);
-        if (notifUpdateIncrement > 100) notifUpdateIncrement = 100;
-        boolean updateNotification = progress <= 1 || progress % notifUpdateIncrement == 0;
-        if (!updateNotification) return;
+        long now = System.currentTimeMillis();
+        if(now - mLastProgressUpdateTimestamp < 500) return;
+        mLastProgressUpdateTimestamp = now;
 
         Notification notification = new NotificationCompat.Builder(mContext)
                 .setSmallIcon(mNotificationIcon)
