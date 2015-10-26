@@ -68,6 +68,7 @@ public class DBOpIntentService extends IntentService {
     private NotificationProgressListener mPurgeProgressListener;
     private NotificationProgressListener mExportProgressListener;
     private NotificationProgressListener mImportProgressListener;
+    private final static Object lock = new Object();
 
     public enum ExportFormat {
         CSV,
@@ -185,7 +186,9 @@ public class DBOpIntentService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             String dbOp = intent.getStringExtra(EXTRA_DB_OP_NAME);
-            mDBOperationStarted = new NetMonBus.DBOperationStarted(getString(R.string.db_op_in_progress, dbOp));
+            synchronized (lock) {
+                mDBOperationStarted = new NetMonBus.DBOperationStarted(getString(R.string.db_op_in_progress, dbOp));
+            }
 
             // Show a toast
             new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -193,7 +196,9 @@ public class DBOpIntentService extends IntentService {
                 public void run() {
                     String toast = intent.getStringExtra(EXTRA_DB_OP_TOAST);
                     Toast.makeText(DBOpIntentService.this, toast, Toast.LENGTH_LONG).show();
-                    NetMonBus.getBus().post(mDBOperationStarted);
+                    synchronized (lock) {
+                        if (mDBOperationStarted != null) NetMonBus.getBus().post(mDBOperationStarted);
+                    }
                 }
             });
 
@@ -211,7 +216,9 @@ public class DBOpIntentService extends IntentService {
                 handleActionImport(uri);
             }
             mDBOperation = null;
-            mDBOperationStarted = null;
+            synchronized (lock) {
+                mDBOperationStarted = null;
+            }
         }
     }
 
