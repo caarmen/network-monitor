@@ -280,23 +280,30 @@ public class DBOpIntentService extends IntentService {
             file = fileExport.getFile();
         }
 
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
         // Start the summary report
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-        updateFileExportNotification(R.drawable.ic_stat_db_op_export, getString(R.string.export_notif_progress_title), getString(R.string.export_progress_finalizing_export), pendingIntent, false);
+        Notification almostDoneNotification =
+                prepareFileExportNotification(R.drawable.ic_stat_db_op_export, getString(R.string.export_notif_progress_title), getString(R.string.export_progress_finalizing_export), pendingIntent, false).build();
+        notificationManager.notify(FileExport.class.hashCode(), almostDoneNotification);
 
         Intent shareIntent = FileExport.getShareIntent(this, file);
 
         // All done
         pendingIntent = PendingIntent.getActivity(this, 0, shareIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        final NotificationCompat.Builder notificationBuilder;
         if (fileExport != null && fileExport.isCanceled()) {
-            updateFileExportNotification(R.drawable.ic_stat_action_done, getString(R.string.export_notif_canceled_title), getString(R.string.export_notif_canceled_content), pendingIntent, true);
+            notificationBuilder =  prepareFileExportNotification(R.drawable.ic_stat_action_done, getString(R.string.export_notif_canceled_title), getString(R.string.export_notif_canceled_content), pendingIntent, true);
         } else {
-            updateFileExportNotification(R.drawable.ic_stat_action_done, getString(R.string.export_notif_complete_title), getString(R.string.export_notif_complete_content), pendingIntent, true);
+            notificationBuilder = prepareFileExportNotification(R.drawable.ic_stat_action_done, getString(R.string.export_notif_complete_title), getString(R.string.export_notif_complete_content), pendingIntent, true);
         }
+        notificationBuilder.addAction(R.drawable.ic_pref_share, getString(R.string.action_share), pendingIntent);
+        notificationManager.notify(FileExport.class.hashCode(), notificationBuilder.build());
     }
 
-    private void updateFileExportNotification(@DrawableRes int iconId, String titleText, String contentText, PendingIntent pendingIntent, boolean autoCancel) {
-        Notification notification = new NotificationCompat.Builder(this)
+    private NotificationCompat.Builder prepareFileExportNotification(@DrawableRes int iconId, String titleText, String contentText, PendingIntent pendingIntent, boolean autoCancel) {
+        return new NotificationCompat.Builder(this)
                 .setSmallIcon(iconId)
                 .setTicker(titleText)
                 .setContentTitle(titleText)
@@ -305,10 +312,7 @@ public class DBOpIntentService extends IntentService {
                 .setAutoCancel(autoCancel)
                 .setOngoing(!autoCancel)
                 .setContentIntent(pendingIntent)
-                .setColor(ActivityCompat.getColor(this, R.color.netmon_color))
-                .build();
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(FileExport.class.hashCode(), notification);
+                .setColor(ActivityCompat.getColor(this, R.color.netmon_color));
     }
 
     private void handleActionImport(Uri uri) {
