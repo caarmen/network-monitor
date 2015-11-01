@@ -24,15 +24,22 @@ limitations under the License.
 -->
 <resources>
     <!-- Strings for exporting the log file -->
+    <string name="export">Export</string>
     <string name="export_subject_send_log">Network Monitor Log</string>
     <string name="export_choice_title">Choose the format to export</string>
     <string name="export_choice_csv">CSV</string>
     <string name="export_choice_html">HTML</string>
     <string name="export_choice_kml">KML</string>
+    <string name="export_choice_gnuplot">Gnuplot</string>
     <string name="export_choice_excel">Excel</string>
     <string name="export_choice_db">Raw database</string>
     <string name="export_choice_text">Text summary only</string>
     <string name="export_kml_choice_title">Choose a field to export to KML</string>
+    <string name="export_gnuplot_title">Gnuplot export settings</string>
+    <string name="export_gnuplot_y_axis_title">Y-axis field</string>
+    <string name="export_gnuplot_series_title">Series field</string>
+    <string name="export_gnuplot_series_filter_title">Filter %s values</string>
+    <string name="export_gnuplot_hint">Network Monitor will produce a gnuplot file.  You will have to run gnuplot on the exported file to obtain a graph image.</string>
     <string name="export_progress_preparing_export">Preparing export&#8230;</string>
     <string name="export_progress_finalizing_export">Finalizing export&#8230;</string>
     <string name="export_error_no_mobile_tests">No connection tests have been done on a mobile connection.</string>

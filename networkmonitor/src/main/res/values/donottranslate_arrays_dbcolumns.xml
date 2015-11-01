@@ -197,6 +197,8 @@ limitations under the License.
         <item>sim_operator</item>
         <item>network_operator</item>
     </string-array>
+
+    <!-- These columns can be filtered: they do not have too many different possible values -->
     <string-array name="filterable_columns">
         <item>google_connection_test</item>
         <item>http_connection_test</item>
@@ -244,6 +246,27 @@ limitations under the License.
         <item>ipv4_address</item>
         <item>ipv6_address</item>
         <item>battery_level</item>
+    </string-array>
+
+    <!-- These columns have numeric (integer or float) values -->
+    <string-array name="numeric_columns">
+        <item>wifi_frequency</item>
+        <item>wifi_channel</item>
+        <item>wifi_signal_strength</item>
+        <item>wifi_rssi</item>
+        <item>device_latitude</item>
+        <item>device_longitude</item>
+        <item>device_position_accuracy</item>
+        <item>device_speed</item>
+        <item>cell_signal_strength</item>
+        <item>cell_signal_strength_dbm</item>
+        <item>cell_asu_level</item>
+        <item>gsm_ber</item>
+        <!--item>evdo_ecio</item-->
+        <item>lte_rsrq</item>
+        <item>battery_level</item>
+        <item>download_speed</item>
+        <item>upload_speed</item>
     </string-array>
 
 </resources>

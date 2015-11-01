@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+This source is part of the
+     _____  ___   ____
+ __ / / _ \/ _ | / __/___  _______ _
+/ // / , _/ __ |/ _/_/ _ \/ __/ _ `/
+\___/_/|_/_/ |_/_/ (_)___/_/  \_, /
+                             /___/
+repository.
+
+Copyright (C) 2015 Carmen Alvarez (c@rmen.ca)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="preferenceScreen">
+
+
+    <ListPreference
+        android:defaultValue="wifi_rssi"
+        android:entries="@array/numeric_columns"
+        android:entryValues="@array/numeric_columns"
+        android:key="PREF_EXPORT_GNUPLOT_Y_AXIS"
+        android:summary="%s"
+        android:title="@string/export_gnuplot_y_axis_title"/>
+    <ListPreference
+        android:defaultValue="wifi_ssid"
+        android:entries="@array/filterable_columns"
+        android:entryValues="@array/filterable_columns"
+        android:key="PREF_EXPORT_GNUPLOT_SERIES"
+        android:summary="%s"
+        android:title="@string/export_gnuplot_series_title"/>
+    <Preference
+        android:key="PREF_EXPORT_GNUPLOT_SERIES_FILTER"
+        android:title="@string/export_gnuplot_series_filter_title"/>
+
+
+</PreferenceScreen>

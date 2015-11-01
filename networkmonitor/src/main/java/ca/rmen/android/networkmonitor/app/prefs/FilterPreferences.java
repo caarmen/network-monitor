@@ -47,7 +47,7 @@ public class FilterPreferences {
         public final String selectionString;
         public final String[] selectionArgs;
 
-        private Selection(String selectionString, String[] selectionArgs) {
+        public Selection(String selectionString, String[] selectionArgs) {
             this.selectionString = selectionString;
             this.selectionArgs = selectionArgs;
         }

@@ -206,6 +206,11 @@ limitations under the License.
             android:label="@string/filter_columns_title" >
         </activity>
         <activity
+            android:name=".app.dbops.ui.GnuplotSettingsActivity"
+            android:exported="false"
+            android:label="@string/export_gnuplot_title" >
+        </activity>
+        <activity
             android:name=".app.prefs.PreferenceFragmentActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"

@@ -8,7 +8,7 @@ This source is part of the
                              /___/
 repository.
 
-Copyright (C) 2014-2015 Carmen Alvarez (c@rmen.ca)
+Copyright (C) 2015 Carmen Alvarez (c@rmen.ca)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,22 +22,24 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:divider="?android:attr/dividerHorizontal"
-    android:orientation="vertical"
-    android:showDividers="middle"
-    tools:ignore="NewApi,UnusedAttribute" >
+<resources>
 
-    <fragment
-        android:id="@+id/listFragment"
-        android:name="ca.rmen.android.networkmonitor.app.prefs.SelectFieldsFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+    <string name="gnuplot_script" translatable="false">
+"reset\n
+set terminal png size 1024,768
+set output \'networkmonitor-gnuplot.png\'
+set style data dots
+set timefmt \"%%Y-%%m-%%d %%H:%%M:%%S\"
+set xdata time
+set title \"Network Monitor: %1$s \\\\&amp; %2$s\"
+set key outside box title \"%2$s\"
+set datafile sep \'|\'
+set format x \"%%Y-%%m-%%d\"
+set ylabel \"%1$s\"
+set xtics rotate
+set xrange[\"%3$s\" : \"%4$s\"]
+plot  \\"
+    </string>
+    <string name="gnuplot_series">  \'-\' using 1:2 title \'%s\' with points pointtype 7 pointsize 1</string>
 
-    <include layout="@layout/ok_cancel_bar"/>
-
-</LinearLayout>
+</resources>

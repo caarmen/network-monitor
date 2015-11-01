@@ -79,6 +79,8 @@ public class NetMonPreferences {
     public static final String PREF_LOCATION_FETCHING_STRATEGY = "PREF_LOCATION_FETCHING_STRATEGY";
     public static final String PREF_NOTIFICATION_RINGTONE = "PREF_NOTIFICATION_RINGTONE";
     public static final String PREF_NOTIFICATION_ENABLED = "PREF_NOTIFICATION_ENABLED";
+    public static final String PREF_EXPORT_GNUPLOT_SERIES = "PREF_EXPORT_GNUPLOT_SERIES";
+    public static final String PREF_EXPORT_GNUPLOT_Y_AXIS = "PREF_EXPORT_GNUPLOT_Y_AXIS";
 
     private static final String PREF_WAKE_INTERVAL = "PREF_WAKE_INTERVAL";
     private static final String PREF_UPDATE_INTERVAL_DEFAULT = "10000";
@@ -92,6 +94,8 @@ public class NetMonPreferences {
     private static final String PREF_SORT_COLUMN_NAME_DEFAULT = NetMonColumns.TIMESTAMP;
     private static final String PREF_SORT_ORDER_DEFAULT = SortOrder.DESC.name();
     private static final String PREF_FILTER_PREFIX = "PREF_FILTERED_VALUES_";
+    private static final String PREF_EXPORT_GNUPLOT_SERIES_DEFAULT = "wifi_ssid";
+    private static final String PREF_EXPORT_GNUPLOT_Y_AXIS_DEFAULT = "wifi_rssi";
 
     private static final String PREF_EXPORT_FOLDER = "PREF_EXPORT_FOLDER";
     private static final String PREF_IMPORT_FOLDER = "PREF_IMPORT_FOLDER";
@@ -286,6 +290,15 @@ public class NetMonPreferences {
         editor.putString(PREF_SORT_ORDER, sortPreferences.sortOrder.name());
         editor.apply();
     }
+
+    public String getExportGnuplotSeriesField() {
+        return mSharedPrefs.getString(PREF_EXPORT_GNUPLOT_SERIES, PREF_EXPORT_GNUPLOT_SERIES_DEFAULT);
+    }
+
+    public String getExportGnuplotYAxisField() {
+        return mSharedPrefs.getString(PREF_EXPORT_GNUPLOT_Y_AXIS, PREF_EXPORT_GNUPLOT_Y_AXIS_DEFAULT);
+    }
+
 
     /**
      * @return the strategy we should use for requesting location updates.

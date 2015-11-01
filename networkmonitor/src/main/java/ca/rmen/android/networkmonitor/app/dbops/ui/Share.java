@@ -24,6 +24,7 @@
 package ca.rmen.android.networkmonitor.app.dbops.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 
 import ca.rmen.android.networkmonitor.Constants;
@@ -54,6 +55,10 @@ public class Share {
         } else if (activity.getString(R.string.export_choice_kml).equals(selectedShareFormat)) {
             // The KML export requires a second dialog before we can share, so we return here.
             shareKml(activity);
+            return;
+        } else if (activity.getString(R.string.export_choice_gnuplot).equals(selectedShareFormat)) {
+            // The gnuplot export requires a second activity before we can share, so we return here.
+            shareGnuplot(activity);
             return;
         } else if (activity.getString(R.string.export_choice_excel).equals(selectedShareFormat)) {
             exportFormat = DBOpIntentService.ExportFormat.EXCEL;
@@ -86,6 +91,12 @@ public class Share {
                 activity.finish();
             }
         });
+    }
+
+    private static void shareGnuplot(final FragmentActivity activity) {
+        Log.v(TAG, "shareGnuplot");
+        Intent intent = new Intent(activity, GnuplotSettingsActivity.class);
+        activity.startActivity(intent);
     }
 
 

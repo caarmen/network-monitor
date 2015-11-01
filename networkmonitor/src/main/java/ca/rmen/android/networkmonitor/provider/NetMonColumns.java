@@ -24,12 +24,12 @@
  */
 package ca.rmen.android.networkmonitor.provider;
 
-import java.util.Arrays;
-import java.util.List;
-
 import android.content.Context;
 import android.net.Uri;
 import android.provider.BaseColumns;
+
+import java.util.Arrays;
+import java.util.List;
 
 import ca.rmen.android.networkmonitor.R;
 
@@ -115,6 +115,17 @@ public class NetMonColumns implements BaseColumns {
             columnLabels[i] = getColumnLabel(context, columnNames[i]);
         }
         return columnLabels;
+    }
+
+    /**
+     * @return the localized display names of all the given DB column names.
+     */
+    public static CharSequence[] getColumnLabels(Context context, CharSequence[] columnNames) {
+        CharSequence[] result = new String[columnNames.length];
+        for (int i=0; i < columnNames.length; i++) {
+            result[i] = getColumnLabel(context, columnNames[i].toString());
+        }
+        return result;
     }
 
     /**

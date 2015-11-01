@@ -24,15 +24,22 @@ limitations under the License.
 -->
 <resources>
     <!-- Strings for exporting the log file -->
+    <string name="export">Exportar</string>
     <string name="export_subject_send_log">Archivo log de Network Monitor</string>
     <string name="export_choice_title">Escoge un formato</string>
     <string name="export_choice_csv">CSV</string>
     <string name="export_choice_html">HTML</string>
     <string name="export_choice_kml">KML</string>
+    <string name="export_choice_gnuplot">Gnuplot</string>
     <string name="export_choice_excel">Excel</string>
     <string name="export_choice_db">Base de datos</string>
     <string name="export_choice_text">Resumen en texto</string>
     <string name="export_kml_choice_title">Escoge un campo</string>
+    <string name="export_gnuplot_title">Ajustes de la exportación Gnuplot</string>
+    <string name="export_gnuplot_y_axis_title">Campo del eje y</string>
+    <string name="export_gnuplot_series_title">Campo de la serie</string>
+    <string name="export_gnuplot_series_filter_title">Filtrar valores de %s</string>
+    <string name="export_gnuplot_hint">Network Monitor producirá un fichero gnuplot. Habrá que ejecutar el programa gnuplot sobre este fichero para obtenir un imagen del gráfico.</string>
     <string name="export_progress_preparing_export">Preparación de la exportación&#8230;</string>
     <string name="export_progress_finalizing_export">Finalización&#8230;</string>
     <string name="export_error_no_mobile_tests">Ninguna prueba ha sido realizada con una conexión de datos móviles.</string>

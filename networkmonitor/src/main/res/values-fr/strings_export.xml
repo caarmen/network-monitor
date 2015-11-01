@@ -24,11 +24,18 @@ limitations under the License.
 -->
 <resources>
     <!-- Strings for exporting the log file -->
+    <string name="export">Exporter</string>
     <string name="export_subject_send_log">Fichier journal du Network Monitor</string>
     <string name="export_choice_title">Choisissez le format</string>
     <string name="export_choice_csv">CSV</string>
     <string name="export_choice_html">HTML</string>
     <string name="export_choice_kml">KML</string>
+    <string name="export_choice_gnuplot">Gnuplot</string>
+    <string name="export_gnuplot_title">Préférences de l\'exportation Gnuplot</string>
+    <string name="export_gnuplot_y_axis_title">Champ de l\'axe des y</string>
+    <string name="export_gnuplot_series_title">Champ de la série</string>
+    <string name="export_gnuplot_series_filter_title">Filtrer des valeurs de %s</string>
+    <string name="export_gnuplot_hint">Network Monitor produira un fichier gnuplot. Il faudra exécuter le programme gnuplot sur ce fichier pour obtenir l\'image du graphique.</string>
     <string name="export_choice_excel">Excel</string>
     <string name="export_choice_db">Base de données</string>
     <string name="export_choice_text">Résumé en texte</string>

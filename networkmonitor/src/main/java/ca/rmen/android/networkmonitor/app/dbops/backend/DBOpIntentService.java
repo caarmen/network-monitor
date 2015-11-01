@@ -53,6 +53,7 @@ import ca.rmen.android.networkmonitor.app.dbops.backend.export.CSVExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.DBExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.ExcelExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.FileExport;
+import ca.rmen.android.networkmonitor.app.dbops.backend.export.GnuplotExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.HTMLExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.kml.KMLExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.imp0rt.DBImport;
@@ -76,6 +77,7 @@ public class DBOpIntentService extends IntentService {
         EXCEL,
         HTML,
         KML,
+        GNUPLOT,
         SUMMARY
     }
 
@@ -268,6 +270,9 @@ public class DBOpIntentService extends IntentService {
             case KML:
                 String placemarkColumnName = extras.getString(EXTRA_EXPORT_KML_PLACEMARK_COLUMN_NAME);
                 fileExport = new KMLExport(this, placemarkColumnName);
+                break;
+            case GNUPLOT:
+                fileExport = new GnuplotExport(this);
                 break;
             case SUMMARY:
             default:
