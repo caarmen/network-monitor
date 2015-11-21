@@ -103,6 +103,6 @@ dependencies {
     compile 'commons-net:commons-net:3.3'
 
     if (!gradle.isFoss) {
-        proprietaryCompile 'com.google.android.gms:play-services-location:8.1.0'
+        proprietaryCompile 'com.google.android.gms:play-services-location:8.3.0'
     }
 }
