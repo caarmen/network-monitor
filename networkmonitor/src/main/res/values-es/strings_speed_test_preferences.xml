@@ -25,7 +25,7 @@ limitations under the License.
 <resources>
 
     <!-- Speed test preferences -->
-    <string name="pref_category_speed_test_settings">PRUEBA DE VELOCIDAD</string>
+    <string name="pref_category_speed_test_settings">Prueba de velocidad</string>
     <string name="pref_title_speed_test_enabled">Activar/desactivar</string>
     <!-- Speed test interval -->
     <string name="pref_title_speed_test_interval">Frecuencia de la prueba de velocidad</string>
@@ -42,11 +42,11 @@ limitations under the License.
     <string name="pref_value_speed_test_interval_100_times">Cada 100 recogida de datos</string>
     <string name="pref_value_speed_test_interval_1000_times">Cada 1000 recogida de datos</string>
     <!-- Download speed test preferences -->
-    <string name="pref_category_speed_test_download_settings">PRUEBA DE BAJADA (HTTP)</string>
+    <string name="pref_category_speed_test_download_settings">Prueba de bajada (HTTP)</string>
     <string name="pref_title_speed_test_download_url">URL del fichero a descargar</string>
     <string name="pref_summary_speed_test_download_url">%1$s\n(%2$s Mb)\nArchivo más grande = mayor precisión (y más tráfico de red)</string>
     <!-- Upload speed test preferences -->
-    <string name="pref_category_speed_test_upload_settings">PRUEBA DE SUBIDA (FTP)</string>
+    <string name="pref_category_speed_test_upload_settings">Prueba de subida (FTP)</string>
     <string name="pref_title_speed_test_upload_server">Nom del servidor</string>
     <string name="pref_summary_speed_test_upload_server">%s</string>
     <string name="pref_hint_speed_test_upload_server">ftp.yourdomain.com</string>
@@ -60,7 +60,7 @@ limitations under the License.
     <string name="pref_title_speed_test_upload_path">Ruta</string>
     <string name="pref_summary_speed_test_upload_path">%s</string>
     <!-- About the speed test -->
-    <string name="pref_category_speed_test_about">ACERCA DE</string>
+    <string name="pref_category_speed_test_about">Acerca de</string>
     <string name="pref_title_speed_test_about">Acerca de la prueba de velocidad</string>
 
 </resources>

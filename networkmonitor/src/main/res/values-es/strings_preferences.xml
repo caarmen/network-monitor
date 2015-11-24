@@ -25,9 +25,9 @@ limitations under the License.
 -->
 <resources>
     <!-- Preferences in the main screen -->
-    <string name="pref_category_monitoring_settings">AJUSTES DE SEGUIMIENTO</string>
-    <string name="pref_category_log_actions">ACCIONES DE REGISTRO</string>
-    <string name="pref_category_other">OTRO</string>
+    <string name="pref_category_monitoring_settings">Ajustes de seguimiento</string>
+    <string name="pref_category_log_actions">Acciones de registro</string>
+    <string name="pref_category_other">Otro</string>
     <string name="pref_title_update_interval">Frecuencia de recogida de datos</string>
     <string name="pref_summary_update_interval">%s</string>
     <string name="pref_title_service_enabled">Activar el servicio</string>
@@ -51,10 +51,10 @@ limitations under the License.
     <string name="pref_value_interval_55_minutes">55 minutos</string>
     <string name="pref_value_interval_1_hour">1 hora</string>
     <!-- Advanced preferences-->
-    <string name="pref_category_report_content">CONTENIDO DEL INFORME</string>
-    <string name="pref_category_performance">RENDIMIENTO</string>
-    <string name="pref_category_notifications">NOTIFICACIONES</string>
-    <string name="pref_category_database">BASE DE DATOS</string>
+    <string name="pref_category_report_content">Contenido del informe</string>
+    <string name="pref_category_performance">Rendimiento</string>
+    <string name="pref_category_notifications">Notificaciones</string>
+    <string name="pref_category_database">Base de datos</string>
     <string name="pref_title_enable_connection_test">Activar las pruebas de conexión</string>
     <string name="pref_summary_enable_connection_test">Activar o desactivar las preubas de conexión (consume datos)</string>
     <string name="pref_title_select_fields">Campos</string>

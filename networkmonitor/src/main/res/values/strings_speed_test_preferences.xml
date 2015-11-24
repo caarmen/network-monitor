@@ -26,7 +26,7 @@ limitations under the License.
 <resources>
 
     <!-- Speed test preferences -->
-    <string name="pref_category_speed_test_settings">SPEED TEST SETTINGS</string>
+    <string name="pref_category_speed_test_settings">Speed test settings</string>
     <string name="pref_title_speed_test_enabled">Enable speed test</string>
     <!-- Speed test interval -->
     <string name="pref_title_speed_test_interval">Speed test frequency</string>
@@ -43,12 +43,12 @@ limitations under the License.
     <string name="pref_value_speed_test_interval_100_times">Every 100 log entries</string>
     <string name="pref_value_speed_test_interval_1000_times">Every 1000 log entries</string>
     <!-- Download speed test preferences -->
-    <string name="pref_category_speed_test_download_settings">DOWNLOAD TEST (HTTP)</string>
+    <string name="pref_category_speed_test_download_settings">Download test (HTTP)</string>
     <string name="pref_title_speed_test_download_url">URL of the file to download</string>
     <string name="pref_summary_speed_test_download_url">%1$s\n(%2$s Mb)\nLarger file = better accuracy (and more network traffic usage)</string>
     <string name="pref_value_speed_test_default_download_url" translatable="false">https://github.com/caarmen/network-monitor/archive/netmon-1.12.2.zip</string>
     <!-- Upload speed test preferences -->
-    <string name="pref_category_speed_test_upload_settings">UPLOAD TEST (FTP)</string>
+    <string name="pref_category_speed_test_upload_settings">Upload test (FTP)</string>
     <string name="pref_title_speed_test_upload_server">Server name</string>
     <string name="pref_summary_speed_test_upload_server">%s</string>
     <string name="pref_hint_speed_test_upload_server">ftp.yourdomain.com</string>
@@ -62,7 +62,7 @@ limitations under the License.
     <string name="pref_title_speed_test_upload_path">Path</string>
     <string name="pref_summary_speed_test_upload_path">%s</string>
     <!-- About the speed test -->
-    <string name="pref_category_speed_test_about">ABOUT</string>
+    <string name="pref_category_speed_test_about">About</string>
     <string name="pref_title_speed_test_about">About the speed test</string>
 
 </resources>

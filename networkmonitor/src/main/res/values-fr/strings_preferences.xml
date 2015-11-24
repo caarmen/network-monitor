@@ -25,9 +25,9 @@ limitations under the License.
 -->
 <resources>
     <!-- Preferences in the main screen -->
-    <string name="pref_category_monitoring_settings">PRÉFÉRENCES DES TESTS</string>
-    <string name="pref_category_log_actions">FICHIER JOURNAL</string>
-    <string name="pref_category_other">AUTRES</string>
+    <string name="pref_category_monitoring_settings">Préférences des tests</string>
+    <string name="pref_category_log_actions">Fichier journal</string>
+    <string name="pref_category_other">Autres</string>
     <string name="pref_title_update_interval">Fréquence de collecte de données</string>
     <string name="pref_summary_update_interval">%s</string>
     <string name="pref_title_service_enabled">Activer le service</string>
@@ -51,10 +51,10 @@ limitations under the License.
     <string name="pref_value_interval_55_minutes">55 minutes</string>
     <string name="pref_value_interval_1_hour">1 heure</string>
     <!-- Advanced preferences-->
-    <string name="pref_category_report_content">CONTENU DU RAPPORT</string>
-    <string name="pref_category_performance">PERFORMANCE</string>
-    <string name="pref_category_notifications">NOTIFICATIONS</string>
-    <string name="pref_category_database">BASE DE DONNÉES</string>
+    <string name="pref_category_report_content">Contenu du rapport</string>
+    <string name="pref_category_performance">Performance</string>
+    <string name="pref_category_notifications">Notifications</string>
+    <string name="pref_category_database">Base de données</string>
     <string name="pref_title_enable_connection_test">Activer les tests de données</string>
     <string name="pref_summary_enable_connection_test">Activer ou desactiver des tests de données</string>
     <string name="pref_title_select_fields">Champs</string>
