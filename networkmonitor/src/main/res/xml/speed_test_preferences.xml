@@ -82,7 +82,7 @@ limitations under the License.
             android:title="@string/pref_title_speed_test_upload_password" />
         <EditTextPreference
             android:defaultValue="/"
-            android:icon="@drawable/ic_folder"
+            android:icon="@drawable/ic_pref_folder"
             android:key="PREF_SPEED_TEST_UPLOAD_PATH"
             android:title="@string/pref_title_speed_test_upload_path" />
     </PreferenceCategory>
