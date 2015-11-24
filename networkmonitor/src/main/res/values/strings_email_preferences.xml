@@ -25,9 +25,9 @@ limitations under the License.
 <resources>
 
     <!-- Email sending preferences -->
-    <string name="pref_category_email_sending_settings">E-MAIL SETTINGS</string>
-    <string name="pref_category_email_server_settings">SMTP SERVER AUTHENTICATION</string>
-    <string name="pref_category_email_status">STATUS</string>
+    <string name="pref_category_email_sending_settings">E-mail settings</string>
+    <string name="pref_category_email_server_settings">SMTP server authentication</string>
+    <string name="pref_category_email_status">Status</string>
     <string name="pref_email_unavailable">Available on Android 4.x and higher</string>
     <string name="pref_title_email_report_interval">E-mail report frequency</string>
     <string name="pref_summary_email_report_interval">%s</string>

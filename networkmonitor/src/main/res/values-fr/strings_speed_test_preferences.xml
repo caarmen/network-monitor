@@ -25,7 +25,7 @@ limitations under the License.
 <resources>
 
     <!-- Speed test preferences -->
-    <string name="pref_category_speed_test_settings">TEST DE VITESSE</string>
+    <string name="pref_category_speed_test_settings">Test de vitesse</string>
     <string name="pref_title_speed_test_enabled">Activer/Désactiver</string>
     <!-- Speed test interval -->
     <string name="pref_title_speed_test_interval">Fréquence du test de vitesse</string>
@@ -42,11 +42,11 @@ limitations under the License.
     <string name="pref_value_speed_test_interval_100_times">Chaque 100 collectes</string>
     <string name="pref_value_speed_test_interval_1000_times">Chaque 1000 collectes</string>
     <!-- Download speed test preferences -->
-    <string name="pref_category_speed_test_download_settings">TEST DE RÉCEPTION (HTTP)</string>
+    <string name="pref_category_speed_test_download_settings">Test de réception (HTTP)</string>
     <string name="pref_title_speed_test_download_url">URL du fichier à télécharger</string>
     <string name="pref_summary_speed_test_download_url">%1$s\n(%2$s Mb)\nFichier plus gros = test plus précis (et plus de trafic réseau)</string>
     <!-- Upload speed test preferences -->
-    <string name="pref_category_speed_test_upload_settings">TEST D\'ÉMISSION (FTP)</string>
+    <string name="pref_category_speed_test_upload_settings">Test d\'émission (FTP)</string>
     <string name="pref_title_speed_test_upload_server">Nom du serveur</string>
     <string name="pref_summary_speed_test_upload_server">%s</string>
     <string name="pref_hint_speed_test_upload_server">ftp.yourdomain.com</string>
@@ -60,7 +60,7 @@ limitations under the License.
     <string name="pref_title_speed_test_upload_path">Chemin</string>
     <string name="pref_summary_speed_test_upload_path">%s</string>
     <!-- About the speed test -->
-    <string name="pref_category_speed_test_about">À PROPOS</string>
+    <string name="pref_category_speed_test_about">À propos</string>
     <string name="pref_title_speed_test_about">À propos du test de vitesse</string>
 
 </resources>
