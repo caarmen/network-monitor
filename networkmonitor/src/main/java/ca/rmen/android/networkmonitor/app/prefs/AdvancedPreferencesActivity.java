@@ -158,8 +158,14 @@ public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (
                         return getString(R.string.pref_value_notification_ringtone_silent);
                     } else {
                         Ringtone ringtone = RingtoneManager.getRingtone(AdvancedPreferencesActivity.this, ringtoneUri);
-                        if (ringtone == null) return null;
-                        return ringtone.getTitle(AdvancedPreferencesActivity.this);
+                        // In some cases the ringtone object is null if the ringtoneUri is the default ringtone uri.
+                        if (ringtone == null) {
+                            Uri defaultRingtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                            if (ringtoneUri.equals(defaultRingtoneUri)) return getString(R.string.pref_value_notification_ringtone_default);
+                            else return null;
+                        } else {
+                            return ringtone.getTitle(AdvancedPreferencesActivity.this);
+                        }
                     }
                 }
                 return null;
