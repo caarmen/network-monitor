@@ -58,14 +58,19 @@ import ca.rmen.android.networkmonitor.util.Log;
 
 public class AdvancedPreferencesActivity extends AppCompatActivity implements ConfirmDialogFragment.DialogButtonListener {
     private static final String TAG = Constants.TAG + AdvancedPreferencesActivity.class.getSimpleName();
-    private static final int ACTIVITY_REQUEST_CODE_IMPORT = 1;
+    private static final int ACTIVITY_REQUEST_CODE_IMPORT_DB = 1;
     private static final int ACTIVITY_REQUEST_CODE_RINGTONE = 2;
+    private static final int ACTIVITY_REQUEST_CODE_IMPORT_SETTINGS = 3;
     public static final String EXTRA_IMPORT_URI = AdvancedPreferencesActivity.class.getPackage().getName() + "_db_url";
-    private static final int ID_ACTION_IMPORT = 3;
+    private static final int ID_ACTION_IMPORT_DB = 3;
     private static final int ID_ACTION_LOCATION_SETTINGS = 4;
     private static final int ID_ACTION_COMPRESS = 5;
-    private static final String PREF_IMPORT = "PREF_IMPORT";
+    private static final int ID_ACTION_EXPORT_SETTINGS = 6;
+    private static final int ID_ACTION_IMPORT_SETTINGS = 7;
     private static final String PREF_COMPRESS = "PREF_COMPRESS";
+    private static final String PREF_IMPORT_DB = "PREF_IMPORT_DB";
+    private static final String PREF_EXPORT_SETTINGS = "PREF_EXPORT_SETTINGS";
+    private static final String PREF_IMPORT_SETTINGS = "PREF_IMPORT_SETTINGS";
 
     private NetMonPreferenceFragmentCompat mPreferenceFragment;
 
@@ -91,7 +96,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
         Preference enableConnectionTest = mPreferenceFragment.findPreference(NetMonPreferences.PREF_ENABLE_CONNECTION_TEST);
         if (prefs.isFastPollingEnabled()) enableConnectionTest.setEnabled(false);
         setOnPreferenceChangeListeners(NetMonPreferences.PREF_TEST_SERVER);
-        setOnPreferenceClickListeners(PREF_IMPORT, PREF_COMPRESS, NetMonPreferences.PREF_NOTIFICATION_RINGTONE);
+        setOnPreferenceClickListeners(PREF_IMPORT_DB, PREF_COMPRESS, NetMonPreferences.PREF_NOTIFICATION_RINGTONE, PREF_IMPORT_SETTINGS, PREF_EXPORT_SETTINGS);
         Preference emailPreference = mPreferenceFragment.findPreference(EmailPreferences.PREF_EMAIL_REPORTS);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             emailPreference.setEnabled(false);
@@ -195,11 +200,10 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
         @Override
         public boolean onPreferenceClick(Preference preference) {
             Log.v(TAG, "onPreferenceClick: " + preference);
-            if (PREF_IMPORT.equals(preference.getKey())) {
-
+            if (PREF_IMPORT_DB.equals(preference.getKey())) {
                 Intent importIntent = new Intent(Intent.ACTION_GET_CONTENT);
                 importIntent.setType("file/*");
-                startActivityForResult(Intent.createChooser(importIntent, getResources().getText(R.string.pref_summary_import)), ACTIVITY_REQUEST_CODE_IMPORT);
+                startActivityForResult(Intent.createChooser(importIntent, getResources().getText(R.string.pref_summary_import)), ACTIVITY_REQUEST_CODE_IMPORT_DB);
             } else if (PREF_COMPRESS.equals(preference.getKey())) {
                 DialogFragmentFactory.showConfirmDialog(AdvancedPreferencesActivity.this, getString(R.string.compress_confirm_title), getString(R.string.compress_confirm_message),
                         ID_ACTION_COMPRESS, null);
@@ -215,6 +219,12 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.pref_title_notification_ringtone));
                 startActivityForResult(intent, ACTIVITY_REQUEST_CODE_RINGTONE);
+            } else if (PREF_IMPORT_SETTINGS.equals(preference.getKey())) {
+                Intent importIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                importIntent.setType("file/*");
+                startActivityForResult(Intent.createChooser(importIntent, getResources().getText(R.string.pref_title_import_settings)), ACTIVITY_REQUEST_CODE_IMPORT_SETTINGS);
+            } else if (PREF_EXPORT_SETTINGS.equals(preference.getKey())) {
+                SettingsExportImport.exportSettings(AdvancedPreferencesActivity.this);
             }
             return false;
         }
@@ -240,14 +250,14 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
         /**
          * Allow the user to choose a DB to import
          */
-        if (requestCode == ACTIVITY_REQUEST_CODE_IMPORT) {
+        if (requestCode == ACTIVITY_REQUEST_CODE_IMPORT_DB) {
             if (resultCode == Activity.RESULT_OK) {
                 // Get the file the user selected, and show a dialog asking for confirmation to import the file.
                 Uri importFile = data.getData();
                 Bundle extras = new Bundle(1);
                 extras.putParcelable(EXTRA_IMPORT_URI, importFile);
                 DialogFragmentFactory.showConfirmDialog(this, getString(R.string.import_confirm_title),
-                        getString(R.string.import_confirm_message, importFile.getPath()), ID_ACTION_IMPORT, extras);
+                        getString(R.string.import_confirm_message, importFile.getPath()), ID_ACTION_IMPORT_DB, extras);
             }
         } else if (requestCode == ACTIVITY_REQUEST_CODE_RINGTONE) {
             if (resultCode == Activity.RESULT_OK) {
@@ -255,13 +265,21 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
                 NetMonPreferences.getInstance(this).setNotificationSoundUri(uri);
                 updatePreferenceSummary(NetMonPreferences.PREF_NOTIFICATION_RINGTONE, R.string.pref_summary_notification_ringtone);
             }
+        } else if (requestCode == ACTIVITY_REQUEST_CODE_IMPORT_SETTINGS) {
+            if (resultCode == Activity.RESULT_OK) {
+                Uri importFile = data.getData();
+                Bundle extras = new Bundle(1);
+                extras.putParcelable(EXTRA_IMPORT_URI, importFile);
+                DialogFragmentFactory.showConfirmDialog(this, getString(R.string.import_confirm_title),
+                        getString(R.string.import_settings_confirm_message, importFile.getPath()), ID_ACTION_IMPORT_SETTINGS, extras);
+            }
         }
     }
 
     @Override
     public void onOkClicked(int actionId, Bundle extras) {
         // Import the database in a background thread.
-        if (actionId == ID_ACTION_IMPORT) {
+        if (actionId == ID_ACTION_IMPORT_DB) {
             final Uri uri = extras.getParcelable(EXTRA_IMPORT_URI);
             DBOpIntentService.startActionImport(this, uri);
         }
@@ -271,8 +289,10 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
         } else if (actionId == ID_ACTION_LOCATION_SETTINGS) {
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intent);
+        } else if (actionId == ID_ACTION_IMPORT_SETTINGS) {
+            final Uri uri = extras.getParcelable(EXTRA_IMPORT_URI);
+            SettingsExportImport.importSettings(this, uri);
         }
-
     }
 
     @Override
@@ -284,7 +304,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
     @Subscribe
     public void onDBOperationStarted(NetMonBus.DBOperationStarted event) {
         Log.d(TAG, "onDBOperationStarted() called with " + "event = [" + event + "]");
-        mPreferenceFragment.findPreference(PREF_IMPORT).setEnabled(false);
+        mPreferenceFragment.findPreference(PREF_IMPORT_DB).setEnabled(false);
         mPreferenceFragment.findPreference(PREF_COMPRESS).setEnabled(false);
         mPreferenceFragment.findPreference(NetMonPreferences.PREF_DB_RECORD_COUNT).setEnabled(false);
     }
@@ -293,7 +313,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
     @Subscribe
     public void onDBOperationEnded(NetMonBus.DBOperationEnded event) {
         Log.d(TAG, "onDBOperationEnded() called with " + "event = [" + event + "]");
-        mPreferenceFragment.findPreference(PREF_IMPORT).setEnabled(true);
+        mPreferenceFragment.findPreference(PREF_IMPORT_DB).setEnabled(true);
         mPreferenceFragment.findPreference(PREF_COMPRESS).setEnabled(true);
         mPreferenceFragment.findPreference(NetMonPreferences.PREF_DB_RECORD_COUNT).setEnabled(true);
     }

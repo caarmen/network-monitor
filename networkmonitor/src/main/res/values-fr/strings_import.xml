@@ -38,4 +38,7 @@ limitations under the License.
     <string name="import_notif_complete_content">L\'importation de %s a réussi.</string>
     <string name="import_notif_canceled_content">L\'importation a été annulée.</string>
     <string name="import_notif_error_content">Echec de l\'importation de %s.</string>
+
+    <!-- strings for importing settings -->
+    <string name="import_settings_confirm_message">Remplacer les préférences par %s?</string>
 </resources>
