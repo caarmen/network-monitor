@@ -38,6 +38,7 @@ limitations under the License.
         <item name="android:listChoiceBackgroundIndicator">@drawable/netmon_list_selector_holo_light</item>
         <item name="android:selectableItemBackground">@drawable/netmon_list_selector_holo_light</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="buttonStyle">@style/NetMonButtonStyle</item>
     </style>
 
     <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">

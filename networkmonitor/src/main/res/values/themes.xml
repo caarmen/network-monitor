@@ -36,6 +36,7 @@ limitations under the License.
             backward-compatibility can go here.
         -->
         <item name="preferenceTheme">@style/NetMonPreferenceThemeOverlay</item>
+        <item name="buttonStyle">@style/NetMonButtonStyle</item>
     </style>
 
     <!-- Application theme. -->
@@ -51,11 +52,9 @@ limitations under the License.
         <item name="colorAccent">@color/netmon_color</item>
         <item name="colorPrimary">@color/netmon_color</item>
         <item name="colorControlNormal">@color/netmon_color</item>
-        <item name="colorButtonNormal">@color/netmon_color</item>
         <item name="colorPrimaryDark">@color/netmon_color_dark</item>
         <item name="colorControlActivated">@color/netmon_color</item>
         <item name="colorControlHighlight">@color/netmon_color_light</item>
-        <item name="android:textAppearanceButton">@style/NetMonButtonTextAppearance</item>
         <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
     </style>
 
@@ -82,6 +81,10 @@ limitations under the License.
 
     <style name="NetMonPreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
         <item name="preferenceCategoryStyle">@style/NetMonPreferenceCategoryStyle</item>
+    </style>
+
+    <style name="NetMonButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:textColor">@color/netmon_button_text_color</item>
     </style>
 
 </resources>

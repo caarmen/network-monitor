@@ -36,6 +36,7 @@ limitations under the License.
         -->
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="android:selectableItemBackground">@drawable/netmon_list_selector_holo_light</item>
+        <item name="buttonStyle">@style/NetMonButtonStyle</item>
     </style>
 
 </resources>
