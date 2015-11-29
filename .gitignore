@@ -10,3 +10,4 @@ networkmonitor/build
 *.iml
 networkmonitor/*.iml
 signing.properties
+etc/*.apk
