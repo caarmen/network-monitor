@@ -36,6 +36,7 @@ import android.support.v7.preference.PreferenceManager;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
@@ -96,7 +97,7 @@ public class SpeedTestPreferencesActivity extends AppCompatActivity { // NO_UCD 
             SpeedTestDownloadConfig downloadConfig = mSpeedTestPrefs.getDownloadConfig();
             if (!downloadConfig.isValid()) {
                 mSpeedTestPrefs.setEnabled(false);
-                PreferenceDialog.showInfoDialog(this, getString(R.string.speed_test_missing_info_dialog_title),
+                DialogFragmentFactory.showInfoDialog(this, getString(R.string.speed_test_missing_info_dialog_title),
                         getString(R.string.speed_test_missing_info_dialog_message));
             }
         }
@@ -110,7 +111,7 @@ public class SpeedTestPreferencesActivity extends AppCompatActivity { // NO_UCD 
             switch (key) {
                 case SpeedTestPreferences.PREF_SPEED_TEST_ENABLED:
                     if (sharedPreferences.getBoolean(key, false)) {
-                        PreferenceDialog.showWarningDialog(SpeedTestPreferencesActivity.this, getString(R.string.speed_test_warning_title),
+                        DialogFragmentFactory.showWarningDialog(SpeedTestPreferencesActivity.this, getString(R.string.speed_test_warning_title),
                                 getString(R.string.speed_test_warning_message));
                     }
                     break;

@@ -55,19 +55,21 @@ import java.io.File;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.bus.NetMonBus;
+import ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.HTMLExport;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
+import ca.rmen.android.networkmonitor.app.dialog.ChoiceDialogFragment;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.prefs.FilterColumnActivity;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
-import ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity;
 import ca.rmen.android.networkmonitor.app.prefs.SelectFieldsActivity;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences.SortOrder;
 import ca.rmen.android.networkmonitor.util.Log;
 
-public class LogActivity extends AppCompatActivity implements DialogButtonListener {
+public class LogActivity extends AppCompatActivity implements DialogButtonListener, ChoiceDialogFragment.DialogItemListener {
     private static final String TAG = Constants.TAG + LogActivity.class.getSimpleName();
     private WebView mWebView;
     private Dialog mDialog;
@@ -76,6 +78,8 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
     private static final int REQUEST_CODE_CLEAR = 1;
     private static final int REQUEST_CODE_SELECT_FIELDS = 2;
     private static final int REQUEST_CODE_FILTER_COLUMN = 3;
+    private static final int ID_ACTION_SHARE = 1;
+    private static final int ID_ACTION_CLEAR = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,15 +131,14 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             case R.id.action_share:
-                Intent intentShare = new Intent(PreferenceFragmentActivity.ACTION_SHARE);
-                startActivity(intentShare);
+                DialogFragmentFactory.showChoiceDialog(this, getString(R.string.export_choice_title), getResources().getStringArray(R.array.export_choices), -1,
+                        ID_ACTION_SHARE);
                 return true;
             case R.id.action_refresh:
                 loadHTMLFile();
                 return true;
             case R.id.action_clear:
-                Intent intentClear = new Intent(PreferenceFragmentActivity.ACTION_CLEAR);
-                startActivityForResult(intentClear, REQUEST_CODE_CLEAR);
+                DialogFragmentFactory.showConfirmDialog(this, getString(R.string.action_clear), getString(R.string.confirm_logs_clear), ID_ACTION_CLEAR, null);
                 return true;
             case R.id.action_select_fields:
                 Intent intentSelectFields = new Intent(this, SelectFieldsActivity.class);
@@ -325,11 +328,24 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         if (actionId == R.id.action_reset_filters) {
             NetMonPreferences.getInstance(this).resetColumnFilters();
             loadHTMLFile();
+        } else if (actionId == ID_ACTION_CLEAR) {
+            Log.v(TAG, "Clicked ok to clear log");
+            DBOpIntentService.startActionPurge(this, 0);
         }
     }
 
     @Override
     public void onCancelClicked(int actionId, Bundle extras) {}
+
+    @Override
+    public void onItemSelected(int actionId, CharSequence[] choices, int which) {
+        // The user picked a file format to export.
+        if (actionId == ID_ACTION_SHARE) {
+            String[] exportChoices = getResources().getStringArray(R.array.export_choices);
+            String selectedShareFormat = exportChoices[which];
+            Share.share(this, selectedShareFormat);
+        }
+    }
 
     private void startRefreshIconAnimation() {
         Log.v(TAG, "startRefreshIconAnimation");

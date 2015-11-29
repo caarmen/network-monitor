@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.support.v14.preference.MultiSelectListPreference;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.EditTextPreference;
+import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -42,13 +43,15 @@ import java.util.Set;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
+import ca.rmen.android.networkmonitor.app.dialog.InfoDialogFragment;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailConfig;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
 import ca.rmen.android.networkmonitor.util.Log;
 
 @TargetApi(14)
-public class EmailPreferencesActivity extends AppCompatActivity { // NO_UCD (use default)
+public class EmailPreferencesActivity extends AppCompatActivity {
     private static final String TAG = Constants.TAG + EmailPreferencesActivity.class.getSimpleName();
 
     private NetMonPreferenceFragmentCompat mPreferenceFragment;
@@ -81,19 +84,22 @@ public class EmailPreferencesActivity extends AppCompatActivity { // NO_UCD (use
     }
 
     @Override
-    protected void onPause() {
-        Log.v(TAG, "onPause");
-        super.onPause();
+    public void onBackPressed() {
+        Log.v(TAG, "onBackPressed");
         int emailInterval = EmailPreferences.getInstance(this).getEmailReportInterval();
         // If the user enabled sending e-mails, make sure we have enough info.
         if (emailInterval > 0) {
             EmailConfig emailConfig = EmailPreferences.getInstance(this).getEmailConfig();
             if (!emailConfig.isValid()) {
-                EmailPreferences.getInstance(this).setEmailReportInterval(0);
-                PreferenceDialog.showInfoDialog(this, getString(R.string.missing_email_settings_info_dialog_title),
+                ListPreference preference = (ListPreference) mPreferenceFragment.findPreference(EmailPreferences.PREF_EMAIL_INTERVAL);
+                preference.setValue("0");
+                DialogFragmentFactory.showInfoDialog(this, getString(R.string.missing_email_settings_info_dialog_title),
                         getString(R.string.missing_email_settings_info_dialog_message));
+                updatePreferenceSummary(EmailPreferences.PREF_EMAIL_INTERVAL, R.string.pref_summary_email_report_interval);
+                return;
             }
         }
+        super.onBackPressed();
     }
 
     @Override
@@ -150,6 +156,8 @@ public class EmailPreferencesActivity extends AppCompatActivity { // NO_UCD (use
             value = ((EditTextPreference) pref).getText();
         else if (pref instanceof MultiSelectListPreference)
             value = getSummary((MultiSelectListPreference) pref, ((MultiSelectListPreference) pref).getValues());
+        else if (pref instanceof ListPreference)
+            value = ((ListPreference)pref).getEntry();
         else
             return;
         String summary = getString(summaryResId, value);
@@ -175,6 +183,5 @@ public class EmailPreferencesActivity extends AppCompatActivity { // NO_UCD (use
             return true;
         }
     };
-
 
 }

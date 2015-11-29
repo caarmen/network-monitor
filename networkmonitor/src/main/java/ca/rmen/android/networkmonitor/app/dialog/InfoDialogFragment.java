@@ -68,18 +68,16 @@ public class InfoDialogFragment extends DialogFragment { // NO_UCD (use default)
         if (iconId > 0) builder.setIcon(iconId);
         final Bundle extras = arguments.getBundle(DialogFragmentFactory.EXTRA_EXTRAS);
         builder.setTitle(arguments.getString(DialogFragmentFactory.EXTRA_TITLE)).setMessage(arguments.getString(DialogFragmentFactory.EXTRA_MESSAGE));
-        if (getActivity() instanceof InfoDialogListener) {
-            OnClickListener neutralListener = new OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    FragmentActivity activity = getActivity();
-                    if (activity == null) Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
-                    else
-                        ((InfoDialogListener) activity).onNeutralClicked(actionId, extras);
+        OnClickListener neutralListener = new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                FragmentActivity activity = getActivity();
+                if (activity instanceof InfoDialogListener) {
+                    ((InfoDialogListener) activity).onNeutralClicked(actionId, extras);
                 }
-            };
-            builder.setNeutralButton(android.R.string.ok, neutralListener);
-        }
+            }
+        };
+        builder.setNeutralButton(android.R.string.ok, neutralListener);
         if (getActivity() instanceof OnCancelListener) builder.setOnCancelListener((OnCancelListener) getActivity());
         final Dialog dialog = builder.create();
         if (getActivity() instanceof OnDismissListener) dialog.setOnDismissListener((OnDismissListener) getActivity());
