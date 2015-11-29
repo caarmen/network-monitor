@@ -46,7 +46,6 @@ import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 import ca.rmen.android.networkmonitor.app.dialog.ChoiceDialogFragment;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
-import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.service.NetMonService;
@@ -92,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
     protected void onStart() {
         super.onStart();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
+        enableDBOperationPreferences();
         NetMonBus.getBus().register(this);
     }
 
@@ -127,16 +127,24 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
     @Subscribe
     public void onDBOperationStarted(NetMonBus.DBOperationStarted event) {
         Log.d(TAG, "onDBOperationStarted() called with " + "event = [" + event + "]");
-        mPreferenceFragment.findPreference(PREF_SHARE).setEnabled(false);
-        mPreferenceFragment.findPreference(PREF_SHARE).setSummary(event.name);
-        mPreferenceFragment.findPreference(PREF_CLEAR_LOG_FILE).setEnabled(false);
-        mPreferenceFragment.findPreference(PREF_CLEAR_LOG_FILE).setSummary(event.name);
+        disableDBOperationPreferences(event.name);
     }
 
     @SuppressWarnings("unused")
     @Subscribe
     public void onDBOperationEnded(NetMonBus.DBOperationEnded event) {
         Log.d(TAG, "onDBOperationEnded() called with " + "event = [" + event + "]");
+        enableDBOperationPreferences();
+    }
+
+    private void disableDBOperationPreferences(String summary) {
+        mPreferenceFragment.findPreference(PREF_SHARE).setEnabled(false);
+        mPreferenceFragment.findPreference(PREF_SHARE).setSummary(summary);
+        mPreferenceFragment.findPreference(PREF_CLEAR_LOG_FILE).setEnabled(false);
+        mPreferenceFragment.findPreference(PREF_CLEAR_LOG_FILE).setSummary(summary);
+    }
+
+    private void enableDBOperationPreferences() {
         mPreferenceFragment.findPreference(PREF_SHARE).setEnabled(true);
         mPreferenceFragment.findPreference(PREF_SHARE).setSummary("");
         mPreferenceFragment.findPreference(PREF_CLEAR_LOG_FILE).setEnabled(true);

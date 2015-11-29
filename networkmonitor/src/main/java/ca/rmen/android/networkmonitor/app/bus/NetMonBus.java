@@ -23,6 +23,9 @@
  */
 package ca.rmen.android.networkmonitor.app.bus;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import com.squareup.otto.Bus;
 
 public class NetMonBus {
@@ -36,15 +39,49 @@ public class NetMonBus {
         return BUS;
     }
 
+    /**
+     * Utility method to post an event to the bus from any thread.
+     * @param event
+     */
+    public static void post(final Object event) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                BUS.post(event);
+            }
+        });
+    }
+
     // region bus events
     public static class DBOperationStarted {
         public final String name;
+
         public DBOperationStarted(String name) {
             this.name = name;
         }
+
+        @Override
+        public String toString() {
+            return "DBOperationStarted{" +
+                    "name='" + name + '\'' +
+                    '}';
+        }
     }
 
-    public static class DBOperationEnded {}
+    public static class DBOperationEnded {
+        public final boolean isDataChanged;
+
+        public DBOperationEnded(boolean isDataChanged) {
+            this.isDataChanged = isDataChanged;
+        }
+
+        @Override
+        public String toString() {
+            return "DBOperationEnded{" +
+                    "isDataChanged=" + isDataChanged +
+                    '}';
+        }
+    }
     // endregion
 
 }

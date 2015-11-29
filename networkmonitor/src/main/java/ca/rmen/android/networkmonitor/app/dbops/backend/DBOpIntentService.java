@@ -96,6 +96,7 @@ public class DBOpIntentService extends IntentService {
 
     private DBOperation mDBOperation = null;
     private NetMonBus.DBOperationStarted mDBOperationStarted;
+    private Handler mHandler;
 
 
     public static void startActionCompress(Context context) {
@@ -151,6 +152,7 @@ public class DBOpIntentService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
+        mHandler = new Handler();
         mCompressProgressListener =
                 new NotificationProgressListener(this,
                         DBCompress.class.hashCode(),
@@ -193,13 +195,13 @@ public class DBOpIntentService extends IntentService {
             }
 
             // Show a toast
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
+            mHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     String toast = intent.getStringExtra(EXTRA_DB_OP_TOAST);
                     Toast.makeText(DBOpIntentService.this, toast, Toast.LENGTH_LONG).show();
                     synchronized (lock) {
-                        if (mDBOperationStarted != null) NetMonBus.getBus().post(mDBOperationStarted);
+                        NetMonBus.getBus().post(mDBOperationStarted);
                     }
                 }
             });
@@ -207,15 +209,19 @@ public class DBOpIntentService extends IntentService {
             // Do the db operation
             if (ACTION_COMPRESS.equals(action)) {
                 handleActionCompress();
+                NetMonBus.post(new NetMonBus.DBOperationEnded(true));
             } else if (ACTION_PURGE.equals(action)) {
                 final int numRowsToKeep = intent.getIntExtra(EXTRA_PURGE_NUM_ROWS_TO_KEEP, 0);
                 handleActionPurge(numRowsToKeep);
+                NetMonBus.post(new NetMonBus.DBOperationEnded(true));
             } else if (ACTION_EXPORT.equals(action)) {
                 final ExportFormat exportFileFormat = (ExportFormat) intent.getSerializableExtra(EXTRA_EXPORT_FORMAT);
                 handleActionExport(exportFileFormat, intent.getExtras());
+                NetMonBus.post(new NetMonBus.DBOperationEnded(false));
             } else if (ACTION_IMPORT.equals(action)) {
                 final Uri uri = intent.getData();
                 handleActionImport(uri);
+                NetMonBus.post(new NetMonBus.DBOperationEnded(true));
             }
             mDBOperation = null;
             synchronized (lock) {
@@ -226,7 +232,6 @@ public class DBOpIntentService extends IntentService {
 
     @Override
     public void onDestroy() {
-        NetMonBus.getBus().post(new NetMonBus.DBOperationEnded());
         NetMonBus.getBus().unregister(this);
         unregisterReceiver(mStopSelfReceiver);
         super.onDestroy();

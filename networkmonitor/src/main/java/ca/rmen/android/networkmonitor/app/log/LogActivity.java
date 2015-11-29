@@ -295,6 +295,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         Log.d(TAG, "onDBOperationEnded() called with " + "event = [" + event + "]");
         mDBOpInProgress = false;
         supportInvalidateOptionsMenu();
+        if (event.isDataChanged) loadHTMLFile();
     }
 
     /**
