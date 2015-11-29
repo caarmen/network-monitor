@@ -45,6 +45,7 @@ import com.squareup.otto.Subscribe;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.bus.NetMonBus;
+import ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.LocationFetchingStrategy;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
@@ -135,8 +136,8 @@ public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (
             } else if (NetMonPreferences.PREF_NOTIFICATION_ENABLED.equals(key)) {
                 if (!prefs.getShowNotificationOnTestFailure()) NetMonNotification.dismissFailedTestNotification(AdvancedPreferencesActivity.this);
             } else if (NetMonPreferences.PREF_DB_RECORD_COUNT.equals(key)) {
-                Intent intent = new Intent(PreferenceFragmentActivity.ACTION_CLEAR_OLD);
-                startActivity(intent);
+                int rowsToKeep = NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getDBRecordCount();
+                if (rowsToKeep > 0) DBOpIntentService.startActionPurge(AdvancedPreferencesActivity.this, rowsToKeep);
             }
         }
     };

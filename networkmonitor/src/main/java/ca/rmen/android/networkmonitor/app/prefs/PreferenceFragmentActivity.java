@@ -59,7 +59,6 @@ public class PreferenceFragmentActivity extends AppCompatActivity implements Dia
     public static final String ACTION_CLEAR = PreferenceFragmentActivity.class.getPackage().getName() + "_clear";
     public static final String ACTION_IMPORT = PreferenceFragmentActivity.class.getPackage().getName() + "_import";
     public static final String ACTION_COMPRESS = PreferenceFragmentActivity.class.getPackage().getName() + "_compress";
-    public static final String ACTION_CLEAR_OLD = PreferenceFragmentActivity.class.getPackage().getName() + "_clear_old";
     public static final String ACTION_CHECK_LOCATION_SETTINGS = PreferenceFragmentActivity.class.getPackage().getName() + "_check_location_settings";
     public static final String ACTION_SHOW_INFO_DIALOG = PreferenceFragmentActivity.class.getPackage().getName() + "_show_info_dialog";
     public static final String ACTION_SHOW_WARNING_DIALOG = PreferenceFragmentActivity.class.getPackage().getName() + "_show_warning_dialog";
@@ -110,10 +109,6 @@ public class PreferenceFragmentActivity extends AppCompatActivity implements Dia
         } else if (ACTION_COMPRESS.equals(action)) {
             DialogFragmentFactory.showConfirmDialog(this, getString(R.string.compress_confirm_title), getString(R.string.compress_confirm_message),
                     ID_ACTION_COMPRESS, intent.getExtras());
-        } else if (ACTION_CLEAR_OLD.equals(action)) {
-            int rowsToKeep = NetMonPreferences.getInstance(this).getDBRecordCount();
-            if (rowsToKeep > 0) DBOpIntentService.startActionPurge(this, rowsToKeep);
-            finish();
         } else if (ACTION_SHOW_INFO_DIALOG.equals(action)) {
             DialogFragmentFactory.showInfoDialog(this, intent.getExtras().getString(EXTRA_DIALOG_TITLE), intent.getExtras().getString(EXTRA_DIALOG_MESSAGE));
         } else if (ACTION_SHOW_WARNING_DIALOG.equals(action)) {
