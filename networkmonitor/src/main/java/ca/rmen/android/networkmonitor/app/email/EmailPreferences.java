@@ -79,6 +79,7 @@ public class EmailPreferences {
     }
 
     public static final String PREF_EMAIL_REPORTS = "PREF_EMAIL_REPORTS";
+    static final String PREF_EMAIL_INTERVAL = "PREF_EMAIL_INTERVAL";
     static final String PREF_EMAIL_REPORT_FORMATS = "PREF_EMAIL_REPORT_FORMATS";
     static final String PREF_EMAIL_SERVER = "PREF_EMAIL_SERVER";
     static final String PREF_EMAIL_PORT = "PREF_EMAIL_PORT";
@@ -87,7 +88,6 @@ public class EmailPreferences {
     static final String PREF_EMAIL_LAST_EMAIL_SENT = "PREF_EMAIL_LAST_EMAIL_SENT";
     private static final String PREF_EMAIL_PASSWORD = "PREF_EMAIL_PASSWORD";
 
-    private static final String PREF_EMAIL_INTERVAL = "PREF_EMAIL_INTERVAL";
     private static final String PREF_EMAIL_SECURITY = "PREF_EMAIL_SECURITY";
     private static final String PREF_EMAIL_PORT_DEFAULT = "587";
 
@@ -144,6 +144,7 @@ public class EmailPreferences {
 
     private int getIntPreference(String key, String defaultValue) {
         String valueStr = mSharedPrefs.getString(key, defaultValue);
+        if (TextUtils.isEmpty(valueStr)) return 0;
         return Integer.valueOf(valueStr);
     }
 

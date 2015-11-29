@@ -210,53 +210,6 @@ limitations under the License.
             android:exported="false"
             android:label="@string/export_gnuplot_title" >
         </activity>
-        <activity
-            android:name=".app.prefs.PreferenceFragmentActivity"
-            android:configChanges="orientation|screenSize"
-            android:exported="false"
-            android:launchMode="singleTop"
-            android:theme="@style/NetMonNoDisplayTheme" >
-            <intent-filter>
-                <action android:name="ca.rmen.android.networkmonitor.app.prefs_share" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="ca.rmen.android.networkmonitor.app.prefs_clear" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="ca.rmen.android.networkmonitor.app.prefs_import" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="ca.rmen.android.networkmonitor.app.prefs_clear_old" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="ca.rmen.android.networkmonitor.app.prefs_compress" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="ca.rmen.android.networkmonitor.app.prefs_check_location_settings" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="ca.rmen.android.networkmonitor.app.prefs_show_info_dialog" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="ca.rmen.android.networkmonitor.app.prefs_show_warning_dialog" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
 
         <!-- Save to storage -->
         <activity

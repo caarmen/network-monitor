@@ -32,6 +32,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.SwitchPreferenceCompat;
 
@@ -40,6 +41,11 @@ import com.squareup.otto.Subscribe;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.bus.NetMonBus;
+import ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
+import ca.rmen.android.networkmonitor.app.dialog.ChoiceDialogFragment;
+import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment;
+import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
@@ -48,12 +54,14 @@ import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
 import ca.rmen.android.networkmonitor.util.Log;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ConfirmDialogFragment.DialogButtonListener, ChoiceDialogFragment.DialogItemListener{
     private static final String TAG = Constants.TAG + MainActivity.class.getSimpleName();
     private GPSVerifier mGPSVerifier;
     private NetMonPreferenceFragmentCompat mPreferenceFragment;
     private static final String PREF_SHARE = "PREF_SHARE";
     private static final String PREF_CLEAR_LOG_FILE = "PREF_CLEAR_LOG_FILE";
+    private static final int ID_ACTION_SHARE = 1;
+    private static final int ID_ACTION_CLEAR = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
         // the main thread.
         if (ActivityManager.isUserAMonkey())
             StrictMode.setThreadPolicy(new ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().penaltyLog().penaltyDeath().build());
+
+        mPreferenceFragment.findPreference(PREF_SHARE).setOnPreferenceClickListener(mOnPreferenceClickListener);
+        mPreferenceFragment.findPreference(PREF_CLEAR_LOG_FILE).setOnPreferenceClickListener(mOnPreferenceClickListener);
     }
 
     @Override
@@ -146,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                     prefs.setConnectionTestEnabled(false);
                     if (prefs.getDBRecordCount() < 0) prefs.setDBRecordCount(10000);
                     SpeedTestPreferences.getInstance(MainActivity.this).setEnabled(false);
-                    PreferenceDialog.showWarningDialog(MainActivity.this, getString(R.string.warning_fast_polling_title),
+                    DialogFragmentFactory.showWarningDialog(MainActivity.this, getString(R.string.warning_fast_polling_title),
                             getString(R.string.warning_fast_polling_message));
                 }
             }
@@ -154,4 +165,40 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
+    @Override
+    public void onOkClicked(int actionId, Bundle extras) {
+        if (actionId == ID_ACTION_CLEAR) {
+            Log.v(TAG, "Clicked ok to clear log");
+            DBOpIntentService.startActionPurge(this, 0);
+        }
+    }
+
+    @Override
+    public void onCancelClicked(int actionId, Bundle extras) {
+
+    }
+
+    @Override
+    public void onItemSelected(int actionId, CharSequence[] choices, int which) {
+        // The user picked a file format to export.
+        if (actionId == ID_ACTION_SHARE) {
+            String[] exportChoices = getResources().getStringArray(R.array.export_choices);
+            String selectedShareFormat = exportChoices[which];
+            Share.share(this, selectedShareFormat);
+        }
+
+    }
+
+    private final Preference.OnPreferenceClickListener mOnPreferenceClickListener = new Preference.OnPreferenceClickListener() {
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+            if (PREF_SHARE.equals(preference.getKey())) {
+                DialogFragmentFactory.showChoiceDialog(MainActivity.this, getString(R.string.export_choice_title), getResources().getStringArray(R.array.export_choices), -1,
+                        ID_ACTION_SHARE);
+            } else if (PREF_CLEAR_LOG_FILE.equals(preference.getKey())) {
+                DialogFragmentFactory.showConfirmDialog(MainActivity.this, getString(R.string.action_clear), getString(R.string.confirm_logs_clear), ID_ACTION_CLEAR, null);
+            }
+            return false;
+        }
+    };
 }

@@ -23,20 +23,18 @@
  */
 package ca.rmen.android.networkmonitor.app.dialog;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
-import ca.rmen.android.networkmonitor.app.prefs.PreferenceFragmentActivity;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -139,19 +137,5 @@ public class PreferenceDialog {
         });
         dialog.show();
         return dialog;
-    }
-
-    public static void showInfoDialog(Context context, String title, String message) {
-        Intent intent = new Intent(PreferenceFragmentActivity.ACTION_SHOW_INFO_DIALOG);
-        intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_TITLE, title);
-        intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_MESSAGE, message);
-        context.startActivity(intent);
-    }
-
-    public static void showWarningDialog(Activity activity, String title, String message) {
-        Intent intent = new Intent(PreferenceFragmentActivity.ACTION_SHOW_WARNING_DIALOG);
-        intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_TITLE, title);
-        intent.putExtra(PreferenceFragmentActivity.EXTRA_DIALOG_MESSAGE, message);
-        activity.startActivity(intent);
     }
 }

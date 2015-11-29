@@ -68,7 +68,6 @@ public class Share {
             exportFormat = DBOpIntentService.ExportFormat.SUMMARY;
         }
         DBOpIntentService.startActionExport(activity, exportFormat);
-        activity.finish();
     }
 
     /**
@@ -82,13 +81,11 @@ public class Share {
             @Override
             public void onPreferenceValueSelected(String value) {
                 DBOpIntentService.startActionKMLExport(activity, value);
-                activity.finish();
             }
 
             @Override
             public void onCancel() {
                 activity.setResult(Activity.RESULT_CANCELED);
-                activity.finish();
             }
         });
     }

@@ -25,15 +25,18 @@
 package ca.rmen.android.networkmonitor.app.prefs;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.location.LocationManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
@@ -46,15 +49,21 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.bus.NetMonBus;
 import ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService;
+import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment;
+import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.LocationFetchingStrategy;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
 import ca.rmen.android.networkmonitor.util.Log;
 
-public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (use default)
+public class AdvancedPreferencesActivity extends AppCompatActivity implements ConfirmDialogFragment.DialogButtonListener {
     private static final String TAG = Constants.TAG + AdvancedPreferencesActivity.class.getSimpleName();
     private static final int ACTIVITY_REQUEST_CODE_IMPORT = 1;
     private static final int ACTIVITY_REQUEST_CODE_RINGTONE = 2;
+    public static final String EXTRA_IMPORT_URI = AdvancedPreferencesActivity.class.getPackage().getName() + "_db_url";
+    private static final int ID_ACTION_IMPORT = 3;
+    private static final int ID_ACTION_LOCATION_SETTINGS = 4;
+    private static final int ID_ACTION_COMPRESS = 5;
     private static final String PREF_IMPORT = "PREF_IMPORT";
     private static final String PREF_COMPRESS = "PREF_COMPRESS";
 
@@ -130,8 +139,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (
                 updatePreferenceSummary(key, R.string.pref_summary_notification_ringtone);
             } else if (NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY.equals(key)) {
                 if (prefs.getLocationFetchingStrategy() == LocationFetchingStrategy.HIGH_ACCURACY) {
-                    Intent intent = new Intent(PreferenceFragmentActivity.ACTION_CHECK_LOCATION_SETTINGS);
-                    startActivity(intent);
+                    checkLocationSettings();
                 }
             } else if (NetMonPreferences.PREF_NOTIFICATION_ENABLED.equals(key)) {
                 if (!prefs.getShowNotificationOnTestFailure()) NetMonNotification.dismissFailedTestNotification(AdvancedPreferencesActivity.this);
@@ -193,8 +201,8 @@ public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (
                 importIntent.setType("file/*");
                 startActivityForResult(Intent.createChooser(importIntent, getResources().getText(R.string.pref_summary_import)), ACTIVITY_REQUEST_CODE_IMPORT);
             } else if (PREF_COMPRESS.equals(preference.getKey())) {
-                Intent intent = new Intent(PreferenceFragmentActivity.ACTION_COMPRESS);
-                startActivity(intent);
+                DialogFragmentFactory.showConfirmDialog(AdvancedPreferencesActivity.this, getString(R.string.compress_confirm_title), getString(R.string.compress_confirm_message),
+                        ID_ACTION_COMPRESS, null);
 
             } else if (NetMonPreferences.PREF_NOTIFICATION_RINGTONE.equals(preference.getKey())) {
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
@@ -227,15 +235,19 @@ public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         Log.v(TAG, "onActivityResult: requestCode =  " + requestCode + ", resultCode = " + resultCode + ", data=" + data);
         /**
          * Allow the user to choose a DB to import
          */
         if (requestCode == ACTIVITY_REQUEST_CODE_IMPORT) {
             if (resultCode == Activity.RESULT_OK) {
-                Intent intent = new Intent(PreferenceFragmentActivity.ACTION_IMPORT);
-                intent.putExtra(PreferenceFragmentActivity.EXTRA_IMPORT_URI, data.getData());
-                startActivity(intent);
+                // Get the file the user selected, and show a dialog asking for confirmation to import the file.
+                Uri importFile = data.getData();
+                Bundle extras = new Bundle(1);
+                extras.putParcelable(EXTRA_IMPORT_URI, importFile);
+                DialogFragmentFactory.showConfirmDialog(this, getString(R.string.import_confirm_title),
+                        getString(R.string.import_confirm_message, importFile.getPath()), ID_ACTION_IMPORT, extras);
             }
         } else if (requestCode == ACTIVITY_REQUEST_CODE_RINGTONE) {
             if (resultCode == Activity.RESULT_OK) {
@@ -243,9 +255,29 @@ public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (
                 NetMonPreferences.getInstance(this).setNotificationSoundUri(uri);
                 updatePreferenceSummary(NetMonPreferences.PREF_NOTIFICATION_RINGTONE, R.string.pref_summary_notification_ringtone);
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void onOkClicked(int actionId, Bundle extras) {
+        // Import the database in a background thread.
+        if (actionId == ID_ACTION_IMPORT) {
+            final Uri uri = extras.getParcelable(EXTRA_IMPORT_URI);
+            DBOpIntentService.startActionImport(this, uri);
+        }
+        // Compress the database in a background thread
+        else if (actionId == ID_ACTION_COMPRESS) {
+            DBOpIntentService.startActionCompress(this);
+        } else if (actionId == ID_ACTION_LOCATION_SETTINGS) {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        }
+
+    }
+
+    @Override
+    public void onCancelClicked(int actionId, Bundle extras) {
+        Log.v(TAG, "onCancelClicked, actionId=" + actionId + ", extras = " + extras);
     }
 
     @SuppressWarnings("unused")
@@ -264,6 +296,19 @@ public class AdvancedPreferencesActivity extends AppCompatActivity { // NO_UCD (
         mPreferenceFragment.findPreference(PREF_IMPORT).setEnabled(true);
         mPreferenceFragment.findPreference(PREF_COMPRESS).setEnabled(true);
         mPreferenceFragment.findPreference(NetMonPreferences.PREF_DB_RECORD_COUNT).setEnabled(true);
+    }
+
+    /**
+     * Checks if we have either the GPS or Network location provider enabled. If not, shows a popup dialog telling the user they should go to the system
+     * settings to enable location tracking.
+     */
+    private void checkLocationSettings() {
+        // If the user chose high accuracy, make sure we have at least one location provider.
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))) {
+            DialogFragmentFactory.showConfirmDialog(this, getString(R.string.no_location_confirm_dialog_title),
+                    getString(R.string.no_location_confirm_dialog_message), ID_ACTION_LOCATION_SETTINGS, null);
+        }
     }
 
 }

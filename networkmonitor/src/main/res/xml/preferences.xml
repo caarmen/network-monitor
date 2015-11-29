@@ -54,13 +54,11 @@ limitations under the License.
             android:icon="@drawable/ic_pref_share"
             android:key="PREF_SHARE"
             android:title="@string/action_share" >
-            <intent android:action="ca.rmen.android.networkmonitor.app.prefs_share" />
         </Preference>
         <Preference
             android:icon="@drawable/ic_pref_clear"
             android:key="PREF_CLEAR_LOG_FILE"
             android:title="@string/action_clear" >
-            <intent android:action="ca.rmen.android.networkmonitor.app.prefs_clear" />
         </Preference>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_other" >
