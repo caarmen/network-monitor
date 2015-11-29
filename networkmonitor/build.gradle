@@ -100,7 +100,7 @@ dependencies {
     compile ('net.sourceforge.jexcelapi:jxl:2.6.12') {
         exclude group: "log4j"
     }
-    compile 'commons-net:commons-net:3.3'
+    compile 'commons-net:commons-net:3.4'
 
     if (!gradle.isFoss) {
         proprietaryCompile 'com.google.android.gms:play-services-location:8.3.0'
