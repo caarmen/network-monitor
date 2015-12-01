@@ -48,6 +48,13 @@ public final class SettingsExportImport {
     private static final String TAG = Constants.TAG + SettingsExportImport.class.getSimpleName();
     private static final String PREF_IMPORT_VERIFICATION = "import_verifcation";
 
+    public interface SettingsImportCallback {
+        /**
+         * Called when the settings have been successfully imported.
+         */
+        void onSettingsImported();
+    }
+
     private SettingsExportImport() {
         // prevent instantiation
     }
@@ -93,7 +100,7 @@ public final class SettingsExportImport {
     /**
      * Overwrites the app's default shared preferences file with the file at the given uri.
      */
-    public static void importSettings(final Context context, Uri uri) {
+    public static void importSettings(final Context context, Uri uri, final SettingsImportCallback callback) {
         final File inputFile = new File(uri.getEncodedPath());
         final File outputFile = getSharedPreferencesFile(context);
         final File backupFile = new File(context.getCacheDir(), outputFile.getName() + ".bak");
@@ -141,6 +148,7 @@ public final class SettingsExportImport {
             protected void onPostExecute(Boolean result) {
                 if (result) {
                     Toast.makeText(context, context.getString(R.string.import_notif_complete_content, inputFile), Toast.LENGTH_LONG).show();
+                    callback.onSettingsImported();
                 } else {
                     Toast.makeText(context, context.getString(R.string.import_notif_error_content, inputFile), Toast.LENGTH_LONG).show();
                 }

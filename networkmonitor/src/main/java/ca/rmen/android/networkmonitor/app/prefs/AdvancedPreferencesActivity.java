@@ -77,13 +77,16 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        NetMonPreferences prefs = NetMonPreferences.getInstance(this);
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         // The first time the user sees the notification preferences, we'll set the ringtone preference
         // to the default notification ringtone.
         if (!sharedPrefs.contains(NetMonPreferences.PREF_NOTIFICATION_RINGTONE)) NetMonPreferences.getInstance(this).setDefaultNotificationSoundUri();
 
         PreferenceManager.setDefaultValues(this, R.xml.adv_preferences, false);
+        loadPreferences();
+    }
+
+    private void loadPreferences() {
         mPreferenceFragment = NetMonPreferenceFragmentCompat.newInstance(R.xml.adv_preferences);
         getSupportFragmentManager().
                 beginTransaction().
@@ -93,6 +96,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
         updatePreferenceSummary(NetMonPreferences.PREF_TEST_SERVER, R.string.pref_summary_test_server);
         updatePreferenceSummary(NetMonPreferences.PREF_NOTIFICATION_RINGTONE, R.string.pref_summary_notification_ringtone);
         Preference enableConnectionTest = mPreferenceFragment.findPreference(NetMonPreferences.PREF_ENABLE_CONNECTION_TEST);
+        NetMonPreferences prefs = NetMonPreferences.getInstance(this);
         if (prefs.isFastPollingEnabled()) enableConnectionTest.setEnabled(false);
         setOnPreferenceChangeListeners(NetMonPreferences.PREF_TEST_SERVER);
         setOnPreferenceClickListeners(PREF_IMPORT_DB, PREF_COMPRESS, NetMonPreferences.PREF_NOTIFICATION_RINGTONE, PREF_IMPORT_SETTINGS, PREF_EXPORT_SETTINGS);
@@ -101,6 +105,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
             emailPreference.setEnabled(false);
             emailPreference.setSummary(R.string.pref_email_unavailable);
         }
+
     }
 
     private void setOnPreferenceClickListeners(String... keys) {
@@ -290,7 +295,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
             startActivity(intent);
         } else if (actionId == ID_ACTION_IMPORT_SETTINGS) {
             final Uri uri = extras.getParcelable(EXTRA_IMPORT_URI);
-            SettingsExportImport.importSettings(this, uri);
+            SettingsExportImport.importSettings(this, uri, mSettingsImportCallback);
         }
     }
 
@@ -329,5 +334,12 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
                     getString(R.string.no_location_confirm_dialog_message), ID_ACTION_LOCATION_SETTINGS, null);
         }
     }
+
+    private final SettingsExportImport.SettingsImportCallback mSettingsImportCallback = new SettingsExportImport.SettingsImportCallback() {
+        @Override
+        public void onSettingsImported() {
+            loadPreferences();
+        }
+    };
 
 }
