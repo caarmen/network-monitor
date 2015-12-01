@@ -65,8 +65,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
     private static final int ID_ACTION_IMPORT_DB = 3;
     private static final int ID_ACTION_LOCATION_SETTINGS = 4;
     private static final int ID_ACTION_COMPRESS = 5;
-    private static final int ID_ACTION_EXPORT_SETTINGS = 6;
-    private static final int ID_ACTION_IMPORT_SETTINGS = 7;
+    private static final int ID_ACTION_IMPORT_SETTINGS = 6;
     private static final String PREF_COMPRESS = "PREF_COMPRESS";
     private static final String PREF_IMPORT_DB = "PREF_IMPORT_DB";
     private static final String PREF_EXPORT_SETTINGS = "PREF_EXPORT_SETTINGS";

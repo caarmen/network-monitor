@@ -39,6 +39,7 @@ limitations under the License.
     <string name="import_notif_error_content">Failed to import %s.</string>
 
     <!-- strings for importing settings -->
+    <string name="import_settings_starting">Importing settings</string>
     <string name="import_settings_confirm_message">Replace current settings with %s?</string>
 
 </resources>

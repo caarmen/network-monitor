@@ -40,5 +40,6 @@ limitations under the License.
     <string name="import_notif_error_content">Error en la importación de %s.</string>
 
     <!-- strings for importing settings -->
+    <string name="import_settings_starting">Importación de ajustes</string>
     <string name="import_settings_confirm_message">¿Reemplazar los ajustes con %s?</string>
 </resources>

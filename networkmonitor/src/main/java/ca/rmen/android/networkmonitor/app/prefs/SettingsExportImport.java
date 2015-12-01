@@ -30,6 +30,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import java.io.File;
@@ -45,6 +46,7 @@ import ca.rmen.android.networkmonitor.util.Log;
  */
 public final class SettingsExportImport {
     private static final String TAG = Constants.TAG + SettingsExportImport.class.getSimpleName();
+    private static final String PREF_IMPORT_VERIFICATION = "import_verifcation";
 
     private SettingsExportImport() {
         // prevent instantiation
@@ -59,6 +61,12 @@ public final class SettingsExportImport {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
+                // Just in case: make sure we don't have our temp setting.
+                SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+                if (sharedPrefs.contains(PREF_IMPORT_VERIFICATION)) {
+                    Log.w(TAG, "Didn't expect to see the " + PREF_IMPORT_VERIFICATION + " setting when exporting");
+                    sharedPrefs.edit().remove(PREF_IMPORT_VERIFICATION).commit();
+                }
                 return IoUtil.copy(inputFile, outputFile);
             }
 
@@ -98,11 +106,22 @@ public final class SettingsExportImport {
             }
 
             @Override
+            protected void onPreExecute() {
+                Toast.makeText(context, R.string.import_settings_starting, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
             protected Boolean doInBackground(Void... params) {
                 // Make a backup of our shared prefs in case the import file is corrupt.
                 if (!IoUtil.copy(outputFile, backupFile)) {
                     return false;
                 }
+
+                // Set a temp preference now. We expect it to disappear after importing.
+                PreferenceManager.getDefaultSharedPreferences(context)
+                        .edit()
+                        .putBoolean(PREF_IMPORT_VERIFICATION, true)
+                        .commit();
 
                 // Attempt the copy
                 if (!IoUtil.copy(inputFile, outputFile)) {
@@ -131,10 +150,13 @@ public final class SettingsExportImport {
 
     private static boolean reloadSettings(Context context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            return reloadSettingsPreV11(context);
+            if (!reloadSettingsPreV11(context)) return false;
         } else {
-            return reloadSettingsV11(context);
+            if (!reloadSettingsV11(context)) return false;
         }
+
+        // We expect our temporary preference to have been erased.
+        return !PreferenceManager.getDefaultSharedPreferences(context).contains(PREF_IMPORT_VERIFICATION);
     }
 
     private static boolean reloadSettingsPreV11(Context context) {
