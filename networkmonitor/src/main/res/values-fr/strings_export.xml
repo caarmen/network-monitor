@@ -23,7 +23,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <resources>
-    <!-- Strings for exporting the log file -->
+    <!-- Strings for exporting the log file or settings -->
     <string name="export">Exporter</string>
     <string name="export_subject_send_log">Fichier journal du Network Monitor</string>
     <string name="export_choice_title">Choisissez le format</string>
@@ -64,5 +64,10 @@ limitations under the License.
     <string name="export_notif_canceled_title">L\'export a été annulé</string>
     <string name="export_notif_canceled_content">Appuyer ici pour partager le fichier partiellement exporté</string>
     <string name="export_notif_error_content">Impossible de sauvegarder le fichier</string>
+
+    <!-- strings for exporting settings -->
+    <string name="export_subject_send_settings">Préférences de Network Monitor</string>
+    <string name="export_settings_failure">Impossible d\'exporter les préférences.</string>
+    <string name="export_settings_message_text">Sauvegarder le fichier ci-joint sur votre terminal, et utiliser la fonction \'Importer préférences\' de Network Monitor pour importer les préférences.</string>
 
 </resources>

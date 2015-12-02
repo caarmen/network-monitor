@@ -23,7 +23,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <resources>
-    <!-- Strings for importing a database -->
+    <!-- Strings for importing a database or settings -->
     <string name="import_confirm_title">Confirm import</string>
     <string name="import_confirm_message">Delete the current database and replace with %s?</string>
 
@@ -37,5 +37,9 @@ limitations under the License.
     <string name="import_notif_complete_content">Successfully imported %s.</string>
     <string name="import_notif_canceled_content">The import was canceled.</string>
     <string name="import_notif_error_content">Failed to import %s.</string>
+
+    <!-- strings for importing settings -->
+    <string name="import_settings_starting">Importing settings</string>
+    <string name="import_settings_confirm_message">Replace current settings with %s?</string>
 
 </resources>

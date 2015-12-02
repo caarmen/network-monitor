@@ -80,6 +80,7 @@ public class IoUtil {
      * @return true if the file could be copied, false if there was an error.
      */
     public static boolean copy(File in, File out) {
+        Log.v(TAG, "copy " + in + " to " + out);
         FileInputStream is = null;
         FileOutputStream os = null;
         try {

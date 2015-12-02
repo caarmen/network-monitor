@@ -109,7 +109,7 @@ limitations under the License.
     <PreferenceCategory android:title="@string/pref_category_database" >
         <Preference
             android:icon="@drawable/ic_pref_import"
-            android:key="PREF_IMPORT"
+            android:key="PREF_IMPORT_DB"
             android:summary="@string/pref_summary_import"
             android:title="@string/pref_title_import" >
         </Preference>
@@ -129,6 +129,16 @@ limitations under the License.
             android:title="@string/pref_title_db_record_count" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_other" >
+        <Preference
+            android:icon="@drawable/ic_pref_export"
+            android:key="PREF_EXPORT_SETTINGS"
+            android:title="@string/pref_title_export_settings" >
+        </Preference>
+        <Preference
+            android:icon="@drawable/ic_pref_import"
+            android:key="PREF_IMPORT_SETTINGS"
+            android:title="@string/pref_title_import_settings" >
+        </Preference>
         <Preference
             android:icon="@drawable/ic_pref_email"
             android:key="PREF_EMAIL_REPORTS"
