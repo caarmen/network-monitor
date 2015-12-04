@@ -42,6 +42,7 @@ import android.widget.Toast;
 
 import java.io.File;
 
+import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -77,6 +78,13 @@ public class AboutActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.about, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem itemSendLogs = menu.findItem(R.id.action_send_logs);
+        itemSendLogs.setVisible(BuildConfig.DEBUG);
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
