@@ -201,7 +201,9 @@ public class DBOpIntentService extends IntentService {
                     String toast = intent.getStringExtra(EXTRA_DB_OP_TOAST);
                     Toast.makeText(DBOpIntentService.this, toast, Toast.LENGTH_LONG).show();
                     synchronized (lock) {
-                        NetMonBus.getBus().post(mDBOperationStarted);
+                        if (mDBOperationStarted != null) {
+                            NetMonBus.getBus().post(mDBOperationStarted);
+                        }
                     }
                 }
             });
