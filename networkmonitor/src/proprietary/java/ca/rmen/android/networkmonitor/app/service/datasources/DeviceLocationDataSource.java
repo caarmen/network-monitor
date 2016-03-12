@@ -25,9 +25,12 @@ package ca.rmen.android.networkmonitor.app.service.datasources;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -59,6 +62,8 @@ public class DeviceLocationDataSource implements NetMonDataSource {
                 .addApi(LocationServices.API)
                 .build();
         mGoogleApiClient.connect();
+        PreferenceManager.getDefaultSharedPreferences(mContext).registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
+
     }
 
     /**
@@ -81,6 +86,7 @@ public class DeviceLocationDataSource implements NetMonDataSource {
         Log.v(TAG, "onDestroy");
         mGoogleApiClient.disconnect();
         if (mDeviceLocationDataSourceImpl != null) mDeviceLocationDataSourceImpl.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(mContext).unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
     }
 
     /**
@@ -89,10 +95,21 @@ public class DeviceLocationDataSource implements NetMonDataSource {
     private void selectLocationDataSource() {
         Log.v(TAG, "selectLocationDataSource");
         if (mDeviceLocationDataSourceImpl != null) mDeviceLocationDataSourceImpl.onDestroy();
-        int playServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mContext);
-        if (playServicesAvailable == ConnectionResult.SUCCESS) mDeviceLocationDataSourceImpl = new GmsDeviceLocationDataSource(mGoogleApiClient);
-        else
+        mDeviceLocationDataSourceImpl = null;
+        NetMonPreferences.LocationFetchingStrategy strategy = NetMonPreferences.getInstance(mContext).getLocationFetchingStrategy();
+        if (strategy == NetMonPreferences.LocationFetchingStrategy.HIGH_ACCURACY_GMS
+                || strategy == NetMonPreferences.LocationFetchingStrategy.SAVE_POWER_GMS) {
+            int playServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mContext);
+
+            if (playServicesAvailable == ConnectionResult.SUCCESS) {
+                mDeviceLocationDataSourceImpl = new GmsDeviceLocationDataSource(mGoogleApiClient);
+            } else {
+                NetMonPreferences.getInstance(mContext).forceFossLocationFetchingStrategy();
+            }
+        }
+        if (mDeviceLocationDataSourceImpl == null) {
             mDeviceLocationDataSourceImpl = new StandardDeviceLocationDataSource();
+        }
         Log.v(TAG, "selectLocationDataSource: using " + mDeviceLocationDataSourceImpl);
         mDeviceLocationDataSourceImpl.onCreate(mContext);
     }
@@ -116,6 +133,16 @@ public class DeviceLocationDataSource implements NetMonDataSource {
         public void onConnectionFailed(ConnectionResult result) {
             Log.v(TAG, "onConnectionFailed: " + result);
             selectLocationDataSource();
+        }
+    };
+
+    private final SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener
+            = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if(NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY.equals(key)) {
+                selectLocationDataSource();
+            }
         }
     };
 }
