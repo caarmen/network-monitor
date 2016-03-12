@@ -100,11 +100,21 @@ public class NetMonService extends Service {
         super.onDestroy();
     }
 
+    private void updateServerIP() {
+        NetMonPreferences prefs = NetMonPreferences.getInstance(this);
+        // The old google ip address no longer works. If the app was using
+        // the old IP, reset it to use the new one.
+        if ("173.194.45.41".equals(prefs.getTestServer())) {
+            prefs.resetTestServer();
+        }
+    }
+
     /**
      * Start scheduling tests, using the scheduler class chosen by the user in the advanced settings.
      */
     private void scheduleTests() {
         Log.v(TAG, "scheduleTests");
+        updateServerIP();
         NetMonPreferences prefs = NetMonPreferences.getInstance(this);
         Class<?> schedulerClass = prefs.getSchedulerClass();
         Log.v(TAG, "Will use scheduler " + schedulerClass);

@@ -55,8 +55,8 @@ limitations under the License.
             android:title="@string/pref_title_cell_id_format" />
 
         <EditTextPreference
-            android:defaultValue="173.194.45.41"
-            android:hint="173.194.45.41"
+            android:defaultValue="216.58.208.206"
+            android:hint="216.58.208.206"
             android:icon="@drawable/ic_pref_server"
             android:inputType="textEmailAddress"
             android:key="PREF_TEST_SERVER"
