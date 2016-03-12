@@ -107,6 +107,14 @@ public class FormatterFactory {
                     }
                 }
             }
+            // Latitude and longitude are stored in the DB with large precision,
+            // but this precision is lost if we retrieve them with getString().
+            else if (NetMonColumns.DEVICE_LATITUDE.equals(columnName)
+                    || NetMonColumns.DEVICE_LONGITUDE.equals(columnName)) {
+                double value = c.getDouble(columnIndex);
+                result = String.valueOf(value);
+                if ("0.0".equals(result)) result = "";
+            }
             // Anything else: just return the raw value as a string
             else {
                 result = c.getString(columnIndex);
