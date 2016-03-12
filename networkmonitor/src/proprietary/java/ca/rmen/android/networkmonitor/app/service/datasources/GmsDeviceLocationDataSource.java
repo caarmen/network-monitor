@@ -109,7 +109,7 @@ public class GmsDeviceLocationDataSource implements NetMonDataSource {
         }
         LocationServices.FusedLocationApi.removeLocationUpdates(mLocationClient, mGmsLocationListener);
         LocationRequest request = new LocationRequest();
-        if (locationFetchingStrategy == LocationFetchingStrategy.HIGH_ACCURACY) {
+        if (locationFetchingStrategy == LocationFetchingStrategy.HIGH_ACCURACY_GMS) {
             request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             int pollingInterval = NetMonPreferences.getInstance(mContext).getUpdateInterval();
             if (pollingInterval < NetMonPreferences.PREF_MIN_POLLING_INTERVAL) pollingInterval = NetMonPreferences.PREF_MIN_POLLING_INTERVAL;

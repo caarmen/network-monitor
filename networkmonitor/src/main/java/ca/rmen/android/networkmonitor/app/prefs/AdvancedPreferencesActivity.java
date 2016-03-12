@@ -147,7 +147,8 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
             } else if (NetMonPreferences.PREF_NOTIFICATION_RINGTONE.equals(key)) {
                 updatePreferenceSummary(key, R.string.pref_summary_notification_ringtone);
             } else if (NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY.equals(key)) {
-                if (prefs.getLocationFetchingStrategy() == LocationFetchingStrategy.HIGH_ACCURACY) {
+                if (prefs.getLocationFetchingStrategy() == LocationFetchingStrategy.HIGH_ACCURACY
+                        || prefs.getLocationFetchingStrategy() == LocationFetchingStrategy.HIGH_ACCURACY_GMS) {
                     checkLocationSettings();
                 }
             } else if (NetMonPreferences.PREF_NOTIFICATION_ENABLED.equals(key)) {

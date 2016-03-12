@@ -26,6 +26,7 @@ package ca.rmen.android.networkmonitor.app.prefs;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.location.Location;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Environment;
@@ -55,7 +56,7 @@ public class NetMonPreferences {
     }
 
     public enum LocationFetchingStrategy {
-        SAVE_POWER, HIGH_ACCURACY
+        SAVE_POWER, HIGH_ACCURACY, SAVE_POWER_GMS, HIGH_ACCURACY_GMS
     }
 
 
@@ -313,6 +314,25 @@ public class NetMonPreferences {
     public LocationFetchingStrategy getLocationFetchingStrategy() {
         String value = mSharedPrefs.getString(PREF_LOCATION_FETCHING_STRATEGY, LocationFetchingStrategy.SAVE_POWER.name());
         return LocationFetchingStrategy.valueOf(value);
+    }
+
+    /**
+     * Set the strategy we should use for requesting location updates.
+     */
+    public void setLocationFetchingStrategy(LocationFetchingStrategy strategy) {
+        setStringPreference(PREF_LOCATION_FETCHING_STRATEGY, strategy.name());
+    }
+
+    /**
+     * Don't use Google Play Services for requesting location.
+     */
+    public void forceFossLocationFetchingStrategy() {
+        LocationFetchingStrategy strategy = getLocationFetchingStrategy();
+        if (strategy == LocationFetchingStrategy.HIGH_ACCURACY_GMS) {
+            setLocationFetchingStrategy(LocationFetchingStrategy.HIGH_ACCURACY);
+        } else if (strategy == LocationFetchingStrategy.SAVE_POWER_GMS) {
+            setLocationFetchingStrategy(LocationFetchingStrategy.SAVE_POWER);
+        }
     }
 
     /**
