@@ -27,6 +27,8 @@ package ca.rmen.android.networkmonitor.app.service.datasources;
 import android.content.ContentValues;
 import android.content.Context;
 
+import java.util.Locale;
+
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestDownload;
@@ -71,7 +73,7 @@ public class DownloadSpeedTestDataSource implements NetMonDataSource {
             if (!downloadConfig.isValid()) return values;
             SpeedTestResult result = SpeedTestDownload.download(downloadConfig);
             mPreferences.setLastDownloadResult(result);
-            if (result.status == SpeedTestStatus.SUCCESS) values.put(NetMonColumns.DOWNLOAD_SPEED, String.format("%.3f", result.getSpeedMbps()));
+            if (result.status == SpeedTestStatus.SUCCESS) values.put(NetMonColumns.DOWNLOAD_SPEED, String.format(Locale.getDefault(), "%.3f", result.getSpeedMbps()));
         } else {
             values.put(NetMonColumns.DOWNLOAD_SPEED, mDisabledValue);
         }

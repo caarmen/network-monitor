@@ -61,7 +61,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
     private static final int ACTIVITY_REQUEST_CODE_IMPORT_DB = 1;
     private static final int ACTIVITY_REQUEST_CODE_RINGTONE = 2;
     private static final int ACTIVITY_REQUEST_CODE_IMPORT_SETTINGS = 3;
-    public static final String EXTRA_IMPORT_URI = AdvancedPreferencesActivity.class.getPackage().getName() + "_db_url";
+    private static final String EXTRA_IMPORT_URI = AdvancedPreferencesActivity.class.getPackage().getName() + "_db_url";
     private static final int ID_ACTION_IMPORT_DB = 3;
     private static final int ID_ACTION_LOCATION_SETTINGS = 4;
     private static final int ID_ACTION_COMPRESS = 5;

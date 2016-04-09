@@ -32,11 +32,9 @@ import ca.rmen.android.networkmonitor.BuildConfig;
  */
 public class PreferencesMigrator {
 
-    private final Context mContext;
-    NetMonPreferences mPrefs;
+    private final NetMonPreferences mPrefs;
 
     public PreferencesMigrator(Context context) {
-        mContext = context;
         mPrefs = NetMonPreferences.getInstance(context);
     }
 

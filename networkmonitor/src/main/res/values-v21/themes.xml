@@ -8,8 +8,7 @@ This source is part of the
                              /___/
 repository.
 
-Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
-Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+Copyright (C) 2015 Carmen Alvarez (c@rmen.ca)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,51 +24,6 @@ limitations under the License.
 -->
 <resources>
 
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-        <item name="android:listChoiceBackgroundIndicator">@drawable/netmon_list_selector_holo_light</item>
-        <item name="android:colorAccent">@color/netmon_color</item>
-        <item name="android:colorPrimary">@color/netmon_color</item>
-        <!--
-        AppCompat hack: for some reason, if I set this attribute, then the back arrow
-        and the overflow button appear as orange
-        <item name="android:colorControlNormal">@color/netmon_color</item>
-        -->
-        <item name="buttonStyle">@style/Widget.AppCompat.Button.Borderless.Colored</item>
-        <item name="android:colorButtonNormal">@color/netmon_color</item>
-        <item name="android:colorPrimaryDark">@color/netmon_color_dark</item>
-        <item name="android:colorControlActivated">@color/netmon_color</item>
-        <item name="android:colorControlHighlight">@color/netmon_color_light</item>
-        <!-- AppCompat hack: on some devices, the material progress drawable does not appear -->
-        <!-- Workaround is to use the holo progress drawable -->
-        <item name="android:progressBarStyleSmall">@style/MaterialProgressBarFix.Small</item>
-        <item name="android:progressBarStyle">@style/MaterialProgressBarFix</item>
-        <item name="android:progressBarStyleLarge">@style/MaterialProgressBarFix.Large</item>
-    </style>
-
-    <style name="NetMonNoDisplayTheme" parent="@style/NetMonNoDisplayBaseTheme">
-        <item name="android:colorAccent">@color/netmon_color</item>
-        <item name="android:colorPrimary">@color/netmon_color</item>
-        <item name="android:colorControlNormal">@color/netmon_color</item>
-        <item name="android:colorButtonNormal">@color/netmon_color</item>
-        <item name="android:colorPrimaryDark">@color/netmon_color_dark</item>
-        <item name="android:colorControlActivated">@color/netmon_color</item>
-        <item name="android:colorControlHighlight">@color/netmon_color_light</item>
-
-    </style>
-
-    <!-- AppCompat hack: use holo progress drawables -->
-    <style name="MaterialProgressBarFix.Small" parent="@android:style/Widget.Holo.ProgressBar.Small" />
-    <style name="MaterialProgressBarFix"       parent="@android:style/Widget.Holo.ProgressBar" />
-    <style name="MaterialProgressBarFix.Large" parent="@android:style/Widget.Holo.ProgressBar.Large" />
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar"/>
 
 </resources>

@@ -23,30 +23,21 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
-        <item name="preferenceTheme">@style/NetMonPreferenceThemeOverlay</item>
-        <item name="buttonStyle">@style/NetMonButtonStyle</item>
+        <!-- listChoiceBackgroundIndicator is used for the menu item selection, up
+             to version 19. The default gray selector with a ripple effect is used on 21+ -->
+        <item name="listChoiceBackgroundIndicator">@drawable/netmon_list_selector_holo_light</item>
+
+        <!-- android:selectableItemBackground is used for the preference item selector,
+             on versions 11-19. colorAccent is used on 21+ -->
+        <item tools:targetApi="11" name="android:selectableItemBackground">@drawable/netmon_list_selector_holo_light</item>
     </style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-
-        <item name="actionBarStyle">@style/NetMonActionBar</item>
         <item name="actionBarItemBackground">@drawable/netmon_list_selector_holo_light</item>
-        <item name="listChoiceBackgroundIndicator">@drawable/netmon_list_selector_holo_light</item>
         <item name="selectableItemBackground">@drawable/netmon_list_selector_holo_light</item>
         <item name="selectableItemBackgroundBorderless">@drawable/netmon_list_selector_holo_light</item>
         <item name="colorAccent">@color/netmon_color</item>
@@ -56,18 +47,19 @@ limitations under the License.
         <item name="colorControlActivated">@color/netmon_color</item>
         <item name="colorControlHighlight">@color/netmon_color_light</item>
         <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
+        <item name="buttonStyle">@style/Widget.AppCompat.Button.Borderless.Colored</item>
+        <item name="preferenceTheme">@style/NetMonPreferenceThemeOverlay</item>
     </style>
 
     <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/netmon_color</item>
-        <item name="listChoiceBackgroundIndicator">@drawable/netmon_list_selector_holo_light</item>
     </style>
 
     <!--
     Special theme for a transparent activity (used when we need to
     show a dialog on top of a PreferenceActivity
     -->
-    <style name="NetMonNoDisplayBaseTheme" parent="@style/AppTheme">
+    <style name="NetMonNoDisplayTheme" parent="@style/AppTheme">
         <item name="android:windowBackground">@null</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsTranslucent">true</item>
@@ -76,15 +68,12 @@ limitations under the License.
         <item name="android:windowNoDisplay">true</item>
     </style>
 
-    <style name="NetMonNoDisplayTheme" parent="@style/NetMonNoDisplayBaseTheme">
-    </style>
-
     <style name="NetMonPreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
+        <item name="android:dividerHeight">0dp</item>
         <item name="preferenceCategoryStyle">@style/NetMonPreferenceCategoryStyle</item>
     </style>
 
-    <style name="NetMonButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:textColor">@color/netmon_button_text_color</item>
+    <style name="NetMonPreferenceCategoryStyle" parent="Preference.Category">
+        <item name="android:layout">@layout/netmon_preference_category</item>
     </style>
-
 </resources>

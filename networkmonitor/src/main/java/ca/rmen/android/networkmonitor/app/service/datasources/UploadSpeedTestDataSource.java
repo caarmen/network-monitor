@@ -27,6 +27,8 @@ package ca.rmen.android.networkmonitor.app.service.datasources;
 import android.content.ContentValues;
 import android.content.Context;
 
+import java.util.Locale;
+
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestExecutionDecider;
@@ -71,7 +73,7 @@ public class UploadSpeedTestDataSource implements NetMonDataSource {
             SpeedTestUploadConfig uploadConfig = mPreferences.getUploadConfig();
             if (!uploadConfig.isValid()) return values;
             SpeedTestResult result = SpeedTestUpload.upload(uploadConfig);
-            if (result.status == SpeedTestStatus.SUCCESS) values.put(NetMonColumns.UPLOAD_SPEED, String.format("%.3f", result.getSpeedMbps()));
+            if (result.status == SpeedTestStatus.SUCCESS) values.put(NetMonColumns.UPLOAD_SPEED, String.format(Locale.getDefault(), "%.3f", result.getSpeedMbps()));
         } else {
             values.put(NetMonColumns.UPLOAD_SPEED, mDisabledValue);
         }

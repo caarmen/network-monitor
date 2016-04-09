@@ -23,6 +23,7 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -44,9 +45,9 @@ import ca.rmen.android.networkmonitor.util.Log;
 /**
  * Export and import shared preferences.
  */
-public final class SettingsExportImport {
+final class SettingsExportImport {
     private static final String TAG = Constants.TAG + SettingsExportImport.class.getSimpleName();
-    private static final String PREF_IMPORT_VERIFICATION = "import_verifcation";
+    private static final String PREF_IMPORT_VERIFICATION = "import_verification";
 
     public interface SettingsImportCallback {
         /**
@@ -66,6 +67,7 @@ public final class SettingsExportImport {
         final File inputFile = getSharedPreferencesFile(context);
         final File outputFile = new File(context.getExternalFilesDir(null), inputFile.getName());
         new AsyncTask<Void, Void, Boolean>() {
+            @SuppressLint("CommitPrefEdits")
             @Override
             protected Boolean doInBackground(Void... params) {
                 // Just in case: make sure we don't have our temp setting.

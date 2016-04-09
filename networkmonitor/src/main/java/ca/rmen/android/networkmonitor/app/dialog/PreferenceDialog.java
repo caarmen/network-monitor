@@ -29,7 +29,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 
 import ca.rmen.android.networkmonitor.Constants;

@@ -232,12 +232,14 @@ public class SummaryExport {
         String[] projection = new String[] { "MIN(" + NetMonColumns.TIMESTAMP + ")", "MAX(" + NetMonColumns.TIMESTAMP + ")" };
         Cursor c = context.getContentResolver().query(NetMonColumns.CONTENT_URI, projection, null, null, null);
         String dateRange = "";
-        if (c.moveToNext()) {
-            long firstTimestamp = c.getLong(0);
-            long lastTimestamp = c.getLong(1);
-            dateRange = DateUtils.formatDateRange(context, firstTimestamp, lastTimestamp, DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME);
+        if (c != null) {
+            if (c.moveToNext()) {
+                long firstTimestamp = c.getLong(0);
+                long lastTimestamp = c.getLong(1);
+                dateRange = DateUtils.formatDateRange(context, firstTimestamp, lastTimestamp, DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME);
+            }
+            c.close();
         }
-        c.close();
         return dateRange;
     }
 

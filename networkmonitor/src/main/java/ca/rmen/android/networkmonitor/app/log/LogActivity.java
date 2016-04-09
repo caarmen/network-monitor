@@ -164,6 +164,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
     private void loadHTMLFile() {
         Log.v(TAG, "loadHTMLFile");
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        assert progressBar != null;
         progressBar.setVisibility(View.VISIBLE);
         startRefreshIconAnimation();
         AsyncTask<Void, Void, File> asyncTask = new AsyncTask<Void, Void, File>() {
@@ -191,6 +192,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
                 }
                 // Load the exported HTML file into the WebView.
                 mWebView = (WebView) findViewById(R.id.web_view);
+                assert mWebView != null;
                 // Save our current horizontal scroll position so we can keep our
                 // horizontal position after reloading the page.
                 final int oldScrollX = mWebView.getScrollX();

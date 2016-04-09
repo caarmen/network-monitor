@@ -24,10 +24,13 @@ limitations under the License.
 -->
 <resources>
     <!-- https://github.com/Gericop/Android-Support-Preference-V7-Fix -->
+    <!-- Without the preference_fallback_accent_color, the preference category
+         names are blue -->
     <color name="preference_fallback_accent_color">@color/netmon_color</color>
+
+    <!-- Without this style, the preference category text is not bold -->
     <style name="Preference_TextAppearanceMaterialBody2">
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 </resources>
