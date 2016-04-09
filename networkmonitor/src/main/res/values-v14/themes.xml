@@ -24,12 +24,8 @@ limitations under the License.
 -->
 <resources>
 
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+    <style name="NetMonPreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay.v14.Material">
+        <item name="android:dividerHeight">0dp</item>
     </style>
 
 </resources>

@@ -23,30 +23,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<resources>
-
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
-        <item name="preferenceTheme">@style/NetMonPreferenceThemeOverlay</item>
-        <item name="buttonStyle">@style/NetMonButtonStyle</item>
-    </style>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
 
         <item name="actionBarStyle">@style/NetMonActionBar</item>
         <item name="actionBarItemBackground">@drawable/netmon_list_selector_holo_light</item>
-        <item name="listChoiceBackgroundIndicator">@drawable/netmon_list_selector_holo_light</item>
         <item name="selectableItemBackground">@drawable/netmon_list_selector_holo_light</item>
         <item name="selectableItemBackgroundBorderless">@drawable/netmon_list_selector_holo_light</item>
         <item name="colorAccent">@color/netmon_color</item>
@@ -56,11 +39,13 @@ limitations under the License.
         <item name="colorControlActivated">@color/netmon_color</item>
         <item name="colorControlHighlight">@color/netmon_color_light</item>
         <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
+        <item name="buttonStyle">@style/NetMonButtonStyle</item>
+        <item name="preferenceTheme">@style/NetMonPreferenceThemeOverlay</item>
+        <item tools:targetApi="11" name="android:selectableItemBackground">@drawable/netmon_list_selector_holo_light</item>
     </style>
 
     <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/netmon_color</item>
-        <item name="listChoiceBackgroundIndicator">@drawable/netmon_list_selector_holo_light</item>
     </style>
 
     <!--
@@ -77,11 +62,10 @@ limitations under the License.
     </style>
 
     <style name="NetMonPreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
+        <item name="android:dividerHeight">0dp</item>
         <item name="preferenceCategoryStyle">@style/NetMonPreferenceCategoryStyle</item>
     </style>
 
-    <style name="NetMonButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:textColor">@color/netmon_button_text_color</item>
-    </style>
+    <style name="NetMonButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless.Colored" />
 
 </resources>
