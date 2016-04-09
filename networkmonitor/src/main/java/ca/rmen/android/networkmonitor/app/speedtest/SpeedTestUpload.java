@@ -49,6 +49,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class SpeedTestUpload {
     private static final String TAG = Constants.TAG + SpeedTestUpload.class.getSimpleName();
 
+    private static final int TIMEOUT = 5000;
 
     public static SpeedTestResult upload(SpeedTestUploadConfig uploadConfig) {
         Log.v(TAG, "upload " + uploadConfig);
@@ -56,6 +57,9 @@ public class SpeedTestUpload {
         if (!uploadConfig.file.exists()) return new SpeedTestResult(0, 0, 0, SpeedTestStatus.INVALID_FILE);
 
         FTPClient ftp = new FTPClient();
+        ftp.setConnectTimeout(TIMEOUT);
+        ftp.setDataTimeout(TIMEOUT);
+        ftp.setDefaultTimeout(TIMEOUT);
         // For debugging, we'll log all the ftp commands
         if (BuildConfig.DEBUG) {
             PrintCommandListener printCommandListener = new PrintCommandListener(System.out);
@@ -86,6 +90,7 @@ public class SpeedTestUpload {
             // set the file type to be read as a binary file
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
             ftp.enterLocalPassiveMode();
+
             // Upload the file
             is = new FileInputStream(uploadConfig.file);
             long before = System.currentTimeMillis();
