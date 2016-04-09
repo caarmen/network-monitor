@@ -28,14 +28,14 @@ import android.app.Dialog;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 /**
  * Class which checks if Google Play Services is available on the device.
  */
 class GPSVerifier {
 
-    private Activity mActivity;
+    private final Activity mActivity;
     private Dialog mGPSDialog;
 
     GPSVerifier(Activity activity) {
@@ -46,15 +46,16 @@ class GPSVerifier {
      * Check if GPS is available, and show an error dialog if not.
      */
     void verifyGPS() {
-        int playServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mActivity);
+        GoogleApiAvailability api = GoogleApiAvailability.getInstance();
+        int playServicesAvailable = api.isGooglePlayServicesAvailable(mActivity);
         if (playServicesAvailable != ConnectionResult.SUCCESS) {
             if (mGPSDialog != null) {
                 mGPSDialog.dismiss();
                 mGPSDialog = null;
             }
 
-            if (GooglePlayServicesUtil.isUserRecoverableError(playServicesAvailable)) {
-                mGPSDialog = GooglePlayServicesUtil.getErrorDialog(playServicesAvailable, mActivity, 1);
+            if (api.isUserResolvableError(playServicesAvailable)) {
+                mGPSDialog = api.getErrorDialog(mActivity, playServicesAvailable, 1);
             }
             if (mGPSDialog != null) {
                 mGPSDialog.show();

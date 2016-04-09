@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
@@ -35,10 +36,10 @@ import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationServices;
 
 /**
@@ -99,7 +100,8 @@ public class DeviceLocationDataSource implements NetMonDataSource {
         NetMonPreferences.LocationFetchingStrategy strategy = NetMonPreferences.getInstance(mContext).getLocationFetchingStrategy();
         if (strategy == NetMonPreferences.LocationFetchingStrategy.HIGH_ACCURACY_GMS
                 || strategy == NetMonPreferences.LocationFetchingStrategy.SAVE_POWER_GMS) {
-            int playServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mContext);
+            GoogleApiAvailability api = GoogleApiAvailability.getInstance();
+            int playServicesAvailable = api.isGooglePlayServicesAvailable(mContext);
 
             if (playServicesAvailable == ConnectionResult.SUCCESS) {
                 mDeviceLocationDataSourceImpl = new GmsDeviceLocationDataSource(mGoogleApiClient);
@@ -130,7 +132,7 @@ public class DeviceLocationDataSource implements NetMonDataSource {
 
     private final OnConnectionFailedListener mConnectionFailedListener = new OnConnectionFailedListener() {
         @Override
-        public void onConnectionFailed(ConnectionResult result) {
+        public void onConnectionFailed(@NonNull ConnectionResult result) {
             Log.v(TAG, "onConnectionFailed: " + result);
             selectLocationDataSource();
         }

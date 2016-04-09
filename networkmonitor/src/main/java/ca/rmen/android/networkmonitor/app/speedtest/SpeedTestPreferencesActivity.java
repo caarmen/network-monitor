@@ -34,10 +34,11 @@ import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
 
+import java.util.Locale;
+
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
-import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
@@ -156,7 +157,7 @@ public class SpeedTestPreferencesActivity extends AppCompatActivity { // NO_UCD 
      */
     private void updateDownloadUrlPreferenceSummary() {
         SpeedTestResult result = mSpeedTestPrefs.getLastDownloadResult();
-        String size = result.status == SpeedTestStatus.SUCCESS ? String.format("%.3f", (float) result.fileBytes / 1000000) : "?";
+        String size = result.status == SpeedTestStatus.SUCCESS ? String.format(Locale.getDefault(), "%.3f", (float) result.fileBytes / 1000000) : "?";
         String url = mSpeedTestPrefs.getDownloadConfig().url;
         url = ellipsize(url);
         String summary = getString(R.string.pref_summary_speed_test_download_url, url, size);

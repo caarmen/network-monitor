@@ -41,7 +41,6 @@ public class NetMonBus {
 
     /**
      * Utility method to post an event to the bus from any thread.
-     * @param event
      */
     public static void post(final Object event) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {

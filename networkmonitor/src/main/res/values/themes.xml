@@ -67,16 +67,13 @@ limitations under the License.
     Special theme for a transparent activity (used when we need to
     show a dialog on top of a PreferenceActivity
     -->
-    <style name="NetMonNoDisplayBaseTheme" parent="@style/AppTheme">
+    <style name="NetMonNoDisplayTheme" parent="@style/AppTheme">
         <item name="android:windowBackground">@null</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowDisablePreview">true</item>
         <item name="android:windowNoDisplay">true</item>
-    </style>
-
-    <style name="NetMonNoDisplayTheme" parent="@style/NetMonNoDisplayBaseTheme">
     </style>
 
     <style name="NetMonPreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">

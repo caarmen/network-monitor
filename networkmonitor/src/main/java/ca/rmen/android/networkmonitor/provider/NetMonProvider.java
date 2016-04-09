@@ -86,7 +86,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     }
 
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
         final int match = URI_MATCHER.match(uri);
         switch (match) {
             case URI_TYPE_NETWORKMONITOR:
@@ -101,7 +101,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         Log.d(TAG, "insert uri=" + uri + " values=" + values);
         final String table = uri.getLastPathSegment();
         final long rowId = mNetworkMonitorDatabase.getWritableDatabase().insert(table, null, values);
@@ -113,7 +113,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     }
 
     @Override
-    public int bulkInsert(Uri uri, @NonNull ContentValues[] values) {
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
         Log.d(TAG, "bulkInsert uri=" + uri + " values.length=" + values.length);
         final String table = uri.getLastPathSegment();
         final SQLiteDatabase db = mNetworkMonitorDatabase.getWritableDatabase();
@@ -139,9 +139,9 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         Log.d(TAG, "update uri=" + uri + " values=" + values + " selection=" + selection);
-        final QueryParams queryParams = getQueryParams(uri, selection, false);
+        final QueryParams queryParams = getQueryParams(uri, selection);
         final int res = mNetworkMonitorDatabase.getWritableDatabase().update(queryParams.table, values, queryParams.whereClause, selectionArgs);
         String notify;
         if (res != 0 && ((notify = uri.getQueryParameter(QUERY_PARAMETER_NOTIFY)) == null || "true".equals(notify))) {
@@ -151,9 +151,9 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         Log.d(TAG, "delete uri=" + uri + " selection=" + selection);
-        final QueryParams queryParams = getQueryParams(uri, selection, false);
+        final QueryParams queryParams = getQueryParams(uri, selection);
         final int res = mNetworkMonitorDatabase.getWritableDatabase().delete(queryParams.table, queryParams.whereClause, selectionArgs);
         String notify;
         if (res != 0 && ((notify = uri.getQueryParameter(QUERY_PARAMETER_NOTIFY)) == null || "true".equals(notify))) {
@@ -163,7 +163,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         final String groupBy = uri.getQueryParameter(QUERY_PARAMETER_GROUP_BY);
         final String limit = uri.getQueryParameter(QUERY_PARAMETER_LIMIT);
         Log.d(TAG,
@@ -176,7 +176,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
             case URI_TYPE_NETWORKMONITOR:
             case URI_TYPE_NETWORKMONITOR_ID:
 
-                final QueryParams queryParams = getQueryParams(uri, selection, true);
+                final QueryParams queryParams = getQueryParams(uri, selection);
                 res = mNetworkMonitorDatabase.getReadableDatabase().query(queryParams.table, projection, queryParams.whereClause, selectionArgs, groupBy, null,
                         sortOrder == null ? queryParams.orderBy : sortOrder, limit);
                 break;
@@ -209,7 +209,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
      * @see android.content.ContentProvider#applyBatch(java.util.ArrayList)
      */
     @Override
-    public ContentProviderResult[] applyBatch(@NonNull ArrayList<ContentProviderOperation> operations) throws OperationApplicationException {
+    public @NonNull ContentProviderResult[] applyBatch(@NonNull ArrayList<ContentProviderOperation> operations) throws OperationApplicationException {
         Log.v(TAG, "applyBatch: " + operations.size());
         Set<Uri> urisToNotify = new HashSet<>();
         for (ContentProviderOperation operation : operations)
@@ -246,7 +246,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     }
 
 
-    private QueryParams getQueryParams(Uri uri, String selection, boolean isQuery) {
+    private QueryParams getQueryParams(Uri uri, String selection) {
         final QueryParams res = new QueryParams();
         String id = null;
         final int matchedId = URI_MATCHER.match(uri);

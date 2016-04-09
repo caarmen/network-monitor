@@ -26,7 +26,6 @@ package ca.rmen.android.networkmonitor.app.prefs;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.location.Location;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Environment;

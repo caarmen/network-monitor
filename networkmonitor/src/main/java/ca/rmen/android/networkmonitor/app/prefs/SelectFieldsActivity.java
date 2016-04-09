@@ -67,6 +67,7 @@ public class SelectFieldsActivity extends AppCompatActivity implements SelectFie
     public boolean onOptionsItemSelected(MenuItem item) {
 
         View okButton = findViewById(R.id.ok);
+        assert okButton != null;
         switch (item.getItemId()) {
             case R.id.action_select_all:
                 for (int i = 0; i < mListView.getCount(); i++)
@@ -147,6 +148,7 @@ public class SelectFieldsActivity extends AppCompatActivity implements SelectFie
     public void onListItemClick(ListView l, View v, int position, long id) {
         Log.v(TAG, "onListItemClick: clicked on view " + v + " at position " + position + " with id " + id);
         View okButton = findViewById(R.id.ok);
+        assert okButton != null;
         SparseBooleanArray checkedItemPositions = l.getCheckedItemPositions();
         for (int i = 0; i < checkedItemPositions.size(); i++) {
             if (checkedItemPositions.get(checkedItemPositions.keyAt(i))) {

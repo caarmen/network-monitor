@@ -23,7 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -76,10 +75,10 @@ public class FilterColumnListFragment extends ListFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context context) {
         Log.v(TAG, "onAttach");
-        super.onAttach(activity);
-        mColumnName = activity.getIntent().getExtras().getString(FilterColumnActivity.EXTRA_COLUMN_NAME);
+        super.onAttach(context);
+        mColumnName = getActivity().getIntent().getExtras().getString(FilterColumnActivity.EXTRA_COLUMN_NAME);
         getLoaderManager().initLoader(URL_LOADER, null, mLoaderCallbacks);
 
     }

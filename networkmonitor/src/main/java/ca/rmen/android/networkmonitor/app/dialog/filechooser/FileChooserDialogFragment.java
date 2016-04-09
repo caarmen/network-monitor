@@ -64,9 +64,9 @@ public class FileChooserDialogFragment extends DialogFragment {
     private File mSelectedFile = null;
 
     public interface FileChooserDialogListener {
-        void onFileSelected(int actionId, File file);
+        void onFileSelected(@SuppressWarnings("UnusedParameters") int actionId, File file);
 
-        void onDismiss(int actionId);
+        void onDismiss(@SuppressWarnings("UnusedParameters") int actionId);
     }
 
     @Override
