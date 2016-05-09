@@ -102,10 +102,11 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
         if (prefs.isFastPollingEnabled()) enableConnectionTest.setEnabled(false);
         setOnPreferenceChangeListeners(NetMonPreferences.PREF_TEST_SERVER);
         setOnPreferenceClickListeners(PREF_IMPORT_DB, PREF_COMPRESS, NetMonPreferences.PREF_NOTIFICATION_RINGTONE, PREF_IMPORT_SETTINGS, PREF_EXPORT_SETTINGS);
-        Preference emailPreference = mPreferenceFragment.findPreference(EmailPreferences.PREF_EMAIL_REPORTS);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            emailPreference.setEnabled(false);
-            emailPreference.setSummary(R.string.pref_email_unavailable);
+            Preference emailPreference = mPreferenceFragment.findPreference(EmailPreferences.PREF_EMAIL_REPORTS);
+            emailPreference.setVisible(false);
+            Preference themePreference = mPreferenceFragment.findPreference(NetMonPreferences.PREF_THEME);
+            themePreference.setVisible(false);
         }
 
     }
@@ -159,7 +160,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
                 int rowsToKeep = NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getDBRecordCount();
                 if (rowsToKeep > 0) DBOpIntentService.startActionPurge(AdvancedPreferencesActivity.this, rowsToKeep);
             } else if (NetMonPreferences.PREF_THEME.equals(key)) {
-                // When the theme changes, restart the app
+                // When the theme changes, restart the activity
                 NetMonPreferences.NetMonTheme theme = NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getTheme();
                 AppCompatDelegate.setDefaultNightMode(theme == NetMonPreferences.NetMonTheme.DAY ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
                 Intent intent = new Intent(AdvancedPreferencesActivity.this, AdvancedPreferencesActivity.class);
