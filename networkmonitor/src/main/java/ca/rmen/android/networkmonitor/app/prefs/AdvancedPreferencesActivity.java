@@ -49,6 +49,7 @@ import com.squareup.otto.Subscribe;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.Theme;
 import ca.rmen.android.networkmonitor.app.bus.NetMonBus;
 import ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment;
@@ -161,8 +162,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
                 if (rowsToKeep > 0) DBOpIntentService.startActionPurge(AdvancedPreferencesActivity.this, rowsToKeep);
             } else if (NetMonPreferences.PREF_THEME.equals(key)) {
                 // When the theme changes, restart the activity
-                NetMonPreferences.NetMonTheme theme = NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getTheme();
-                AppCompatDelegate.setDefaultNightMode(theme == NetMonPreferences.NetMonTheme.DAY ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
+                Theme.setThemeFromSettings(getApplicationContext());
                 Intent intent = new Intent(AdvancedPreferencesActivity.this, AdvancedPreferencesActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(AdvancedPreferencesActivity.this);

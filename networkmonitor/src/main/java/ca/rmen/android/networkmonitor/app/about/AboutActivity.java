@@ -27,8 +27,6 @@ package ca.rmen.android.networkmonitor.app.about;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.LightingColorFilter;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -48,7 +46,7 @@ import java.io.File;
 import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
+import ca.rmen.android.networkmonitor.app.Theme;
 import ca.rmen.android.networkmonitor.util.Log;
 import de.psdev.licensesdialog.LicensesDialogFragment;
 
@@ -80,25 +78,16 @@ public class AboutActivity extends AppCompatActivity {
         // In night mode, we need to make the icons lighter, or else they don't appear.
         // We could just have different icon resources for night and day themes, but
         // I didn't feel like regenerating the icons :)
-        tintCompoundDrawables(R.id.tv_about_bug);
-        tintCompoundDrawables(R.id.tv_about_contributions);
-        tintCompoundDrawables(R.id.tv_about_libraries);
-        tintCompoundDrawables(R.id.tv_about_rate);
-        tintCompoundDrawables(R.id.tv_about_source_code);
+        tintCompoundDrawables(R.id.tv_about_bug,
+            R.id.tv_about_contributions,
+            R.id.tv_about_libraries,
+            R.id.tv_about_rate,
+            R.id.tv_about_source_code);
     }
 
-    private void tintCompoundDrawables(@IdRes int textViewId) {
-        TextView textView = (TextView) findViewById(textViewId);
-        assert textView != null;
-        Drawable[] compoundDrawables = textView.getCompoundDrawables();
-        int colorFilter = 0x0;
-        if (NetMonPreferences.getInstance(this).getTheme() == NetMonPreferences.NetMonTheme.NIGHT) {
-            colorFilter = 0xFFFFFF;
-        }
-        for (Drawable compoundDrawable : compoundDrawables) {
-            if (compoundDrawable != null) {
-                compoundDrawable.setColorFilter(new LightingColorFilter(0, colorFilter));
-            }
+    private void tintCompoundDrawables(@IdRes int... textViewIds) {
+        for (int textViewId : textViewIds) {
+            Theme.tintCompoundDrawables(this, (TextView) findViewById(textViewId));
         }
     }
 
