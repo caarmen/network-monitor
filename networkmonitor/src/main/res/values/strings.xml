@@ -9,7 +9,7 @@ This source is part of the
 repository.
 
 Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
-Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+Copyright (C) 2013-2016 Carmen Alvarez (c@rmen.ca)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ limitations under the License.
 
     <!-- Strings for the about screen -->
     <string name="about_title">About</string>
-    <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2015 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
+    <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2016 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
     <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2014 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
     <string name="about_projectUrl">Source code:\nhttps://github.com/caarmen/network-monitor</string>
     <string name="about_issues">Report bugs:\nhttps://github.com/caarmen/network-monitor/issues</string>

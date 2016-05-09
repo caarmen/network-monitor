@@ -27,9 +27,12 @@ package ca.rmen.android.networkmonitor.app.about;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.LightingColorFilter;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
@@ -45,6 +48,7 @@ import java.io.File;
 import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.util.Log;
 import de.psdev.licensesdialog.LicensesDialogFragment;
 
@@ -67,11 +71,35 @@ public class AboutActivity extends AppCompatActivity {
         }
 
         ((TextView) findViewById(R.id.txtVersion)).setText(getString(R.string.app_name) + " v" + versionName);
-        TextView tvLibraries = (TextView) findViewById(R.id.about_libraries);
+        TextView tvLibraries = (TextView) findViewById(R.id.tv_about_libraries);
         SpannableString content = new SpannableString(getString(R.string.about_libraries));
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         tvLibraries.setText(content);
         if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // In night mode, we need to make the icons lighter, or else they don't appear.
+        // We could just have different icon resources for night and day themes, but
+        // I didn't feel like regenerating the icons :)
+        tintCompoundDrawables(R.id.tv_about_bug);
+        tintCompoundDrawables(R.id.tv_about_contributions);
+        tintCompoundDrawables(R.id.tv_about_libraries);
+        tintCompoundDrawables(R.id.tv_about_rate);
+        tintCompoundDrawables(R.id.tv_about_source_code);
+    }
+
+    private void tintCompoundDrawables(@IdRes int textViewId) {
+        TextView textView = (TextView) findViewById(textViewId);
+        assert textView != null;
+        Drawable[] compoundDrawables = textView.getCompoundDrawables();
+        int colorFilter = 0x0;
+        if (NetMonPreferences.getInstance(this).getTheme() == NetMonPreferences.NetMonTheme.NIGHT) {
+            colorFilter = 0xFFFFFF;
+        }
+        for (Drawable compoundDrawable : compoundDrawables) {
+            if (compoundDrawable != null) {
+                compoundDrawable.setColorFilter(new LightingColorFilter(0, colorFilter));
+            }
+        }
     }
 
     @Override
