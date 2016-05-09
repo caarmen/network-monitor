@@ -24,6 +24,6 @@ limitations under the License.
 -->
 <resources>
 
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar"/>
+    <style name="AppBaseTheme" parent="Theme.AppCompat.DayNight.DarkActionBar"/>
 
 </resources>

@@ -145,6 +145,14 @@ limitations under the License.
             android:title="@string/pref_title_email" >
             <intent android:action="ca.rmen.android.networkmonitor.app.email.EmailPreferencesActivity" />
         </Preference>
+        <ListPreference
+            android:defaultValue="DAY"
+            android:entries="@array/preferences_theme_labels"
+            android:entryValues="@array/preferences_theme_values"
+            android:icon="@drawable/ic_pref_theme"
+            android:key="PREF_THEME"
+            android:summary="@string/pref_summary_theme"
+            android:title="@string/pref_title_theme" />
     </PreferenceCategory>
 
 </PreferenceScreen>

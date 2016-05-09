@@ -67,6 +67,7 @@ limitations under the License.
             android:textColorLink="@color/netmon_color" />
 
         <TextView
+            android:id="@+id/tv_about_source_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -80,6 +81,7 @@ limitations under the License.
             android:textColorLink="@color/netmon_color" />
 
         <TextView
+            android:id="@+id/tv_about_bug"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -93,6 +95,7 @@ limitations under the License.
             android:textColorLink="@color/netmon_color" />
 
         <TextView
+            android:id="@+id/tv_about_rate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -106,7 +109,7 @@ limitations under the License.
             android:textColorLink="@color/netmon_color" />
 
         <TextView
-            android:id="@+id/about_libraries"
+            android:id="@+id/tv_about_libraries"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -122,6 +125,7 @@ limitations under the License.
             android:textColor="@color/netmon_color" />
 
         <TextView
+            android:id="@+id/tv_about_contributions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"

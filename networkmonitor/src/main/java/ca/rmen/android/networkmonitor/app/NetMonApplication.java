@@ -32,8 +32,8 @@ public class NetMonApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Theme.setThemeFromSettings(this);
         Log.init(this, 1000000, true);
     }
-
 
 }

@@ -8,7 +8,7 @@ This source is part of the
                              /___/
 repository.
 
-Copyright (C) 2014-2015 Carmen Alvarez (c@rmen.ca)
+Copyright (C) 2014-2016 Carmen Alvarez (c@rmen.ca)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ limitations under the License.
     <string name="pref_category_email_sending_settings">Préférences du courriel</string>
     <string name="pref_category_email_server_settings">Authentification du serveur SMTP</string>
     <string name="pref_category_email_status">Statut</string>
-    <string name="pref_email_unavailable">Disponible sous Android 4.x et plus</string>
     <string name="pref_title_email_report_interval">Fréquence du rapport par courriel</string>
     <string name="pref_summary_email_report_interval">%s</string>
     <string name="pref_value_email_report_interval_never">Jamais</string>

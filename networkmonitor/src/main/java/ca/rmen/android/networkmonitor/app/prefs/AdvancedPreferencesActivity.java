@@ -37,7 +37,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
@@ -47,6 +49,7 @@ import com.squareup.otto.Subscribe;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.Theme;
 import ca.rmen.android.networkmonitor.app.bus.NetMonBus;
 import ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment;
@@ -100,10 +103,11 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
         if (prefs.isFastPollingEnabled()) enableConnectionTest.setEnabled(false);
         setOnPreferenceChangeListeners(NetMonPreferences.PREF_TEST_SERVER);
         setOnPreferenceClickListeners(PREF_IMPORT_DB, PREF_COMPRESS, NetMonPreferences.PREF_NOTIFICATION_RINGTONE, PREF_IMPORT_SETTINGS, PREF_EXPORT_SETTINGS);
-        Preference emailPreference = mPreferenceFragment.findPreference(EmailPreferences.PREF_EMAIL_REPORTS);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            emailPreference.setEnabled(false);
-            emailPreference.setSummary(R.string.pref_email_unavailable);
+            Preference emailPreference = mPreferenceFragment.findPreference(EmailPreferences.PREF_EMAIL_REPORTS);
+            emailPreference.setVisible(false);
+            Preference themePreference = mPreferenceFragment.findPreference(NetMonPreferences.PREF_THEME);
+            themePreference.setVisible(false);
         }
 
     }
@@ -156,6 +160,14 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
             } else if (NetMonPreferences.PREF_DB_RECORD_COUNT.equals(key)) {
                 int rowsToKeep = NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getDBRecordCount();
                 if (rowsToKeep > 0) DBOpIntentService.startActionPurge(AdvancedPreferencesActivity.this, rowsToKeep);
+            } else if (NetMonPreferences.PREF_THEME.equals(key)) {
+                // When the theme changes, restart the activity
+                Theme.setThemeFromSettings(getApplicationContext());
+                Intent intent = new Intent(AdvancedPreferencesActivity.this, AdvancedPreferencesActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(AdvancedPreferencesActivity.this);
+                stackBuilder.addNextIntentWithParentStack(intent);
+                stackBuilder.startActivities();
             }
         }
     };

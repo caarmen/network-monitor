@@ -58,6 +58,10 @@ public class NetMonPreferences {
         SAVE_POWER, HIGH_ACCURACY, SAVE_POWER_GMS, HIGH_ACCURACY_GMS
     }
 
+    public enum NetMonTheme {
+        DAY, NIGHT
+    }
+
 
     static final String PREF_TEST_SERVER = "PREF_TEST_SERVER";
     public static final int PREF_MIN_POLLING_INTERVAL = 10000;
@@ -81,6 +85,7 @@ public class NetMonPreferences {
     public static final String PREF_NOTIFICATION_ENABLED = "PREF_NOTIFICATION_ENABLED";
     public static final String PREF_EXPORT_GNUPLOT_SERIES = "PREF_EXPORT_GNUPLOT_SERIES";
     public static final String PREF_EXPORT_GNUPLOT_Y_AXIS = "PREF_EXPORT_GNUPLOT_Y_AXIS";
+    public static final String PREF_THEME = "PREF_THEME";
 
     private static final String PREF_WAKE_INTERVAL = "PREF_WAKE_INTERVAL";
     private static final String PREF_UPDATE_INTERVAL_DEFAULT = "10000";
@@ -384,6 +389,11 @@ public class NetMonPreferences {
 
     public void setImportFolder(File folder) {
         setStringPreference(PREF_IMPORT_FOLDER, folder.getAbsolutePath());
+    }
+
+    public NetMonTheme getTheme() {
+        String themeStr = mSharedPrefs.getString(PREF_THEME, NetMonTheme.DAY.name());
+        return NetMonTheme.valueOf(themeStr);
     }
 
     private int getIntPreference(String key, String defaultValue) {

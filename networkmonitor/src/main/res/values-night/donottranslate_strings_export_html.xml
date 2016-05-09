@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This source is part of the
+     _____  ___   ____
+ __ / / _ \/ _ | / __/___  _______ _
+/ // / , _/ __ |/ _/_/ _ \/ __/ _ `/
+\___/_/|_/_/ |_/_/ (_)___/_/  \_, /
+                             /___/
+repository.
+
+Copyright (C) 2014-2015 Carmen Alvarez (c@rmen.ca)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<resources>
+
+    <string name="css" translatable="false">
+<![CDATA[
+<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
+<style type="text/css">
+body {
+ background-color: #000;
+ color: #fff;
+}
+table {
+ border-collapse: collapse;
+ border: 1px #fd8900 solid;
+}
+th {
+ background-color: #fff300;
+ color: #fd8900;
+ border: 1px #fd8900 solid;
+}
+th table , th table tr td{
+ border: 0px #000 solid;
+ white-space: pre-wrap;
+ font-weight: bold;
+}
+a:link, a:visited {
+ color: #fd8900;
+}
+a:hover, a:active {
+ color: #886600;
+}
+td.sort_column, td.sort_column a:link, td.sort_column a:visited {
+ color: #553300;
+ display:inline;
+}
+td.filtered_column_label {
+ font-style: italic;
+}
+td.filter_icon, td.filter_icon a:link, td.filter_icon a:visited {
+ color: #fd8900;
+ display:inline;
+ text-decoration:none;
+ font-size: 1.7em;
+ padding-left: 7px;
+ padding-right: 7px;
+}
+td {
+ white-space: pre;
+ border-right: 1px #fd8900 solid;
+ padding-left: 5px;
+ padding-right: 5px;
+}
+tr.even td {
+ background-color:#444;
+}
+tr.odd td {
+ background-color:#222;
+}
+td.pass { 
+ color:#8A8;
+ font-weight:bold;
+}
+td.fail { 
+ color:#F88;
+ font-weight:bold;
+}
+td.slow {
+ color:#FC8;
+ font-weight:bold;
+}
+</style>]]>
+    </string>
+
+</resources>

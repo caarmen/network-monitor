@@ -25,7 +25,7 @@ limitations under the License.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <!-- listChoiceBackgroundIndicator is used for the menu item selection, up
              to version 19. The default gray selector with a ripple effect is used on 21+ -->
         <item name="listChoiceBackgroundIndicator">@drawable/netmon_list_selector_holo_light</item>
@@ -51,7 +51,7 @@ limitations under the License.
         <item name="preferenceTheme">@style/NetMonPreferenceThemeOverlay</item>
     </style>
 
-    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="colorAccent">@color/netmon_color</item>
     </style>
 

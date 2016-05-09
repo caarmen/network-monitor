@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -87,6 +88,9 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.log);
         if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mWebView = (WebView) findViewById(R.id.web_view);
+        assert mWebView != null;
+        mWebView.setBackgroundColor(Color.TRANSPARENT);
         loadHTMLFile();
     }
 
@@ -191,8 +195,6 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
                     return;
                 }
                 // Load the exported HTML file into the WebView.
-                mWebView = (WebView) findViewById(R.id.web_view);
-                assert mWebView != null;
                 // Save our current horizontal scroll position so we can keep our
                 // horizontal position after reloading the page.
                 final int oldScrollX = mWebView.getScrollX();

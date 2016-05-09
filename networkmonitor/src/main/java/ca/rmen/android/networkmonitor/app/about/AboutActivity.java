@@ -30,6 +30,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
@@ -45,6 +46,7 @@ import java.io.File;
 import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.Theme;
 import ca.rmen.android.networkmonitor.util.Log;
 import de.psdev.licensesdialog.LicensesDialogFragment;
 
@@ -67,11 +69,26 @@ public class AboutActivity extends AppCompatActivity {
         }
 
         ((TextView) findViewById(R.id.txtVersion)).setText(getString(R.string.app_name) + " v" + versionName);
-        TextView tvLibraries = (TextView) findViewById(R.id.about_libraries);
+        TextView tvLibraries = (TextView) findViewById(R.id.tv_about_libraries);
         SpannableString content = new SpannableString(getString(R.string.about_libraries));
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         tvLibraries.setText(content);
         if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // In night mode, we need to make the icons lighter, or else they don't appear.
+        // We could just have different icon resources for night and day themes, but
+        // I didn't feel like regenerating the icons :)
+        tintCompoundDrawables(R.id.tv_about_bug,
+            R.id.tv_about_contributions,
+            R.id.tv_about_libraries,
+            R.id.tv_about_rate,
+            R.id.tv_about_source_code);
+    }
+
+    private void tintCompoundDrawables(@IdRes int... textViewIds) {
+        for (int textViewId : textViewIds) {
+            Theme.tintCompoundDrawables(this, (TextView) findViewById(textViewId));
+        }
     }
 
     @Override
