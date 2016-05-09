@@ -37,7 +37,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
@@ -156,6 +158,15 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
             } else if (NetMonPreferences.PREF_DB_RECORD_COUNT.equals(key)) {
                 int rowsToKeep = NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getDBRecordCount();
                 if (rowsToKeep > 0) DBOpIntentService.startActionPurge(AdvancedPreferencesActivity.this, rowsToKeep);
+            } else if (NetMonPreferences.PREF_THEME.equals(key)) {
+                // When the theme changes, restart the app
+                NetMonPreferences.NetMonTheme theme = NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getTheme();
+                AppCompatDelegate.setDefaultNightMode(theme == NetMonPreferences.NetMonTheme.DAY ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
+                Intent intent = new Intent(AdvancedPreferencesActivity.this, AdvancedPreferencesActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(AdvancedPreferencesActivity.this);
+                stackBuilder.addNextIntentWithParentStack(intent);
+                stackBuilder.startActivities();
             }
         }
     };

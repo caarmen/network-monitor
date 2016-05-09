@@ -9,7 +9,7 @@ This source is part of the
 repository.
 
 Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
-Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+Copyright (C) 2013-2016 Carmen Alvarez (c@rmen.ca)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -88,6 +88,10 @@ limitations under the License.
     <string name="pref_title_email">Send yourself reports by e-mail</string>
     <string name="pref_title_import_settings">Import settings</string>
     <string name="pref_title_export_settings">Export settings</string>
+    <string name="pref_title_theme">Theme</string>
+    <string name="pref_summary_theme">%s</string>
+    <string name="pref_value_theme_day">Light</string>
+    <string name="pref_value_theme_night">Dark</string>
     <string name="pref_title_notification_enabled">Enable notifications</string>
     <string name="pref_summary_notification_enabled">Notify when a network test fails.</string>
     <string name="pref_title_notification_ringtone">Notification ringtone</string>

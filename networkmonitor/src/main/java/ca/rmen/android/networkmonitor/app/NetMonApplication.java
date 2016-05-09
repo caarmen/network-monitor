@@ -24,7 +24,9 @@
 package ca.rmen.android.networkmonitor.app;
 
 import android.app.Application;
+import android.support.v7.app.AppCompatDelegate;
 
+import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.util.Log;
 
 public class NetMonApplication extends Application {
@@ -32,6 +34,8 @@ public class NetMonApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        NetMonPreferences.NetMonTheme theme = NetMonPreferences.getInstance(this).getTheme();
+        AppCompatDelegate.setDefaultNightMode(theme == NetMonPreferences.NetMonTheme.DAY ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
         Log.init(this, 1000000, true);
     }
 
