@@ -38,6 +38,7 @@ import java.util.Comparator;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.Theme;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -104,18 +105,21 @@ class FileAdapter extends ArrayAdapter<File> {
         view.setText(FileChooser.getShortDisplayName(getContext(), file));
         view.setTypeface(null, Typeface.NORMAL);
         view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file, 0, 0, 0);
+        Theme.tintCompoundDrawables(getContext(), view);
     }
 
     private void updateViewFolder(TextView view, File folder) {
         view.setText(FileChooser.getShortDisplayName(getContext(), folder));
         view.setTypeface(null, Typeface.NORMAL);
         view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_folder, 0, 0, 0);
+        Theme.tintCompoundDrawables(getContext(), view);
     }
 
     private void updateViewBackFolder(TextView view, File backFolder) {
         view.setText("(" + FileChooser.getShortDisplayName(getContext(), backFolder) + ")");
         view.setTypeface(null, Typeface.ITALIC);
         view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_navigation_arrow_back, 0, 0, 0);
+        Theme.tintCompoundDrawables(getContext(), view);
     }
 
     @Override
