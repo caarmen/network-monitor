@@ -29,6 +29,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -110,6 +111,16 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         if (mDialog != null) mDialog.show();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
         NetMonBus.getBus().register(this);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Bug: if you are in night mode, rotate the screen and tap on "refresh", the day mode colors
+        // are used.
+        // This is a workaround.
+        // https://code.google.com/p/android/issues/detail?id=206394
+        getDelegate().applyDayNight();
     }
 
     @Override
