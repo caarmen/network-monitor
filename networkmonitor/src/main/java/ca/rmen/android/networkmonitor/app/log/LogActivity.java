@@ -114,16 +114,6 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Bug: if you are in night mode, rotate the screen and tap on "refresh", the day mode colors
-        // are used.
-        // This is a workaround.
-        // https://code.google.com/p/android/issues/detail?id=206394
-        getDelegate().applyDayNight();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.log, menu);
