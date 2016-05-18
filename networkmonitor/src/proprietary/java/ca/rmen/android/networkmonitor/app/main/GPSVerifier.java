@@ -25,7 +25,7 @@ package ca.rmen.android.networkmonitor.app.main;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.widget.Toast;
+import android.support.design.widget.Snackbar;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -60,7 +60,7 @@ class GPSVerifier {
             if (mGPSDialog != null) {
                 mGPSDialog.show();
             } else {
-                Toast.makeText(mActivity, "Google Play Services must be installed", Toast.LENGTH_LONG).show();
+                Snackbar.make(mActivity.getWindow().getDecorView().getRootView(), "Google Play Services must be installed", Snackbar.LENGTH_LONG).show();
             }
         }
     }

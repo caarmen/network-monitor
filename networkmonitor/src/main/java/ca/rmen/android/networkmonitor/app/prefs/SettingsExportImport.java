@@ -25,6 +25,7 @@ package ca.rmen.android.networkmonitor.app.prefs;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,7 +33,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
+import android.support.design.widget.Snackbar;
 
 import java.io.File;
 import java.util.Map;
@@ -63,15 +64,15 @@ final class SettingsExportImport {
     /**
      * Copies the shared preferences file to the sd card, and prompts the user to share it.
      */
-    public static void exportSettings(final Context context) {
-        final File inputFile = getSharedPreferencesFile(context);
-        final File outputFile = new File(context.getExternalFilesDir(null), inputFile.getName());
+    public static void exportSettings(final Activity activity) {
+        final File inputFile = getSharedPreferencesFile(activity);
+        final File outputFile = new File(activity.getExternalFilesDir(null), inputFile.getName());
         new AsyncTask<Void, Void, Boolean>() {
             @SuppressLint("CommitPrefEdits")
             @Override
             protected Boolean doInBackground(Void... params) {
                 // Just in case: make sure we don't have our temp setting.
-                SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+                SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
                 if (sharedPrefs.contains(PREF_IMPORT_VERIFICATION)) {
                     Log.w(TAG, "Didn't expect to see the " + PREF_IMPORT_VERIFICATION + " setting when exporting");
                     sharedPrefs.edit().remove(PREF_IMPORT_VERIFICATION).commit();
@@ -85,15 +86,15 @@ final class SettingsExportImport {
                     // Bring up the chooser to share the file.
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.export_subject_send_settings));
+                    sendIntent.putExtra(Intent.EXTRA_SUBJECT, activity.getString(R.string.export_subject_send_settings));
 
                     sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + outputFile.getAbsolutePath()));
                     sendIntent.setType("message/rfc822");
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.export_settings_message_text));
-                    Intent chooserIntent = Intent.createChooser(sendIntent, context.getResources().getText(R.string.action_share));
-                    context.startActivity(chooserIntent);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, activity.getString(R.string.export_settings_message_text));
+                    Intent chooserIntent = Intent.createChooser(sendIntent, activity.getResources().getText(R.string.action_share));
+                    activity.startActivity(chooserIntent);
                 } else {
-                    Toast.makeText(context, R.string.export_settings_failure, Toast.LENGTH_LONG).show();
+                    Snackbar.make(activity.getWindow().getDecorView().getRootView(), R.string.export_settings_failure, Snackbar.LENGTH_LONG).show();
                 }
             }
         }.execute();
@@ -102,21 +103,21 @@ final class SettingsExportImport {
     /**
      * Overwrites the app's default shared preferences file with the file at the given uri.
      */
-    public static void importSettings(final Context context, Uri uri, final SettingsImportCallback callback) {
+    public static void importSettings(final Activity activity, Uri uri, final SettingsImportCallback callback) {
         final File inputFile = new File(uri.getEncodedPath());
-        final File outputFile = getSharedPreferencesFile(context);
-        final File backupFile = new File(context.getCacheDir(), outputFile.getName() + ".bak");
+        final File outputFile = getSharedPreferencesFile(activity);
+        final File backupFile = new File(activity.getCacheDir(), outputFile.getName() + ".bak");
 
         new AsyncTask<Void, Void, Boolean>() {
 
             private void rollback() {
                 IoUtil.copy(backupFile, outputFile);
-                reloadSettings(context);
+                reloadSettings(activity);
             }
 
             @Override
             protected void onPreExecute() {
-                Toast.makeText(context, R.string.import_settings_starting, Toast.LENGTH_LONG).show();
+                Snackbar.make(activity.getWindow().getDecorView().getRootView(), R.string.import_settings_starting, Snackbar.LENGTH_LONG).show();
             }
 
             @Override
@@ -127,7 +128,7 @@ final class SettingsExportImport {
                 }
 
                 // Set a temp preference now. We expect it to disappear after importing.
-                PreferenceManager.getDefaultSharedPreferences(context)
+                PreferenceManager.getDefaultSharedPreferences(activity)
                         .edit()
                         .putBoolean(PREF_IMPORT_VERIFICATION, true)
                         .commit();
@@ -139,7 +140,7 @@ final class SettingsExportImport {
                 }
 
                 // Check that we have valid settings.
-                if (!reloadSettings(context)) {
+                if (!reloadSettings(activity)) {
                     rollback();
                     return false;
                 }
@@ -149,10 +150,10 @@ final class SettingsExportImport {
             @Override
             protected void onPostExecute(Boolean result) {
                 if (result) {
-                    Toast.makeText(context, context.getString(R.string.import_notif_complete_content, inputFile), Toast.LENGTH_LONG).show();
+                    Snackbar.make(activity.getWindow().getDecorView().getRootView(), activity.getString(R.string.import_notif_complete_content, inputFile), Snackbar.LENGTH_LONG).show();
                     callback.onSettingsImported();
                 } else {
-                    Toast.makeText(context, context.getString(R.string.import_notif_error_content, inputFile), Toast.LENGTH_LONG).show();
+                    Snackbar.make(activity.getWindow().getDecorView().getRootView(), activity.getString(R.string.import_notif_error_content, inputFile), Snackbar.LENGTH_LONG).show();
                 }
             }
         }.execute();

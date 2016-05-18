@@ -29,13 +29,13 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -48,7 +48,6 @@ import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
@@ -192,7 +191,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
                     return;
                 }
                 if (result == null) {
-                    Toast.makeText(LogActivity.this, R.string.error_reading_log, Toast.LENGTH_LONG).show();
+                    Snackbar.make(mWebView, R.string.error_reading_log, Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 // Load the exported HTML file into the WebView.

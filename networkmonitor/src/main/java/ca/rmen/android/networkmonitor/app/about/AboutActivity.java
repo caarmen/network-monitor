@@ -31,6 +31,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
@@ -39,7 +40,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 
@@ -135,7 +135,7 @@ public class AboutActivity extends AppCompatActivity {
 
                     @Override
                     protected void onPostExecute(Boolean result) {
-                        if (!result) Toast.makeText(AboutActivity.this, R.string.support_error, Toast.LENGTH_LONG).show();
+                        if (!result) Snackbar.make(getWindow().getDecorView().getRootView(), R.string.support_error, Snackbar.LENGTH_LONG).show();
                     }
 
 
