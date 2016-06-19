@@ -105,5 +105,10 @@ limitations under the License.
 
     <!-- Strings about db operations -->
     <string name="db_op_in_progress">(%s en cours)</string>
+    <string name="permission_button_allow">Continuer</string>
+    <string name="permission_button_deny">Annuler</string>
+    <string name="permission_external_storage_rationale">Network Monitor a besoin d\'accéder au stockage externe.  Sans cet accès, seuls les fichiers internes de l\'application seront montrés.</string>
+    <string name="permission_location_denied">Quelques champs seront absents du fichier journal.</string>
+    <string name="permission_location_rationale">Network Monitor a besoin d\'accéder à la localisation du terminal pour remplir certains champs.  Sans cet accès, ces champs seront absents du fichier journal.</string>
 
 </resources>

@@ -105,5 +105,10 @@ limitations under the License.
 
     <!-- Strings about db operations -->
     <string name="db_op_in_progress">(%s en curso)</string>
+    <string name="permission_button_allow">Continuar</string>
+    <string name="permission_button_deny">Cancelar</string>
+    <string name="permission_external_storage_rationale">Network Monitor necesita acceder al almacenamiento externo.  Sin acceso, sólo podrá mostrar los ficheros internos de la aplicación.</string>
+    <string name="permission_location_denied">El archivo log no incluirá algunos campos.</string>
+    <string name="permission_location_rationale">Network Monitor necesita aceder a la ubicación del dispositivo para rellenar alguos campos del archivo log. Sin este acceso, el archivo log no incluirá estos campos.</string>
 
 </resources>
