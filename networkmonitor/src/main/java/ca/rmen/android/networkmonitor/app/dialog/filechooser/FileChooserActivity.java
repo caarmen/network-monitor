@@ -24,33 +24,51 @@
  */
 package ca.rmen.android.networkmonitor.app.dialog.filechooser;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 
 import java.io.File;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.util.Log;
+import ca.rmen.android.networkmonitor.util.PermissionUtil;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
 /**
  * This invisible activity handles the action {@link Intent#ACTION_GET_CONTENT}.  It displays a file chooser
  * dialog.  If the user selects a file, this activity sets the selected file as the result Intent data.
  */
+@RuntimePermissions
 public class FileChooserActivity extends FragmentActivity implements FileChooserDialogFragment.FileChooserDialogListener {
     private static final String TAG = Constants.TAG + FileChooserActivity.class.getSimpleName();
     private static final int ACTION_CHOOSE_FILE = 1;
+
+    private boolean mPermissionRequestingDone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate: bundle=" + savedInstanceState);
-        if(savedInstanceState == null) {
-            File initialFolder = NetMonPreferences.getInstance(this).getImportFolder();
-            DialogFragmentFactory.showFileChooserDialog(this, initialFolder, false, ACTION_CHOOSE_FILE);
+        if (savedInstanceState == null) {
+            mPermissionRequestingDone = false;
+            FileChooserActivityPermissionsDispatcher.requestPermissionWithCheck(this);
+        } else {
+            mPermissionRequestingDone = true;
         }
     }
 
@@ -71,4 +89,55 @@ public class FileChooserActivity extends FragmentActivity implements FileChooser
         finish();
     }
 
+    @Override
+    protected void onResume() {
+        Log.v(TAG, "onResume");
+        super.onResume();
+        if (mPermissionRequestingDone) {
+            showFileChooserDialog();
+        }
+    }
+
+    private void showFileChooserDialog() {
+        Log.v(TAG, "showFileChooserDialog");
+        File initialFolder = NetMonPreferences.getInstance(this).getImportFolder();
+        if (!PermissionUtil.hasExternalStoragePermission(this)) {
+            initialFolder = getExternalFilesDir(null);
+        }
+        DialogFragmentFactory.showFileChooserDialog(this, initialFolder, false, ACTION_CHOOSE_FILE);
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @OnPermissionDenied({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void requestPermission() {
+        Log.v(TAG, "Permissions granted");
+        mPermissionRequestingDone = true;
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @OnShowRationale({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showRationaleForPermissions(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.permission_external_storage_rationale)
+                .setPositiveButton(R.string.permission_button_allow, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        request.proceed();
+                    }
+                }).setNegativeButton(R.string.permission_button_deny, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                request.cancel();
+                showFileChooserDialog();
+            }
+        }).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // NOTE: delegate the permission handling to generated method
+        FileChooserActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
 }

@@ -112,6 +112,7 @@ limitations under the License.
 
     <string name="permission_location_rationale">Network Monitor needs access to your location to report certain fields. If you deny this permission, those fields will not be reported.</string>
     <string name="permission_location_denied">Some fields will not be included in the logs</string>
+    <string name="permission_external_storage_rationale">Network Monitor needs access to external storage. If you deny access, it will only be able to access the files inside the Network Monitor folder.</string>
     <string name="permission_button_allow">Continue</string>
     <string name="permission_button_deny">Cancel</string>
 
