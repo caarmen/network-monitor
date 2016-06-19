@@ -47,4 +47,10 @@ limitations under the License.
         <copyright>Copyright (c) Square, Inc.</copyright>
         <license>Apache Software License 2.0</license>
     </notice>
+    <notice>
+        <name>PermissionsDispatcher</name>
+        <url>https://github.com/hotchemi/PermissionsDispatcher</url>
+        <copyright>Copyright (c) Shintaro Katafuchi, Marcel Schnelle, Yoshinori Isogai</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
 </notices>

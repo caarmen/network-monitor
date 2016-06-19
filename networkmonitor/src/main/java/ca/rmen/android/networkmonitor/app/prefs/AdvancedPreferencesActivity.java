@@ -39,7 +39,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
@@ -219,7 +218,8 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
             Log.v(TAG, "onPreferenceClick: " + preference);
             if (PREF_IMPORT_DB.equals(preference.getKey())) {
                 Intent importIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                importIntent.setType("file/*");
+                importIntent.setType("*/*");
+                importIntent.addCategory(Intent.CATEGORY_OPENABLE);
                 startActivityForResult(Intent.createChooser(importIntent, getResources().getText(R.string.pref_summary_import)), ACTIVITY_REQUEST_CODE_IMPORT_DB);
             } else if (PREF_COMPRESS.equals(preference.getKey())) {
                 DialogFragmentFactory.showConfirmDialog(AdvancedPreferencesActivity.this, getString(R.string.compress_confirm_title), getString(R.string.compress_confirm_message),
@@ -238,7 +238,8 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
                 startActivityForResult(intent, ACTIVITY_REQUEST_CODE_RINGTONE);
             } else if (PREF_IMPORT_SETTINGS.equals(preference.getKey())) {
                 Intent importIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                importIntent.setType("file/*");
+                importIntent.setType("*/*");
+                importIntent.addCategory(Intent.CATEGORY_OPENABLE);
                 startActivityForResult(Intent.createChooser(importIntent, getResources().getText(R.string.pref_title_import_settings)), ACTIVITY_REQUEST_CODE_IMPORT_SETTINGS);
             } else if (PREF_EXPORT_SETTINGS.equals(preference.getKey())) {
                 SettingsExportImport.exportSettings(AdvancedPreferencesActivity.this);

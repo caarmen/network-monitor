@@ -35,6 +35,7 @@ import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.LocationFetchingStrategy;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
+import ca.rmen.android.networkmonitor.util.PermissionUtil;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -67,9 +68,14 @@ public class GmsDeviceLocationDataSource implements NetMonDataSource {
      *         {@link NetMonColumns#DEVICE_LONGITUDE}. Uses Google Play Services.
      */
     @Override
+    @SuppressWarnings("MissingPermission")
     public ContentValues getContentValues() {
         Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues(3);
+        if (!PermissionUtil.hasLocationPermission(mContext)) {
+            Log.v(TAG, "No location permission.");
+            return values;
+        }
         if (!mLocationClient.isConnected()) {
             Log.v(TAG, "LocationClient not connected, doing nothing");
             return values;
@@ -100,10 +106,15 @@ public class GmsDeviceLocationDataSource implements NetMonDataSource {
      * Depending on the location fetching strategy, and the application's test interval register a listener to
      * receive location updates.
      */
+    @SuppressWarnings("MissingPermission")
     private void registerLocationListener() {
         LocationFetchingStrategy locationFetchingStrategy = NetMonPreferences.getInstance(mContext).getLocationFetchingStrategy();
         Log.v(TAG, "registerLocationListener: strategy = " + locationFetchingStrategy);
         if (!mLocationClient.isConnected()) {
+            Log.v(TAG, "LocationClient not connected, doing nothing");
+            return;
+        }
+        if (!PermissionUtil.hasLocationPermission(mContext)) {
             Log.v(TAG, "LocationClient not connected, doing nothing");
             return;
         }

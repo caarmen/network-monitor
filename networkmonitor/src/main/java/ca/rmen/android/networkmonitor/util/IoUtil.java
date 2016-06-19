@@ -23,6 +23,9 @@
  */
 package ca.rmen.android.networkmonitor.util;
 
+import android.content.Context;
+import android.net.Uri;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
@@ -85,6 +88,23 @@ public class IoUtil {
         FileOutputStream os = null;
         try {
             is = new FileInputStream(in);
+            os = new FileOutputStream(out);
+            long size = copy(is, os);
+            return size > 0;
+        } catch (IOException e) {
+            Log.w(TAG, "Could not copy " + in + " to " + out, e);
+            return false;
+        } finally {
+            closeSilently(is, os);
+        }
+    }
+
+    public static boolean copy(Context context, Uri in, File out) {
+        Log.v(TAG, "copy " + in + " to " + out);
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = context.getContentResolver().openInputStream(in);
             os = new FileOutputStream(out);
             long size = copy(is, os);
             return size > 0;
