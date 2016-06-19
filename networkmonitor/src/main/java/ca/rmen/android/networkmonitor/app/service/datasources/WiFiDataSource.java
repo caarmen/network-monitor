@@ -35,6 +35,7 @@ import android.util.SparseIntArray;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
+import ca.rmen.android.networkmonitor.util.PermissionUtil;
 
 /**
  * retrieves the SSID, BSSID, signal strength, and RSSI of the currently connected WiFi network, if any.
@@ -44,6 +45,7 @@ public class WiFiDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + WiFiDataSource.class.getSimpleName();
     private static final SparseIntArray CHANNEL_FREQUENCIES = new SparseIntArray(14);
     private WifiManager mWifiManager;
+    private Context mContext;
 
     static {
         CHANNEL_FREQUENCIES.append(2412, 1);
@@ -65,6 +67,7 @@ public class WiFiDataSource implements NetMonDataSource {
     @Override
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
+        mContext = context;
         mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
     }
 
@@ -82,14 +85,17 @@ public class WiFiDataSource implements NetMonDataSource {
         int signalLevel = WifiManager.calculateSignalLevel(connectionInfo.getRssi(), 5);
         result.put(NetMonColumns.WIFI_SIGNAL_STRENGTH, signalLevel);
         result.put(NetMonColumns.WIFI_RSSI, connectionInfo.getRssi());
-        List<ScanResult> scanResults = mWifiManager.getScanResults();
-        if (scanResults != null) {
-            for (ScanResult scanResult : scanResults) {
-                if (scanResult.BSSID != null && scanResult.BSSID.equals(connectionInfo.getBSSID())) {
-                    int channel = CHANNEL_FREQUENCIES.get(scanResult.frequency);
-                    result.put(NetMonColumns.WIFI_FREQUENCY, scanResult.frequency);
-                    result.put(NetMonColumns.WIFI_CHANNEL, channel);
-                    break;
+
+        if (PermissionUtil.hasLocationPermission(mContext)) {
+            List<ScanResult> scanResults = mWifiManager.getScanResults();
+            if (scanResults != null) {
+                for (ScanResult scanResult : scanResults) {
+                    if (scanResult.BSSID != null && scanResult.BSSID.equals(connectionInfo.getBSSID())) {
+                        int channel = CHANNEL_FREQUENCIES.get(scanResult.frequency);
+                        result.put(NetMonColumns.WIFI_FREQUENCY, scanResult.frequency);
+                        result.put(NetMonColumns.WIFI_CHANNEL, channel);
+                        break;
+                    }
                 }
             }
         }

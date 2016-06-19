@@ -29,8 +29,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoLte;
 import android.telephony.CellSignalStrength;
@@ -62,8 +65,10 @@ public class NetMonSignalStrength {
     private static final int GSM_SIGNAL_STRENGTH_MODERATE = 8;// WTF? good = moderate?
 
     private final TelephonyManager mTelephonyManager;
+    private final Context mContext;
 
     public NetMonSignalStrength(Context context) {
+        mContext = context;
         mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
     }
 
@@ -297,25 +302,27 @@ public class NetMonSignalStrength {
             Log.e(TAG, "getLteRsrq Could not get rsrq", e);
         }
         // Second hacky way: reflection on the CellInfo object.
-        List<CellInfo> cellInfos = mTelephonyManager.getAllCellInfo();
-        if (cellInfos != null) {
-            for (CellInfo cellInfo : cellInfos) {
-                if (cellInfo.isRegistered()) {
-                    if (cellInfo instanceof CellInfoLte) {
-                        CellSignalStrengthLte signalStrengthLte = ((CellInfoLte) cellInfo).getCellSignalStrength();
-                        try {
-                            Field fieldRsrq = CellSignalStrength.class.getDeclaredField("mRsrq");
-                            fieldRsrq.setAccessible(true);
-                            int rsrq = (Integer) fieldRsrq.get(signalStrengthLte);
-                            Log.v(TAG, "getLteRsrq: found " + rsrq + " using CellInfoLte.mRsrq");
-                            if (rsrq < 0) return rsrq;
-                        } catch (NoSuchFieldException | IllegalAccessException | IllegalArgumentException e) {
-                            Log.e(TAG, "getRsrq Could not get Rsrq", e);
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            List<CellInfo> cellInfos = mTelephonyManager.getAllCellInfo();
+            if (cellInfos != null) {
+                for (CellInfo cellInfo : cellInfos) {
+                    if (cellInfo.isRegistered()) {
+                        if (cellInfo instanceof CellInfoLte) {
+                            CellSignalStrengthLte signalStrengthLte = ((CellInfoLte) cellInfo).getCellSignalStrength();
+                            try {
+                                Field fieldRsrq = CellSignalStrength.class.getDeclaredField("mRsrq");
+                                fieldRsrq.setAccessible(true);
+                                int rsrq = (Integer) fieldRsrq.get(signalStrengthLte);
+                                Log.v(TAG, "getLteRsrq: found " + rsrq + " using CellInfoLte.mRsrq");
+                                if (rsrq < 0) return rsrq;
+                            } catch (NoSuchFieldException | IllegalAccessException | IllegalArgumentException e) {
+                                Log.e(TAG, "getRsrq Could not get Rsrq", e);
+                            }
                         }
+
                     }
 
                 }
-
             }
         }
         return SIGNAL_STRENGTH_NONE_OR_UNKNOWN;

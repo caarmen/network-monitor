@@ -31,10 +31,13 @@ import android.telephony.CellLocation;
 import android.telephony.TelephonyManager;
 import android.telephony.cdma.CdmaCellLocation;
 import android.telephony.gsm.GsmCellLocation;
+
+
 import ca.rmen.android.networkmonitor.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
+import ca.rmen.android.networkmonitor.util.PermissionUtil;
 
 /**
  * Retrieves information from the current cell we are connected to.
@@ -47,11 +50,13 @@ public class CellLocationDataSource implements NetMonDataSource {
      */
     private static final int CDMA_COORDINATE_DIVISOR = 3600 * 4;
     private TelephonyManager mTelephonyManager;
+    private Context mContext;
 
     @Override
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
         mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        mContext = context;
     }
 
     @Override
@@ -61,6 +66,10 @@ public class CellLocationDataSource implements NetMonDataSource {
     public ContentValues getContentValues() {
         Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues();
+        if (!PermissionUtil.hasLocationPermission(mContext)) {
+            Log.d(TAG, "No location permissions");
+            return values;
+        }
         CellLocation cellLocation = mTelephonyManager.getCellLocation();
         if (cellLocation instanceof GsmCellLocation) {
             GsmCellLocation gsmCellLocation = (GsmCellLocation) cellLocation;

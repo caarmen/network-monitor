@@ -40,6 +40,7 @@ import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.LocationFetchingStrategy;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
+import ca.rmen.android.networkmonitor.util.PermissionUtil;
 
 /**
  * Retrieves the device's location, using the most recent Location retrieved among all of the available the location providers.
@@ -69,9 +70,14 @@ public class StandardDeviceLocationDataSource implements NetMonDataSource {
     public ContentValues getContentValues() {
         Log.v(TAG, "getContentValues");
         ContentValues values = new ContentValues(3);
+        if (!PermissionUtil.hasLocationPermission(mContext)) {
+            Log.v(TAG, "No location permission");
+            return values;
+        }
         Location mostRecentLocation = null;
         List<String> providers = mLocationManager.getProviders(true);
         for (String provider : providers) {
+            @SuppressWarnings("MissingPermission")
             Location location = mLocationManager.getLastKnownLocation(provider);
             Log.v(TAG, "Location for provider " + provider + ": " + location);
             if (isBetter(mostRecentLocation, location)) mostRecentLocation = location;
@@ -88,15 +94,24 @@ public class StandardDeviceLocationDataSource implements NetMonDataSource {
     }
 
     @Override
+    @SuppressWarnings("MissingPermission")
     public void onDestroy() {
         Log.v(TAG, "onDestroy");
         PreferenceManager.getDefaultSharedPreferences(mContext).unregisterOnSharedPreferenceChangeListener(mPreferenceListener);
-        mLocationManager.removeUpdates(mLocationListener);
+
+        if (PermissionUtil.hasLocationPermission(mContext)) {
+            mLocationManager.removeUpdates(mLocationListener);
+        }
     }
 
+    @SuppressWarnings("MissingPermission")
     private void registerLocationListener() {
         LocationFetchingStrategy locationFetchingStrategy = NetMonPreferences.getInstance(mContext).getLocationFetchingStrategy();
         Log.v(TAG, "registerLocationListener: strategy = " + locationFetchingStrategy);
+        if (!PermissionUtil.hasLocationPermission(mContext)) {
+            Log.d(TAG, "No location permissions");
+            return;
+        }
         mLocationManager.removeUpdates(mLocationListener);
         if (locationFetchingStrategy == LocationFetchingStrategy.HIGH_ACCURACY) {
             int pollingFrequency = NetMonPreferences.getInstance(mContext).getUpdateInterval();

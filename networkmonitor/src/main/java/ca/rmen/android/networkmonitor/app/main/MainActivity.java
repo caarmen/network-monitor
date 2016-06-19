@@ -24,13 +24,18 @@
  */
 package ca.rmen.android.networkmonitor.app.main;
 
+import android.Manifest;
 import android.app.ActivityManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
@@ -51,9 +56,14 @@ import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.service.NetMonService;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
 import ca.rmen.android.networkmonitor.util.Log;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
-
-public class MainActivity extends AppCompatActivity implements ConfirmDialogFragment.DialogButtonListener, ChoiceDialogFragment.DialogItemListener{
+@RuntimePermissions
+public class MainActivity extends AppCompatActivity implements ConfirmDialogFragment.DialogButtonListener, ChoiceDialogFragment.DialogItemListener {
     private static final String TAG = Constants.TAG + MainActivity.class.getSimpleName();
     private GPSVerifier mGPSVerifier;
     private NetMonPreferenceFragmentCompat mPreferenceFragment;
@@ -76,7 +86,10 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
             getSupportActionBar().setIcon(R.drawable.ic_launcher);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-        if (NetMonPreferences.getInstance(this).isServiceEnabled()) startService(new Intent(MainActivity.this, NetMonService.class));
+        if (NetMonPreferences.getInstance(this).isServiceEnabled()) {
+            startService(new Intent(MainActivity.this, NetMonService.class));
+            MainActivityPermissionsDispatcher.requestPermissionsWithCheck(this);
+        }
         // Use strict mode for monkey tests. We can't enable strict mode for normal use
         // because, when sharing (exporting), the mail app may read the attachment in
         // the main thread.
@@ -85,6 +98,40 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
 
         mPreferenceFragment.findPreference(PREF_SHARE).setOnPreferenceClickListener(mOnPreferenceClickListener);
         mPreferenceFragment.findPreference(PREF_CLEAR_LOG_FILE).setOnPreferenceClickListener(mOnPreferenceClickListener);
+    }
+
+    @NeedsPermission({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    void requestPermissions() {
+        Log.v(TAG, "Permissions granted");
+    }
+
+    @OnShowRationale({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    void showRationaleForPermissions(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.permission_location_rationale)
+                .setPositiveButton(R.string.permission_button_allow, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        request.proceed();
+                    }
+                }).setNegativeButton(R.string.permission_button_deny, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        request.cancel();
+                    }
+                }).show();
+    }
+
+    @OnPermissionDenied({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    void onPermissionsDenied() {
+        Snackbar.make(getWindow().getDecorView().getRootView(), R.string.permission_location_denied, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // NOTE: delegate the permission handling to generated method
+        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
     @Override
@@ -159,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
                 if (sharedPreferences.getBoolean(NetMonPreferences.PREF_SERVICE_ENABLED, NetMonPreferences.PREF_SERVICE_ENABLED_DEFAULT)) {
                     mGPSVerifier.verifyGPS();
                     startService(new Intent(MainActivity.this, NetMonService.class));
+                    MainActivityPermissionsDispatcher.requestPermissionsWithCheck(MainActivity.this);
                 }
             } else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
                 if (prefs.isFastPollingEnabled()) {
