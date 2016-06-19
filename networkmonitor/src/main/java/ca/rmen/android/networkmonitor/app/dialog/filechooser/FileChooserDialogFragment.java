@@ -23,12 +23,15 @@
  */
 package ca.rmen.android.networkmonitor.app.dialog.filechooser;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -41,11 +44,17 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.util.Log;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
 /**
  * Dialog to pick a file (or folder)
  * The calling activity must implement the {@link FileChooserDialogFragment.FileChooserDialogListener} interface.
  */
+@RuntimePermissions
 public class FileChooserDialogFragment extends DialogFragment {
 
     private static final String TAG = Constants.TAG + FileChooserDialogFragment.class.getSimpleName();
@@ -178,6 +187,7 @@ public class FileChooserDialogFragment extends DialogFragment {
                 .setOnCancelListener(cancelListener)
                 .create();
         dialog.setOnDismissListener(dismissListener);
+        FileChooserDialogFragmentPermissionsDispatcher.requestPermissionWithCheck(this);
         return dialog;
     }
 
@@ -193,5 +203,41 @@ public class FileChooserDialogFragment extends DialogFragment {
         int actionId = arguments.getInt(DialogFragmentFactory.EXTRA_ACTION_ID);
         FileChooserDialogListener listener = (FileChooserDialogListener) getActivity();
         if (listener != null) listener.onDismiss(actionId);
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @OnPermissionDenied({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void requestPermission() {
+        Log.v(TAG, "Permissions granted");
+        reload();
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @OnShowRationale({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showRationaleForPermissions(final PermissionRequest request) {
+        Log.v(TAG, "showRationaleForPermissions");
+        new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.permission_external_storage_rationale)
+                .setPositiveButton(R.string.permission_button_allow, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        request.proceed();
+                    }
+                }).setNegativeButton(R.string.permission_button_deny, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                request.cancel();
+                reload();
+            }
+        }).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.v(TAG, "onRequestPermissionsResult");
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // NOTE: delegate the permission handling to generated method
+        FileChooserDialogFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 }
