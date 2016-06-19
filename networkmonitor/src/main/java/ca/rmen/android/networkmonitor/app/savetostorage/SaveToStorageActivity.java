@@ -24,20 +24,33 @@
  */
 package ca.rmen.android.networkmonitor.app.savetostorage;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 
 import java.io.File;
 
 import ca.rmen.android.networkmonitor.Constants;
+import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.dialog.filechooser.FileChooserDialogFragment;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.util.Log;
+import ca.rmen.android.networkmonitor.util.PermissionUtil;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
 /**
  * Invisible activity which expects a file as a Uri in the {@link Intent#EXTRA_STREAM} extra.
@@ -45,9 +58,11 @@ import ca.rmen.android.networkmonitor.util.Log;
  * selected, this launches the {@link SaveToStorageService} service to save the file in
  * the selected folder, and exits without waiting for the service to complete.
  */
+@RuntimePermissions
 public class SaveToStorageActivity extends FragmentActivity implements FileChooserDialogFragment.FileChooserDialogListener {
     private static final String TAG = Constants.TAG + SaveToStorageActivity.class.getSimpleName();
     private static final int ACTION_SAVE_TO_STORAGE = 1;
+    private boolean mPermissionRequestingDone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +85,10 @@ public class SaveToStorageActivity extends FragmentActivity implements FileChoos
                 SaveToStorage.displayErrorToast(this);
                 return;
             }
-            File initialFolder = NetMonPreferences.getInstance(this).getExportFolder();
-            DialogFragmentFactory.showFileChooserDialog(this, initialFolder, true, ACTION_SAVE_TO_STORAGE);
+            mPermissionRequestingDone = false;
+            SaveToStorageActivityPermissionsDispatcher.requestPermissionWithCheck(this);
+        } else {
+            mPermissionRequestingDone = true;
         }
 
     }
@@ -100,6 +117,58 @@ public class SaveToStorageActivity extends FragmentActivity implements FileChoos
     public void onDismiss(int actionId) {
         Log.v(TAG, "onDismiss");
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.v(TAG, "onResume");
+        super.onResume();
+        if (mPermissionRequestingDone) {
+            showFileChooserDialog();
+        }
+    }
+
+    private void showFileChooserDialog() {
+        Log.v(TAG, "showFileChooserDialog");
+        File initialFolder = NetMonPreferences.getInstance(this).getExportFolder();
+        if (!PermissionUtil.hasExternalStoragePermission(this)) {
+            initialFolder = getExternalFilesDir(null);
+        }
+        DialogFragmentFactory.showFileChooserDialog(this, initialFolder, true, ACTION_SAVE_TO_STORAGE);
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @OnPermissionDenied({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void requestPermission() {
+        Log.v(TAG, "Permissions granted");
+        mPermissionRequestingDone = true;
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @OnShowRationale({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showRationaleForPermissions(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.permission_external_storage_rationale)
+                .setPositiveButton(R.string.permission_button_allow, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        request.proceed();
+                    }
+                }).setNegativeButton(R.string.permission_button_deny, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                request.cancel();
+                showFileChooserDialog();
+            }
+        }).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // NOTE: delegate the permission handling to generated method
+        SaveToStorageActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
 }
