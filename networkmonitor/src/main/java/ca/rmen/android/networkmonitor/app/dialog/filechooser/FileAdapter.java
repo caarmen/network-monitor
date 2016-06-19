@@ -25,6 +25,7 @@ package ca.rmen.android.networkmonitor.app.dialog.filechooser;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +34,10 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
@@ -65,16 +68,32 @@ class FileAdapter extends ArrayAdapter<File> {
         Log.v(TAG, "load " + selectedFolder);
         mSelectedFolder = selectedFolder;
         clear();
-        File[] files = selectedFolder.listFiles(mFileFilter);
-        if (selectedFolder.getParentFile() != null) {
-            add(selectedFolder.getParentFile());
-        }
-        if(files != null) { // will be null if we don't have permission to read this folder
-            Arrays.sort(files, mFileComparator);
-            for (File file : files) {
-                add(file);
+        new AsyncTask<File, Void, List<File>>() {
+
+            @Override
+            protected List<File> doInBackground(File... params) {
+                File selectedFolder = params[0];
+                File[] files = selectedFolder.listFiles(mFileFilter);
+                List<File> result = new ArrayList<>();
+                if (selectedFolder.getParentFile() != null) {
+                    result.add(selectedFolder.getParentFile());
+                }
+                if(files != null) { // will be null if we don't have permission to read this folder
+                    Arrays.sort(files, mFileComparator);
+                    for (File file : files) {
+                        result.add(file);
+                    }
+                }
+                return result;
             }
-        }
+
+            @Override
+            protected void onPostExecute(List<File> files) {
+                for (File file : files) {
+                    add(file);
+                }
+            }
+        }.execute(selectedFolder);
     }
 
     @Override
