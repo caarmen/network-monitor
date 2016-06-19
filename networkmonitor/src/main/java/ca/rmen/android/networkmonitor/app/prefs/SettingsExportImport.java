@@ -36,6 +36,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Map;
 
 import ca.rmen.android.networkmonitor.Constants;
@@ -103,8 +104,7 @@ final class SettingsExportImport {
     /**
      * Overwrites the app's default shared preferences file with the file at the given uri.
      */
-    public static void importSettings(final Activity activity, Uri uri, final SettingsImportCallback callback) {
-        final File inputFile = new File(uri.getEncodedPath());
+    public static void importSettings(final Activity activity, final Uri uri, final SettingsImportCallback callback) {
         final File outputFile = getSharedPreferencesFile(activity);
         final File backupFile = new File(activity.getCacheDir(), outputFile.getName() + ".bak");
 
@@ -134,7 +134,7 @@ final class SettingsExportImport {
                         .commit();
 
                 // Attempt the copy
-                if (!IoUtil.copy(inputFile, outputFile)) {
+                if (!IoUtil.copy(activity, uri, outputFile)) {
                     rollback();
                     return false;
                 }
@@ -150,10 +150,10 @@ final class SettingsExportImport {
             @Override
             protected void onPostExecute(Boolean result) {
                 if (result) {
-                    Snackbar.make(activity.getWindow().getDecorView().getRootView(), activity.getString(R.string.import_notif_complete_content, inputFile), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(activity.getWindow().getDecorView().getRootView(), activity.getString(R.string.import_notif_complete_content, uri), Snackbar.LENGTH_LONG).show();
                     callback.onSettingsImported();
                 } else {
-                    Snackbar.make(activity.getWindow().getDecorView().getRootView(), activity.getString(R.string.import_notif_error_content, inputFile), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(activity.getWindow().getDecorView().getRootView(), activity.getString(R.string.import_notif_error_content, uri), Snackbar.LENGTH_LONG).show();
                 }
             }
         }.execute();

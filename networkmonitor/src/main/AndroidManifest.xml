@@ -240,8 +240,9 @@ limitations under the License.
                 <action android:name="android.intent.action.GET_CONTENT" />
 
                 <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
 
-                <data android:mimeType="file/*" />
+                <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
 
