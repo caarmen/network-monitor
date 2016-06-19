@@ -62,6 +62,7 @@ public class FileChooserDialogFragment extends DialogFragment {
     public static final String EXTRA_FILE_CHOOSER_FOLDERS_ONLY = "folders_only";
 
     private File mSelectedFile = null;
+    private FileAdapter mAdapter = null;
 
     public interface FileChooserDialogListener {
         void onFileSelected(@SuppressWarnings("UnusedParameters") int actionId, File file);
@@ -120,16 +121,16 @@ public class FileChooserDialogFragment extends DialogFragment {
         mSelectedFile = getInitialFolder(savedInstanceState);
 
         final Context context = getActivity();
-        final FileAdapter adapter = new FileAdapter(context, mSelectedFile, foldersOnly);
+        mAdapter = new FileAdapter(context, mSelectedFile, foldersOnly);
 
         // Save the file the user selected. Reload the dialog with the new folder
         // contents.
         OnClickListener fileSelectionListener = new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                mSelectedFile = adapter.getItem(i);
+                mSelectedFile = mAdapter.getItem(i);
                 if (mSelectedFile.isDirectory()) {
-                    adapter.load(mSelectedFile);
+                    mAdapter.load(mSelectedFile);
                     AlertDialog dialog = (AlertDialog) dialogInterface;
                     dialog.setTitle(FileChooser.getFullDisplayName(context, mSelectedFile));
                     dialog.getListView().clearChoices();
@@ -171,13 +172,17 @@ public class FileChooserDialogFragment extends DialogFragment {
         };
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle(FileChooser.getFullDisplayName(context, mSelectedFile))
-                .setSingleChoiceItems(adapter, -1, fileSelectionListener)
+                .setSingleChoiceItems(mAdapter, -1, fileSelectionListener)
                 .setPositiveButton(R.string.file_chooser_choose, positiveListener)
                 .setNegativeButton(android.R.string.cancel, negativeListener)
                 .setOnCancelListener(cancelListener)
                 .create();
         dialog.setOnDismissListener(dismissListener);
         return dialog;
+    }
+
+    public void reload() {
+        mAdapter.load(mSelectedFile);
     }
 
     @Override

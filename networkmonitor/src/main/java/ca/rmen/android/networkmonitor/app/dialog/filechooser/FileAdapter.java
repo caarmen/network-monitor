@@ -25,6 +25,7 @@ package ca.rmen.android.networkmonitor.app.dialog.filechooser;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,16 +66,29 @@ class FileAdapter extends ArrayAdapter<File> {
         Log.v(TAG, "load " + selectedFolder);
         mSelectedFolder = selectedFolder;
         clear();
-        File[] files = selectedFolder.listFiles(mFileFilter);
-        if (selectedFolder.getParentFile() != null) {
-            add(selectedFolder.getParentFile());
-        }
-        if(files != null) { // will be null if we don't have permission to read this folder
-            Arrays.sort(files, mFileComparator);
-            for (File file : files) {
-                add(file);
+        new AsyncTask<File, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(File... params) {
+                File selectedFolder = params[0];
+                File[] files = selectedFolder.listFiles(mFileFilter);
+                if (selectedFolder.getParentFile() != null) {
+                    add(selectedFolder.getParentFile());
+                }
+                if(files != null) { // will be null if we don't have permission to read this folder
+                    Arrays.sort(files, mFileComparator);
+                    for (File file : files) {
+                        add(file);
+                    }
+                }
+                return null;
             }
-        }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                notifyDataSetChanged();
+            }
+        }.execute(selectedFolder);
     }
 
     @Override
