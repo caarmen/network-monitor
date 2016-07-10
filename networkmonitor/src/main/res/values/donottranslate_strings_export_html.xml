@@ -39,11 +39,6 @@ table {
 .table-data-container-container {
  padding: 0px;
 }
-.table-data-container {
- max-height: #HEIGHT#;
- overflow-y:auto;
- overflow-x:hidden;
-}
 .table-data {
  width: 100%;
  table-layout:fixed;
@@ -137,7 +132,8 @@ td.slow {
  color:#FA0;
 }
 </style>]]>
-</string>
+    </string>
+
     <!-- Icon characters in the table headers for sorting and filtering -->
     <string name="icon_sort_asc" translatable="false"><![CDATA[&nbsp;&uarr;&nbsp;]]></string>
     <string name="icon_sort_desc" translatable="false"><![CDATA[&nbsp;&darr;&nbsp;]]></string>

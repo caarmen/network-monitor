@@ -49,26 +49,28 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class HTMLExport extends TableFileExport {
     private static final String TAG = Constants.TAG + TableFileExport.class.getSimpleName();
     private static final String SCHEME_NETMON = "netmon:";
+    private static final String TABLE_HEIGHT_FILE_EXPORT = "100vh";
     public static final String URL_SORT = SCHEME_NETMON + "//sort";
     public static final String URL_FILTER = SCHEME_NETMON + "//filter";
     private static final String HTML_FILE = "networkmonitor.html";
-    private final int mHeight;
     private PrintWriter mPrintWriter;
+    private int mNumColumns;
+    private final String mFixedTableHeight;
 
     /**
      * @param external if true, the file will be exported to the sd card. Otherwise it will written to the application's internal storage.
      */
     public HTMLExport(Context context, boolean external) {
-        this(context, external, -1);
+        this(context, external, TABLE_HEIGHT_FILE_EXPORT);
     }
 
     /**
      * @param external if true, the file will be exported to the sd card. Otherwise it will written to the application's internal storage.
-     * @param height the height, in pixels, of the table to output.
+     * @param fixedTableHeight Ex: "100vh" or "1080px". If provided, the header of the table will remain fixed while the contents will be scrollable. The contents will fit the given height.
      */
-    public HTMLExport(Context context, boolean external, int height) {
+    public HTMLExport(Context context, boolean external, String fixedTableHeight) {
         super(context, new File(external ? context.getExternalFilesDir(null) : context.getFilesDir(), HTML_FILE), FormatterStyle.XML);
-        mHeight = height;
+        mFixedTableHeight = fixedTableHeight;
     }
 
     @Override
@@ -80,19 +82,21 @@ public class HTMLExport extends TableFileExport {
             Log.e(TAG, "writeHeader Could not initialize print writer", e);
             return;
         }
+        mNumColumns = columnLabels.length + 1;
         mPrintWriter.println("<!DOCTYPE html>");
         mPrintWriter.println("<html>");
         mPrintWriter.println("  <head>");
         mPrintWriter.println("    <title>" + mContext.getString(R.string.app_name) + "</title>");
         String columnCss = getColumnCss();
         String templateCss = mContext.getString(R.string.css);
-        String height = mHeight > 0 ? mHeight + "px" : "100vh";
-        String css = templateCss
-                .replace("#COLUMN_CSS#", columnCss)
-                .replace("#HEIGHT#", height);
+        String css = templateCss.replace("#COLUMN_CSS#", columnCss);
 
         mPrintWriter.println(css);
         mPrintWriter.println(mContext.getString(R.string.css_themed));
+        if (mFixedTableHeight != null) {
+            String fixedHeaderCss = mContext.getString(R.string.fixed_header_css).replace("#MAX_HEIGHT#", mFixedTableHeight);
+            mPrintWriter.println(fixedHeaderCss);
+        }
         mPrintWriter.println("  </head><body>");
         mPrintWriter.println("<table class='main-table'>");
         mPrintWriter.println(getColgroup(columnLabels.length));
@@ -169,6 +173,11 @@ public class HTMLExport extends TableFileExport {
     @Override
     void writeFooter() {
         if (mPrintWriter == null) return;
+        if (mFixedTableHeight != null) {
+            mPrintWriter.println("<tr><td colspan='" + mNumColumns + "'>&nbsp</td></tr>");
+            mPrintWriter.println("<tr><td colspan='" + mNumColumns + "'>&nbsp</td></tr>");
+            mPrintWriter.println("<tr><td colspan='" + mNumColumns + "'>&nbsp</td></tr>");
+        }
         mPrintWriter.println("</tbody></table></div></td></tr>");
         mPrintWriter.println("</tbody></table>");
         mPrintWriter.println("</body></html>");

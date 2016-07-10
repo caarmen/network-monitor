@@ -64,4 +64,9 @@ limitations under the License.
         android:id="@+id/action_reset_filters"
         app:showAsAction="never"
         android:title="@string/action_reset_filters"/>
+
+    <item
+        android:id="@+id/action_freeze_header"
+        app:showAsAction="never"
+        android:title="@string/action_freeze_header"/>
 </menu>
