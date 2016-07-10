@@ -35,8 +35,6 @@ table {
  width: 100%;
  border: 1px #fd8900 solid;
  table-layout: fixed;
- position: fixed;
- top: 0px;
 }
 .table-data-container-container {
  padding: 0px;
