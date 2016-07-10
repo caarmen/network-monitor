@@ -39,11 +39,6 @@ table {
 .table-data-container-container {
  padding: 0px;
 }
-.table-data-container {
- max-height: #HEIGHT#;
- overflow-y:auto;
- overflow-x:hidden;
-}
 .table-data {
  width: 100%;
  table-layout:fixed;
@@ -97,10 +92,10 @@ td.fail {
 td.slow {
  font-weight:bold;
 }
-#COLUMN_CSS#
 </style>]]>
     </string>
 
+    <!-- Include the fixed_header_css CSS style if we want to freeze the table header -->
     <string name="fixed_header_css" translatable="false">
 <![CDATA[
 <style type="text/css">
@@ -112,12 +107,30 @@ body {
  overflow-y: hidden;
 }
 .table-data-container {
- max-height: #MAX_HEIGHT#;
+ max-height: %1$s;
  overflow-y:auto;
  overflow-x:hidden;
 }
+/*
+ If we have a fixed header, we need to add some "padding" of at least the height of
+ the header, at the bottom of the table. Otherwise, it will not be possible for the user
+ to scroll up to see the last few rows in the table.
+*/
+.table-data tr:last-child td {
+ padding-bottom: 70px;
+}
 </style>]]>
 </string>
+
+    <!-- If we need to add more CSS content, this string can be used to add the surrounding style tag -->
+    <string name="css_template" translatable="false">
+<![CDATA[
+<style type="text/css">
+%s
+</style>]]>
+    </string>
+
+    <!-- Different themes will customize the css_themed CSS style -->
     <string name="css_themed" translatable="false">
 <![CDATA[
 <style type="text/css">
@@ -137,7 +150,8 @@ td.slow {
  color:#FA0;
 }
 </style>]]>
-</string>
+    </string>
+
     <!-- Icon characters in the table headers for sorting and filtering -->
     <string name="icon_sort_asc" translatable="false"><![CDATA[&nbsp;&uarr;&nbsp;]]></string>
     <string name="icon_sort_desc" translatable="false"><![CDATA[&nbsp;&darr;&nbsp;]]></string>
