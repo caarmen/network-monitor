@@ -43,6 +43,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
@@ -91,7 +92,18 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         mWebView = (WebView) findViewById(R.id.web_view);
         assert mWebView != null;
         mWebView.setBackgroundColor(Color.TRANSPARENT);
-        loadHTMLFile();
+        mWebView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    //noinspection deprecation
+                    mWebView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                } else {
+                    mWebView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+                loadHTMLFile();
+            }
+        });
     }
 
     @Override
@@ -125,6 +137,16 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         // Only show the menu item to clear filters if we have filters.
         menu.findItem(R.id.action_reset_filters).setVisible(NetMonPreferences.getInstance(this).hasColumnFilters());
         menu.findItem(R.id.action_clear).setEnabled(!mDBOpInProgress);
+        MenuItem menuItem = menu.findItem(R.id.action_freeze_header);
+        // Freezing the table header only seems to work on kitkat+.
+        // Don't know why.  But we'll hide this feature on older versions.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            menuItem.setVisible(false);
+        } else {
+            boolean freezeHeader = NetMonPreferences.getInstance(this).getFreezeHtmlTableHeader();
+            if (freezeHeader) menuItem.setTitle(R.string.action_unfreeze_header);
+            else menuItem.setTitle(R.string.action_freeze_header);
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -158,6 +180,11 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
                 DialogFragmentFactory.showConfirmDialog(this, getString(R.string.clear_filters_confirm_dialog_title),
                         getString(R.string.clear_filters_confirm_dialog_message), R.id.action_reset_filters, null);
                 return true;
+            case R.id.action_freeze_header:
+                boolean newFreezeHeaderSetting = !NetMonPreferences.getInstance(this).getFreezeHtmlTableHeader();
+                NetMonPreferences.getInstance(this).setFreezeHtmlTableHeader(newFreezeHeaderSetting);
+                loadHTMLFile();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -171,13 +198,24 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         assert progressBar != null;
         progressBar.setVisibility(View.VISIBLE);
         startRefreshIconAnimation();
+        final boolean freezeHeader = NetMonPreferences.getInstance(this).getFreezeHtmlTableHeader();
+        final String fixedTableHeight;
+        if (freezeHeader) {
+            // I've come to the following calculation by trial and error.
+            // I've noticed that when entering the web view, the density is equal to the scale/zoom, but I'm
+            // not sure if it's the density or zoom which really matters in this calculation.
+            // We subtract 100px from the scaled webview height to account for the table header.
+            fixedTableHeight = ((mWebView.getHeight() / getResources().getDisplayMetrics().density) - 100) + "px";
+        } else {
+            fixedTableHeight = null;
+        }
         AsyncTask<Void, Void, File> asyncTask = new AsyncTask<Void, Void, File>() {
 
             @Override
             protected File doInBackground(Void... params) {
                 Log.v(TAG, "loadHTMLFile:doInBackground");
                 // Export the DB to the HTML file.
-                HTMLExport htmlExport = new HTMLExport(LogActivity.this, false);
+                HTMLExport htmlExport = new HTMLExport(LogActivity.this, false, fixedTableHeight);
                 int recordCount = NetMonPreferences.getInstance(LogActivity.this).getFilterRecordCount();
                 return htmlExport.export(recordCount, null);
             }

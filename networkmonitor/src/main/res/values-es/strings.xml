@@ -110,5 +110,7 @@ limitations under the License.
     <string name="permission_external_storage_rationale">Network Monitor necesita acceder al almacenamiento externo.  Sin acceso, sólo podrá mostrar los ficheros internos de la aplicación.</string>
     <string name="permission_location_denied">El archivo log no incluirá algunos campos.</string>
     <string name="permission_location_rationale">Network Monitor necesita aceder a la ubicación del dispositivo para rellenar alguos campos del archivo log. Sin este acceso, el archivo log no incluirá estos campos.</string>
+    <string name="action_freeze_header">Fijar cabecera (beta)</string>
+    <string name="action_unfreeze_header">Desbloquear cabecera</string>
 
 </resources>

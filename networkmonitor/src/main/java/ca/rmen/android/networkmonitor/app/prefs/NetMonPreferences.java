@@ -87,6 +87,8 @@ public class NetMonPreferences {
     public static final String PREF_EXPORT_GNUPLOT_Y_AXIS = "PREF_EXPORT_GNUPLOT_Y_AXIS";
     public static final String PREF_THEME = "PREF_THEME";
 
+    private static final String PREF_FREEZE_HTML_TABLE_HEADER = "PREF_FREEZE_HTML_TABLE_HEADER";
+    private static final boolean PREF_FREEZE_HTML_TABLE_HEADER_DEFAULT = false;
     private static final String PREF_WAKE_INTERVAL = "PREF_WAKE_INTERVAL";
     private static final String PREF_UPDATE_INTERVAL_DEFAULT = "10000";
     private static final String PREF_DB_RECORD_COUNT_DEFAULT = "-1";
@@ -177,6 +179,20 @@ public class NetMonPreferences {
      */
     public int getFilterRecordCount() {
         return getIntPreference(NetMonPreferences.PREF_FILTER_RECORD_COUNT, NetMonPreferences.PREF_FILTER_RECORD_COUNT_DEFAULT);
+    }
+
+    /**
+     * @return true if we should keep the column headings in the log view in a fixed position, while the table body scrolls.
+     */
+    public boolean getFreezeHtmlTableHeader() {
+        return mSharedPrefs.getBoolean(NetMonPreferences.PREF_FREEZE_HTML_TABLE_HEADER, NetMonPreferences.PREF_FREEZE_HTML_TABLE_HEADER_DEFAULT);
+    }
+
+    /**
+     * @param value if true, we should keep the column headings in the log view in a fixed position, while the table body scrolls.
+     */
+    public void setFreezeHtmlTableHeader(boolean value) {
+        setBooleanPreference(NetMonPreferences.PREF_FREEZE_HTML_TABLE_HEADER, value);
     }
 
     /**
