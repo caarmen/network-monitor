@@ -71,6 +71,7 @@ public class HTMLExport extends TableFileExport {
         mPrintWriter.println("  <head>");
         mPrintWriter.println(mContext.getString(R.string.css));
         mPrintWriter.println("    <title>" + mContext.getString(R.string.app_name) + "</title>");
+        mPrintWriter.println(mContext.getString(R.string.css_themed));
         mPrintWriter.println("  </head><body>");
         mPrintWriter.println("<table><thead>");
 
