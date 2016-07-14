@@ -69,26 +69,38 @@ td {
  padding-left: 5px;
  padding-right: 5px;
 }
+td.pass {
+ font-weight:bold;
+}
+td.fail { 
+ font-weight:bold;
+}
+td.slow {
+ font-weight:bold;
+}
+</style>]]>
+
+</string>
+    <string name="css_themed" translatable="false">
+<![CDATA[
+<style type="text/css">
 tr.even td {
  background-color:#ffffe1;
 }
 tr.odd td {
  background-color:#fff;
 }
-td.pass { 
- color:#0A0; 
- font-weight:bold;
+td.pass {
+ color:#0A0;
 }
-td.fail { 
- color:#F00; 
- font-weight:bold;
+td.fail {
+ color:#F00;
 }
 td.slow {
  color:#FA0;
- font-weight:bold;
 }
 </style>]]>
-    </string>
+</string>
     <!-- Icon characters in the table headers for sorting and filtering -->
     <string name="icon_sort_asc" translatable="false"><![CDATA[&nbsp;&uarr;&nbsp;]]></string>
     <string name="icon_sort_desc" translatable="false"><![CDATA[&nbsp;&darr;&nbsp;]]></string>

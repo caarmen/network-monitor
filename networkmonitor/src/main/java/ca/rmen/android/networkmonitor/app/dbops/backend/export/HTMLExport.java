@@ -66,15 +66,18 @@ public class HTMLExport extends TableFileExport {
             Log.e(TAG, "writeHeader Could not initialize print writer", e);
             return;
         }
+        mPrintWriter.println("<!DOCTYPE html>");
         mPrintWriter.println("<html>");
         mPrintWriter.println("  <head>");
         mPrintWriter.println(mContext.getString(R.string.css));
+        mPrintWriter.println("    <title>" + mContext.getString(R.string.app_name) + "</title>");
+        mPrintWriter.println(mContext.getString(R.string.css_themed));
         mPrintWriter.println("  </head><body>");
         mPrintWriter.println("<table><thead>");
 
         mPrintWriter.println("  <tr>");
         SortPreferences sortPreferences = NetMonPreferences.getInstance(mContext).getSortPreferences();
-        mPrintWriter.println("    <th><table><tr></tr></table></th>");
+        mPrintWriter.println("    <th><table><tr><td></td></tr></table></th>");
         for (String columnLabel : columnLabels) {
             String dbColumnName = NetMonColumns.getColumnName(mContext, columnLabel);
             String labelClass = "";
@@ -107,7 +110,7 @@ public class HTMLExport extends TableFileExport {
             String sort = "<td class=\"" + labelClass + "\">" + sortIconCharacter + "<a href=\"" + URL_SORT + dbColumnName + "\">" + columnLabel + "</a></td>";
 
             // One cell for the filter icon.
-            String filter = "<td class=\"" + filterIconClass + "\"><a href=\"" + URL_FILTER + dbColumnName + "\"a>" + filterIconCharacter + "</a></td>";
+            String filter = "<td class=\"" + filterIconClass + "\"><a href=\"" + URL_FILTER + dbColumnName + "\">" + filterIconCharacter + "</a></td>";
 
             // Write out the table cell for this column header.
             mPrintWriter.println("    <th><table><tr>" + sort + filter + "</tr></table></th>");
