@@ -87,6 +87,7 @@ public class HTMLExport extends TableFileExport {
         String columnCss = mContext.getString(R.string.css_template, getColumnCss());
 
         mPrintWriter.println(mContext.getString(R.string.css));
+        mPrintWriter.println(mContext.getString(R.string.css_api_level_custom));
         mPrintWriter.println(mContext.getString(R.string.css_themed));
         mPrintWriter.println(columnCss);
         if (mFixedTableHeight != null) {

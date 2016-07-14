@@ -32,7 +32,6 @@ table {
  border-spacing: 0px;
 }
 .main-table {
- width: 100%;
  border: 1px #fd8900 solid;
  table-layout: fixed;
 }
@@ -44,7 +43,7 @@ table {
  table-layout:fixed;
 }
 .column_heading {
- display: inline-block;
+ display: block;
  padding-right: 3em;
 }
 th {
@@ -54,6 +53,7 @@ th {
  font-weight: bold;
  text-align: left;
  position: relative;
+ height: 58px; /* height actually behaves as a min-height */
 }
 a:link, a:visited {
  color: #fd8900;
@@ -73,9 +73,6 @@ a.filter_icon, a.filter_icon:link, a.filter_icon:visited {
  display:inline;
  text-decoration:none;
  font-size: 3em;
- position: absolute;
- top: 0px;
- right: 0px;
  padding-right: 8px;
 }
 th, .table-data tr td {
@@ -122,11 +119,18 @@ body {
 </style>]]>
 </string>
 
-    <!-- If we need to add more CSS content, this string can be used to add the surrounding style tag -->
+    <!-- If we need to add more CSS content programmatically, this string can be used to add the surrounding style tag -->
     <string name="css_template" translatable="false">
 <![CDATA[
 <style type="text/css">
 %s
+</style>]]>
+    </string>
+
+    <!-- CSS-styles specific for different android versions. This will be overridden in values-vX folders. -->
+    <string name="css_api_level_custom" translatable="false">
+<![CDATA[
+<style type="text/css">
 </style>]]>
     </string>
 
