@@ -23,17 +23,20 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import android.content.Context;
-
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.FormatterFactory.FormatterStyle;
+import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences.SortOrder;
@@ -49,17 +52,28 @@ public class HTMLExport extends TableFileExport {
     public static final String URL_SORT = SCHEME_NETMON + "//sort";
     public static final String URL_FILTER = SCHEME_NETMON + "//filter";
     private static final String HTML_FILE = "networkmonitor.html";
+    private final int mHeight;
     private PrintWriter mPrintWriter;
 
     /**
      * @param external if true, the file will be exported to the sd card. Otherwise it will written to the application's internal storage.
      */
     public HTMLExport(Context context, boolean external) {
+        this(context, external, -1);
+    }
+
+    /**
+     * @param external if true, the file will be exported to the sd card. Otherwise it will written to the application's internal storage.
+     * @param height the height, in pixels, of the table to output.
+     */
+    public HTMLExport(Context context, boolean external, int height) {
         super(context, new File(external ? context.getExternalFilesDir(null) : context.getFilesDir(), HTML_FILE), FormatterStyle.XML);
+        mHeight = height;
     }
 
     @Override
     void writeHeader(String[] columnLabels) {
+
         try {
             mPrintWriter = new PrintWriter(mFile, "utf-8");
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
@@ -69,25 +83,32 @@ public class HTMLExport extends TableFileExport {
         mPrintWriter.println("<!DOCTYPE html>");
         mPrintWriter.println("<html>");
         mPrintWriter.println("  <head>");
-        mPrintWriter.println(mContext.getString(R.string.css));
         mPrintWriter.println("    <title>" + mContext.getString(R.string.app_name) + "</title>");
+        String columnCss = getColumnCss();
+        String templateCss = mContext.getString(R.string.css);
+        String height = mHeight > 0 ? mHeight + "px" : "100vh";
+        String css = templateCss
+                .replace("#COLUMN_CSS#", columnCss)
+                .replace("#HEIGHT#", height);
+
+        mPrintWriter.println(css);
         mPrintWriter.println(mContext.getString(R.string.css_themed));
         mPrintWriter.println("  </head><body>");
-        mPrintWriter.println("<table><thead>");
-
-        mPrintWriter.println("  <tr>");
+        mPrintWriter.println("<table class='main-table'>");
+        mPrintWriter.println(getColgroup(columnLabels.length));
+        mPrintWriter.println("  <thead><tr>");
         SortPreferences sortPreferences = NetMonPreferences.getInstance(mContext).getSortPreferences();
-        mPrintWriter.println("    <th><table><tr><td></td></tr></table></th>");
+        mPrintWriter.println("    <th></th>");
         for (String columnLabel : columnLabels) {
             String dbColumnName = NetMonColumns.getColumnName(mContext, columnLabel);
-            String labelClass = "";
+            String labelClass = "column_heading";
 
             // Indicate if this is the sorting column: specify a particular css style
             // for the label, and show an up or down arrow depending on if we're
             // sorting ascending or descending.
             String sortIconCharacter = "";
             if (dbColumnName.equals(sortPreferences.sortColumnName)) {
-                labelClass = "sort_column";
+                labelClass += " sort_column";
                 if (sortPreferences.sortOrder == SortOrder.DESC) sortIconCharacter = mContext.getString(R.string.icon_sort_desc);
                 else
                     sortIconCharacter = mContext.getString(R.string.icon_sort_asc);
@@ -107,15 +128,21 @@ public class HTMLExport extends TableFileExport {
             }
 
             // One cell for the sort icon and column label.
-            String sort = "<td class=\"" + labelClass + "\">" + sortIconCharacter + "<a href=\"" + URL_SORT + dbColumnName + "\">" + columnLabel + "</a></td>";
+            String sort = sortIconCharacter + "<a class=\"" + labelClass + "\" href=\"" + URL_SORT + dbColumnName + "\">" + columnLabel + "</a>";
 
             // One cell for the filter icon.
-            String filter = "<td class=\"" + filterIconClass + "\"><a href=\"" + URL_FILTER + dbColumnName + "\">" + filterIconCharacter + "</a></td>";
+            String filter = "<a class=\"" + filterIconClass + "\" href=\"" + URL_FILTER + dbColumnName + "\">" + filterIconCharacter + "</a>";
 
             // Write out the table cell for this column header.
-            mPrintWriter.println("    <th><table><tr>" + sort + filter + "</tr></table></th>");
+            mPrintWriter.println("    <th>" + sort + filter + "</th>");
         }
         mPrintWriter.println("  </tr></thead><tbody>");
+        mPrintWriter.println("  <tr>");
+        // container-container?  :( Wish I could do this more cleanly/simply.
+        mPrintWriter.println("    <td class='table-data-container-container' colspan='" + (columnLabels.length + 1) + "'>");
+        mPrintWriter.println("      <div class='table-data-container'>");
+        mPrintWriter.println("        <table class='table-data'>");
+        mPrintWriter.println(getColgroup(columnLabels.length));
     }
 
     @Override
@@ -142,9 +169,85 @@ public class HTMLExport extends TableFileExport {
     @Override
     void writeFooter() {
         if (mPrintWriter == null) return;
+        mPrintWriter.println("</tbody></table></div></td></tr>");
         mPrintWriter.println("</tbody></table>");
         mPrintWriter.println("</body></html>");
         mPrintWriter.flush();
         mPrintWriter.close();
+    }
+
+
+    /**
+     * @return the longest word in the given string.
+     */
+    private static String findLongestWord(String s) {
+        String[] tokens = s.split(" ");
+        String longestWord = null;
+        for (String token : tokens) {
+            if(longestWord == null || token.length() > longestWord.length()) longestWord = token;
+        }
+        return longestWord;
+    }
+
+    /**
+     * @return the HTML &lt;colgroup&gt; tag including all the &lt;col&gt; child tags, used to size each column.
+     */
+    private String getColgroup(int numColumns) {
+        StringBuilder stringBuilder = new StringBuilder("  <colgroup>");
+        for (int i = 0; i <= numColumns; i++) {
+            stringBuilder.append("    <col class='col").append(i).append("'/>\n");
+        }
+        stringBuilder.append("  </colgroup>");
+        return stringBuilder.toString();
+
+    }
+
+    /**
+     * @return the CSS code for the styles of each column.  The styles only specify the column width.
+     */
+    private String getColumnCss() {
+        int[] columnWidths = getBestColumnWidths();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(".col0{width:50px}\n");
+        for (int i = 0; i < columnWidths.length; i++) {
+            stringBuilder.append(".col").append((i+1)).append("{width:").append((columnWidths[i] + 3)).append("em;}").append('\n');
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * Determines the best width for each column based on the column titles and the column data.
+     * @return an array of widths, in px, for each column in the table.
+     */
+    private int[] getBestColumnWidths() {
+        String[] usedColumnNames = (String[]) NetMonPreferences.getInstance(mContext).getSelectedColumns().toArray();
+        Uri uri = NetMonColumns.CONTENT_URI;
+        FilterPreferences.Selection selection = FilterPreferences.getSelectionClause(mContext);
+        String[] projection = new String[usedColumnNames.length];
+        for (int i =0; i < usedColumnNames.length; i++) {
+            projection[i] = "MAX(length(" + usedColumnNames[i] + "))";
+        }
+        int[] columnWidths = new int[usedColumnNames.length];
+        Cursor c = mContext.getContentResolver().query(uri, projection, selection.selectionString, selection.selectionArgs,
+                null);
+        if (c != null) {
+            try {
+                if (c.moveToFirst()) {
+                    for (int i=0; i < c.getColumnCount(); i++) {
+                        String columnLabel = NetMonColumns.getColumnLabel(mContext, usedColumnNames[i]);
+                        String longestWordInLabel = findLongestWord(columnLabel);
+                        int lengthLongestWordInLabel = longestWordInLabel.length();
+                        int lengthLongestValue = c.getInt(i);
+                        // The best column width is the largest of:
+                        // a) the largest data value
+                        // b) the largest word in the column title
+                        columnWidths[i] = Math.max(lengthLongestWordInLabel, lengthLongestValue);
+                    }
+                }
+            } finally {
+                c.close();
+            }
+        }
+        return columnWidths;
     }
 }

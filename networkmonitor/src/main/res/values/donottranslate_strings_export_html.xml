@@ -29,18 +29,36 @@ limitations under the License.
 <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
 <style type="text/css">
 table {
- border-collapse: collapse;
+ border-spacing: 0px;
+}
+.main-table {
+ width: 100%;
  border: 1px #fd8900 solid;
+ table-layout: fixed;
+}
+.table-data-container-container {
+ padding: 0px;
+}
+.table-data-container {
+ max-height: #HEIGHT#;
+ overflow-y:auto;
+ overflow-x:hidden;
+}
+.table-data {
+ width: 100%;
+ table-layout:fixed;
+}
+.column_heading {
+ display: inline-block;
+ padding-right: 3em;
 }
 th {
  background-color: #fff300;
  color: #fd8900;
- border: 1px #fd8900 solid;
-}
-th table , th table tr td{
- border: 0px #000 solid;
  white-space: pre-wrap;
  font-weight: bold;
+ text-align: left;
+ position: relative;
 }
 a:link, a:visited {
  color: #fd8900;
@@ -48,23 +66,24 @@ a:link, a:visited {
 a:hover, a:active {
  color: #886600;
 }
-td.sort_column, td.sort_column a:link, td.sort_column a:visited {
+a.sort_column, a.sort_column:link, a.sort_column:visited {
  color: #553300;
  display:inline;
 }
-td.filtered_column_label {
+a.filtered_column_label {
  font-style: italic;
 }
-td.filter_icon, td.filter_icon a:link, td.filter_icon a:visited {
+a.filter_icon, a.filter_icon:link, a.filter_icon:visited {
  color: #fd8900;
  display:inline;
  text-decoration:none;
- font-size: 1.7em;
- padding-left: 7px;
- padding-right: 7px;
+ font-size: 3em;
+ position: absolute;
+ top: 0px;
+ right: 0px;
+ padding-right: 8px;
 }
-td {
- white-space: pre;
+th, .table-data tr td {
  border-right: 1px #fd8900 solid;
  padding-left: 5px;
  padding-right: 5px;
@@ -78,8 +97,26 @@ td.fail {
 td.slow {
  font-weight:bold;
 }
+#COLUMN_CSS#
 </style>]]>
+    </string>
 
+    <string name="fixed_header_css" translatable="false">
+<![CDATA[
+<style type="text/css">
+html {
+ overflow-y: hidden;
+}
+body {
+ position: relative;
+ overflow-y: hidden;
+}
+.table-data-container {
+ max-height: #MAX_HEIGHT#;
+ overflow-y:auto;
+ overflow-x:hidden;
+}
+</style>]]>
 </string>
     <string name="css_themed" translatable="false">
 <![CDATA[

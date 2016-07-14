@@ -171,13 +171,14 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         assert progressBar != null;
         progressBar.setVisibility(View.VISIBLE);
         startRefreshIconAnimation();
+        final int height = ((View) mWebView.getParent()).getHeight();
         AsyncTask<Void, Void, File> asyncTask = new AsyncTask<Void, Void, File>() {
 
             @Override
             protected File doInBackground(Void... params) {
                 Log.v(TAG, "loadHTMLFile:doInBackground");
                 // Export the DB to the HTML file.
-                HTMLExport htmlExport = new HTMLExport(LogActivity.this, false);
+                HTMLExport htmlExport = new HTMLExport(LogActivity.this, false, height);
                 int recordCount = NetMonPreferences.getInstance(LogActivity.this).getFilterRecordCount();
                 return htmlExport.export(recordCount, null);
             }
