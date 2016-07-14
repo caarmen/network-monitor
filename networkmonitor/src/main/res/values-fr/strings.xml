@@ -68,7 +68,7 @@ limitations under the License.
 
     <!-- Notification -->
     <string name="service_notification_ticker">Network Monitor recueille des données.</string>
-    <string name="service_notification_text">Tests de connexion en cours.</string>
+    <string name="service_notification_text">Tests de connexion en cours</string>
     <string name="service_notification_action_stop">Arrêt</string>
     <string name="service_notification_action_logs">Fichier journal</string>
 

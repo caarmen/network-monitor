@@ -74,7 +74,7 @@ limitations under the License.
 
     <!-- Notification -->
     <string name="service_notification_ticker">Network Monitor is collecting data</string>
-    <string name="service_notification_text">Collecting data.</string>
+    <string name="service_notification_text">Collecting data</string>
     <string name="service_notification_action_stop">Stop</string>
     <string name="service_notification_action_logs">Logs</string>
 

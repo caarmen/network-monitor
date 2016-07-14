@@ -67,7 +67,7 @@ limitations under the License.
     <string name="about_contributions">Contribuciones:</string>
 
     <!-- Notification -->
-    <string name="service_notification_ticker">Network Monitor recoge datos.</string>
+    <string name="service_notification_ticker">Network Monitor recoge datos</string>
     <string name="service_notification_text">Recoge datos.</string>
     <string name="service_notification_action_stop">Apagar</string>
     <string name="service_notification_action_logs">Archivo log</string>
