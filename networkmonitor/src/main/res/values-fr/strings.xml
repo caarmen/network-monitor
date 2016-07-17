@@ -27,6 +27,11 @@ limitations under the License.
     <string name="app_name">Network Monitor</string>
     <string name="log_title">Fichier journal</string>
 
+    <string name="app_warning_title">Attention !</string>
+    <string name="app_warning_message">Activer le service peut engendrer une forte utilisation de la batterie et des données mobiles.</string>
+    <string name="app_warning_ok">Ça me va !</string>
+    <string name="app_warning_cancel">Aïe, j\'ai peur</string>
+
     <!-- Strings for the log screen -->
     <string name="action_share">Partager le fichier journal</string>
     <string name="action_refresh">Actualiser</string>

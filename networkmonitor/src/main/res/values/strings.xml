@@ -28,6 +28,11 @@ limitations under the License.
     <string name="app_name">Network Monitor</string>
     <string name="log_title">Log file</string>
 
+    <string name="app_warning_title">Warning!</string>
+    <string name="app_warning_message">Activating the service may result in high battery and data consumption.</string>
+    <string name="app_warning_ok">Fine with me!</string>
+    <string name="app_warning_cancel">Yikes, nevermind</string>
+
     <!-- Strings for the log screen -->
     <string name="action_share">Share log file</string>
     <string name="action_refresh">Refresh</string>

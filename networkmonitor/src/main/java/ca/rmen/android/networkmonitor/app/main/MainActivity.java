@@ -63,7 +63,10 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
-public class MainActivity extends AppCompatActivity implements ConfirmDialogFragment.DialogButtonListener, ChoiceDialogFragment.DialogItemListener {
+public class MainActivity extends AppCompatActivity
+        implements ConfirmDialogFragment.DialogButtonListener,
+        ChoiceDialogFragment.DialogItemListener,
+        WarningDialogFragment.DialogButtonListener {
     private static final String TAG = Constants.TAG + MainActivity.class.getSimpleName();
     private GPSVerifier mGPSVerifier;
     private NetMonPreferenceFragmentCompat mPreferenceFragment;
@@ -205,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
             if (NetMonPreferences.PREF_SERVICE_ENABLED.equals(key)) {
                 if (sharedPreferences.getBoolean(NetMonPreferences.PREF_SERVICE_ENABLED, NetMonPreferences.PREF_SERVICE_ENABLED_DEFAULT)) {
                     mGPSVerifier.verifyGPS();
-                    startService(new Intent(MainActivity.this, NetMonService.class));
+                    WarningDialogFragment.show(MainActivity.this);
                     MainActivityPermissionsDispatcher.requestPermissionsWithCheck(MainActivity.this);
                 }
             } else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
@@ -245,6 +248,16 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
 
     }
 
+    @Override
+    public void onAppWarningOkClicked() {
+        startService(new Intent(MainActivity.this, NetMonService.class));
+    }
+
+    @Override
+    public void onAppWarningCancelClicked() {
+        NetMonPreferences.getInstance(this).setServiceEnabled(false);
+    }
+
     private final Preference.OnPreferenceClickListener mOnPreferenceClickListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
@@ -257,4 +270,5 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
             return false;
         }
     };
+
 }
