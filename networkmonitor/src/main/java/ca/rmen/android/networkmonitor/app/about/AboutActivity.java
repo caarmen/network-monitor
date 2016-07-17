@@ -8,7 +8,7 @@
  * repository.
  *
  * Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
- * Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2013-2016 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,7 +78,8 @@ public class AboutActivity extends AppCompatActivity {
         // In night mode, we need to make the icons lighter, or else they don't appear.
         // We could just have different icon resources for night and day themes, but
         // I didn't feel like regenerating the icons :)
-        tintCompoundDrawables(R.id.tv_about_bug,
+        tintCompoundDrawables(R.id.tv_about_legal,
+            R.id.tv_about_bug,
             R.id.tv_about_contributions,
             R.id.tv_about_libraries,
             R.id.tv_about_rate,
@@ -161,5 +162,10 @@ public class AboutActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.w(TAG, "Couldn't show license dialog", e);
         }
+    }
+
+    @SuppressWarnings("UnusedParameters")
+    public void onLegalClicked(View v) {
+        startActivity(new Intent(this, LicenseActivity.class));
     }
 }
