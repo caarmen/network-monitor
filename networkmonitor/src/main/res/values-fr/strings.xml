@@ -27,6 +27,12 @@ limitations under the License.
     <string name="app_name">Network Monitor</string>
     <string name="log_title">Fichier journal</string>
 
+    <string name="app_warning_title">Attention !</string>
+    <string name="app_warning_message">Activer le service peut engendrer une forte utilisation de la batterie et des données mobiles.</string>
+    <string name="app_warning_ok">Ça me va !</string>
+    <string name="app_warning_cancel">Aïe, j\'ai peur</string>
+    <string name="app_warning_stfu">Ne plus montrer ce message</string>
+
     <!-- Strings for the log screen -->
     <string name="action_share">Partager le fichier journal</string>
     <string name="action_refresh">Actualiser</string>
@@ -60,11 +66,13 @@ limitations under the License.
     <string name="about_title">À propos</string>
     <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2016 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
     <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2014 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
+    <string name="about_legal">License/avertissement</string>
     <string name="about_projectUrl">Code source : https://github.com/caarmen/network-monitor</string>
     <string name="about_issues">Remonter des anomalies :\nhttps://github.com/caarmen/network-monitor/issues</string>
     <string name="about_rate">Donnez votre avis sur le Play Store :\nhttps://play.google.com/store/apps/details?id=ca.rmen.android.networkmonitor</string>
     <string name="about_libraries">Librairies externes</string>
     <string name="about_contributions">Contributions :</string>
+    <string name="license_header">License Network Monitor</string>
 
     <!-- Notification -->
     <string name="service_notification_ticker">Network Monitor recueille des données.</string>

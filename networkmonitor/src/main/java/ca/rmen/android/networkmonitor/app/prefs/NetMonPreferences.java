@@ -104,6 +104,9 @@ public class NetMonPreferences {
     private static final String PREF_EXPORT_GNUPLOT_SERIES_DEFAULT = "wifi_ssid";
     private static final String PREF_EXPORT_GNUPLOT_Y_AXIS_DEFAULT = "wifi_rssi";
 
+    private static final String PREF_SHOW_APP_WARNING = "show_app_warning";
+    private static final boolean PREF_SHOW_APP_WARNING_DEFAULT = true;
+
     private static final String PREF_EXPORT_FOLDER = "PREF_EXPORT_FOLDER";
     private static final String PREF_IMPORT_FOLDER = "PREF_IMPORT_FOLDER";
 
@@ -405,6 +408,14 @@ public class NetMonPreferences {
 
     public void setImportFolder(File folder) {
         setStringPreference(PREF_IMPORT_FOLDER, folder.getAbsolutePath());
+    }
+
+    public boolean getShowAppWarning() {
+        return mSharedPrefs.getBoolean(PREF_SHOW_APP_WARNING, PREF_SHOW_APP_WARNING_DEFAULT);
+    }
+
+    public void setShowApppWarning(boolean value) {
+        setBooleanPreference(PREF_SHOW_APP_WARNING, value);
     }
 
     public NetMonTheme getTheme() {
