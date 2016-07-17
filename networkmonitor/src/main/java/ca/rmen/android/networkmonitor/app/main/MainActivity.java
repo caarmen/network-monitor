@@ -208,7 +208,11 @@ public class MainActivity extends AppCompatActivity
             if (NetMonPreferences.PREF_SERVICE_ENABLED.equals(key)) {
                 if (sharedPreferences.getBoolean(NetMonPreferences.PREF_SERVICE_ENABLED, NetMonPreferences.PREF_SERVICE_ENABLED_DEFAULT)) {
                     mGPSVerifier.verifyGPS();
-                    WarningDialogFragment.show(MainActivity.this);
+                    if (prefs.getShowAppWarning()) {
+                        WarningDialogFragment.show(MainActivity.this);
+                    } else {
+                        onAppWarningOkClicked();
+                    }
                     MainActivityPermissionsDispatcher.requestPermissionsWithCheck(MainActivity.this);
                 }
             } else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {

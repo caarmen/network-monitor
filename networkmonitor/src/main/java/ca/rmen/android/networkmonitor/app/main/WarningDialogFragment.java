@@ -25,17 +25,19 @@ package ca.rmen.android.networkmonitor.app.main;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
-import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.CheckBox;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -61,7 +63,8 @@ public class WarningDialogFragment extends DialogFragment { // NO_UCD (use defau
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.app_warning_title);
-        builder.setView(R.layout.warning_dialog);
+        final View view = LayoutInflater.from(getActivity()).inflate(R.layout.warning_dialog, null);
+        builder.setView(view);
         OnClickListener positiveListener = null;
         OnClickListener negativeListener = null;
         if (getActivity() instanceof DialogButtonListener) {
@@ -70,10 +73,13 @@ public class WarningDialogFragment extends DialogFragment { // NO_UCD (use defau
                 public void onClick(DialogInterface dialog, int which) {
                     Log.v(TAG, "onClick (positive button");
                     FragmentActivity activity = getActivity();
-                    if (activity == null)
+                    if (activity == null) {
                         Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
-                    else
+                    } else {
+                        CheckBox showWarningDialog = (CheckBox) view.findViewById(R.id.app_warning_cb_stfu);
+                        NetMonPreferences.getInstance(activity).setShowApppWarning(!showWarningDialog.isChecked());
                         ((DialogButtonListener) activity).onAppWarningOkClicked();
+                    }
                 }
             };
             negativeListener = new OnClickListener() {

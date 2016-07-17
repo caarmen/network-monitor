@@ -34,6 +34,13 @@ limitations under the License.
         android:layout_marginBottom="16dp"
         android:text="@string/app_warning_message" />
 
+    <CheckBox
+        android:id="@+id/app_warning_cb_stfu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/app_warning_stfu" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
