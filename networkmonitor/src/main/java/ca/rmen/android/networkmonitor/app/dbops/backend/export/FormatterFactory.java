@@ -66,7 +66,7 @@ public class FormatterFactory {
      * This formats values with a format which is common to all export types.
      */
     private static class DefaultFormatter implements Formatter {
-        public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss", Locale.US);
+        public final SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss", Locale.US);
         private final CellIdFormat mCellIdFormat;
 
         public DefaultFormatter(Context context) {
@@ -85,7 +85,7 @@ public class FormatterFactory {
             if (NetMonColumns.TIMESTAMP.equals(columnName)) {
                 long timestamp = c.getLong(columnIndex);
                 Date date = new Date(timestamp);
-                result = DATE_FORMAT.format(date);
+                result = mDateFormat.format(date);
             }
             // Format cell ids
             else if (NetMonColumns.CDMA_CELL_BASE_STATION_ID.equals(columnName) || NetMonColumns.CDMA_CELL_NETWORK_ID.equals(columnName)
