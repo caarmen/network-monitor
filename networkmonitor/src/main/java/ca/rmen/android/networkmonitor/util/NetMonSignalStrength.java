@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2013-2016 Carmen Alvarez (c@rmen.ca)
  * Copyright (C) 2010 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,6 +33,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoLte;
@@ -62,7 +63,7 @@ public class NetMonSignalStrength {
 
     private static final int GSM_SIGNAL_STRENGTH_GREAT = 12;
     private static final int GSM_SIGNAL_STRENGTH_GOOD = 8;
-    private static final int GSM_SIGNAL_STRENGTH_MODERATE = 8;// WTF? good = moderate?
+    private static final int GSM_SIGNAL_STRENGTH_MODERATE = 5;
 
     private final TelephonyManager mTelephonyManager;
     private final Context mContext;
@@ -195,12 +196,31 @@ public class NetMonSignalStrength {
         // signal, its better to show 0 bars to the user in such cases.
         // asu = 99 is a special case, where the signal strength is unknown.
         int asu = signalStrength.getGsmSignalStrength();
-        if (asu <= 2 || asu == 99) return SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
-        else if (asu >= GSM_SIGNAL_STRENGTH_GREAT) return SIGNAL_STRENGTH_GREAT;
-        else if (asu >= GSM_SIGNAL_STRENGTH_GOOD) return SIGNAL_STRENGTH_GOOD;
-        else if (asu >= GSM_SIGNAL_STRENGTH_MODERATE) return SIGNAL_STRENGTH_MODERATE;
-        else
-            return SIGNAL_STRENGTH_POOR;
+        if (asu > 0) {
+            if (asu <= 2 || asu == 99) return SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+            else if (asu >= GSM_SIGNAL_STRENGTH_GREAT) return SIGNAL_STRENGTH_GREAT;
+            else if (asu >= GSM_SIGNAL_STRENGTH_GOOD) return SIGNAL_STRENGTH_GOOD;
+            else if (asu >= GSM_SIGNAL_STRENGTH_MODERATE) return SIGNAL_STRENGTH_MODERATE;
+            else
+                return SIGNAL_STRENGTH_POOR;
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            // On a Huawei P9 Lite, getGsmSignalStrength() always returns 0, but the private
+            // apis getGsmLevel() and getLteLevel() don't.  Let's try them.
+            try {
+                if (mTelephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_LTE) {
+                    Method methodGetLteLevel = SignalStrength.class.getMethod("getLteLevel");
+                    return (Integer) methodGetLteLevel.invoke(signalStrength);
+                } else {
+                    Method methodGetGsmLevel = SignalStrength.class.getMethod("getGsmLevel");
+                    return (Integer) methodGetGsmLevel.invoke(signalStrength);
+                }
+            } catch (Throwable t) {
+                Log.v(TAG, "getGsmLevel or getLteLevel failed: " + t.getMessage(), t);
+                return SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+            }
+        } else {
+            return SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+        }
     }
 
     /**
@@ -208,16 +228,23 @@ public class NetMonSignalStrength {
      */
     private int getGsmDbm(SignalStrength signalStrength) {
         Log.v(TAG, "getGsmDbm" + signalStrength);
-        int dBm;
 
         int level = signalStrength.getGsmSignalStrength();
         int asu = level == 99 ? SIGNAL_STRENGTH_NONE_OR_UNKNOWN : level;
         if (asu != SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
-            dBm = -113 + 2 * asu;
+            return -113 + 2 * asu;
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            // On the Huawei P9 Lite, getGsmSignalStrength() returns 0 but getGsmDbm() returns a value.
+            try {
+                Method methodGetGsmDbm = SignalStrength.class.getMethod("getGsmDbm");
+                return (Integer) methodGetGsmDbm.invoke(signalStrength);
+            } catch (Throwable t) {
+                Log.v(TAG, "Couldn't execute getGsmDbm() " + t.getMessage(), t);
+                return SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+            }
         } else {
-            dBm = SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
+            return SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
         }
-        return dBm;
     }
 
     /**
