@@ -92,6 +92,7 @@ limitations under the License.
     <string name="missing_email_settings_info_dialog_message">Imposible enviar correos, porque hay campos no rellenados. La frecuencia de los correos ha sido reinicializado a \'Nunca\'"</string>
     <string name="warning_notification_ticker_email_failed">Error del envío del informe</string>
     <string name="warning_notification_message_email_failed">Imposible enviar el informe.</string>
+    <string name="email_help_file">file:///android_asset/email_help-es.html</string>
 
     <!-- Strings for the notification about a failed test -->
     <string name="warning_notification_ticker_test_failed">La prueba de conexión falló.</string>

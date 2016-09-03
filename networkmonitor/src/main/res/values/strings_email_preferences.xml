@@ -60,5 +60,7 @@ limitations under the License.
     <string name="pref_title_email_last_email_sent">Last e-mail sent</string>
     <string name="pref_summary_email_last_email_sent">%s</string>
     <string name="pref_value_email_report_format_db">Raw database</string>
+    <string name="pref_category_email_help">Help</string>
+    <string name="pref_title_email_help">Not receiving e-mails?</string>
 
 </resources>

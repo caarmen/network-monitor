@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2014 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2016 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,36 +21,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ca.rmen.android.networkmonitor.app.speedtest;
+package ca.rmen.android.networkmonitor.app.email;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 
-import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.util.Log;
 
 /**
- * A placeholder fragment containing a simple view.
+ * Activity which shows an HTML help for email.
  */
-public class SpeedTestAboutFragment extends Fragment {
-    private static final String TAG = Constants.TAG + SpeedTestAboutFragment.class.getSimpleName();
-
-    public SpeedTestAboutFragment() {}
+public class EmailHelpActivity extends AppCompatActivity {
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.v(TAG, "onCreateView");
-        View rootView = inflater.inflate(R.layout.fragment_speed_test_about, container, false);
-        WebView wv = (WebView) rootView.findViewById(R.id.webview);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_email_help);
+        WebView wv = (WebView) findViewById(R.id.webview);
         wv.setBackgroundColor(0);
         wv.getSettings().setDefaultFontSize(14);
-        wv.loadUrl(getString(R.string.speed_test_about_file));
-        return rootView;
+        wv.loadUrl(getString(R.string.email_help_file));
     }
 
+    @SuppressWarnings("UnusedParameters")
+    public void okClicked(View view) {
+        finish();
+    }
 }

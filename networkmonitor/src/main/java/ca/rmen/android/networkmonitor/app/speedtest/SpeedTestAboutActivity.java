@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2014-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2014-2016 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,11 @@
 package ca.rmen.android.networkmonitor.app.speedtest;
 
 import android.content.Intent;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.webkit.WebView;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
@@ -44,11 +44,11 @@ public class SpeedTestAboutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speed_test_about);
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.container, new SpeedTestAboutFragment()).commit();
-        }
+        WebView wv = (WebView) findViewById(R.id.webview);
+        wv.setBackgroundColor(0);
+        wv.getSettings().setDefaultFontSize(14);
+        wv.loadUrl(getString(R.string.speed_test_about_file));
     }
 
     @SuppressWarnings("UnusedParameters")
