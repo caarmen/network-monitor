@@ -92,6 +92,7 @@ limitations under the License.
     <string name="missing_email_settings_info_dialog_message">Impossible d\'envoyer des courriels, parce qu\'au moins un des champs n\'a pas été rempli. La fréquence de l\'envoi des rapports a été mis à \'jamais\'"</string>
     <string name="warning_notification_ticker_email_failed">Erreur de l\'envoi du rapport</string>
     <string name="warning_notification_message_email_failed">Impossible d\'envoyer le rapport.</string>
+    <string name="email_help_file">file:///android_asset/email_help-fr.html</string>
 
     <!-- Strings for the notification about a failed test -->
     <string name="warning_notification_ticker_test_failed">Test de connexion echoué.</string>
