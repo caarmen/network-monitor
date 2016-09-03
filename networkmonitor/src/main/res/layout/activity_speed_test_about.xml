@@ -25,8 +25,11 @@ limitations under the License.
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:divider="?android:attr/dividerHorizontal"
     android:orientation="vertical"
-    tools:context="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestAboutActivity">
+    android:showDividers="middle"
+    tools:context="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestAboutActivity"
+    tools:ignore="UnusedAttribute">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -41,14 +44,18 @@ limitations under the License.
             android:id="@+id/webview"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@null" />
+            android:background="@null"
+            android:fadeScrollbars="false" />
 
     </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:divider="?android:attr/dividerVertical"
+        android:dividerPadding="12dp"
+        android:orientation="horizontal"
+        android:showDividers="middle">
 
         <Button
             android:id="@+id/button_ok"
