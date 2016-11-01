@@ -8,7 +8,7 @@ This source is part of the
                              /___/
 repository.
 
-Copyright (C) 2014-2016 Carmen Alvarez (c@rmen.ca)
+Copyright (C) 2016 Carmen Alvarez (c@rmen.ca)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,8 +23,5 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <resources>
-    <color name="netmon_color_dark">#ff974c00</color>
-    <color name="netmon_color">#ffe68f3e</color>
-    <color name="netmon_color_light">#a5ffa047</color>
-    <integer name="icon_tint">0x0</integer>
+    <integer name="icon_tint">0xFFFFFF</integer>
 </resources>

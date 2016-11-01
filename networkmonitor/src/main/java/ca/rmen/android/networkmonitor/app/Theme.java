@@ -29,6 +29,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatDelegate;
 import android.widget.TextView;
 
+import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 
 public final class Theme {
@@ -58,10 +59,7 @@ public final class Theme {
      */
     public static void tintCompoundDrawables(Context context, TextView textView) {
         Drawable[] compoundDrawables = textView.getCompoundDrawables();
-        int colorFilter = 0x0;
-        if (NetMonPreferences.getInstance(context).getTheme() == NetMonPreferences.NetMonTheme.NIGHT) {
-            colorFilter = 0xFFFFFF;
-        }
+        int colorFilter = context.getResources().getInteger(R.integer.icon_tint);
         for (Drawable compoundDrawable : compoundDrawables) {
             if (compoundDrawable != null) {
                 compoundDrawable.setColorFilter(new LightingColorFilter(0, colorFilter));
