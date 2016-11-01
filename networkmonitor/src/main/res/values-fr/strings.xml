@@ -114,6 +114,10 @@ limitations under the License.
 
     <!-- Strings about db operations -->
     <string name="db_op_in_progress">(%s en cours)</string>
+    <string name="permission_data_usage_permission_title">Pop-up agaçante mais nécessaire</string>
+    <string name="permission_read_phone_state_message"><![CDATA[<b>¯\\_(ツ)_/¯</b><br><br>\nNetwork Monitor a besoin d\'accèder à l\'état du terminal afin de collecter des statistiques sur la consommation des données par les applications. Sans cet accès, ces champs seront absents du fichier journal. Network Monitor <b>ne placera aucun appel</b> et ne collectera que le nombre d\'octets transmis par chaque application.]]></string>
+    <string name="permission_data_usage_denied">Les informations sur la consommation de données seront absentes du fichier journal.</string>
+    <string name="permission_data_usage_message"><![CDATA[<b>¯\\_(ツ)_/¯</b><br><br>\nDans l\'écran suivant, veuillez donner accès à Network Monitor aux statistiques de consommation de données.]]></string>
     <string name="permission_button_allow">Continuer</string>
     <string name="permission_button_deny">Annuler</string>
     <string name="permission_external_storage_rationale">Network Monitor a besoin d\'accéder au stockage externe.  Sans cet accès, seuls les fichiers internes de l\'application seront montrés.</string>

@@ -28,7 +28,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import ca.rmen.android.networkmonitor.R;
@@ -93,6 +95,8 @@ public class NetMonColumns implements BaseColumns {
     public static final String NETWORK_INTERFACE = "network_interface";
     public static final String IPV4_ADDRESS = "ipv4_address";
     public static final String IPV6_ADDRESS = "ipv6_address";
+    public static final String MOST_CONSUMING_APP_NAME = "most_consuming_app_name";
+    public static final String MOST_CONSUMING_APP_BYTES = "most_consuming_app_bytes";
     public static final String BATTERY_LEVEL = "battery_level";
     public static final String DOWNLOAD_SPEED = "download_speed";
     public static final String UPLOAD_SPEED = "upload_speed";
@@ -102,7 +106,15 @@ public class NetMonColumns implements BaseColumns {
      * @return the list of column names in the main table. This returns the technical names of the columns, as they appear in the DB.
      */
     public static String[] getColumnNames(Context context) {
-        return context.getResources().getStringArray(R.array.db_columns);
+        String [] allColumnNames = context.getResources().getStringArray(R.array.db_columns);
+        List<String> newerApiColumnNames = getNewerApiColumns(context);
+        List<String> result = new ArrayList<>();
+        for (String columnName : allColumnNames) {
+            if (!newerApiColumnNames.contains(columnName)) {
+                result.add(columnName);
+            }
+        }
+        return result.toArray(new String[0]);
     }
 
     /**
@@ -136,10 +148,14 @@ public class NetMonColumns implements BaseColumns {
         String[] columnNames = context.getResources().getStringArray(R.array.db_columns);
         String[] hiddenColumnNames = context.getResources().getStringArray(R.array.db_columns_hide);
         List<String> hiddenColumnNamesList = Arrays.asList(hiddenColumnNames);
+        List<String> newerApiColumnNames = getNewerApiColumns(context);
         String[] result = new String[columnNames.length - hiddenColumnNames.length];
         int i = 0;
         for (String columnName : columnNames) {
-            if (!hiddenColumnNamesList.contains(columnName)) result[i++] = columnName;
+            if (!hiddenColumnNamesList.contains(columnName)
+                    && !newerApiColumnNames.contains(columnName)) {
+                result[i++] = columnName;
+            }
         }
         return result;
     }
@@ -164,7 +180,15 @@ public class NetMonColumns implements BaseColumns {
     }
 
     public static String[] getFilterableColumns(Context context) {
-        return context.getResources().getStringArray(R.array.filterable_columns);
+        String[] filterableColumns = context.getResources().getStringArray(R.array.filterable_columns);
+        List<String> newerApiColumns = getNewerApiColumns(context);
+        List<String> result = new ArrayList<>();
+        for (String column : filterableColumns) {
+            if (!newerApiColumns.contains(column)) {
+                result.add(column);
+            }
+        }
+        return result.toArray(new String[0]);
     }
 
     public static boolean isColumnFilterable(Context context, String columnName) {
@@ -172,6 +196,10 @@ public class NetMonColumns implements BaseColumns {
         for (String filterableColumn : filterableColumns)
             if (columnName.equals(filterableColumn)) return true;
         return false;
+    }
+
+    private static List<String> getNewerApiColumns(Context context) {
+        return Arrays.asList(context.getResources().getStringArray(R.array.newer_api_db_columns));
     }
 
     static final String DEFAULT_ORDER = _ID;

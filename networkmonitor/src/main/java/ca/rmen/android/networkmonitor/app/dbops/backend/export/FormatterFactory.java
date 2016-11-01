@@ -68,8 +68,10 @@ public class FormatterFactory {
     private static class DefaultFormatter implements Formatter {
         public final SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss", Locale.US);
         private final CellIdFormat mCellIdFormat;
+        private final Context mContext;
 
         public DefaultFormatter(Context context) {
+            mContext = context;
             mCellIdFormat = NetMonPreferences.getInstance(context).getCellIdFormat();
             Log.v(TAG, "Constructor: cellIdFormat = " + mCellIdFormat);
         }
@@ -114,6 +116,15 @@ public class FormatterFactory {
                 double value = c.getDouble(columnIndex);
                 result = String.valueOf(value);
                 if ("0.0".equals(result)) result = "";
+            }
+            // bytes
+            else if (NetMonColumns.MOST_CONSUMING_APP_BYTES.equals(columnName)) {
+                long bytes = c.getLong(columnIndex);
+                if (bytes > 0) {
+                    result = android.text.format.Formatter.formatShortFileSize(mContext, bytes);
+                } else {
+                    result = "";
+                }
             }
             // Anything else: just return the raw value as a string
             else {

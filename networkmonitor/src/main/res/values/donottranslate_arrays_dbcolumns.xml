@@ -8,7 +8,7 @@ This source is part of the
                              /___/
 repository.
 
-Copyright (C) 2014-2015 Carmen Alvarez (c@rmen.ca)
+Copyright (C) 2014-2016 Carmen Alvarez (c@rmen.ca)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -78,6 +78,8 @@ limitations under the License.
         <item>ipv4_address</item>
         <item>ipv6_address</item>
         <item>battery_level</item>
+        <item>most_consuming_app_name</item>
+        <item>most_consuming_app_bytes</item>
         <item>download_speed</item>
         <item>upload_speed</item>
     </string-array>
@@ -85,6 +87,8 @@ limitations under the License.
         <item>gsm_ber</item>
         <!--item>evdo_ecio</item-->
         <item>lte_rsrq</item>
+        <item>most_consuming_app_name</item>
+        <item>most_consuming_app_bytes</item>
     </string-array>
     <string-array name="db_columns_profile_wifi">
         <item>timestamp</item>
@@ -196,6 +200,7 @@ limitations under the License.
         <item>wifi_rssi</item>
         <item>sim_operator</item>
         <item>network_operator</item>
+        <item>most_consuming_app_name</item>
     </string-array>
 
     <!-- These columns can be filtered: they do not have too many different possible values -->
@@ -246,6 +251,7 @@ limitations under the License.
         <item>ipv4_address</item>
         <item>ipv6_address</item>
         <item>battery_level</item>
+        <item>most_consuming_app_name</item>
     </string-array>
 
     <!-- These columns have numeric (integer or float) values -->
@@ -267,6 +273,14 @@ limitations under the License.
         <item>battery_level</item>
         <item>download_speed</item>
         <item>upload_speed</item>
+        <item>most_consuming_app_bytes</item>
+    </string-array>
+
+    <!-- these columns are too new to be used in this api level -->
+    <!-- this will be overridden in values-vX/ folders -->
+    <string-array name="newer_api_db_columns">
+        <item>most_consuming_app_name</item>
+        <item>most_consuming_app_bytes</item>
     </string-array>
 
 </resources>

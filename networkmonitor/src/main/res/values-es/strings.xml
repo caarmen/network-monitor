@@ -114,6 +114,10 @@ limitations under the License.
 
     <!-- Strings about db operations -->
     <string name="db_op_in_progress">(%s en curso)</string>
+    <string name="permission_data_usage_permission_title">Cuadro de diálogo fastidioso pero necesario</string>
+    <string name="permission_read_phone_state_message"><![CDATA[<b>¯\\_(ツ)_/¯</b><br><br>\nNetwork Monitor necesita acceder al estado del dispositivo para recoger estadísticas sobre la consumación de datos por las aplicaciones. Sin este acceso, el archivo log no incluirá estos campos. Network Monitor <b>no hará ninguna llamada</b> y recogerá sólo el nombre de bytes transmitidos por cada aplicación.]]></string>
+    <string name="permission_data_usage_denied">El archivo log no incluirá información sobre la consumación de datos por las aplicaciones.</string>
+    <string name="permission_data_usage_message"><![CDATA[<b>¯\\_(ツ)_/¯</b><br><br>\nEn la pantalla siguiente, conceder acceso a Network Monitor para leer las estadísticas de la consumación de datos por las aplicaciones.]]></string>
     <string name="permission_button_allow">Continuar</string>
     <string name="permission_button_deny">Cancelar</string>
     <string name="permission_external_storage_rationale">Network Monitor necesita acceder al almacenamiento externo.  Sin acceso, sólo podrá mostrar los ficheros internos de la aplicación.</string>

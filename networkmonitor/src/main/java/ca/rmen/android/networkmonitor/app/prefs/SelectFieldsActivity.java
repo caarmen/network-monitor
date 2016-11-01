@@ -23,9 +23,17 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
@@ -40,12 +48,24 @@ import java.util.List;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment;
+import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.prefs.SelectFieldsFragment.SelectFieldsFragmentListener;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
+import ca.rmen.android.networkmonitor.util.PermissionUtil;
+import ca.rmen.android.networkmonitor.util.TextUtil;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.RuntimePermissions;
 
-public class SelectFieldsActivity extends AppCompatActivity implements SelectFieldsFragmentListener { // NO_UCD (use default)
+@RuntimePermissions
+public class SelectFieldsActivity extends AppCompatActivity
+        implements SelectFieldsFragmentListener,
+        ConfirmDialogFragment.DialogButtonListener {
     private static final String TAG = Constants.TAG + SelectFieldsActivity.class.getSimpleName();
+    private static final int ACTION_REQUEST_PHONE_STATE_PERMISSION = 1;
+    private static final int ACTION_REQUEST_USAGE_PERMISSION = 2;
     private ListView mListView;
 
     @Override
@@ -145,17 +165,99 @@ public class SelectFieldsActivity extends AppCompatActivity implements SelectFie
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        Log.v(TAG, "onListItemClick: clicked on view " + v + " at position " + position + " with id " + id);
+    public void onListItemClick(ListView l, int position) {
+        Log.v(TAG, "onListItemClick: clicked on position " + position);
         View okButton = findViewById(R.id.ok);
         assert okButton != null;
+        okButton.setEnabled(false);
         SparseBooleanArray checkedItemPositions = l.getCheckedItemPositions();
         for (int i = 0; i < checkedItemPositions.size(); i++) {
             if (checkedItemPositions.get(checkedItemPositions.keyAt(i))) {
                 okButton.setEnabled(true);
-                return;
+                break;
             }
         }
-        okButton.setEnabled(false);
+
+        // We require permissions to collect data for some columns.
+        // First we need the READ_PHONE_STATE permission, which is managed like typical
+        // M dangerous permissions.
+        // Then we need the PACKAGE_USAGE_STATS permission, which we can only obtain by asking
+        // the user to grant us access in a specific system settings screen (Security -> Data Usage)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkedItemPositions.get(position)) {
+                SelectFieldsFragment.SelectedField selectedField
+                        = (SelectFieldsFragment.SelectedField) l.getAdapter().getItem(position);
+                if (selectedField.dbName.equals(NetMonColumns.MOST_CONSUMING_APP_NAME)
+                        || selectedField.dbName.equals(NetMonColumns.MOST_CONSUMING_APP_BYTES)) {
+                    requestPhoneStatePermission();
+                }
+            }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void requestPhoneStatePermission() {
+        if (!PermissionUtil.hasReadPhoneStatePermission(this)) {
+            DialogFragmentFactory.showConfirmDialog(
+                    this,
+                    getString(R.string.permission_data_usage_permission_title),
+                    TextUtil.fromHtml(getString(R.string.permission_read_phone_state_message)),
+                    ACTION_REQUEST_PHONE_STATE_PERMISSION,
+                    null);
+        } else if (!PermissionUtil.hasUsageStatsPermission(this)) {
+            requestUsagePermission();
+        }
+    }
+
+    @NeedsPermission({Manifest.permission.READ_PHONE_STATE})
+    @TargetApi(Build.VERSION_CODES.M)
+    void requestUsagePermission() {
+        Log.v(TAG, "Read phone state permission granted");
+        if (PermissionUtil.hasUsageStatsPermission(this)) {
+            Log.v(TAG, "Already have the usage stats permission");
+        } else {
+            // Need to post it.  Otherwise we end up with one of those exceptions about doing stuff
+            // after onSaveInstanceState was called.
+            new Handler().post(new Runnable(){
+                @Override
+                public void run() {
+                    DialogFragmentFactory.showConfirmDialog(
+                            SelectFieldsActivity.this,
+                            getString(R.string.permission_data_usage_permission_title),
+                            TextUtil.fromHtml(getString(R.string.permission_data_usage_message)),
+                            ACTION_REQUEST_USAGE_PERMISSION,
+                            null);
+                }
+            });
+        }
+    }
+
+    @OnPermissionDenied({Manifest.permission.READ_PHONE_STATE})
+    @TargetApi(Build.VERSION_CODES.M)
+    void onPermissionsDenied() {
+        Snackbar.make(getWindow().getDecorView().getRootView(), R.string.permission_data_usage_denied, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.M)
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        SelectFieldsActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    @Override
+    public void onOkClicked(int actionId, Bundle extras) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (actionId == ACTION_REQUEST_PHONE_STATE_PERMISSION) {
+                SelectFieldsActivityPermissionsDispatcher.requestUsagePermissionWithCheck(this);
+            } else if (actionId == ACTION_REQUEST_USAGE_PERMISSION) {
+                startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+            }
+        }
+    }
+
+    @Override
+    public void onCancelClicked(int actionId, Bundle extras) {
+        Snackbar.make(getWindow().getDecorView().getRootView(), R.string.permission_data_usage_denied, Snackbar.LENGTH_LONG).show();
     }
 }

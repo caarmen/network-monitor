@@ -77,6 +77,8 @@ limitations under the License.
     <string name="ipv4_address">Adresse IPv4</string>
     <string name="ipv6_address">Adresse IPv6</string>
     <string name="battery_level">Niveau de batterie</string>
+    <string name="most_consuming_app_name">L\'appli la plus gourmande</string>
+    <string name="most_consuming_app_bytes">L\'appli la plus gourmande (octets)</string>
     <string name="download_speed">Vitesse de réception (Mbps)</string>
     <string name="upload_speed">Vitesse d\'émission (Mbps)</string>
 

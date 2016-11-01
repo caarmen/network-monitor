@@ -78,6 +78,8 @@ limitations under the License.
     <string name="ipv4_address">Dirección IPv4</string>
     <string name="ipv6_address">Dirección IPv6</string>
     <string name="battery_level">Nivel de la batería</string>
+    <string name="most_consuming_app_name">Aplicación que consume más datos</string>
+    <string name="most_consuming_app_bytes">Aplicación que consume más datos (bytes)</string>
     <string name="download_speed">Velocidad de descarga (Mbps)</string>
     <string name="upload_speed">Velocidad de subida (Mbps)</string>
 
