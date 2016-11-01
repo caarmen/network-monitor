@@ -116,7 +116,7 @@ public class AboutActivity extends AppCompatActivity {
 
                     @Override
                     protected Boolean doInBackground(Void... params) {
-                        if (!Log.prepareLogFile()) {
+                        if (!Log.prepareLogFile(getApplicationContext())) {
                             return false;
                         }
                         // Bring up the chooser to share the file.

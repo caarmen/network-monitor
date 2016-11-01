@@ -80,12 +80,12 @@ public class GnuplotSettingsActivity extends AppCompatActivity {
         mFilterPreference.setTitle(getString(R.string.export_gnuplot_series_filter_title, seriesColumnLabel));
     }
 
-    public void onOk(View view) {
+    public void onOk(@SuppressWarnings("UnusedParameters") View view) {
         DBOpIntentService.startActionExport(this, DBOpIntentService.ExportFormat.GNUPLOT);
         finish();
     }
 
-    public void onCancel(View view) {
+    public void onCancel(@SuppressWarnings("UnusedParameters") View view) {
         finish();
     }
     private final Preference.OnPreferenceClickListener mOnPreferenceClickListener = new Preference.OnPreferenceClickListener() {

@@ -26,12 +26,9 @@ package ca.rmen.android.networkmonitor.app.about;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 
 public class LicenseActivity extends AppCompatActivity {
-
-    private static final String TAG = Constants.TAG + LicenseActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

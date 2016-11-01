@@ -26,11 +26,11 @@ package ca.rmen.android.networkmonitor.app.dbops.backend.clean;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.BaseColumns;
+import android.text.TextUtils;
+import android.util.SparseArray;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import ca.rmen.android.networkmonitor.Constants;
@@ -57,7 +57,7 @@ public class DBCompress implements DBOperation {
     public void execute(ProgressListener listener) {
         Log.v(TAG, "compress DB");
         Cursor c = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, null, null, null, BaseColumns._ID);
-        Map<Integer, String> previousRow = null;
+        SparseArray<String> previousRow = null;
         List<Integer> rowIdsToDelete = new ArrayList<>();
         int idLastRow = 0;
         int posLastNewRow = 0;
@@ -71,9 +71,9 @@ public class DBCompress implements DBOperation {
                 while (c.moveToNext() && !mIsCanceled.get()) {
                     int position = c.getPosition();
                     int id = c.getInt(idIndex);
-                    Map<Integer, String> currentRow = readRow(c, columnCount, timestampIndex, idIndex);
+                    SparseArray<String> currentRow = readRow(c, columnCount, timestampIndex, idIndex);
                     if (previousRow != null) {
-                        boolean rowsAreEqual = previousRow.equals(currentRow);
+                        boolean rowsAreEqual = areEqual(previousRow, currentRow);
                         if (rowsAreEqual) {
                             // If we've seen at least 3 consecutive identical rows,
                             // delete the previous row.
@@ -123,6 +123,15 @@ public class DBCompress implements DBOperation {
         }
     }
 
+    private static boolean areEqual(SparseArray<String> o1, SparseArray<String> o2) {
+        if (o1.size() != o2.size()) return false;
+        for (int i = 0; i < o1.size(); i++) {
+            if (o1.keyAt(i) != (o2.keyAt(i))) return false;
+            if (!TextUtils.equals(o1.get(i), o2.get(i))) return false;
+        }
+        return true;
+    }
+
     @Override
     public void cancel() {
         mIsCanceled.set(true);
@@ -131,8 +140,8 @@ public class DBCompress implements DBOperation {
     /**
      * @return a map of the row's values: the key is the column index, and the value the string representation of a cell.
      */
-    private static Map<Integer, String> readRow(Cursor c, int columnCount, int timestampIndex, int idIndex) {
-        Map<Integer, String> result = new HashMap<>();
+    private static SparseArray<String> readRow(Cursor c, int columnCount, int timestampIndex, int idIndex) {
+        SparseArray<String> result = new SparseArray<>();
         for (int i = 0; i < columnCount; i++) {
             if (i == timestampIndex || i == idIndex) continue;
             result.put(i, c.getString(i));

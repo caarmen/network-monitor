@@ -41,8 +41,6 @@ public class SpeedTestPreferences {
 
     private static final String TAG = Constants.TAG + SpeedTestPreferences.class.getSimpleName();
     private static final String FILE = "speedtest";
-    private final Context mContext;
-
 
     static final String PREF_SPEED_TEST_ENABLED = "PREF_SPEED_TEST_ENABLED";
     static final String PREF_SPEED_TEST_DOWNLOAD_URL = "PREF_SPEED_TEST_DOWNLOAD_URL";
@@ -73,8 +71,7 @@ public class SpeedTestPreferences {
     }
 
     private SpeedTestPreferences(Context context) {
-        mContext = context.getApplicationContext();
-        mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public boolean isEnabled() {
@@ -86,28 +83,28 @@ public class SpeedTestPreferences {
         mSharedPrefs.edit().putBoolean(PREF_SPEED_TEST_ENABLED, enabled).apply();
     }
 
-    public int getSpeedTestInterval() {
+    int getSpeedTestInterval() {
         return Integer.valueOf(mSharedPrefs.getString(PREF_SPEED_TEST_INTERVAL, PREF_SPEED_TEST_DEFAULT_INTERVAL));
     }
 
-    public SpeedTestUploadConfig getUploadConfig() {
+    public SpeedTestUploadConfig getUploadConfig(Context context) {
         String server = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_SERVER, "").trim();
         int port = Integer.valueOf(mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_PORT, PREF_SPEED_TEST_DEFAULT_UPLOAD_PORT));
         String user = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_USER, "").trim();
         String password = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_PASSWORD, "").trim();
         String path = mSharedPrefs.getString(PREF_SPEED_TEST_UPLOAD_PATH, PREF_SPEED_TEST_DEFAULT_UPLOAD_PATH).trim();
 
-        File file = FileUtil.getCacheFile(mContext, FILE);
+        File file = FileUtil.getCacheFile(context, FILE);
         return new SpeedTestUploadConfig(server, port, user, password, path, file);
     }
 
-    public SpeedTestDownloadConfig getDownloadConfig() {
+    public SpeedTestDownloadConfig getDownloadConfig(Context context) {
         String url = mSharedPrefs.getString(PREF_SPEED_TEST_DOWNLOAD_URL, "");
-        File file = FileUtil.getCacheFile(mContext, FILE);
+        File file = FileUtil.getCacheFile(context, FILE);
         return new SpeedTestDownloadConfig(url, file);
     }
 
-    public SpeedTestResult getLastDownloadResult() {
+    SpeedTestResult getLastDownloadResult() {
         return SpeedTestResult.read(mSharedPrefs, PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT);
     }
 

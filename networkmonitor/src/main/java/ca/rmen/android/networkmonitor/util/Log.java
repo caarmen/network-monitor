@@ -47,7 +47,7 @@ import android.os.Message;
 /**
  * A logger that appends messages to a file on the disk.<br/> {@link #init(Context, int, boolean)} must be called prior to using the other methods of this class
  * (typically this should be done in {@link Application#onCreate()}).<br/>
- * Before using the log file (for instance to send it to server), {@link #prepareLogFile()} must be called.
+ * Before using the log file (for instance to send it to server), {@link #prepareLogFile(Context)} must be called.
  * However, this is automatically called in case of an uncaught Exception.
  */
 public class Log {
@@ -75,7 +75,6 @@ public class Log {
     private static boolean sError = true;
     private static boolean sErrorLogged;
     private static boolean sAndroidLogD;
-    private static Context sContext;
 
     /**
      * If you are using ACRA, this method must be called <em>after</em> calling {@code ACRA.init()}.
@@ -84,10 +83,9 @@ public class Log {
      * @param androidLogD If {@code true}, then {@link #d(String, String)} and {@link #v(String, String)} calls will also log
      *            to the standard Android Logcat facility.
      */
-    public static void init(Context context, int maxLogSize, boolean androidLogD) {
+    public static void init(final Context context, int maxLogSize, boolean androidLogD) {
         if (!sError) logError("Fatal error! Init must be called only once.");
 
-        sContext = context;
         sMaxLogSize = maxLogSize;
         sAndroidLogD = androidLogD;
 
@@ -110,7 +108,7 @@ public class Log {
         Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread thread, Throwable ex) {
-                Log.prepareLogFile();
+                Log.prepareLogFile(context);
                 previousExceptionHandler.uncaughtException(thread, ex);
             }
         });
@@ -271,7 +269,7 @@ public class Log {
      * 
      * @return true if we were able to prepare the log file, false if some error occurred.
      */
-    public static boolean prepareLogFile() {
+    public static boolean prepareLogFile(Context context) {
         android.util.Log.d("Log", "Preparing log file...");
         BufferedInputStream in0 = null;
         BufferedInputStream in1 = null;
@@ -279,7 +277,7 @@ public class Log {
         try {
             if (sFile0.exists()) in0 = new BufferedInputStream(new FileInputStream(sFile0));
             if (sFile1.exists()) in1 = new BufferedInputStream(new FileInputStream(sFile1));
-            File outputFile = new File(sContext.getExternalFilesDir(null), FILE);
+            File outputFile = new File(context.getExternalFilesDir(null), FILE);
             out = new BufferedOutputStream(new FileOutputStream(outputFile, false));
 
             if (sFile0.exists() && sFile1.exists()) {
@@ -307,7 +305,7 @@ public class Log {
     }
 
     final static class LogHandler extends Handler {
-        public LogHandler(Looper looper) {
+        LogHandler(Looper looper) {
             super(looper);
         }
 
@@ -346,11 +344,20 @@ public class Log {
                         break;
                 }
                 Bundle data = msg.getData();
-                sWriter.write(data.getString(KEY_THREADID));
-                sWriter.write(" ");
-                sWriter.write(data.getString(KEY_TAG));
-                sWriter.write(' ');
-                sWriter.write(data.getString(KEY_MESSAGE));
+                String threadId = data.getString(KEY_THREADID);
+                String tag = data.getString(KEY_TAG);
+                String message = data.getString(KEY_MESSAGE);
+                if (threadId != null) {
+                    sWriter.write(threadId);
+                    sWriter.write(" ");
+                }
+                if (tag != null) {
+                    sWriter.write(tag);
+                    sWriter.write(" ");
+                }
+                if (message != null) {
+                    sWriter.write(message);
+                }
                 sWriter.write('\n');
                 Throwable throwable = (Throwable) data.getSerializable(KEY_THROWABLE);
                 if (throwable != null) {

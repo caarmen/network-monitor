@@ -50,10 +50,12 @@ public class UploadSpeedTestDataSource implements NetMonDataSource {
     private String mDisabledValue;
 
     private SpeedTestExecutionDecider mSpeedTestExecutionDecider;
+    private Context mContext;
 
     @Override
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
+        mContext = context;
         mPreferences = SpeedTestPreferences.getInstance(context);
         mDisabledValue = context.getString(R.string.speed_test_disabled);
         mSpeedTestExecutionDecider = new SpeedTestExecutionDecider(context);
@@ -70,7 +72,7 @@ public class UploadSpeedTestDataSource implements NetMonDataSource {
         ContentValues values = new ContentValues();
 
         if (mSpeedTestExecutionDecider.shouldExecute()) {
-            SpeedTestUploadConfig uploadConfig = mPreferences.getUploadConfig();
+            SpeedTestUploadConfig uploadConfig = mPreferences.getUploadConfig(mContext);
             if (!uploadConfig.isValid()) return values;
             SpeedTestResult result = SpeedTestUpload.upload(uploadConfig);
             if (result.status == SpeedTestStatus.SUCCESS) values.put(NetMonColumns.UPLOAD_SPEED, String.format(Locale.getDefault(), "%.3f", result.getSpeedMbps()));

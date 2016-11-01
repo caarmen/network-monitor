@@ -29,9 +29,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.v4.util.LongSparseArray;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -335,7 +334,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
                     null, null, null);
             if (cursor != null) {
                 // Keep track of all the rows we need to update.
-                Map<Long, ContentValues> mccMncUpdates = new HashMap<>();
+                LongSparseArray<ContentValues> mccMncUpdates = new LongSparseArray<>();
                 try {
                     int idIndex = cursor.getColumnIndex(NetMonColumns._ID);
                     int simOperatorIndex = cursor.getColumnIndex(NetMonColumns.SIM_OPERATOR);
@@ -358,8 +357,10 @@ public class NetMonDatabase extends SQLiteOpenHelper {
                 }
                 if (mccMncUpdates.size() > 0) {
                     Log.v(TAG, "Will update MCC/MNC columns for " + mccMncUpdates.size() + " records");
-                    for (long id : mccMncUpdates.keySet())
-                        db.update(NetMonColumns.TABLE_NAME, mccMncUpdates.get(id), NetMonColumns._ID + "=?", new String[] { String.valueOf(id) });
+                    for (int i = 0; i < mccMncUpdates.size(); i++) {
+                        long id = mccMncUpdates.keyAt(i);
+                        db.update(NetMonColumns.TABLE_NAME, mccMncUpdates.get(id), NetMonColumns._ID + "=?", new String[]{String.valueOf(id)});
+                    }
                     Log.v(TAG, "MCC/MNC update complete");
                 } else {
                     Log.v(TAG, "No MCC/MNC records to update");

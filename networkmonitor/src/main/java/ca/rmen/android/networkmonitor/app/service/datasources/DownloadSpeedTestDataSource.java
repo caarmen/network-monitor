@@ -46,6 +46,7 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class DownloadSpeedTestDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + DownloadSpeedTestDataSource.class.getSimpleName();
 
+    private Context mContext;
     private SpeedTestPreferences mPreferences;
     private String mDisabledValue;
     private SpeedTestExecutionDecider mSpeedTestExecutionDecider;
@@ -53,6 +54,7 @@ public class DownloadSpeedTestDataSource implements NetMonDataSource {
     @Override
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
+        mContext = context;
         mPreferences = SpeedTestPreferences.getInstance(context);
         mDisabledValue = context.getString(R.string.speed_test_disabled);
         mSpeedTestExecutionDecider = new SpeedTestExecutionDecider(context);
@@ -69,7 +71,7 @@ public class DownloadSpeedTestDataSource implements NetMonDataSource {
         ContentValues values = new ContentValues();
 
         if (mSpeedTestExecutionDecider.shouldExecute()) {
-            SpeedTestDownloadConfig downloadConfig = mPreferences.getDownloadConfig();
+            SpeedTestDownloadConfig downloadConfig = mPreferences.getDownloadConfig(mContext);
             if (!downloadConfig.isValid()) return values;
             SpeedTestResult result = SpeedTestDownload.download(downloadConfig);
             mPreferences.setLastDownloadResult(result);

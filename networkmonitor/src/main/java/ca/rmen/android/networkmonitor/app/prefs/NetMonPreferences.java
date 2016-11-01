@@ -342,7 +342,7 @@ public class NetMonPreferences {
     /**
      * Set the strategy we should use for requesting location updates.
      */
-    public void setLocationFetchingStrategy(LocationFetchingStrategy strategy) {
+    private void setLocationFetchingStrategy(LocationFetchingStrategy strategy) {
         setStringPreference(PREF_LOCATION_FETCHING_STRATEGY, strategy.name());
     }
 
@@ -414,7 +414,7 @@ public class NetMonPreferences {
         return mSharedPrefs.getBoolean(PREF_SHOW_APP_WARNING, PREF_SHOW_APP_WARNING_DEFAULT);
     }
 
-    public void setShowApppWarning(boolean value) {
+    public void setShowAppWarning(boolean value) {
         setBooleanPreference(PREF_SHOW_APP_WARNING, value);
     }
 

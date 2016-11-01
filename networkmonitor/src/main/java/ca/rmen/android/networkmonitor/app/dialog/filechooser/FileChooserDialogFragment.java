@@ -129,7 +129,7 @@ public class FileChooserDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 mSelectedFile = mAdapter.getItem(i);
-                if (mSelectedFile.isDirectory()) {
+                if (mSelectedFile != null && mSelectedFile.isDirectory()) {
                     mAdapter.load(mSelectedFile);
                     AlertDialog dialog = (AlertDialog) dialogInterface;
                     dialog.setTitle(FileChooser.getFullDisplayName(context, mSelectedFile));
@@ -179,10 +179,6 @@ public class FileChooserDialogFragment extends DialogFragment {
                 .create();
         dialog.setOnDismissListener(dismissListener);
         return dialog;
-    }
-
-    public void reload() {
-        mAdapter.load(mSelectedFile);
     }
 
     @Override

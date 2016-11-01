@@ -36,7 +36,6 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.Map;
 
 import ca.rmen.android.networkmonitor.Constants;
@@ -120,6 +119,7 @@ final class SettingsExportImport {
                 Snackbar.make(activity.getWindow().getDecorView().getRootView(), R.string.import_settings_starting, Snackbar.LENGTH_LONG).show();
             }
 
+            @SuppressLint("CommitPrefEdits")
             @Override
             protected Boolean doInBackground(Void... params) {
                 // Make a backup of our shared prefs in case the import file is corrupt.
@@ -134,7 +134,9 @@ final class SettingsExportImport {
                         .commit();
 
                 // Attempt the copy
-                if (!IoUtil.copy(activity, uri, outputFile)) {
+                if (IoUtil.copy(activity, uri, outputFile)) {
+                    Log.v(TAG, "Copy successful");
+                } else {
                     rollback();
                     return false;
                 }

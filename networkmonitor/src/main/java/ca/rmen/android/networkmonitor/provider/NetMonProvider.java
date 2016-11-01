@@ -36,8 +36,10 @@ import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.OperationApplicationException;
 import android.content.UriMatcher;
+import android.content.pm.ProviderInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteCursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -69,6 +71,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     private static final int URI_TYPE_UNIQUE_VALUES_ID = 3;
 
     private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
+    private Context mContext;
 
     static {
         URI_MATCHER.addURI(AUTHORITY, NetMonColumns.TABLE_NAME, URI_TYPE_NETWORKMONITOR);
@@ -81,8 +84,14 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
 
     @Override
     public boolean onCreate() {
-        mNetworkMonitorDatabase = new NetMonDatabase(getContext());
+        mNetworkMonitorDatabase = new NetMonDatabase(mContext);
         return true;
+    }
+
+    @Override
+    public void attachInfo(Context context, ProviderInfo info) {
+        mContext = context;
+        super.attachInfo(context, info);
     }
 
     @Override
@@ -107,7 +116,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
         final long rowId = mNetworkMonitorDatabase.getWritableDatabase().insert(table, null, values);
         String notify;
         if (rowId != -1 && ((notify = uri.getQueryParameter(QUERY_PARAMETER_NOTIFY)) == null || "true".equals(notify))) {
-            getContext().getContentResolver().notifyChange(uri, null);
+            mContext.getContentResolver().notifyChange(uri, null);
         }
         return uri.buildUpon().appendEncodedPath(String.valueOf(rowId)).build();
     }
@@ -132,7 +141,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
         }
         String notify;
         if (res != 0 && ((notify = uri.getQueryParameter(QUERY_PARAMETER_NOTIFY)) == null || "true".equals(notify))) {
-            getContext().getContentResolver().notifyChange(uri, null);
+            mContext.getContentResolver().notifyChange(uri, null);
         }
 
         return res;
@@ -145,7 +154,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
         final int res = mNetworkMonitorDatabase.getWritableDatabase().update(queryParams.table, values, queryParams.whereClause, selectionArgs);
         String notify;
         if (res != 0 && ((notify = uri.getQueryParameter(QUERY_PARAMETER_NOTIFY)) == null || "true".equals(notify))) {
-            getContext().getContentResolver().notifyChange(uri, null);
+            mContext.getContentResolver().notifyChange(uri, null);
         }
         return res;
     }
@@ -157,7 +166,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
         final int res = mNetworkMonitorDatabase.getWritableDatabase().delete(queryParams.table, queryParams.whereClause, selectionArgs);
         String notify;
         if (res != 0 && ((notify = uri.getQueryParameter(QUERY_PARAMETER_NOTIFY)) == null || "true".equals(notify))) {
-            getContext().getContentResolver().notifyChange(uri, null);
+            mContext.getContentResolver().notifyChange(uri, null);
         }
         return res;
     }
@@ -198,7 +207,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
             default:
                 return null;
         }
-        res.setNotificationUri(getContext().getContentResolver(), uri);
+        res.setNotificationUri(mContext.getContentResolver(), uri);
         logCursor(res, selectionArgs);
         return res;
     }
@@ -232,7 +241,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
             }
             db.setTransactionSuccessful();
             for (Uri uri : urisToNotify)
-                getContext().getContentResolver().notifyChange(uri, null);
+                mContext.getContentResolver().notifyChange(uri, null);
             return result;
         } finally {
             db.endTransaction();

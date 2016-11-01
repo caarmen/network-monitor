@@ -100,9 +100,9 @@ public class FileChooserActivity extends FragmentActivity implements FileChooser
 
     private void showFileChooserDialog() {
         Log.v(TAG, "showFileChooserDialog");
-        File initialFolder = NetMonPreferences.getInstance(this).getImportFolder();
-        if (!PermissionUtil.hasExternalStoragePermission(this)) {
-            initialFolder = getExternalFilesDir(null);
+        File initialFolder = getExternalFilesDir(null);
+        if (PermissionUtil.hasExternalStoragePermission(this)) {
+            initialFolder = NetMonPreferences.getInstance(this).getImportFolder();
         }
         DialogFragmentFactory.showFileChooserDialog(this, initialFolder, false, ACTION_CHOOSE_FILE);
     }

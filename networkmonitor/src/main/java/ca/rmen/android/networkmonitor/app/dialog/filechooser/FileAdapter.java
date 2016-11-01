@@ -26,6 +26,7 @@ package ca.rmen.android.networkmonitor.app.dialog.filechooser;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -80,9 +82,7 @@ class FileAdapter extends ArrayAdapter<File> {
                 }
                 if(files != null) { // will be null if we don't have permission to read this folder
                     Arrays.sort(files, mFileComparator);
-                    for (File file : files) {
-                        result.add(file);
-                    }
+                    Collections.addAll(result, files);
                 }
                 return result;
             }
@@ -96,12 +96,13 @@ class FileAdapter extends ArrayAdapter<File> {
         }.execute(selectedFolder);
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         final TextView result;
         File file = getItem(position);
         if(convertView == null) {
-            if(file.isDirectory()) {
+            if(file != null && file.isDirectory()) {
                 result = (TextView) mInflater.inflate(R.layout.select_dialog_item_material, parent, false);
             } else {
                 result = (TextView) mInflater.inflate(ca.rmen.android.networkmonitor.R.layout.netmon_select_dialog_singlechoice_material, parent, false);
@@ -112,7 +113,7 @@ class FileAdapter extends ArrayAdapter<File> {
         // The first item is the parent directory (if there is one).
         if (position == 0 && mSelectedFolder.getParentFile() != null) {
             updateViewBackFolder(result, file);
-        } else if(file.isDirectory()){
+        } else if(file != null && file.isDirectory()){
             updateViewFolder(result, file);
         } else {
             updateViewFile(result, file);
@@ -149,7 +150,7 @@ class FileAdapter extends ArrayAdapter<File> {
     @Override
     public int getItemViewType(int position) {
         File file = getItem(position);
-        if(file.isDirectory()) return 0;
+        if(file != null && file.isDirectory()) return 0;
         return 1;
     }
 

@@ -128,7 +128,7 @@ public class FilterColumnListFragment extends ListFragment {
             List<String> selectedColumns = NetMonPreferences.getInstance(context).getColumnFilterValues(mColumnName);
             for (i = 0; i < lv.getCount(); i++) {
                 FilterListItem item = adapter.getItem(i);
-                if (selectedColumns.contains(item.value)) lv.setItemChecked(i, true);
+                if (item != null && selectedColumns.contains(item.value)) lv.setItemChecked(i, true);
             }
 
             setListShown(true);

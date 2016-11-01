@@ -112,15 +112,6 @@ public class EmailPreferences {
         return getIntPreference(EmailPreferences.PREF_EMAIL_INTERVAL, "0") * 60 * 1000;
     }
 
-    /**
-     * set the interval, in milliseconds, between e-mailing reports.
-     */
-    public void setEmailReportInterval(int interval) {
-        Editor editor = mSharedPrefs.edit();
-        editor.putString(EmailPreferences.PREF_EMAIL_INTERVAL, String.valueOf(interval));
-        editor.apply();
-    }
-
     public void setLastEmailSent(long when) {
         Editor editor = mSharedPrefs.edit();
         editor.putLong(EmailPreferences.PREF_EMAIL_LAST_EMAIL_SENT, when);

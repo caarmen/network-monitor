@@ -95,7 +95,7 @@ public class SpeedTestPreferencesActivity extends AppCompatActivity { // NO_UCD 
         boolean speedTestEnabled = mSpeedTestPrefs.isEnabled();
         // If the user enabled the speed test, make sure we have enough info.
         if (speedTestEnabled) {
-            SpeedTestDownloadConfig downloadConfig = mSpeedTestPrefs.getDownloadConfig();
+            SpeedTestDownloadConfig downloadConfig = mSpeedTestPrefs.getDownloadConfig(this);
             if (!downloadConfig.isValid()) {
                 mSpeedTestPrefs.setEnabled(false);
                 DialogFragmentFactory.showInfoDialog(this, getString(R.string.speed_test_missing_info_dialog_title),
@@ -158,7 +158,7 @@ public class SpeedTestPreferencesActivity extends AppCompatActivity { // NO_UCD 
     private void updateDownloadUrlPreferenceSummary() {
         SpeedTestResult result = mSpeedTestPrefs.getLastDownloadResult();
         String size = result.status == SpeedTestStatus.SUCCESS ? String.format(Locale.getDefault(), "%.3f", (float) result.fileBytes / 1000000) : "?";
-        String url = mSpeedTestPrefs.getDownloadConfig().url;
+        String url = mSpeedTestPrefs.getDownloadConfig(this).url;
         url = ellipsize(url);
         String summary = getString(R.string.pref_summary_speed_test_download_url, url, size);
         Preference pref = mPreferenceFragment.findPreference(SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL);
@@ -178,7 +178,7 @@ public class SpeedTestPreferencesActivity extends AppCompatActivity { // NO_UCD 
      * We save the download result so we can update the summary of the url preference to include the file size.
      */
     private void download() {
-        final SpeedTestDownloadConfig config = mSpeedTestPrefs.getDownloadConfig();
+        final SpeedTestDownloadConfig config = mSpeedTestPrefs.getDownloadConfig(this);
         new AsyncTask<Void, Void, Void>() {
 
 

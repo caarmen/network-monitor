@@ -77,7 +77,7 @@ public class WarningDialogFragment extends DialogFragment { // NO_UCD (use defau
                         Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
                     } else {
                         CheckBox showWarningDialog = (CheckBox) view.findViewById(R.id.app_warning_cb_stfu);
-                        NetMonPreferences.getInstance(activity).setShowApppWarning(!showWarningDialog.isChecked());
+                        NetMonPreferences.getInstance(activity).setShowAppWarning(!showWarningDialog.isChecked());
                         ((DialogButtonListener) activity).onAppWarningOkClicked();
                     }
                 }
