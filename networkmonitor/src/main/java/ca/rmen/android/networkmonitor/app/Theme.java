@@ -39,7 +39,14 @@ public final class Theme {
 
     public static void setThemeFromSettings(Context context) {
         NetMonPreferences.NetMonTheme theme = NetMonPreferences.getInstance(context).getTheme();
-        AppCompatDelegate.setDefaultNightMode(theme == NetMonPreferences.NetMonTheme.DAY ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
+
+        if (NetMonPreferences.NetMonTheme.NIGHT.equals(theme)) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else if (NetMonPreferences.NetMonTheme.DAY.equals(theme)) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        } else if (NetMonPreferences.NetMonTheme.AUTO.equals(theme)) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+        }
     }
 
     /**

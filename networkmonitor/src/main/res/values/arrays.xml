@@ -194,10 +194,12 @@ limitations under the License.
     <string-array name="preferences_theme_labels">
         <item>@string/pref_value_theme_day</item>
         <item>@string/pref_value_theme_night</item>
+        <item>@string/pref_value_theme_auto</item>
     </string-array>
     <string-array name="preferences_theme_values" translatable="false">
         <item>DAY</item>
         <item>NIGHT</item>
+        <item>AUTO</item>
     </string-array>
 
 </resources>

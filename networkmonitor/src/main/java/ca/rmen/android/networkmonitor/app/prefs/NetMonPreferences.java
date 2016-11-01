@@ -59,7 +59,7 @@ public class NetMonPreferences {
     }
 
     public enum NetMonTheme {
-        DAY, NIGHT
+        DAY, NIGHT, AUTO
     }
 
 
