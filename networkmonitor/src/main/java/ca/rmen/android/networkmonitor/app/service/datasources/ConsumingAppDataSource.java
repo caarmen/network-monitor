@@ -32,6 +32,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.RemoteException;
 import android.telephony.TelephonyManager;
@@ -55,6 +56,7 @@ public class ConsumingAppDataSource implements NetMonDataSource {
     private TelephonyManager mTelephonyManager;
     private NetworkStatsManager mNetworkStatsManager;
     private PackageManager mPackageManager;
+    private ConnectivityManager mConnectivityManager;
     private NetMonPreferences mPrefs;
 
     @Override
@@ -62,6 +64,7 @@ public class ConsumingAppDataSource implements NetMonDataSource {
         Log.v(TAG, "onCreate");
         mContext = context;
         mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mNetworkStatsManager = (NetworkStatsManager) context.getSystemService(Context.NETWORK_STATS_SERVICE);
         }
@@ -90,14 +93,20 @@ public class ConsumingAppDataSource implements NetMonDataSource {
             return values;
         }
 
+        NetworkInfo activeNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo == null) {
+            return values;
+        }
+
         List<ApplicationInfo> packages = mPackageManager.getInstalledApplications(
                 PackageManager.GET_META_DATA);
 
         long maxBytes = 0;
         String processName = null;
 
+        int activeNetworkType = activeNetworkInfo.getType();
         for (ApplicationInfo packageInfo : packages) {
-            long bytes = getBytesForUid(packageInfo.uid);
+            long bytes = getBytesForUid(packageInfo.uid, activeNetworkType);
             if (bytes > maxBytes) {
                 maxBytes = bytes;
                 processName = packageInfo.processName;
@@ -112,28 +121,21 @@ public class ConsumingAppDataSource implements NetMonDataSource {
         return values;
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
-    private long getBytesForUid(int uid) {
-        return getBytesForUid(uid, ConnectivityManager.TYPE_MOBILE)
-                + getBytesForUid(uid, ConnectivityManager.TYPE_WIFI);
-    }
-
     @SuppressLint("HardwareIds")
     @TargetApi(Build.VERSION_CODES.M)
     private long getBytesForUid(int uid, int networkType) {
         Log.v(TAG, "getBytesForUid, uid = " + uid + ", networkType = " + networkType);
-        String subscriberID = null;
+
         try {
-            if (networkType == ConnectivityManager.TYPE_MOBILE) {
-                if (PermissionUtil.hasReadPhoneStatePermission(mContext)) {
-                    subscriberID = mTelephonyManager.getSubscriberId();
-                } else {
-                    return 0;
-                }
+            String subscriberId;
+            if (PermissionUtil.hasReadPhoneStatePermission(mContext)) {
+                subscriberId = mTelephonyManager.getSubscriberId();
+            } else {
+                subscriberId = "";
             }
             NetworkStats stats = mNetworkStatsManager.queryDetailsForUid(
                     networkType,
-                    subscriberID,
+                    subscriberId,
                     Long.MIN_VALUE,
                     Long.MAX_VALUE,
                     uid);
