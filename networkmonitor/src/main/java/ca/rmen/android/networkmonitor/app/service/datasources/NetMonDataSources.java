@@ -54,6 +54,7 @@ public class NetMonDataSources {
         ServiceStateDataSource.class,
         WiFiDataSource.class,
         NetworkInterfaceDataSource.class,
+        ConsumingAppDataSource.class,
         DownloadSpeedTestDataSource.class,
         UploadSpeedTestDataSource.class
     };

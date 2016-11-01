@@ -121,6 +121,10 @@ limitations under the License.
     <!-- Strings about db operations -->
     <string name="db_op_in_progress">(%s in progress)</string>
 
+    <string name="permission_data_usage_permission_title">Necessary annoying popup</string>
+    <string name="permission_read_phone_state_message"><![CDATA[<b>¯\\_(ツ)_/¯</b><br><br>\nNetwork Monitor needs access to your phone state to collect app mobile data usage stats. If you deny this permission, those fields will not be reported. Network Monitor <b>will not place any calls</b> and will only retrieve the number of bytes consumed by each app.]]></string>
+    <string name="permission_data_usage_denied">App data usage statistics will not be reported.</string>
+    <string name="permission_data_usage_message"><![CDATA[<b>¯\\_(ツ)_/¯</b><br><br>\nIn the following screen, please grant Network Monitor access to data usage statistics.]]></string>
     <string name="permission_location_rationale">Network Monitor needs access to your location to report certain fields. If you deny this permission, those fields will not be reported.</string>
     <string name="permission_location_denied">Some fields will not be included in the logs</string>
     <string name="permission_external_storage_rationale">Network Monitor needs access to external storage. If you deny access, it will only be able to access the files inside the Network Monitor folder.</string>

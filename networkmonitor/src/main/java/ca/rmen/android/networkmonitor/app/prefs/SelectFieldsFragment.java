@@ -26,6 +26,7 @@ package ca.rmen.android.networkmonitor.app.prefs;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
@@ -38,25 +39,65 @@ import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 public class SelectFieldsFragment extends ListFragment {
 
     interface SelectFieldsFragmentListener {
-        void onListItemClick(ListView l, View v, int position, long id);
+        void onListItemClick(ListView l, int position);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Activity activity = getActivity();
-        // Build the list of choices for the user.  Look up the friendly label of each column name, and pre-select the one the user chose last time.
-        final String[] columnLabels = NetMonColumns.getColumnLabels(activity);
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(activity, android.R.layout.simple_list_item_multiple_choice, columnLabels);
+        FieldsAdapter adapter = FieldsAdapter.newInstance(activity);
         setListAdapter(adapter);
         ListView lv = getListView();
         lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         // Preselect the columns from the preferences
         List<String> selectedColumns = NetMonPreferences.getInstance(activity).getSelectedColumns();
         for (String selectedColumn : selectedColumns) {
-            String selectedColumnLabel = NetMonColumns.getColumnLabel(activity, selectedColumn);
-            int position = adapter.getPosition(selectedColumnLabel);
+            int position = adapter.getPositionForColumnName(selectedColumn);
             lv.setItemChecked(position, true);
+        }
+    }
+
+    static class SelectedField {
+        final String dbName;
+        final String label;
+
+        // Build the list of choices for the user.  Look up the friendly label of each column name, and pre-select the one the user chose last time.
+        SelectedField(String dbName, String label) {
+            this.dbName = dbName;
+            this.label = label;
+        }
+
+        @Override
+        public String toString() {
+            return label;
+        }
+    }
+
+    static class FieldsAdapter extends ArrayAdapter<SelectedField> {
+
+        static FieldsAdapter newInstance(Context context) {
+            String[] dbColumns = NetMonColumns.getColumnNames(context);
+            String[] columnLabels = NetMonColumns.getColumnLabels(context);
+            SelectedField[] fields = new SelectedField[dbColumns.length];
+            for (int i=0; i < dbColumns.length; i++) {
+                fields[i] = new SelectedField(dbColumns[i], columnLabels[i]);
+            }
+            return new FieldsAdapter(context, fields);
+        }
+
+        FieldsAdapter(Context context, SelectedField[] selectedFields) {
+            super(context, android.R.layout.simple_list_item_multiple_choice, selectedFields);
+        }
+
+        int getPositionForColumnName(String columnName) {
+            for (int i = 0; i < getCount(); i++) {
+                SelectedField selectedField = getItem(i);
+                if (selectedField != null && selectedField.dbName.equals(columnName)) {
+                    return i;
+                }
+            }
+            return -1;
         }
     }
 
@@ -64,7 +105,7 @@ public class SelectFieldsFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Activity activity = getActivity();
-        if (activity instanceof SelectFieldsFragmentListener) ((SelectFieldsFragmentListener) activity).onListItemClick(l, v, position, id);
+        if (activity instanceof SelectFieldsFragmentListener) ((SelectFieldsFragmentListener) activity).onListItemClick(l, position);
     }
 
 }

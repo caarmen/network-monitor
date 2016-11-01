@@ -86,12 +86,12 @@ public class DialogFragmentFactory extends DialogFragment {
      *         {@link DialogButtonListener}, the actionId and extras parameter will be provided in
      *         the {@link DialogButtonListener#onOkClicked(int, Bundle)} callback on the activity, when the user clicks on the ok button.
      */
-    public static void showConfirmDialog(FragmentActivity activity, String title, String message, int actionId, Bundle extras) {
+    public static void showConfirmDialog(FragmentActivity activity, CharSequence title, CharSequence message, int actionId, Bundle extras) {
         Log.v(TAG, "showConfirmDialog: title = " + title + ", message = " + message + ", actionId = " + actionId + ", extras = " + extras);
         ConfirmDialogFragment result = new ConfirmDialogFragment();
         Bundle arguments = new Bundle(4);
-        arguments.putString(EXTRA_TITLE, title);
-        arguments.putString(EXTRA_MESSAGE, message);
+        arguments.putCharSequence(EXTRA_TITLE, title);
+        arguments.putCharSequence(EXTRA_MESSAGE, message);
         arguments.putInt(EXTRA_ACTION_ID, actionId);
         if (extras != null) arguments.putBundle(EXTRA_EXTRAS, extras);
         result.setArguments(arguments);

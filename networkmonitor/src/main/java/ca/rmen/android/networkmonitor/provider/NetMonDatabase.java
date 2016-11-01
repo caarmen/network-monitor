@@ -43,7 +43,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
     public static final String DATABASE_NAME = "networkmonitor.db";
-    private static final int DATABASE_VERSION = 16;
+    private static final int DATABASE_VERSION = 17;
 
     // @formatter:off
     private static final String SQL_CREATE_TABLE_NETWORKMONITOR = "CREATE TABLE IF NOT EXISTS "
@@ -102,6 +102,8 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.IPV4_ADDRESS+ " TEXT,"
             + NetMonColumns.IPV6_ADDRESS+ " TEXT,"
             + NetMonColumns.BATTERY_LEVEL+ " INTEGER, "
+            + NetMonColumns.MOST_CONSUMING_APP_NAME + " TEXT, "
+            + NetMonColumns.MOST_CONSUMING_APP_BYTES + " INTEGER, "
             + NetMonColumns.DOWNLOAD_SPEED+ " TEXT, "
             + NetMonColumns.UPLOAD_SPEED+ " TEXt"
             + " );";
@@ -194,6 +196,12 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V16_DEVICE_SPEED = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
             + NetMonColumns.DEVICE_SPEED + " REAL";
 
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V17_MOST_CONSUMING_APP_NAME = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.MOST_CONSUMING_APP_NAME + " TEXT";
+
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V17_MOST_CONSUMING_APP_BYTES = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.MOST_CONSUMING_APP_BYTES + " INTEGER";
+
     private static final String SQL_CREATE_VIEW_CONNECTION_TEST_STATS = "CREATE VIEW " + ConnectionTestStatsColumns.VIEW_NAME + " AS "
             + buildConnectionTestQuery();
 
@@ -277,6 +285,11 @@ public class NetMonDatabase extends SQLiteOpenHelper {
 
         if (oldVersion < 16) {
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V16_DEVICE_SPEED);
+        }
+
+        if (oldVersion < 17) {
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V17_MOST_CONSUMING_APP_NAME);
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V17_MOST_CONSUMING_APP_BYTES);
         }
     }
 
