@@ -228,19 +228,24 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
                     Log.v(TAG, "finishing, ignoring loadHTMLFile result");
                     return;
                 }
+                WebView webView = mWebView;
+                if (webView == null) {
+                    Log.v(TAG, "Must be destroyed or destroying, we have no webview, ignoring loadHTMLFile result");
+                    return;
+                }
                 if (result == null) {
-                    Snackbar.make(mWebView, R.string.error_reading_log, Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(webView, R.string.error_reading_log, Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 // Load the exported HTML file into the WebView.
                 // Save our current horizontal scroll position so we can keep our
                 // horizontal position after reloading the page.
-                final int oldScrollX = mWebView.getScrollX();
-                mWebView.getSettings().setUseWideViewPort(true);
-                mWebView.getSettings().setBuiltInZoomControls(true);
-                mWebView.getSettings().setJavaScriptEnabled(true);
-                mWebView.loadUrl("file://" + result.getAbsolutePath());
-                mWebView.setWebViewClient(new WebViewClient() {
+                final int oldScrollX = webView.getScrollX();
+                webView.getSettings().setUseWideViewPort(true);
+                webView.getSettings().setBuiltInZoomControls(true);
+                webView.getSettings().setJavaScriptEnabled(true);
+                webView.loadUrl("file://" + result.getAbsolutePath());
+                webView.setWebViewClient(new WebViewClient() {
 
                     @Override
                     public void onPageStarted(WebView view, String url, Bitmap favicon) {

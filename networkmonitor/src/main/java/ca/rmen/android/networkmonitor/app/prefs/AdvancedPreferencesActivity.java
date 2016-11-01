@@ -173,6 +173,11 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
 
     private void updatePreferenceSummary(final String key, final int summaryResId) {
         final Preference pref = mPreferenceFragment.findPreference(key);
+        // I don't see how this is possible, but a crash was reported for a null pref...
+        if (pref == null) {
+            Log.v(TAG, "updatePreferenceSummary: No preference found for " + key);
+            return;
+        }
         // RingtoneManager.getRingtone() actually does some disk reads.
         // Discovered this with StrictMode and monkey.
         // Ugly code (async task) to make it easier to find real StrictMode violations...
