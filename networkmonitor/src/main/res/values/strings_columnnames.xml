@@ -83,4 +83,6 @@ limitations under the License.
     <string name="download_speed">Download Speed (Mbps)</string>
     <string name="upload_speed">Upload Speed (Mbps)</string>
 
+    <string name="most_consuming_app_name_help">The application which has consumed the most data for the given network type, since the boot of the device.</string>
+    <string name="most_consuming_app_bytes_help">The data consumed by the application which has consumed the most data for the given network type, since the boot of the device.</string>
 </resources>

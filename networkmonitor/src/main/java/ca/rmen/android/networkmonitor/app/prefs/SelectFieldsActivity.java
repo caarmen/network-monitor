@@ -34,23 +34,19 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ListFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.SparseBooleanArray;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
-import ca.rmen.android.networkmonitor.app.prefs.SelectFieldsFragment.SelectFieldsFragmentListener;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 import ca.rmen.android.networkmonitor.util.PermissionUtil;
@@ -61,20 +57,28 @@ import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
 public class SelectFieldsActivity extends AppCompatActivity
-        implements SelectFieldsFragmentListener,
-        ConfirmDialogFragment.DialogButtonListener {
+        implements ConfirmDialogFragment.DialogButtonListener {
     private static final String TAG = Constants.TAG + SelectFieldsActivity.class.getSimpleName();
     private static final int ACTION_REQUEST_PHONE_STATE_PERMISSION = 1;
     private static final int ACTION_REQUEST_USAGE_PERMISSION = 2;
-    private ListView mListView;
+    private SelectedFieldsAdapter mSelectFieldsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_fields);
-        ListFragment lvf = (ListFragment) getSupportFragmentManager().findFragmentById(R.id.listFragment);
-        mListView = lvf.getListView();
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mSelectFieldsAdapter = new SelectedFieldsAdapter(this);
+        recyclerView.setAdapter(mSelectFieldsAdapter);
+        mSelectFieldsAdapter.registerAdapterDataObserver(mListener);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mSelectFieldsAdapter.unregisterAdapterDataObserver(mListener);
+        super.onDestroy();
     }
 
     @Override
@@ -85,52 +89,37 @@ public class SelectFieldsActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         View okButton = findViewById(R.id.ok);
         assert okButton != null;
         switch (item.getItemId()) {
             case R.id.action_select_all:
-                for (int i = 0; i < mListView.getCount(); i++)
-                    mListView.setItemChecked(i, true);
+                mSelectFieldsAdapter.selectAll();
                 okButton.setEnabled(true);
                 break;
             case R.id.action_select_none:
-                for (int i = 0; i < mListView.getCount(); i++)
-                    mListView.setItemChecked(i, false);
+                mSelectFieldsAdapter.selectNone();
                 okButton.setEnabled(false);
                 break;
             case R.id.action_select_profile_wifi:
-                selectColumns(getResources().getStringArray(R.array.db_columns_profile_wifi));
+                mSelectFieldsAdapter.selectColumns(getResources().getStringArray(R.array.db_columns_profile_wifi));
                 okButton.setEnabled(true);
                 break;
             case R.id.action_select_profile_mobile_gsm:
-                selectColumns(getResources().getStringArray(R.array.db_columns_profile_mobile_gsm));
+                mSelectFieldsAdapter.selectColumns(getResources().getStringArray(R.array.db_columns_profile_mobile_gsm));
                 okButton.setEnabled(true);
                 break;
             case R.id.action_select_profile_mobile_cdma:
-                selectColumns(getResources().getStringArray(R.array.db_columns_profile_mobile_cdma));
+                mSelectFieldsAdapter.selectColumns(getResources().getStringArray(R.array.db_columns_profile_mobile_cdma));
                 okButton.setEnabled(true);
                 break;
             case R.id.action_select_profile_location:
-                selectColumns(getResources().getStringArray(R.array.db_columns_profile_location));
+                mSelectFieldsAdapter.selectColumns(getResources().getStringArray(R.array.db_columns_profile_location));
                 okButton.setEnabled(true);
                 break;
             default:
                 return super.onOptionsItemSelected(item);
         }
         return true;
-    }
-
-    private void selectColumns(String[] columnNames) {
-        for (int i = 0; i < mListView.getCount(); i++)
-            mListView.setItemChecked(i, false);
-        @SuppressWarnings("unchecked")
-        ArrayAdapter<CharSequence> adapter = (ArrayAdapter<CharSequence>) mListView.getAdapter();
-        for (String columnName : columnNames) {
-            String columnLabel = NetMonColumns.getColumnLabel(this, columnName);
-            int position = adapter.getPosition(columnLabel);
-            mListView.setItemChecked(position, true);
-        }
     }
 
     @SuppressWarnings("UnusedParameters")
@@ -142,12 +131,7 @@ public class SelectFieldsActivity extends AppCompatActivity
     @SuppressWarnings("UnusedParameters")
     public void onOk(View v) {
         Log.v(TAG, "onOk");
-        SparseBooleanArray checkedPositions = mListView.getCheckedItemPositions();
-        String[] dbColumns = NetMonColumns.getColumnNames(this);
-        final List<String> selectedColumns = new ArrayList<>(dbColumns.length);
-        for (int i = 0; i < dbColumns.length; i++) {
-            if (checkedPositions.get(i)) selectedColumns.add(dbColumns[i]);
-        }
+        final List<String> selectedColumns = mSelectFieldsAdapter.getSelectedColumns();
         new AsyncTask<Void, Void, Void>() {
 
             @Override
@@ -164,36 +148,28 @@ public class SelectFieldsActivity extends AppCompatActivity
         }.execute();
     }
 
-    @Override
-    public void onListItemClick(ListView l, int position) {
-        Log.v(TAG, "onListItemClick: clicked on position " + position);
-        View okButton = findViewById(R.id.ok);
-        assert okButton != null;
-        okButton.setEnabled(false);
-        SparseBooleanArray checkedItemPositions = l.getCheckedItemPositions();
-        for (int i = 0; i < checkedItemPositions.size(); i++) {
-            if (checkedItemPositions.get(checkedItemPositions.keyAt(i))) {
-                okButton.setEnabled(true);
-                break;
-            }
-        }
+    private final RecyclerView.AdapterDataObserver mListener = new RecyclerView.AdapterDataObserver() {
+        @Override
+        public void onChanged() {
+            Log.v(TAG, "onChanged");
+            View okButton = findViewById(R.id.ok);
+            List<String> selectedColumns = mSelectFieldsAdapter.getSelectedColumns();
+            okButton.setEnabled(!selectedColumns.isEmpty());
 
-        // We require permissions to collect data for some columns.
-        // First we need the READ_PHONE_STATE permission, which is managed like typical
-        // M dangerous permissions.
-        // Then we need the PACKAGE_USAGE_STATS permission, which we can only obtain by asking
-        // the user to grant us access in a specific system settings screen (Security -> Data Usage)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkedItemPositions.get(position)) {
-                SelectFieldsFragment.SelectedField selectedField
-                        = (SelectFieldsFragment.SelectedField) l.getAdapter().getItem(position);
-                if (selectedField.dbName.equals(NetMonColumns.MOST_CONSUMING_APP_NAME)
-                        || selectedField.dbName.equals(NetMonColumns.MOST_CONSUMING_APP_BYTES)) {
+            // We require permissions to collect data for some columns.
+            // First we need the READ_PHONE_STATE permission, which is managed like typical
+            // M dangerous permissions.
+            // Then we need the PACKAGE_USAGE_STATS permission, which we can only obtain by asking
+            // the user to grant us access in a specific system settings screen (Security -> Data Usage)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (selectedColumns.contains(NetMonColumns.MOST_CONSUMING_APP_NAME)
+                        || selectedColumns.contains(NetMonColumns.MOST_CONSUMING_APP_BYTES)) {
                     requestPhoneStatePermission();
                 }
             }
         }
-    }
+    };
+
 
     @TargetApi(Build.VERSION_CODES.M)
     private void requestPhoneStatePermission() {
@@ -218,7 +194,7 @@ public class SelectFieldsActivity extends AppCompatActivity
         } else {
             // Need to post it.  Otherwise we end up with one of those exceptions about doing stuff
             // after onSaveInstanceState was called.
-            new Handler().post(new Runnable(){
+            new Handler().post(new Runnable() {
                 @Override
                 public void run() {
                     DialogFragmentFactory.showConfirmDialog(
