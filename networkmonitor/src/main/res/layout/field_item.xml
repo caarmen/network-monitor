@@ -27,9 +27,10 @@ limitations under the License.
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
+        android:minHeight="48dp"
         android:orientation="horizontal"
         android:paddingEnd="?attr/listPreferredItemPaddingRight"
         android:paddingLeft="?attr/listPreferredItemPaddingLeft"
@@ -39,10 +40,11 @@ limitations under the License.
         <TextView
             android:id="@+id/field_name"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="center_vertical"
             android:textAppearance="?attr/textAppearanceListItemSmall"
-            tools:text="Network type" />
+            tools:text="Aplicación que consume más datos (bytes)" />
 
         <ImageView
             android:id="@+id/field_help"

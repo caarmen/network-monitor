@@ -82,4 +82,7 @@ limitations under the License.
     <string name="download_speed">Vitesse de réception (Mbps)</string>
     <string name="upload_speed">Vitesse d\'émission (Mbps)</string>
 
+    <string name="most_consuming_app_name_help">L\'application qui a consommé le plus de données pour le type de réseau donné, depuis le démarrage du terminal.</string>
+    <string name="most_consuming_app_bytes_help">La quantité de données consommées par l\'application qui a consommé le plus de données pour le type de réseau donné, depuis le démarrage du terminal.</string>
+
 </resources>
