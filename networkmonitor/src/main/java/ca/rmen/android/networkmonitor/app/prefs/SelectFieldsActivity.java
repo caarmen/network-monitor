@@ -27,6 +27,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
+import ca.rmen.android.networkmonitor.databinding.SelectFieldsBinding;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
 import ca.rmen.android.networkmonitor.util.PermissionUtil;
@@ -62,16 +64,16 @@ public class SelectFieldsActivity extends AppCompatActivity
     private static final int ACTION_REQUEST_PHONE_STATE_PERMISSION = 1;
     private static final int ACTION_REQUEST_USAGE_PERMISSION = 2;
     private SelectedFieldsAdapter mSelectFieldsAdapter;
+    private SelectFieldsBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.select_fields);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mBinding = DataBindingUtil.setContentView(this, R.layout.select_fields);
+        mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mSelectFieldsAdapter = new SelectedFieldsAdapter(this);
-        recyclerView.setAdapter(mSelectFieldsAdapter);
+        mBinding.recyclerView.setAdapter(mSelectFieldsAdapter);
         mSelectFieldsAdapter.registerAdapterDataObserver(mListener);
     }
 
@@ -89,32 +91,30 @@ public class SelectFieldsActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        View okButton = findViewById(R.id.ok);
-        assert okButton != null;
         switch (item.getItemId()) {
             case R.id.action_select_all:
                 mSelectFieldsAdapter.selectAll();
-                okButton.setEnabled(true);
+                mBinding.okCancelBar.ok.setEnabled(true);
                 break;
             case R.id.action_select_none:
                 mSelectFieldsAdapter.selectNone();
-                okButton.setEnabled(false);
+                mBinding.okCancelBar.ok.setEnabled(false);
                 break;
             case R.id.action_select_profile_wifi:
                 mSelectFieldsAdapter.selectColumns(getResources().getStringArray(R.array.db_columns_profile_wifi));
-                okButton.setEnabled(true);
+                mBinding.okCancelBar.ok.setEnabled(true);
                 break;
             case R.id.action_select_profile_mobile_gsm:
                 mSelectFieldsAdapter.selectColumns(getResources().getStringArray(R.array.db_columns_profile_mobile_gsm));
-                okButton.setEnabled(true);
+                mBinding.okCancelBar.ok.setEnabled(true);
                 break;
             case R.id.action_select_profile_mobile_cdma:
                 mSelectFieldsAdapter.selectColumns(getResources().getStringArray(R.array.db_columns_profile_mobile_cdma));
-                okButton.setEnabled(true);
+                mBinding.okCancelBar.ok.setEnabled(true);
                 break;
             case R.id.action_select_profile_location:
                 mSelectFieldsAdapter.selectColumns(getResources().getStringArray(R.array.db_columns_profile_location));
-                okButton.setEnabled(true);
+                mBinding.okCancelBar.ok.setEnabled(true);
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -152,9 +152,8 @@ public class SelectFieldsActivity extends AppCompatActivity
         @Override
         public void onChanged() {
             Log.v(TAG, "onChanged");
-            View okButton = findViewById(R.id.ok);
             List<String> selectedColumns = mSelectFieldsAdapter.getSelectedColumns();
-            okButton.setEnabled(!selectedColumns.isEmpty());
+            mBinding.okCancelBar.ok.setEnabled(!selectedColumns.isEmpty());
 
             // We require permissions to collect data for some columns.
             // First we need the READ_PHONE_STATE permission, which is managed like typical
@@ -194,17 +193,12 @@ public class SelectFieldsActivity extends AppCompatActivity
         } else {
             // Need to post it.  Otherwise we end up with one of those exceptions about doing stuff
             // after onSaveInstanceState was called.
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    DialogFragmentFactory.showConfirmDialog(
-                            SelectFieldsActivity.this,
-                            getString(R.string.permission_data_usage_permission_title),
-                            TextUtil.fromHtml(getString(R.string.permission_data_usage_message)),
-                            ACTION_REQUEST_USAGE_PERMISSION,
-                            null);
-                }
-            });
+            new Handler().post(() -> DialogFragmentFactory.showConfirmDialog(
+                    SelectFieldsActivity.this,
+                    getString(R.string.permission_data_usage_permission_title),
+                    TextUtil.fromHtml(getString(R.string.permission_data_usage_message)),
+                    ACTION_REQUEST_USAGE_PERMISSION,
+                    null));
         }
     }
 

@@ -23,17 +23,13 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
-import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +39,7 @@ import java.util.Set;
 
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
+import ca.rmen.android.networkmonitor.databinding.FieldItemBinding;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 
 class SelectedFieldsAdapter extends RecyclerView.Adapter<SelectedFieldsAdapter.SelectedFieldHolder> {
@@ -64,7 +61,6 @@ class SelectedFieldsAdapter extends RecyclerView.Adapter<SelectedFieldsAdapter.S
             return label;
         }
     }
-
 
     private final FragmentActivity mActivity;
     private final SelectedField[] mSelectedFields;
@@ -114,29 +110,21 @@ class SelectedFieldsAdapter extends RecyclerView.Adapter<SelectedFieldsAdapter.S
     @Override
     public void onBindViewHolder(SelectedFieldHolder holder, int position) {
         final SelectedField selectedField = mSelectedFields[position];
-        holder.textView.setText(selectedField.label);
-        holder.imageView.setVisibility(TextUtils.isEmpty(selectedField.tip) ? View.GONE : View.VISIBLE);
-        holder.checkBox.setOnCheckedChangeListener(null);
-        holder.checkBox.setChecked(mCheckedItems.contains(selectedField.dbName));
-        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                if (checked) mCheckedItems.add(selectedField.dbName);
-                else mCheckedItems.remove(selectedField.dbName);
-                notifyDataSetChanged();
-            }
+        holder.binding.fieldName.setText(selectedField.label);
+        holder.binding.fieldHelp.setVisibility(TextUtils.isEmpty(selectedField.tip) ? View.GONE : View.VISIBLE);
+        holder.binding.checkbox.setOnCheckedChangeListener(null);
+        holder.binding.checkbox.setChecked(mCheckedItems.contains(selectedField.dbName));
+        holder.binding.checkbox.setOnCheckedChangeListener((compoundButton, checked) -> {
+            if (checked) mCheckedItems.add(selectedField.dbName);
+            else mCheckedItems.remove(selectedField.dbName);
+            notifyDataSetChanged();
         });
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogFragmentFactory.showInfoDialog(mActivity, selectedField.label, selectedField.tip);
-            }
-        });
+        holder.binding.fieldHelp.setOnClickListener(view -> DialogFragmentFactory.showInfoDialog(mActivity, selectedField.label, selectedField.tip));
     }
 
     @Override
     public SelectedFieldHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new SelectedFieldHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.field_item, parent, false));
+        return new SelectedFieldHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.field_item, parent, false));
     }
 
     @Override
@@ -145,21 +133,13 @@ class SelectedFieldsAdapter extends RecyclerView.Adapter<SelectedFieldsAdapter.S
     }
 
     static class SelectedFieldHolder extends RecyclerView.ViewHolder {
-        final TextView textView;
-        final CheckBox checkBox;
-        final ImageView imageView;
 
-        SelectedFieldHolder(View itemView) {
-            super(itemView);
-            textView = (TextView) itemView.findViewById(android.R.id.text1);
-            checkBox = (CheckBox) itemView.findViewById(android.R.id.checkbox);
-            imageView = (ImageView) itemView.findViewById(R.id.field_help);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    checkBox.performClick();
-                }
-            });
+        final FieldItemBinding binding;
+
+        SelectedFieldHolder(FieldItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+            binding.getRoot().setOnClickListener(v -> binding.checkbox.performClick());
         }
     }
 }

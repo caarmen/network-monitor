@@ -21,45 +21,49 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:background="?attr/selectableItemBackground"
-    android:clickable="true"
-    android:orientation="horizontal"
-    android:paddingEnd="?attr/listPreferredItemPaddingRight"
-    android:paddingLeft="?attr/listPreferredItemPaddingLeft"
-    android:paddingRight="?attr/listPreferredItemPaddingRight"
-    android:paddingStart="?attr/listPreferredItemPaddingLeft">
 
-    <TextView
-        android:id="@android:id/text1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textAppearance="?attr/textAppearanceListItemSmall"
-        tools:text="Network type" />
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/field_help"
-        android:layout_width="wrap_content"
-        android:layout_height="?attr/listPreferredItemHeightSmall"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
         android:background="?attr/selectableItemBackground"
-        android:contentDescription="@string/pref_title_about"
-        android:paddingEnd="8dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingStart="8dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_pref_question"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:paddingEnd="?attr/listPreferredItemPaddingRight"
+        android:paddingLeft="?attr/listPreferredItemPaddingLeft"
+        android:paddingRight="?attr/listPreferredItemPaddingRight"
+        android:paddingStart="?attr/listPreferredItemPaddingLeft">
 
-    <CheckBox
-        android:id="@android:id/checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="?attr/listPreferredItemHeightSmall"
-        android:checkMark="?android:attr/listChoiceIndicatorMultiple" />
+        <TextView
+            android:id="@+id/field_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="?attr/textAppearanceListItemSmall"
+            tools:text="Network type" />
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/field_help"
+            android:layout_width="wrap_content"
+            android:layout_height="?attr/listPreferredItemHeightSmall"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="@string/pref_title_about"
+            android:paddingEnd="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingStart="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_pref_question"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="?attr/listPreferredItemHeightSmall"
+            android:checkMark="?android:attr/listChoiceIndicatorMultiple" />
+
+    </LinearLayout>
+</layout>

@@ -29,11 +29,13 @@ buildscript {
     dependencies {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'me.tatarka:gradle-retrolambda:3.3.1'
     }
 }
 apply plugin: 'com.android.application'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'android-apt'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     File signFile = rootProject.file('signing.properties')
@@ -55,6 +57,9 @@ android {
     }
     compileSdkVersion 25
     buildToolsVersion "24.0.3"
+    dataBinding {
+        enabled = true
+    }
 
     defaultConfig {
         applicationId "ca.rmen.android.networkmonitor"
@@ -66,8 +71,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {
@@ -109,4 +114,6 @@ dependencies {
     if (!gradle.isFoss) {
         proprietaryCompile 'com.google.android.gms:play-services-location:9.6.1'
     }
+
+    retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
 }
