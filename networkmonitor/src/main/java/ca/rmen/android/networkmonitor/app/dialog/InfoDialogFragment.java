@@ -27,13 +27,15 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
+import android.widget.TextView;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -44,10 +46,6 @@ import ca.rmen.android.networkmonitor.util.Log;
 public class InfoDialogFragment extends DialogFragment { // NO_UCD (use default)
 
     private static final String TAG = Constants.TAG + InfoDialogFragment.class.getSimpleName();
-
-    public interface InfoDialogListener {
-        void onNeutralClicked(int actionId, Bundle extras);
-    }
 
     public InfoDialogFragment() {
         super();
@@ -63,24 +61,21 @@ public class InfoDialogFragment extends DialogFragment { // NO_UCD (use default)
         Context context = getActivity();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         Bundle arguments = getArguments();
-        final int actionId = arguments.getInt(DialogFragmentFactory.EXTRA_ACTION_ID);
         final int iconId = arguments.getInt(DialogFragmentFactory.EXTRA_ICON_ID);
         if (iconId > 0) builder.setIcon(iconId);
-        final Bundle extras = arguments.getBundle(DialogFragmentFactory.EXTRA_EXTRAS);
-        builder.setTitle(arguments.getString(DialogFragmentFactory.EXTRA_TITLE)).setMessage(arguments.getString(DialogFragmentFactory.EXTRA_MESSAGE));
-        OnClickListener neutralListener = new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                FragmentActivity activity = getActivity();
-                if (activity instanceof InfoDialogListener) {
-                    ((InfoDialogListener) activity).onNeutralClicked(actionId, extras);
-                }
-            }
-        };
-        builder.setNeutralButton(android.R.string.ok, neutralListener);
+        CharSequence message = arguments.getString(DialogFragmentFactory.EXTRA_MESSAGE);
+        SpannableString s = new SpannableString(message);
+        Linkify.addLinks(s, Linkify.WEB_URLS);
+        builder.setTitle(arguments.getString(DialogFragmentFactory.EXTRA_TITLE)).setMessage(s);
+        builder.setPositiveButton(android.R.string.ok, null);
         if (getActivity() instanceof OnCancelListener) builder.setOnCancelListener((OnCancelListener) getActivity());
         final Dialog dialog = builder.create();
         if (getActivity() instanceof OnDismissListener) dialog.setOnDismissListener((OnDismissListener) getActivity());
+        dialog.setOnShowListener(dialogInterface -> {
+            TextView messageTextView = (TextView) ((Dialog) dialogInterface).findViewById(android.R.id.message);
+            if (messageTextView != null)
+                messageTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        });
         return dialog;
     }
 

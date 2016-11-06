@@ -83,6 +83,7 @@ limitations under the License.
     <string name="download_speed">Velocidad de descarga (Mbps)</string>
     <string name="upload_speed">Velocidad de subida (Mbps)</string>
 
+    <string name="gsm_ber_help">GSM bit error rate (0–7, 99) tal como se define en TS 27.007 8.5. Ausente en muchos dispositivos. Documentación: https://goo.gl/v93sYj</string>
     <string name="most_consuming_app_name_help">La aplicación que ha consumido el mayor número de datos por el tipo de red dado, desde el arranque del dispositivo.</string>
     <string name="most_consuming_app_bytes_help">La cantidad de datos consumidos por la aplicación que ha consumido el mayor número de datos por el tipo de red dado, desde el arranque del dispositivo.</string>
 
