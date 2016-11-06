@@ -65,8 +65,8 @@ android {
         applicationId "ca.rmen.android.networkmonitor"
         minSdkVersion 9
         targetSdkVersion 25
-        versionName "1.28.7"
-        versionCode 12807
+        versionName "1.28.8"
+        versionCode 12808
         archivesBaseName += "-" + versionName
     }
 
@@ -112,7 +112,7 @@ dependencies {
     apt 'com.github.hotchemi:permissionsdispatcher-processor:2.2.0'
 
     if (!gradle.isFoss) {
-        proprietaryCompile 'com.google.android.gms:play-services-location:9.6.1'
+        proprietaryCompile 'com.google.android.gms:play-services-location:9.8.0'
     }
 
     retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
