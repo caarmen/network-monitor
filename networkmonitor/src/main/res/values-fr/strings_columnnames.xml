@@ -82,4 +82,8 @@ limitations under the License.
     <string name="download_speed">Vitesse de réception (Mbps)</string>
     <string name="upload_speed">Vitesse d\'émission (Mbps)</string>
 
+    <string name="gsm_ber_help">GSM bit error rate (0–7, 99) tel que défini par TS 27.007 8.5. Absent dans beaucoup de terminaux. Documentation: https://goo.gl/v93sYj</string>
+    <string name="most_consuming_app_name_help">L\'application qui a consommé le plus de données pour le type de réseau donné, depuis le démarrage du terminal.</string>
+    <string name="most_consuming_app_bytes_help">La quantité de données consommées par l\'application qui a consommé le plus de données pour le type de réseau donné, depuis le démarrage du terminal.</string>
+
 </resources>

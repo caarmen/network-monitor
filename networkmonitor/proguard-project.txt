@@ -62,3 +62,6 @@
     @com.squareup.otto.Produce public *;
 }
 -dontobfuscate
+
+#retrolambda:
+-dontwarn java.lang.invoke.*

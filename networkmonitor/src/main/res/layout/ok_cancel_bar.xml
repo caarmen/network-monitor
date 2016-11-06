@@ -21,29 +21,32 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    style="?android:attr/buttonBarStyle"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:divider="?android:attr/dividerVertical"
-    android:dividerPadding="12dp"
-    android:showDividers="middle"
-    tools:ignore="NewApi,UnusedAttribute">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <Button
-        android:id="@+id/cancel"
-        android:layout_width="0dp"
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:onClick="onCancel"
-        android:text="@android:string/cancel" />
+        android:divider="?android:attr/dividerVertical"
+        android:dividerPadding="12dp"
+        android:showDividers="middle"
+        tools:ignore="NewApi,UnusedAttribute">
 
-    <Button
-        android:id="@+id/ok"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:onClick="onOk"
-        android:text="@android:string/ok" />
-</LinearLayout>
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onCancel"
+            android:text="@android:string/cancel" />
+
+        <Button
+            android:id="@+id/ok"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onOk"
+            android:text="@android:string/ok" />
+    </LinearLayout>
+</layout>
