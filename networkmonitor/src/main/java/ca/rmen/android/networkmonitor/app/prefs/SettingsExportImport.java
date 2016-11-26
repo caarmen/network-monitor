@@ -122,6 +122,7 @@ final class SettingsExportImport {
             @SuppressLint("CommitPrefEdits")
             @Override
             protected Boolean doInBackground(Void... params) {
+
                 // Make a backup of our shared prefs in case the import file is corrupt.
                 if (!IoUtil.copy(outputFile, backupFile)) {
                     return false;
@@ -186,7 +187,9 @@ final class SettingsExportImport {
 
     @TargetApi(Build.VERSION_CODES.M)
     private static boolean reloadSettingsV23(Context context) {
-        return reloadSettings(context, Context.MODE_PRIVATE);
+        // This mode is deprecated but we still need this it in order to force a reread of preferences
+        // from the disk.
+        return reloadSettings(context, Context.MODE_MULTI_PROCESS);
     }
 
     private static boolean reloadSettings(Context context, int preferencesReadMode) {
