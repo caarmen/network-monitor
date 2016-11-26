@@ -8,7 +8,7 @@ This source is part of the
                              /___/
 repository.
 
-Copyright (C) 2015 Carmen Alvarez (c@rmen.ca)
+Copyright (C) 2015-2016 Carmen Alvarez (c@rmen.ca)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -42,15 +42,27 @@ limitations under the License.
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
-        <name>Otto</name>
-        <url>http://square.github.io/otto/</url>
-        <copyright>Copyright (c) Square, Inc.</copyright>
+        <name>greenrobot EventBus</name>
+        <url>https://github.com/greenrobot/EventBus</url>
+        <copyright>Copyright (c) greenrobot</copyright>
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
         <name>PermissionsDispatcher</name>
         <url>https://github.com/hotchemi/PermissionsDispatcher</url>
         <copyright>Copyright (c) Shintaro Katafuchi, Marcel Schnelle, Yoshinori Isogai</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>streamsupport</name>
+        <url>https://github.com/streamsupport/streamsupport</url>
+        <copyright>Copyright (c) Oracle</copyright>
+        <license>GNU General Public License 2.0</license>
+    </notice>
+    <notice>
+        <name>retrolambda</name>
+        <url>https://github.com/orfjackal/retrolambda</url>
+        <copyright>Copyright (c) Esko Luontola</copyright>
         <license>Apache Software License 2.0</license>
     </notice>
 </notices>
