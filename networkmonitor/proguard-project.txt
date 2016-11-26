@@ -66,4 +66,7 @@
 #retrolambda:
 -dontwarn java.lang.invoke.*
 
+# streamsupport:
+-dontwarn java8.util.**
+
 -dontobfuscate
