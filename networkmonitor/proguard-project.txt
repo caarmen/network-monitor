@@ -55,13 +55,15 @@
 
 -keepattributes SourceFile,LineNumberTable
 
-# otto
+# Eventbus:
+# http://greenrobot.org/eventbus/documentation/proguard/
 -keepattributes *Annotation*
 -keepclassmembers class ** {
-    @com.squareup.otto.Subscribe public *;
-    @com.squareup.otto.Produce public *;
+    @org.greenrobot.eventbus.Subscribe <methods>;
 }
--dontobfuscate
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
 
 #retrolambda:
 -dontwarn java.lang.invoke.*
+
+-dontobfuscate
