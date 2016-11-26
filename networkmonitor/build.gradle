@@ -56,7 +56,7 @@ android {
         android.buildTypes.release.signingConfig = null
     }
     compileSdkVersion 25
-    buildToolsVersion "25"
+    buildToolsVersion "25.0.1"
     dataBinding {
         enabled = true
     }
@@ -65,8 +65,8 @@ android {
         applicationId "ca.rmen.android.networkmonitor"
         minSdkVersion 9
         targetSdkVersion 25
-        versionName "1.28.9"
-        versionCode 12809
+        versionName "1.28.10"
+        versionCode 12810
         archivesBaseName += "-" + versionName
     }
 
@@ -103,7 +103,7 @@ dependencies {
     compile 'com.android.support:design:25.0.1'
     compile 'com.android.support:preference-v7:25.0.1'
     compile 'com.android.support:preference-v14:25.0.1'
-    compile 'com.squareup:otto:1.3.8'
+    compile 'org.greenrobot:eventbus:3.0.0'
     compile ('net.sourceforge.jexcelapi:jxl:2.6.12') {
         exclude group: "log4j"
     }

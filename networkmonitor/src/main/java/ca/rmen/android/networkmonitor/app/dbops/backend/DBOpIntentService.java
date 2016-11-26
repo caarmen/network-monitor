@@ -39,8 +39,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
-import com.squareup.otto.Produce;
-
 import java.io.File;
 
 import ca.rmen.android.networkmonitor.Constants;
@@ -180,7 +178,6 @@ public class DBOpIntentService extends IntentService {
                         R.string.import_notif_progress_title,
                         R.string.import_notif_progress_content,
                         R.string.import_notif_complete_title);
-        NetMonBus.getBus().register(this);
         registerReceiver(mStopSelfReceiver, new IntentFilter(ACTION_STOP_DB_OP));
     }
 
@@ -201,7 +198,7 @@ public class DBOpIntentService extends IntentService {
                     Toast.makeText(DBOpIntentService.this, toast, Toast.LENGTH_LONG).show();
                     synchronized (lock) {
                         if (mDBOperationStarted != null) {
-                            NetMonBus.getBus().post(mDBOperationStarted);
+                            NetMonBus.getBus().postSticky(mDBOperationStarted);
                         }
                     }
                 }
@@ -227,21 +224,16 @@ public class DBOpIntentService extends IntentService {
             mDBOperation = null;
             synchronized (lock) {
                 mDBOperationStarted = null;
+                NetMonBus.DBOperationStarted stickyEvent = NetMonBus.getBus().getStickyEvent(NetMonBus.DBOperationStarted.class);
+                if (stickyEvent != null) NetMonBus.getBus().removeStickyEvent(stickyEvent);
             }
         }
     }
 
     @Override
     public void onDestroy() {
-        NetMonBus.getBus().unregister(this);
         unregisterReceiver(mStopSelfReceiver);
         super.onDestroy();
-    }
-
-    @SuppressWarnings("unused")
-    @Produce
-    public NetMonBus.DBOperationStarted produceDBOperationStarted() {
-        return mDBOperationStarted;
     }
 
     private void handleActionCompress() {

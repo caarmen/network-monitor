@@ -26,16 +26,17 @@ package ca.rmen.android.networkmonitor.app.bus;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
+
 
 public class NetMonBus {
-    private static final Bus BUS = new Bus();
+    private static final EventBus BUS = EventBus.getDefault();
 
     private NetMonBus() {
         // prevent instantiation
     }
 
-    public static synchronized Bus getBus() {
+    public static synchronized EventBus getBus() {
         return BUS;
     }
 
