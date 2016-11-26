@@ -163,13 +163,10 @@ public class StandardDeviceLocationDataSource implements NetMonDataSource {
         }
     };
 
-    private final OnSharedPreferenceChangeListener mPreferenceListener = new OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
-            if (NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY.equals(key) || NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
-                registerLocationListener();
-            }
+    private final OnSharedPreferenceChangeListener mPreferenceListener = (sharedPreferences, key) -> {
+        Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
+        if (NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY.equals(key) || NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
+            registerLocationListener();
         }
     };
 }

@@ -191,15 +191,12 @@ public class DBOpIntentService extends IntentService {
             }
 
             // Show a toast
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    String toast = intent.getStringExtra(EXTRA_DB_OP_TOAST);
-                    Toast.makeText(DBOpIntentService.this, toast, Toast.LENGTH_LONG).show();
-                    synchronized (lock) {
-                        if (mDBOperationStarted != null) {
-                            NetMonBus.getBus().postSticky(mDBOperationStarted);
-                        }
+            mHandler.post(() -> {
+                String toast = intent.getStringExtra(EXTRA_DB_OP_TOAST);
+                Toast.makeText(DBOpIntentService.this, toast, Toast.LENGTH_LONG).show();
+                synchronized (lock) {
+                    if (mDBOperationStarted != null) {
+                        NetMonBus.getBus().postSticky(mDBOperationStarted);
                     }
                 }
             });

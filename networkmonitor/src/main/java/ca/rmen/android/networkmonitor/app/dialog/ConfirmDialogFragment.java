@@ -74,25 +74,19 @@ public class ConfirmDialogFragment extends DialogFragment { // NO_UCD (use defau
         OnClickListener positiveListener = null;
         OnClickListener negativeListener = null;
         if (getActivity() instanceof DialogButtonListener) {
-            positiveListener = new OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Log.v(TAG, "onClick (positive button");
-                    FragmentActivity activity = getActivity();
-                    if (activity == null) Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
-                    else
-                        ((DialogButtonListener) activity).onOkClicked(actionId, extras);
-                }
+            positiveListener = (dialog, which) -> {
+                Log.v(TAG, "onClick (positive button");
+                FragmentActivity activity = getActivity();
+                if (activity == null) Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
+                else
+                    ((DialogButtonListener) activity).onOkClicked(actionId, extras);
             };
-            negativeListener = new OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Log.v(TAG, "onClick (negative button");
-                    FragmentActivity activity = getActivity();
-                    if (activity == null) Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
-                    else
-                        ((DialogButtonListener) activity).onCancelClicked(actionId, extras);
-                }
+            negativeListener = (dialog, which) -> {
+                Log.v(TAG, "onClick (negative button");
+                FragmentActivity activity = getActivity();
+                if (activity == null) Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
+                else
+                    ((DialogButtonListener) activity).onCancelClicked(actionId, extras);
             };
         }
         builder.setNegativeButton(android.R.string.cancel, negativeListener);

@@ -107,23 +107,20 @@ public class EmailPreferencesActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
-            if (EmailPreferences.PREF_EMAIL_RECIPIENTS.equals(key)) {
-                updatePreferenceSummary(EmailPreferences.PREF_EMAIL_RECIPIENTS, R.string.pref_summary_email_recipients);
-            } else if (EmailPreferences.PREF_EMAIL_REPORT_FORMATS.equals(key)) {
-                updatePreferenceSummary(EmailPreferences.PREF_EMAIL_REPORT_FORMATS, R.string.pref_summary_email_report_formats);
-            } else if (EmailPreferences.PREF_EMAIL_SERVER.equals(key)) {
-                updatePreferenceSummary(EmailPreferences.PREF_EMAIL_SERVER, R.string.pref_summary_email_server);
-            } else if (EmailPreferences.PREF_EMAIL_PORT.equals(key)) {
-                updatePreferenceSummary(EmailPreferences.PREF_EMAIL_PORT, R.string.pref_summary_email_port);
-            } else if (EmailPreferences.PREF_EMAIL_USER.equals(key)) {
-                updatePreferenceSummary(EmailPreferences.PREF_EMAIL_USER, R.string.pref_summary_email_user);
-            } else if (EmailPreferences.PREF_EMAIL_LAST_EMAIL_SENT.equals(key)) {
-                updatePreferenceSummary(EmailPreferences.PREF_EMAIL_LAST_EMAIL_SENT, R.string.pref_summary_email_last_email_sent);
-            }
+    private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = (sharedPreferences, key) -> {
+        Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
+        if (EmailPreferences.PREF_EMAIL_RECIPIENTS.equals(key)) {
+            updatePreferenceSummary(EmailPreferences.PREF_EMAIL_RECIPIENTS, R.string.pref_summary_email_recipients);
+        } else if (EmailPreferences.PREF_EMAIL_REPORT_FORMATS.equals(key)) {
+            updatePreferenceSummary(EmailPreferences.PREF_EMAIL_REPORT_FORMATS, R.string.pref_summary_email_report_formats);
+        } else if (EmailPreferences.PREF_EMAIL_SERVER.equals(key)) {
+            updatePreferenceSummary(EmailPreferences.PREF_EMAIL_SERVER, R.string.pref_summary_email_server);
+        } else if (EmailPreferences.PREF_EMAIL_PORT.equals(key)) {
+            updatePreferenceSummary(EmailPreferences.PREF_EMAIL_PORT, R.string.pref_summary_email_port);
+        } else if (EmailPreferences.PREF_EMAIL_USER.equals(key)) {
+            updatePreferenceSummary(EmailPreferences.PREF_EMAIL_USER, R.string.pref_summary_email_user);
+        } else if (EmailPreferences.PREF_EMAIL_LAST_EMAIL_SENT.equals(key)) {
+            updatePreferenceSummary(EmailPreferences.PREF_EMAIL_LAST_EMAIL_SENT, R.string.pref_summary_email_last_email_sent);
         }
     };
 
@@ -167,19 +164,15 @@ public class EmailPreferencesActivity extends AppCompatActivity {
      * Because of this, we set a listener directly on the MultiSelectListPreference.
      * http://stackoverflow.com/questions/22388683/multiselectlistpreference-onsharedpreferencechanged-not-called-after-first-time
      */
-    private final Preference.OnPreferenceChangeListener mOnPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
-
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
-            Log.v(TAG, "onPreferenceChange: preference = " + preference + ", newValue = " + newValue);
-            if (EmailPreferences.PREF_EMAIL_REPORT_FORMATS.equals(preference.getKey())) {
-                @SuppressWarnings("unchecked")
-                String valueStr = getSummary((MultiSelectListPreference) preference, (Set<String>) newValue);
-                String summary = getString(R.string.pref_summary_email_report_formats, valueStr);
-                preference.setSummary(summary);
-            }
-            return true;
+    private final Preference.OnPreferenceChangeListener mOnPreferenceChangeListener = (preference, newValue) -> {
+        Log.v(TAG, "onPreferenceChange: preference = " + preference + ", newValue = " + newValue);
+        if (EmailPreferences.PREF_EMAIL_REPORT_FORMATS.equals(preference.getKey())) {
+            @SuppressWarnings("unchecked")
+            String valueStr = getSummary((MultiSelectListPreference) preference, (Set<String>) newValue);
+            String summary = getString(R.string.pref_summary_email_report_formats, valueStr);
+            preference.setSummary(summary);
         }
+        return true;
     };
 
 }

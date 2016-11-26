@@ -98,11 +98,8 @@ public class GnuplotSettingsActivity extends AppCompatActivity {
         }
     };
 
-    private final Preference.OnPreferenceChangeListener mOnPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
-            updateFilterPreferenceTitle((String) newValue);
-            return true;
-        }
+    private final Preference.OnPreferenceChangeListener mOnPreferenceChangeListener = (preference, newValue) -> {
+        updateFilterPreferenceTitle((String) newValue);
+        return true;
     };
 }

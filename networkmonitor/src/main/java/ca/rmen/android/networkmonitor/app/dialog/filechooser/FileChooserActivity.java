@@ -120,18 +120,11 @@ public class FileChooserActivity extends FragmentActivity implements FileChooser
     void showRationaleForPermissions(final PermissionRequest request) {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.permission_external_storage_rationale)
-                .setPositiveButton(R.string.permission_button_allow, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        request.proceed();
-                    }
-                }).setNegativeButton(R.string.permission_button_deny, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                request.cancel();
-                showFileChooserDialog();
-            }
-        }).show();
+                .setPositiveButton(R.string.permission_button_allow, (dialogInterface, i) -> request.proceed())
+                .setNegativeButton(R.string.permission_button_deny, (dialogInterface, i) -> {
+                    request.cancel();
+                    showFileChooserDialog();
+                }).show();
     }
 
     @Override

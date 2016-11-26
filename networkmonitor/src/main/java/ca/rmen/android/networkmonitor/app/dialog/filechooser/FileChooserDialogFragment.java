@@ -125,51 +125,30 @@ public class FileChooserDialogFragment extends DialogFragment {
 
         // Save the file the user selected. Reload the dialog with the new folder
         // contents.
-        OnClickListener fileSelectionListener = new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mSelectedFile = mAdapter.getItem(i);
-                if (mSelectedFile != null && mSelectedFile.isDirectory()) {
-                    mAdapter.load(mSelectedFile);
-                    AlertDialog dialog = (AlertDialog) dialogInterface;
-                    dialog.setTitle(FileChooser.getFullDisplayName(context, mSelectedFile));
-                    dialog.getListView().clearChoices();
-                    dialog.getListView().setSelectionAfterHeaderView();
-                }
+        OnClickListener fileSelectionListener = (dialogInterface, i) -> {
+            mSelectedFile = mAdapter.getItem(i);
+            if (mSelectedFile != null && mSelectedFile.isDirectory()) {
+                mAdapter.load(mSelectedFile);
+                AlertDialog dialog = (AlertDialog) dialogInterface;
+                dialog.setTitle(FileChooser.getFullDisplayName(context, mSelectedFile));
+                dialog.getListView().clearChoices();
+                dialog.getListView().setSelectionAfterHeaderView();
             }
         };
 
+        final FileChooserDialogListener listener = (FileChooserDialogListener) getActivity();
         // When the user taps the positive button, notify the listener.
-        OnClickListener positiveListener = new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                FileChooserDialogListener activity = (FileChooserDialogListener) getActivity();
-                if (activity == null)
-                    Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
-                else
-                    activity.onFileSelected(actionId, mSelectedFile);
-            }
+        OnClickListener positiveListener = (dialog, which) -> {
+            if (listener == null)
+                Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
+            else
+                listener.onFileSelected(actionId, mSelectedFile);
         };
 
         // Dismiss/cancel callbacks: Are all of these needed?
-        OnClickListener negativeListener = new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                ((FileChooserDialogListener) getActivity()).onDismiss(actionId);
-            }
-        };
-        OnCancelListener cancelListener = new OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialogInterface) {
-                ((FileChooserDialogListener) getActivity()).onDismiss(actionId);
-            }
-        };
-        OnDismissListener dismissListener = new OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                ((FileChooserDialogListener) getActivity()).onDismiss(actionId);
-            }
-        };
+        OnClickListener negativeListener = (dialog, which) -> listener.onDismiss(actionId);
+        OnCancelListener cancelListener = dialogInterface -> listener.onDismiss(actionId);
+        OnDismissListener dismissListener = dialogInterface -> listener.onDismiss(actionId);
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle(FileChooser.getFullDisplayName(context, mSelectedFile))
                 .setSingleChoiceItems(mAdapter, -1, fileSelectionListener)

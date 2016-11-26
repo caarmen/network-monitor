@@ -363,12 +363,8 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
     /**
      * Refresh the screen when certain shared preferences change.
      */
-    private final OnSharedPreferenceChangeListener mSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
-
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals(NetMonPreferences.PREF_SORT_COLUMN_NAME) || key.equals(NetMonPreferences.PREF_SORT_ORDER)) loadHTMLFile();
-        }
+    private final OnSharedPreferenceChangeListener mSharedPreferenceChangeListener = (sharedPreferences, key) -> {
+        if (key.equals(NetMonPreferences.PREF_SORT_COLUMN_NAME) || key.equals(NetMonPreferences.PREF_SORT_ORDER)) loadHTMLFile();
     };
 
     @Override

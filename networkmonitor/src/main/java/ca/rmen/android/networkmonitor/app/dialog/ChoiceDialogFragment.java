@@ -75,18 +75,15 @@ public class ChoiceDialogFragment extends DialogFragment { // NO_UCD (use defaul
         OnClickListener listener = null;
         final AtomicBoolean hasClicked = new AtomicBoolean(false);
         if (getActivity() instanceof DialogItemListener) {
-            listener = new OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    FragmentActivity activity = getActivity();
-                    if (activity == null) {
-                        Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
-                    } else if (hasClicked.get()) {
-                        Log.w(TAG, "User already clicked once on this dialog! Monkey?");
-                    } else {
-                        hasClicked.set(true);
-                        ((DialogItemListener) activity).onItemSelected(actionId, choices, which);
-                    }
+            listener = (dialog, which) -> {
+                FragmentActivity activity = getActivity();
+                if (activity == null) {
+                    Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
+                } else if (hasClicked.get()) {
+                    Log.w(TAG, "User already clicked once on this dialog! Monkey?");
+                } else {
+                    hasClicked.set(true);
+                    ((DialogItemListener) activity).onItemSelected(actionId, choices, which);
                 }
             };
         }
