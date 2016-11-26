@@ -50,7 +50,7 @@ final class SettingsExportImport {
     private static final String TAG = Constants.TAG + SettingsExportImport.class.getSimpleName();
     private static final String PREF_IMPORT_VERIFICATION = "import_verification";
 
-    public interface SettingsImportCallback {
+    interface SettingsImportCallback {
         /**
          * Called when the settings have been successfully imported.
          */
@@ -64,7 +64,7 @@ final class SettingsExportImport {
     /**
      * Copies the shared preferences file to the sd card, and prompts the user to share it.
      */
-    public static void exportSettings(final Activity activity) {
+    static void exportSettings(final Activity activity) {
         final File inputFile = getSharedPreferencesFile(activity);
         final File outputFile = new File(activity.getExternalFilesDir(null), inputFile.getName());
         new AsyncTask<Void, Void, Boolean>() {
@@ -103,7 +103,7 @@ final class SettingsExportImport {
     /**
      * Overwrites the app's default shared preferences file with the file at the given uri.
      */
-    public static void importSettings(final Activity activity, final Uri uri, final SettingsImportCallback callback) {
+    static void importSettings(final Activity activity, final Uri uri, final SettingsImportCallback callback) {
         final File outputFile = getSharedPreferencesFile(activity);
         final File backupFile = new File(activity.getCacheDir(), outputFile.getName() + ".bak");
 
@@ -164,8 +164,10 @@ final class SettingsExportImport {
     private static boolean reloadSettings(Context context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             if (!reloadSettingsPreV11(context)) return false;
-        } else {
+        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             if (!reloadSettingsV11(context)) return false;
+        } else {
+            if (!reloadSettingsV23(context)) return false;
         }
 
         // We expect our temporary preference to have been erased.
@@ -173,20 +175,27 @@ final class SettingsExportImport {
     }
 
     private static boolean reloadSettingsPreV11(Context context) {
-        String sharedPreferencesName = getSharedPreferencesName(context);
-        SharedPreferences sharedPreferences = context.getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE);
-        Map<String, ?> allSettings = sharedPreferences.getAll();
-        Log.v(TAG, "allSettings: " + allSettings);
-        return !allSettings.isEmpty();
+        return reloadSettings(context, Context.MODE_PRIVATE);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private static boolean reloadSettingsV11(Context context) {
+        //noinspection deprecation
+        return reloadSettings(context, Context.MODE_MULTI_PROCESS);
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private static boolean reloadSettingsV23(Context context) {
+        return reloadSettings(context, Context.MODE_PRIVATE);
+    }
+
+    private static boolean reloadSettings(Context context, int preferencesReadMode) {
         String sharedPreferencesName = getSharedPreferencesName(context);
-        SharedPreferences sharedPreferences = context.getSharedPreferences(sharedPreferencesName, Context.MODE_MULTI_PROCESS);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(sharedPreferencesName, preferencesReadMode);
         Map<String, ?> allSettings = sharedPreferences.getAll();
         Log.v(TAG, "allSettings: " + allSettings);
         return !allSettings.isEmpty();
+
     }
 
     private static String getSharedPreferencesName(Context context) {

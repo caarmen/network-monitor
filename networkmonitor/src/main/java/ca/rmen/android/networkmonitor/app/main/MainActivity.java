@@ -26,7 +26,6 @@ package ca.rmen.android.networkmonitor.app.main;
 
 import android.Manifest;
 import android.app.ActivityManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;

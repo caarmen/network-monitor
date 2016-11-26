@@ -27,7 +27,6 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.Set;
 
 import ca.rmen.android.networkmonitor.BuildConfig;
@@ -46,6 +45,8 @@ import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailSecurity;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.Log;
+import java8.util.stream.Collectors;
+import java8.util.stream.StreamSupport;
 
 /**
  * Sends a mail to a recipient or recipients, including (or not) some file attachments with exports of the log.
@@ -99,10 +100,9 @@ public class ReportEmailer {
     private void sendEmail(final EmailConfig emailConfig) {
         Log.v(TAG, "sendEmail: emailConfig = " + emailConfig);
         // Prepare the file attachments before we start to send the e-mail.
-        Set<File> attachments = new HashSet<>();
-        for (String fileType : emailConfig.reportFormats) {
-            attachments.add(createAttachment(fileType));
-        }
+        Set<File> attachments = StreamSupport.stream(emailConfig.reportFormats)
+                .map(this::createAttachment)
+                .collect(Collectors.toSet());
         final String protocol;
         if(emailConfig.security == EmailSecurity.TLS)
             protocol = "TLS";

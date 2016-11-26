@@ -28,9 +28,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java8.util.stream.Collectors;
 
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
@@ -51,6 +51,7 @@ import android.support.annotation.NonNull;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.util.Log;
+import java8.util.stream.StreamSupport;
 
 public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     private static final String TAG = Constants.TAG + NetMonProvider.class.getSimpleName();
@@ -220,9 +221,9 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     @Override
     public @NonNull ContentProviderResult[] applyBatch(@NonNull ArrayList<ContentProviderOperation> operations) throws OperationApplicationException {
         Log.v(TAG, "applyBatch: " + operations.size());
-        Set<Uri> urisToNotify = new HashSet<>();
-        for (ContentProviderOperation operation : operations)
-            urisToNotify.add(operation.getUri());
+        Set<Uri> urisToNotify = StreamSupport.stream(operations)
+                        .map(ContentProviderOperation::getUri)
+                        .collect(Collectors.toSet());
         Log.v(TAG, "applyBatch: will notify these uris after persisting: " + urisToNotify);
         SQLiteDatabase db = mNetworkMonitorDatabase.getWritableDatabase();
         db.beginTransaction();

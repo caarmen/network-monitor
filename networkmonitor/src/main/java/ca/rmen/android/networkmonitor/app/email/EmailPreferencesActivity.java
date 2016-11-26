@@ -25,7 +25,6 @@
 package ca.rmen.android.networkmonitor.app.email;
 
 import android.annotation.TargetApi;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.support.v14.preference.MultiSelectListPreference;

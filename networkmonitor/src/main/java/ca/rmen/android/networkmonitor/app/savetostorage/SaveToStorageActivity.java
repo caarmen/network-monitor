@@ -26,7 +26,6 @@ package ca.rmen.android.networkmonitor.app.savetostorage;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;

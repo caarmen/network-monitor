@@ -1,7 +1,6 @@
 package ca.rmen.android.networkmonitor.app.prefs.hack;
 
 import android.annotation.TargetApi;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v14.preference.MultiSelectListPreference;

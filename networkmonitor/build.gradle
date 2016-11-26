@@ -115,5 +115,6 @@ dependencies {
         proprietaryCompile 'com.google.android.gms:play-services-location:9.8.0'
     }
 
+    compile 'net.sourceforge.streamsupport:streamsupport:1.5.2'
     retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
 }

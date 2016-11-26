@@ -25,7 +25,6 @@
  */
 package ca.rmen.android.networkmonitor.app.speedtest;
 
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
