@@ -24,7 +24,6 @@
 package ca.rmen.android.networkmonitor.app.main;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -68,30 +67,24 @@ public class WarningDialogFragment extends DialogFragment { // NO_UCD (use defau
         OnClickListener positiveListener = null;
         OnClickListener negativeListener = null;
         if (getActivity() instanceof DialogButtonListener) {
-            positiveListener = new OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Log.v(TAG, "onClick (positive button");
-                    FragmentActivity activity = getActivity();
-                    if (activity == null) {
-                        Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
-                    } else {
-                        CheckBox showWarningDialog = (CheckBox) view.findViewById(R.id.app_warning_cb_stfu);
-                        NetMonPreferences.getInstance(activity).setShowAppWarning(!showWarningDialog.isChecked());
-                        ((DialogButtonListener) activity).onAppWarningOkClicked();
-                    }
+            positiveListener = (dialog, which) -> {
+                Log.v(TAG, "onClick (positive button");
+                FragmentActivity activity = getActivity();
+                if (activity == null) {
+                    Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
+                } else {
+                    CheckBox showWarningDialog = (CheckBox) view.findViewById(R.id.app_warning_cb_stfu);
+                    NetMonPreferences.getInstance(activity).setShowAppWarning(!showWarningDialog.isChecked());
+                    ((DialogButtonListener) activity).onAppWarningOkClicked();
                 }
             };
-            negativeListener = new OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Log.v(TAG, "onClick (negative button");
-                    FragmentActivity activity = getActivity();
-                    if (activity == null)
-                        Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
-                    else
-                        ((DialogButtonListener) activity).onAppWarningCancelClicked();
-                }
+            negativeListener = (dialog, which) -> {
+                Log.v(TAG, "onClick (negative button");
+                FragmentActivity activity = getActivity();
+                if (activity == null)
+                    Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
+                else
+                    ((DialogButtonListener) activity).onAppWarningCancelClicked();
             };
         }
         builder.setNegativeButton(R.string.app_warning_cancel, negativeListener);

@@ -123,7 +123,7 @@ public class EmailPreferences {
     }
 
     public EmailConfig getEmailConfig() {
-        Set<String> reportFormats = mSharedPrefs.getStringSet(PREF_EMAIL_REPORT_FORMATS, new HashSet<String>());
+        Set<String> reportFormats = mSharedPrefs.getStringSet(PREF_EMAIL_REPORT_FORMATS, new HashSet<>());
         String server = mSharedPrefs.getString(PREF_EMAIL_SERVER, "").trim();
         int port = getIntPreference(PREF_EMAIL_PORT, PREF_EMAIL_PORT_DEFAULT);
         String user = mSharedPrefs.getString(PREF_EMAIL_USER, "").trim();

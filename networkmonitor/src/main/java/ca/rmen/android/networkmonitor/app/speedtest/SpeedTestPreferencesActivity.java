@@ -25,7 +25,6 @@
  */
 package ca.rmen.android.networkmonitor.app.speedtest;
 
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -104,42 +103,39 @@ public class SpeedTestPreferencesActivity extends AppCompatActivity { // NO_UCD 
         }
     }
 
-    private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
-            // Show a warning when the user enables the speed test.
-            switch (key) {
-                case SpeedTestPreferences.PREF_SPEED_TEST_ENABLED:
-                    if (sharedPreferences.getBoolean(key, false)) {
-                        DialogFragmentFactory.showWarningDialog(SpeedTestPreferencesActivity.this, getString(R.string.speed_test_warning_title),
-                                getString(R.string.speed_test_warning_message));
-                    }
-                    break;
-                case SpeedTestPreferences.PREF_SPEED_TEST_INTERVAL:
-                    updatePreferenceSummary(key, R.string.pref_summary_speed_test_interval);
-                    break;
-                // If the user changed the download url, delete the previously downloaded file
-                // and download the new one.
-                case SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL:
-                    FileUtil.clearCache(SpeedTestPreferencesActivity.this);
-                    download();
-                    break;
-                case SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_SERVER:
-                    updatePreferenceSummary(key, R.string.pref_summary_speed_test_upload_server);
-                    break;
-                case SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_PORT:
-                    updatePreferenceSummary(key, R.string.pref_summary_speed_test_upload_port);
-                    break;
-                case SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_USER:
-                    updatePreferenceSummary(key, R.string.pref_summary_speed_test_upload_user);
-                    break;
-                case SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_PATH:
-                    updatePreferenceSummary(key, R.string.pref_summary_speed_test_upload_path);
-                    break;
-                default:
-                    break;
-            }
+    private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = (sharedPreferences, key) -> {
+        Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
+        // Show a warning when the user enables the speed test.
+        switch (key) {
+            case SpeedTestPreferences.PREF_SPEED_TEST_ENABLED:
+                if (sharedPreferences.getBoolean(key, false)) {
+                    DialogFragmentFactory.showWarningDialog(SpeedTestPreferencesActivity.this, getString(R.string.speed_test_warning_title),
+                            getString(R.string.speed_test_warning_message));
+                }
+                break;
+            case SpeedTestPreferences.PREF_SPEED_TEST_INTERVAL:
+                updatePreferenceSummary(key, R.string.pref_summary_speed_test_interval);
+                break;
+            // If the user changed the download url, delete the previously downloaded file
+            // and download the new one.
+            case SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL:
+                FileUtil.clearCache(SpeedTestPreferencesActivity.this);
+                download();
+                break;
+            case SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_SERVER:
+                updatePreferenceSummary(key, R.string.pref_summary_speed_test_upload_server);
+                break;
+            case SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_PORT:
+                updatePreferenceSummary(key, R.string.pref_summary_speed_test_upload_port);
+                break;
+            case SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_USER:
+                updatePreferenceSummary(key, R.string.pref_summary_speed_test_upload_user);
+                break;
+            case SpeedTestPreferences.PREF_SPEED_TEST_UPLOAD_PATH:
+                updatePreferenceSummary(key, R.string.pref_summary_speed_test_upload_path);
+                break;
+            default:
+                break;
         }
     };
 

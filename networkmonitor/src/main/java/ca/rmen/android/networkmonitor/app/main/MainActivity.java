@@ -26,7 +26,6 @@ package ca.rmen.android.networkmonitor.app.main;
 
 import android.Manifest;
 import android.app.ActivityManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -113,17 +112,9 @@ public class MainActivity extends AppCompatActivity
     void showRationaleForPermissions(final PermissionRequest request) {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.permission_location_rationale)
-                .setPositiveButton(R.string.permission_button_allow, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        request.proceed();
-                    }
-                }).setNegativeButton(R.string.permission_button_deny, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        request.cancel();
-                    }
-                }).show();
+                .setPositiveButton(R.string.permission_button_allow, (dialogInterface, i) -> request.proceed())
+                .setNegativeButton(R.string.permission_button_deny, (dialogInterface, i) -> request.cancel())
+                .show();
     }
 
     @OnPermissionDenied({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
@@ -263,17 +254,14 @@ public class MainActivity extends AppCompatActivity
         NetMonPreferences.getInstance(this).setServiceEnabled(false);
     }
 
-    private final Preference.OnPreferenceClickListener mOnPreferenceClickListener = new Preference.OnPreferenceClickListener() {
-        @Override
-        public boolean onPreferenceClick(Preference preference) {
-            if (PREF_SHARE.equals(preference.getKey())) {
-                DialogFragmentFactory.showChoiceDialog(MainActivity.this, getString(R.string.export_choice_title), getResources().getStringArray(R.array.export_choices), -1,
-                        ID_ACTION_SHARE);
-            } else if (PREF_CLEAR_LOG_FILE.equals(preference.getKey())) {
-                DialogFragmentFactory.showConfirmDialog(MainActivity.this, getString(R.string.action_clear), getString(R.string.confirm_logs_clear), ID_ACTION_CLEAR, null);
-            }
-            return false;
+    private final Preference.OnPreferenceClickListener mOnPreferenceClickListener = preference -> {
+        if (PREF_SHARE.equals(preference.getKey())) {
+            DialogFragmentFactory.showChoiceDialog(MainActivity.this, getString(R.string.export_choice_title), getResources().getStringArray(R.array.export_choices), -1,
+                    ID_ACTION_SHARE);
+        } else if (PREF_CLEAR_LOG_FILE.equals(preference.getKey())) {
+            DialogFragmentFactory.showConfirmDialog(MainActivity.this, getString(R.string.action_clear), getString(R.string.confirm_logs_clear), ID_ACTION_CLEAR, null);
         }
+        return false;
     };
 
 }

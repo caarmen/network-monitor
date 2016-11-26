@@ -44,12 +44,7 @@ public class NetMonBus {
      * Utility method to post an event to the bus from any thread.
      */
     public static void post(final Object event) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                BUS.post(event);
-            }
-        });
+        new Handler(Looper.getMainLooper()).post(() -> BUS.post(event));
     }
 
     // region bus events

@@ -25,9 +25,9 @@
 package ca.rmen.android.networkmonitor.app.log;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -46,6 +46,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -268,7 +269,18 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
                     }
 
                     @Override
+                    @TargetApi(Build.VERSION_CODES.N)
+                    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                        return loadUrl(request.getUrl().toString()) || super.shouldOverrideUrlLoading(view, request);
+                    }
+
+                    @SuppressWarnings("deprecation")
+                    @Override
                     public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                        return loadUrl(url) || super.shouldOverrideUrlLoading(view, url);
+                    }
+
+                    private boolean loadUrl(String url) {
                         Log.v(TAG, "url: " + url);
                         // If the user clicked on one of the column names, let's update
                         // the sorting preference (column name, ascending or descending order).
@@ -298,7 +310,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
                             startActivityForResult(intent, REQUEST_CODE_FILTER_COLUMN);
                             return true;
                         } else {
-                            return super.shouldOverrideUrlLoading(view, url);
+                            return false;
                         }
                     }
                 });
@@ -363,12 +375,8 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
     /**
      * Refresh the screen when certain shared preferences change.
      */
-    private final OnSharedPreferenceChangeListener mSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
-
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals(NetMonPreferences.PREF_SORT_COLUMN_NAME) || key.equals(NetMonPreferences.PREF_SORT_ORDER)) loadHTMLFile();
-        }
+    private final OnSharedPreferenceChangeListener mSharedPreferenceChangeListener = (sharedPreferences, key) -> {
+        if (key.equals(NetMonPreferences.PREF_SORT_COLUMN_NAME) || key.equals(NetMonPreferences.PREF_SORT_ORDER)) loadHTMLFile();
     };
 
     @Override

@@ -105,12 +105,9 @@ public class Log {
 
         // Install an exception handler
         final UncaughtExceptionHandler previousExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
-        Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread thread, Throwable ex) {
-                Log.prepareLogFile(context);
-                previousExceptionHandler.uncaughtException(thread, ex);
-            }
+        Thread.setDefaultUncaughtExceptionHandler((thread, ex) -> {
+            Log.prepareLogFile(context);
+            previousExceptionHandler.uncaughtException(thread, ex);
         });
 
         sError = false;

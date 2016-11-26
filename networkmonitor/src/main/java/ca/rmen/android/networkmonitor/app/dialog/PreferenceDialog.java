@@ -25,8 +25,6 @@ package ca.rmen.android.networkmonitor.app.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
@@ -109,31 +107,16 @@ public class PreferenceDialog {
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setTitle(titleId)
                 .setSingleChoiceItems(labels, currentPrefPosition, null)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Save the preference for the record count.
-                        int selectedItemPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                        final String selectedItemValue = values[selectedItemPosition];
-                        sharedPrefs.edit().putString(preferenceName, selectedItemValue).apply();
-                        listener.onPreferenceValueSelected(selectedItemValue);
-                    }
-
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    // Save the preference for the record count.
+                    int selectedItemPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                    final String selectedItemValue = values[selectedItemPosition];
+                    sharedPrefs.edit().putString(preferenceName, selectedItemValue).apply();
+                    listener.onPreferenceValueSelected(selectedItemValue);
                 })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        listener.onCancel();
-                    }
-                });
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> listener.onCancel());
         final Dialog dialog = builder.create();
-        dialog.setOnCancelListener(new OnCancelListener() {
-
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                listener.onCancel();
-            }
-        });
+        dialog.setOnCancelListener(dialogInterface -> listener.onCancel());
         dialog.show();
         return dialog;
     }

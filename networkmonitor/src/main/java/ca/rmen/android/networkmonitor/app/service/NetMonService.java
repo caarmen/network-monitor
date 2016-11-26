@@ -29,7 +29,6 @@ import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -176,22 +175,18 @@ public class NetMonService extends Service {
         }
     };
 
-    private final OnSharedPreferenceChangeListener mSharedPreferenceListener = new OnSharedPreferenceChangeListener() {
-
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            Log.v(TAG, "onSharedPreferenceChanged: " + key);
-            // Listen for the user disabling the service
-            if (NetMonPreferences.PREF_SERVICE_ENABLED.equals(key)) {
-                if (!sharedPreferences.getBoolean(key, NetMonPreferences.PREF_SERVICE_ENABLED_DEFAULT)) {
-                    Log.v(TAG, "Preference to enable service was turned off");
-                    stopSelf();
-                }
+    private final OnSharedPreferenceChangeListener mSharedPreferenceListener = (sharedPreferences, key) -> {
+        Log.v(TAG, "onSharedPreferenceChanged: " + key);
+        // Listen for the user disabling the service
+        if (NetMonPreferences.PREF_SERVICE_ENABLED.equals(key)) {
+            if (!sharedPreferences.getBoolean(key, NetMonPreferences.PREF_SERVICE_ENABLED_DEFAULT)) {
+                Log.v(TAG, "Preference to enable service was turned off");
+                stopSelf();
             }
-            // Reschedule our task if the user changed the interval
-            else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key) || NetMonPreferences.PREF_SCHEDULER.equals(key)) {
-                scheduleTests();
-            }
+        }
+        // Reschedule our task if the user changed the interval
+        else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key) || NetMonPreferences.PREF_SCHEDULER.equals(key)) {
+            scheduleTests();
         }
     };
 

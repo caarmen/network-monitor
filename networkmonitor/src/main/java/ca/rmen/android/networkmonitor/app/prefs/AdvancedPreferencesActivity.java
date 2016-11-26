@@ -141,34 +141,31 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
     }
 
 
-    private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            final NetMonPreferences prefs = NetMonPreferences.getInstance(AdvancedPreferencesActivity.this);
-            Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
-            if (NetMonPreferences.PREF_TEST_SERVER.equals(key)) {
-                updatePreferenceSummary(key, R.string.pref_summary_test_server);
-            } else if (NetMonPreferences.PREF_NOTIFICATION_RINGTONE.equals(key)) {
-                updatePreferenceSummary(key, R.string.pref_summary_notification_ringtone);
-            } else if (NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY.equals(key)) {
-                if (prefs.getLocationFetchingStrategy() == LocationFetchingStrategy.HIGH_ACCURACY
-                        || prefs.getLocationFetchingStrategy() == LocationFetchingStrategy.HIGH_ACCURACY_GMS) {
-                    checkLocationSettings();
-                }
-            } else if (NetMonPreferences.PREF_NOTIFICATION_ENABLED.equals(key)) {
-                if (!prefs.getShowNotificationOnTestFailure()) NetMonNotification.dismissFailedTestNotification(AdvancedPreferencesActivity.this);
-            } else if (NetMonPreferences.PREF_DB_RECORD_COUNT.equals(key)) {
-                int rowsToKeep = NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getDBRecordCount();
-                if (rowsToKeep > 0) DBOpIntentService.startActionPurge(AdvancedPreferencesActivity.this, rowsToKeep);
-            } else if (NetMonPreferences.PREF_THEME.equals(key)) {
-                // When the theme changes, restart the activity
-                Theme.setThemeFromSettings(getApplicationContext());
-                Intent intent = new Intent(AdvancedPreferencesActivity.this, AdvancedPreferencesActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(AdvancedPreferencesActivity.this);
-                stackBuilder.addNextIntentWithParentStack(intent);
-                stackBuilder.startActivities();
+    private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = (sharedPreferences, key) -> {
+        final NetMonPreferences prefs = NetMonPreferences.getInstance(AdvancedPreferencesActivity.this);
+        Log.v(TAG, "onSharedPreferenceChanged: key = " + key);
+        if (NetMonPreferences.PREF_TEST_SERVER.equals(key)) {
+            updatePreferenceSummary(key, R.string.pref_summary_test_server);
+        } else if (NetMonPreferences.PREF_NOTIFICATION_RINGTONE.equals(key)) {
+            updatePreferenceSummary(key, R.string.pref_summary_notification_ringtone);
+        } else if (NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY.equals(key)) {
+            if (prefs.getLocationFetchingStrategy() == LocationFetchingStrategy.HIGH_ACCURACY
+                    || prefs.getLocationFetchingStrategy() == LocationFetchingStrategy.HIGH_ACCURACY_GMS) {
+                checkLocationSettings();
             }
+        } else if (NetMonPreferences.PREF_NOTIFICATION_ENABLED.equals(key)) {
+            if (!prefs.getShowNotificationOnTestFailure()) NetMonNotification.dismissFailedTestNotification(AdvancedPreferencesActivity.this);
+        } else if (NetMonPreferences.PREF_DB_RECORD_COUNT.equals(key)) {
+            int rowsToKeep = NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getDBRecordCount();
+            if (rowsToKeep > 0) DBOpIntentService.startActionPurge(AdvancedPreferencesActivity.this, rowsToKeep);
+        } else if (NetMonPreferences.PREF_THEME.equals(key)) {
+            // When the theme changes, restart the activity
+            Theme.setThemeFromSettings(getApplicationContext());
+            Intent intent = new Intent(AdvancedPreferencesActivity.this, AdvancedPreferencesActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(AdvancedPreferencesActivity.this);
+            stackBuilder.addNextIntentWithParentStack(intent);
+            stackBuilder.startActivities();
         }
     };
 
@@ -217,54 +214,46 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
         }.execute();
     }
 
-    private final Preference.OnPreferenceClickListener mOnPreferenceClickListener = new Preference.OnPreferenceClickListener() {
+    private final Preference.OnPreferenceClickListener mOnPreferenceClickListener = preference -> {
+        Log.v(TAG, "onPreferenceClick: " + preference);
+        if (PREF_IMPORT_DB.equals(preference.getKey())) {
+            Intent importIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            importIntent.setType("*/*");
+            importIntent.addCategory(Intent.CATEGORY_OPENABLE);
+            startActivityForResult(Intent.createChooser(importIntent, getResources().getText(R.string.pref_summary_import)), ACTIVITY_REQUEST_CODE_IMPORT_DB);
+        } else if (PREF_COMPRESS.equals(preference.getKey())) {
+            DialogFragmentFactory.showConfirmDialog(AdvancedPreferencesActivity.this, getString(R.string.compress_confirm_title), getString(R.string.compress_confirm_message),
+                    ID_ACTION_COMPRESS, null);
 
-        @Override
-        public boolean onPreferenceClick(Preference preference) {
-            Log.v(TAG, "onPreferenceClick: " + preference);
-            if (PREF_IMPORT_DB.equals(preference.getKey())) {
-                Intent importIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                importIntent.setType("*/*");
-                importIntent.addCategory(Intent.CATEGORY_OPENABLE);
-                startActivityForResult(Intent.createChooser(importIntent, getResources().getText(R.string.pref_summary_import)), ACTIVITY_REQUEST_CODE_IMPORT_DB);
-            } else if (PREF_COMPRESS.equals(preference.getKey())) {
-                DialogFragmentFactory.showConfirmDialog(AdvancedPreferencesActivity.this, getString(R.string.compress_confirm_title), getString(R.string.compress_confirm_message),
-                        ID_ACTION_COMPRESS, null);
+        } else if (NetMonPreferences.PREF_NOTIFICATION_RINGTONE.equals(preference.getKey())) {
+            Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, NetMonPreferences.getInstance(getApplicationContext()).getNotificationSoundUri());
 
-            } else if (NetMonPreferences.PREF_NOTIFICATION_RINGTONE.equals(preference.getKey())) {
-                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, NetMonPreferences.getInstance(getApplicationContext()).getNotificationSoundUri());
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.pref_title_notification_ringtone));
-                startActivityForResult(intent, ACTIVITY_REQUEST_CODE_RINGTONE);
-            } else if (PREF_IMPORT_SETTINGS.equals(preference.getKey())) {
-                Intent importIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                importIntent.setType("*/*");
-                importIntent.addCategory(Intent.CATEGORY_OPENABLE);
-                startActivityForResult(Intent.createChooser(importIntent, getResources().getText(R.string.pref_title_import_settings)), ACTIVITY_REQUEST_CODE_IMPORT_SETTINGS);
-            } else if (PREF_EXPORT_SETTINGS.equals(preference.getKey())) {
-                SettingsExportImport.exportSettings(AdvancedPreferencesActivity.this);
-            }
-            return false;
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.pref_title_notification_ringtone));
+            startActivityForResult(intent, ACTIVITY_REQUEST_CODE_RINGTONE);
+        } else if (PREF_IMPORT_SETTINGS.equals(preference.getKey())) {
+            Intent importIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            importIntent.setType("*/*");
+            importIntent.addCategory(Intent.CATEGORY_OPENABLE);
+            startActivityForResult(Intent.createChooser(importIntent, getResources().getText(R.string.pref_title_import_settings)), ACTIVITY_REQUEST_CODE_IMPORT_SETTINGS);
+        } else if (PREF_EXPORT_SETTINGS.equals(preference.getKey())) {
+            SettingsExportImport.exportSettings(AdvancedPreferencesActivity.this);
         }
+        return false;
     };
 
-    private final Preference.OnPreferenceChangeListener mOnPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
-
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
-            // Ignore the value if it is empty.
-            if (NetMonPreferences.PREF_TEST_SERVER.equals(preference.getKey())) {
-                String newValueStr = (String) newValue;
-                return !TextUtils.isEmpty(newValueStr);
-            }
-            return true;
+    private final Preference.OnPreferenceChangeListener mOnPreferenceChangeListener = (preference, newValue) -> {
+        // Ignore the value if it is empty.
+        if (NetMonPreferences.PREF_TEST_SERVER.equals(preference.getKey())) {
+            String newValueStr = (String) newValue;
+            return !TextUtils.isEmpty(newValueStr);
         }
+        return true;
     };
 
     @Override
@@ -315,7 +304,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
             startActivity(intent);
         } else if (actionId == ID_ACTION_IMPORT_SETTINGS) {
             final Uri uri = extras.getParcelable(EXTRA_IMPORT_URI);
-            SettingsExportImport.importSettings(this, uri, mSettingsImportCallback);
+            SettingsExportImport.importSettings(this, uri, this::loadPreferences);
         }
     }
 
@@ -354,12 +343,5 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
                     getString(R.string.no_location_confirm_dialog_message), ID_ACTION_LOCATION_SETTINGS, null);
         }
     }
-
-    private final SettingsExportImport.SettingsImportCallback mSettingsImportCallback = new SettingsExportImport.SettingsImportCallback() {
-        @Override
-        public void onSettingsImported() {
-            loadPreferences();
-        }
-    };
 
 }

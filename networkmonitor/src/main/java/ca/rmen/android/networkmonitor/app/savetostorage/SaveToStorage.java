@@ -42,22 +42,12 @@ class SaveToStorage {
 
     static void displaySuccessToast(final Context context, final File dest) {
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, context.getString(R.string.export_save_to_external_storage_success, dest.getAbsolutePath()), Toast.LENGTH_LONG).show();
-            }
-        });
+        handler.post(() -> Toast.makeText(context, context.getString(R.string.export_save_to_external_storage_success, dest.getAbsolutePath()), Toast.LENGTH_LONG).show());
     }
 
     static void displayErrorToast(final Context context) {
 
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, R.string.export_notif_error_content, Toast.LENGTH_LONG).show();
-            }
-        });
+        handler.post(() -> Toast.makeText(context, R.string.export_notif_error_content, Toast.LENGTH_LONG).show());
     }
 }

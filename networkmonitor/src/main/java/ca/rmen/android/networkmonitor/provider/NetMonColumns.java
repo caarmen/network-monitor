@@ -30,7 +30,6 @@ import android.provider.BaseColumns;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import ca.rmen.android.networkmonitor.R;

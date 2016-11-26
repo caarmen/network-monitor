@@ -26,7 +26,6 @@ package ca.rmen.android.networkmonitor.app.dialog.filechooser;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -120,18 +119,11 @@ public class FileChooserActivity extends FragmentActivity implements FileChooser
     void showRationaleForPermissions(final PermissionRequest request) {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.permission_external_storage_rationale)
-                .setPositiveButton(R.string.permission_button_allow, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        request.proceed();
-                    }
-                }).setNegativeButton(R.string.permission_button_deny, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                request.cancel();
-                showFileChooserDialog();
-            }
-        }).show();
+                .setPositiveButton(R.string.permission_button_allow, (dialogInterface, i) -> request.proceed())
+                .setNegativeButton(R.string.permission_button_deny, (dialogInterface, i) -> {
+                    request.cancel();
+                    showFileChooserDialog();
+                }).show();
     }
 
     @Override
