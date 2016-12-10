@@ -28,6 +28,8 @@ limitations under the License.
     <string name="log_title">Fichier journal</string>
 
     <string name="app_warning_title">Attention !</string>
+    <string name="app_warning_battery_icon">Batterie</string>
+    <string name="app_warning_data_usage_icon">Données mobiles</string>
     <string name="app_warning_message">Activer le service peut engendrer une forte utilisation de la batterie et des données mobiles.</string>
     <string name="app_warning_ok">Ça me va !</string>
     <string name="app_warning_cancel">Aïe, j\'ai peur</string>

@@ -395,7 +395,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
     public void onCancelClicked(int actionId, Bundle extras) {}
 
     @Override
-    public void onItemSelected(int actionId, CharSequence[] choices, int which) {
+    public void onItemSelected(int actionId, int which) {
         // The user picked a file format to export.
         if (actionId == ID_ACTION_SHARE) {
             String[] exportChoices = getResources().getStringArray(R.array.export_choices);

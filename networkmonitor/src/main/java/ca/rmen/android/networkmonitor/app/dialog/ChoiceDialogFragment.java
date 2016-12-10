@@ -51,7 +51,7 @@ public class ChoiceDialogFragment extends DialogFragment { // NO_UCD (use defaul
      * An activity which contains a choice dialog fragment should implement this interface.
      */
     public interface DialogItemListener {
-        void onItemSelected(int actionId, CharSequence[] choices, int which);
+        void onItemSelected(int actionId, int which);
     }
 
     public ChoiceDialogFragment() {
@@ -83,7 +83,7 @@ public class ChoiceDialogFragment extends DialogFragment { // NO_UCD (use defaul
                     Log.w(TAG, "User already clicked once on this dialog! Monkey?");
                 } else {
                     hasClicked.set(true);
-                    ((DialogItemListener) activity).onItemSelected(actionId, choices, which);
+                    ((DialogItemListener) activity).onItemSelected(actionId, which);
                 }
             };
         }

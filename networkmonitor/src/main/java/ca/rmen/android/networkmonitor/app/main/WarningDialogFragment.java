@@ -30,7 +30,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 
@@ -62,7 +61,7 @@ public class WarningDialogFragment extends DialogFragment { // NO_UCD (use defau
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.app_warning_title);
-        final View view = LayoutInflater.from(getActivity()).inflate(R.layout.warning_dialog, null);
+        final View view = View.inflate(getActivity(), R.layout.warning_dialog, null);
         builder.setView(view);
         OnClickListener positiveListener = null;
         OnClickListener negativeListener = null;

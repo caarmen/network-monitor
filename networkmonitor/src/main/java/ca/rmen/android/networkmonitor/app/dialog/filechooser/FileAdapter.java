@@ -103,9 +103,9 @@ class FileAdapter extends ArrayAdapter<File> {
         File file = getItem(position);
         if(convertView == null) {
             if(file != null && file.isDirectory()) {
-                result = (TextView) mInflater.inflate(R.layout.select_dialog_item_material, parent, false);
+                result = (TextView) mInflater.inflate(R.layout.netmon_select_dialog_item_material, parent, false);
             } else {
-                result = (TextView) mInflater.inflate(ca.rmen.android.networkmonitor.R.layout.netmon_select_dialog_singlechoice_material, parent, false);
+                result = (TextView) mInflater.inflate(R.layout.netmon_select_dialog_singlechoice_material, parent, false);
             }
         } else {
             result = (TextView) convertView;

@@ -115,7 +115,7 @@ public class DBCompress implements DBOperation {
                 if(mIsCanceled.get())
                     listener.onError(mContext.getString(R.string.compress_notif_canceled_content));
                 else
-                    listener.onComplete(mContext.getString(R.string.compress_notif_complete_content, numRowsDeleted));
+                    listener.onComplete(mContext.getResources().getQuantityString(R.plurals.compress_notif_complete_content, numRowsDeleted, numRowsDeleted));
             }
             else {
                 listener.onError(mContext.getString(R.string.compress_notif_error_content));

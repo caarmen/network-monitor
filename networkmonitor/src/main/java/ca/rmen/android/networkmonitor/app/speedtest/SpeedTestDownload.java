@@ -33,6 +33,7 @@ import java.net.URLConnection;
 
 import android.net.TrafficStats;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
@@ -49,7 +50,7 @@ public class SpeedTestDownload {
     private static final int TIMEOUT = 5000;
 
     interface SpeedTestDownloadCallback {
-        void onSpeedTestResult(SpeedTestResult result);
+        void onSpeedTestResult(@NonNull SpeedTestResult result);
     }
 
     public static void download(SpeedTestDownloadConfig config, SpeedTestDownloadCallback callback) {
@@ -61,12 +62,13 @@ public class SpeedTestDownload {
             }
 
             @Override
-            protected void onPostExecute(SpeedTestResult speedTestResult) {
+            protected void onPostExecute(@NonNull SpeedTestResult speedTestResult) {
                 callback.onSpeedTestResult(speedTestResult);
             }
         }.execute(config);
     }
 
+    @NonNull
     public static SpeedTestResult download(SpeedTestDownloadConfig config) {
         Log.v(TAG, "download " + config);
         URL url;

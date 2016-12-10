@@ -189,6 +189,7 @@ final class SettingsExportImport {
     private static boolean reloadSettingsV23(Context context) {
         // This mode is deprecated but we still need this it in order to force a reread of preferences
         // from the disk.
+        //noinspection deprecation
         return reloadSettings(context, Context.MODE_MULTI_PROCESS);
     }
 

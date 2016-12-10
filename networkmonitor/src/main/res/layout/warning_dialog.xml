@@ -46,6 +46,7 @@ limitations under the License.
         android:layout_height="wrap_content">
 
         <ImageView
+            android:contentDescription="@string/app_warning_battery_icon"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_alignParentLeft="true"
@@ -53,6 +54,7 @@ limitations under the License.
             android:src="@drawable/ic_battery" />
 
         <ImageView
+            android:contentDescription="@string/app_warning_data_usage_icon"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_alignParentEnd="true"

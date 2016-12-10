@@ -28,6 +28,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.preference.Preference;
 
 import ca.rmen.android.networkmonitor.R;
@@ -62,7 +63,7 @@ class RingtonePreferenceSummaryUpdater extends AsyncTask<Preference, Void, Ringt
             if (ringtone == null) {
                 Uri defaultRingtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                 if (ringtoneUri.equals(defaultRingtoneUri)) return new Result(preference, context.getString(R.string.pref_value_notification_ringtone_default));
-                else return null;
+                else return new Result(preference, "");
             } else {
                 return new Result(preference, ringtone.getTitle(context));
             }
@@ -70,7 +71,7 @@ class RingtonePreferenceSummaryUpdater extends AsyncTask<Preference, Void, Ringt
     }
 
     @Override
-    protected void onPostExecute(Result result) {
+    protected void onPostExecute(@NonNull Result result) {
         result.preference.setSummary(result.summary);
     }
 }

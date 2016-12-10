@@ -101,7 +101,7 @@ public class DialogFragmentFactory extends DialogFragment {
     /**
      * Show a visible dialog fragment with the given title and list of items. If the given activity implements {@link DialogItemListener}, the
      *         actionId, list of items, and item selected by the user, will be provided in the
-     *         {@link DialogItemListener#onItemSelected(int, CharSequence[], int)} callback on the activity, when the user selects an item.
+     *         {@link DialogItemListener#onItemSelected(int, int)} callback on the activity, when the user selects an item.
      * @param selectedItem if greater than zero, then the given item at that index will be pre-selected in the list.
      */
     public static void showChoiceDialog(FragmentActivity activity, String title, CharSequence[] items, int selectedItem, int actionId) {

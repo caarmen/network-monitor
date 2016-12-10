@@ -22,6 +22,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -54,7 +55,9 @@ limitations under the License.
                 android:gravity="center_vertical"
                 android:text="@string/license"
                 android:textSize="10sp"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="SmallSp" />
+            <!-- Yes, we have a small font here, but it's for small print, the license text -->
 
         </LinearLayout>
     </HorizontalScrollView>

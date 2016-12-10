@@ -28,7 +28,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
@@ -130,21 +129,15 @@ public class DeviceLocationDataSource implements NetMonDataSource {
         }
     };
 
-    private final OnConnectionFailedListener mConnectionFailedListener = new OnConnectionFailedListener() {
-        @Override
-        public void onConnectionFailed(@NonNull ConnectionResult result) {
-            Log.v(TAG, "onConnectionFailed: " + result);
-            selectLocationDataSource();
-        }
+    private final OnConnectionFailedListener mConnectionFailedListener = result -> {
+        Log.v(TAG, "onConnectionFailed: " + result);
+        selectLocationDataSource();
     };
 
     private final SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener
-            = new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if(NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY.equals(key)) {
-                selectLocationDataSource();
-            }
-        }
-    };
+            = (sharedPreferences, key) -> {
+                if(NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY.equals(key)) {
+                    selectLocationDataSource();
+                }
+            };
 }
