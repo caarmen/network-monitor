@@ -32,6 +32,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import android.net.TrafficStats;
+import android.os.AsyncTask;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
@@ -46,6 +47,25 @@ public class SpeedTestDownload {
 
     // The maximum connection and read timeout 
     private static final int TIMEOUT = 5000;
+
+    interface SpeedTestDownloadCallback {
+        void onSpeedTestResult(SpeedTestResult result);
+    }
+
+    public static void download(SpeedTestDownloadConfig config, SpeedTestDownloadCallback callback) {
+        new AsyncTask<SpeedTestDownloadConfig, Void, SpeedTestResult>(){
+
+            @Override
+            protected SpeedTestResult doInBackground(SpeedTestDownloadConfig... speedTestDownloadConfigs) {
+                return download(speedTestDownloadConfigs[0]);
+            }
+
+            @Override
+            protected void onPostExecute(SpeedTestResult speedTestResult) {
+                callback.onSpeedTestResult(speedTestResult);
+            }
+        }.execute(config);
+    }
 
     public static SpeedTestResult download(SpeedTestDownloadConfig config) {
         Log.v(TAG, "download " + config);

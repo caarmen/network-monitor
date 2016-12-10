@@ -30,10 +30,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.location.LocationManager;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -176,42 +174,12 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
             Log.v(TAG, "updatePreferenceSummary: No preference found for " + key);
             return;
         }
-        // RingtoneManager.getRingtone() actually does some disk reads.
-        // Discovered this with StrictMode and monkey.
-        // Ugly code (async task) to make it easier to find real StrictMode violations...
-        new AsyncTask<Void, Void, CharSequence>() {
 
-            @Override
-            protected CharSequence doInBackground(Void... params) {
-                if (pref instanceof EditTextPreference) {
-                    return ((EditTextPreference) pref).getText();
-                } else if (pref.getKey().equals(NetMonPreferences.PREF_NOTIFICATION_RINGTONE)) {
-                    Uri ringtoneUri = NetMonPreferences.getInstance(AdvancedPreferencesActivity.this).getNotificationSoundUri();
-                    if (ringtoneUri == null) {
-                        return getString(R.string.pref_value_notification_ringtone_silent);
-                    } else {
-                        Ringtone ringtone = RingtoneManager.getRingtone(AdvancedPreferencesActivity.this, ringtoneUri);
-                        // In some cases the ringtone object is null if the ringtoneUri is the default ringtone uri.
-                        if (ringtone == null) {
-                            Uri defaultRingtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                            if (ringtoneUri.equals(defaultRingtoneUri)) return getString(R.string.pref_value_notification_ringtone_default);
-                            else return null;
-                        } else {
-                            return ringtone.getTitle(AdvancedPreferencesActivity.this);
-                        }
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(CharSequence value) {
-                if (value == null) return;
-                String summary = getString(summaryResId, value);
-                pref.setSummary(summary);
-            }
-
-        }.execute();
+        if (pref instanceof EditTextPreference) {
+            pref.setSummary(getString(summaryResId, ((EditTextPreference) pref).getText()));
+        } else if (pref.getKey().equals(NetMonPreferences.PREF_NOTIFICATION_RINGTONE)) {
+            new RingtonePreferenceSummaryUpdater().execute(pref);
+        }
     }
 
     private final Preference.OnPreferenceClickListener mOnPreferenceClickListener = preference -> {
