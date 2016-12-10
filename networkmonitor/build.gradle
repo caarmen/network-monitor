@@ -108,11 +108,11 @@ dependencies {
         exclude group: "log4j"
     }
     compile 'commons-net:commons-net:3.5'
-    compile 'com.github.hotchemi:permissionsdispatcher:2.2.0'
-    apt 'com.github.hotchemi:permissionsdispatcher-processor:2.2.0'
+    compile 'com.github.hotchemi:permissionsdispatcher:2.2.1'
+    apt 'com.github.hotchemi:permissionsdispatcher-processor:2.2.1'
 
     if (!gradle.isFoss) {
-        proprietaryCompile 'com.google.android.gms:play-services-location:10.0.0'
+        proprietaryCompile 'com.google.android.gms:play-services-location:10.0.1'
     }
 
     compile 'net.sourceforge.streamsupport:streamsupport:1.5.2'
