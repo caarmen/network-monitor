@@ -26,7 +26,6 @@
 package ca.rmen.android.networkmonitor.app.speedtest;
 
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.EditTextPreference;
@@ -175,29 +174,13 @@ public class SpeedTestPreferencesActivity extends AppCompatActivity { // NO_UCD 
      */
     private void download() {
         final SpeedTestDownloadConfig config = mSpeedTestPrefs.getDownloadConfig(this);
-        new AsyncTask<Void, Void, Void>() {
-
-
-            @Override
-            protected void onPreExecute() {
-                Preference pref = mPreferenceFragment.findPreference(SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL);
-                String summary = getString(R.string.pref_summary_speed_test_download_url, config.url, "?");
-                pref.setSummary(summary);
-            }
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                SpeedTestResult result = SpeedTestDownload.download(config);
-                mSpeedTestPrefs.setLastDownloadResult(result);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                updateDownloadUrlPreferenceSummary();
-            }
-
-        }.execute();
-
+        Preference pref = mPreferenceFragment.findPreference(SpeedTestPreferences.PREF_SPEED_TEST_DOWNLOAD_URL);
+        String summary = getString(R.string.pref_summary_speed_test_download_url, config.url, "?");
+        pref.setSummary(summary);
+        SpeedTestDownload.download(config, result -> {
+                    mSpeedTestPrefs.setLastDownloadResult(result);
+                    updateDownloadUrlPreferenceSummary();
+                }
+        );
     }
 }
