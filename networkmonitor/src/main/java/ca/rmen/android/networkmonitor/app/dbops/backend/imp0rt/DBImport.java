@@ -45,6 +45,7 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 import ca.rmen.android.networkmonitor.app.dbops.backend.DBOperation;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.provider.NetMonProvider;
 import ca.rmen.android.networkmonitor.util.IoUtil;
@@ -147,7 +148,7 @@ public class DBImport implements DBOperation {
                         if (mIsCanceled.get())
                             listener.onError(mContext.getString(R.string.import_notif_canceled_content));
                         else
-                            listener.onComplete(mContext.getString(R.string.import_notif_complete_content, mUri.getPath()));
+                            listener.onComplete(mContext.getString(R.string.import_notif_complete_content, Share.readDisplayName(mContext, uri)));
                     }
                     return;
                 } finally {
@@ -157,6 +158,6 @@ public class DBImport implements DBOperation {
         } catch (SQLiteException e) {
            Log.w(TAG, "Couldn't import database " + mUri, e);
         }
-        if (listener != null) listener.onError(mContext.getString(R.string.import_notif_error_content, mUri.getPath()));
+        if (listener != null) listener.onError(mContext.getString(R.string.import_notif_error_content, Share.readDisplayName(mContext, uri)));
     }
 }

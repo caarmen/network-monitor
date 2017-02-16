@@ -28,9 +28,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
 
@@ -82,6 +85,20 @@ public class Share {
                 Log.v(TAG, "grant permission to " + packageName);
             }
         }
+    }
+
+    @WorkerThread
+    public static String readDisplayName(Context context, Uri uri) {
+        Cursor cursor = null;
+        try {
+            cursor = context.getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                return cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+        return null;
     }
 
     /**

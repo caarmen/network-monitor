@@ -26,13 +26,14 @@
 package ca.rmen.android.networkmonitor.app.savetostorage;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.WorkerThread;
 import android.widget.Toast;
 
-import java.io.File;
-
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 
 class SaveToStorage {
 
@@ -40,11 +41,14 @@ class SaveToStorage {
         // utility class
     }
 
-    static void displaySuccessToast(final Context context, final File dest) {
+    @WorkerThread
+    static void displaySuccessToast(final Context context, final Uri dest) {
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(() -> Toast.makeText(context, context.getString(R.string.export_save_to_external_storage_success, dest.getAbsolutePath()), Toast.LENGTH_LONG).show());
+        final String displayName = Share.readDisplayName(context, dest);
+        handler.post(() -> Toast.makeText(context, context.getString(R.string.export_save_to_external_storage_success, displayName), Toast.LENGTH_LONG).show());
     }
 
+    @WorkerThread
     static void displayErrorToast(final Context context) {
 
         Handler handler = new Handler(Looper.getMainLooper());

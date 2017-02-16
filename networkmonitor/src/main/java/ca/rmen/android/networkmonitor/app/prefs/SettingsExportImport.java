@@ -109,6 +109,7 @@ final class SettingsExportImport {
 
         new AsyncTask<Void, Void, Boolean>() {
 
+            private String mFileDisplayName;
             private void rollback() {
                 IoUtil.copy(backupFile, outputFile);
                 reloadSettings(activity);
@@ -123,6 +124,7 @@ final class SettingsExportImport {
             @Override
             protected Boolean doInBackground(Void... params) {
 
+                mFileDisplayName = Share.readDisplayName(activity, uri);
                 // Make a backup of our shared prefs in case the import file is corrupt.
                 if (!IoUtil.copy(outputFile, backupFile)) {
                     return false;
@@ -153,10 +155,10 @@ final class SettingsExportImport {
             @Override
             protected void onPostExecute(Boolean result) {
                 if (result) {
-                    Snackbar.make(activity.getWindow().getDecorView().getRootView(), activity.getString(R.string.import_notif_complete_content, uri), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(activity.getWindow().getDecorView().getRootView(), activity.getString(R.string.import_notif_complete_content, mFileDisplayName), Snackbar.LENGTH_LONG).show();
                     callback.onSettingsImported();
                 } else {
-                    Snackbar.make(activity.getWindow().getDecorView().getRootView(), activity.getString(R.string.import_notif_error_content, uri), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(activity.getWindow().getDecorView().getRootView(), activity.getString(R.string.import_notif_error_content, mFileDisplayName), Snackbar.LENGTH_LONG).show();
                 }
             }
         }.execute();

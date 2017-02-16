@@ -250,7 +250,7 @@ limitations under the License.
         <activity
             android:name=".app.savetostorage.SaveToStorageActivity"
             android:excludeFromRecents="true"
-            android:exported="true"
+            android:enabled="@bool/sdkLevel19"
             android:icon="@drawable/ic_device_sd_storage"
             android:label="@string/export_save_to_external_storage"
             android:theme="@style/NetMonNoDisplayTheme" >

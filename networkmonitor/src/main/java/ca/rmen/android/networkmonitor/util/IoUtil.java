@@ -116,4 +116,21 @@ public class IoUtil {
         }
     }
 
+    public static boolean copy(Context context, Uri in, Uri out) {
+        Log.v(TAG, "copy " + in + " to " + out);
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = context.getContentResolver().openInputStream(in);
+            os = context.getContentResolver().openOutputStream(out);
+            long size = copy(is, os);
+            return size > 0;
+        } catch (IOException e) {
+            Log.w(TAG, "Could not copy " + in + " to " + out, e);
+            return false;
+        } finally {
+            closeSilently(is, os);
+        }
+    }
+
 }
