@@ -45,6 +45,7 @@ import ca.rmen.android.networkmonitor.app.dbops.backend.export.FileExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.Formatter;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.FormatterFactory;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.FormatterFactory.FormatterStyle;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences.Selection;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
@@ -66,7 +67,7 @@ public class KMLExport extends FileExport {
      * @param placemarkNameColumn the column whose value will be exported to the KML placemark names.
      */
     public KMLExport(Context context, String placemarkNameColumn) {
-        super(context, new File(context.getExternalFilesDir(null), KML_FILE_PREFIX + placemarkNameColumn + ".kml"));
+        super(context, Share.getExportFile(context, KML_FILE_PREFIX + placemarkNameColumn + ".kml"));
         mPlacemarkNameColumn = placemarkNameColumn;
     }
 

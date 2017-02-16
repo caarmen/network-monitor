@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 import jxl.CellView;
 import jxl.JXLException;
 import jxl.Workbook;
@@ -67,7 +68,7 @@ public class ExcelExport extends TableFileExport {
     private int mColumnCount;
 
     public ExcelExport(Context context) {
-        super(context, new File(context.getExternalFilesDir(null), EXCEL_FILE), FormatterStyle.DEFAULT);
+        super(context, Share.getExportFile(context, EXCEL_FILE), FormatterStyle.DEFAULT);
     }
 
     @Override

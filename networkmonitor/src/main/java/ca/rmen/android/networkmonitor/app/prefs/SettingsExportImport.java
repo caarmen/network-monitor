@@ -40,6 +40,7 @@ import java.util.Map;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 import ca.rmen.android.networkmonitor.util.IoUtil;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -66,7 +67,7 @@ final class SettingsExportImport {
      */
     static void exportSettings(final Activity activity) {
         final File inputFile = getSharedPreferencesFile(activity);
-        final File outputFile = new File(activity.getExternalFilesDir(null), inputFile.getName());
+        final File outputFile = Share.getExportFile(activity, inputFile.getName());
         new AsyncTask<Void, Void, Boolean>() {
             @SuppressLint("CommitPrefEdits")
             @Override
@@ -88,8 +89,7 @@ final class SettingsExportImport {
                     sendIntent.setAction(Intent.ACTION_SEND);
                     sendIntent.putExtra(Intent.EXTRA_SUBJECT, activity.getString(R.string.export_subject_send_settings));
 
-                    sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + outputFile.getAbsolutePath()));
-                    sendIntent.setType("message/rfc822");
+                    Share.addFileToShareIntent(activity, sendIntent, outputFile.getName());
                     sendIntent.putExtra(Intent.EXTRA_TEXT, activity.getString(R.string.export_settings_message_text));
                     Intent chooserIntent = Intent.createChooser(sendIntent, activity.getResources().getText(R.string.action_share));
                     activity.startActivity(chooserIntent);

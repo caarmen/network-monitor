@@ -34,6 +34,7 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 import ca.rmen.android.networkmonitor.app.dbops.backend.DBOperation;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -84,8 +85,7 @@ public abstract class FileExport implements DBOperation {
 
         String messageBody = context.getString(R.string.export_message_text, dateRange);
         if (exportedFile != null && exportedFile.exists()) {
-            sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + exportedFile.getAbsolutePath()));
-            sendIntent.setType("message/rfc822");
+            Share.addFileToShareIntent(context, sendIntent, exportedFile.getName());
             messageBody += context.getString(R.string.export_message_text_file_attached);
         } else {
             sendIntent.setType("text/plain");

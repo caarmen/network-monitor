@@ -43,6 +43,8 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
+
 
 /**
  * A logger that appends messages to a file on the disk.<br/> {@link #init(Context, int, boolean)} must be called prior to using the other methods of this class
@@ -274,7 +276,8 @@ public class Log {
         try {
             if (sFile0.exists()) in0 = new BufferedInputStream(new FileInputStream(sFile0));
             if (sFile1.exists()) in1 = new BufferedInputStream(new FileInputStream(sFile1));
-            File outputFile = new File(context.getExternalFilesDir(null), FILE);
+            File outputFile = Share.getExportFile(context, FILE);
+            if (outputFile == null) return false;
             out = new BufferedOutputStream(new FileOutputStream(outputFile, false));
 
             if (sFile0.exists() && sFile1.exists()) {

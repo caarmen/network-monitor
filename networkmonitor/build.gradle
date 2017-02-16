@@ -56,7 +56,7 @@ android {
         android.buildTypes.release.signingConfig = null
     }
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "25.0.2"
     dataBinding {
         enabled = true
     }
@@ -65,8 +65,8 @@ android {
         applicationId "ca.rmen.android.networkmonitor"
         minSdkVersion 9
         targetSdkVersion 25
-        versionName "1.28.10"
-        versionCode 12810
+        versionName "1.28.11"
+        versionCode 12811
         archivesBaseName += "-" + versionName
     }
 

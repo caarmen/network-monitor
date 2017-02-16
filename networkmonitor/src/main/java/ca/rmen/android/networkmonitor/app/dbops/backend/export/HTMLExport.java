@@ -36,6 +36,7 @@ import java.util.List;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.FormatterFactory.FormatterStyle;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences;
@@ -68,7 +69,7 @@ public class HTMLExport extends TableFileExport {
      * @param fixedTableHeight CSS height specification for the body of the table (below the column headers). Ex: "100vh" or "1080px". If provided, the header of the table will remain in a fixed position, the body of the table will have the given fixed height, and the contents of the table body will be scrollable.
      */
     public HTMLExport(Context context, boolean external, String fixedTableHeight) {
-        super(context, new File(external ? context.getExternalFilesDir(null) : context.getFilesDir(), HTML_FILE), FormatterStyle.XML);
+        super(context, new File(external ? Share.getExportFolder(context) : context.getFilesDir(), HTML_FILE), FormatterStyle.XML);
         mFixedTableHeight = fixedTableHeight;
     }
 

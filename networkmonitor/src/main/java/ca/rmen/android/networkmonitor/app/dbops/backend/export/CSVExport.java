@@ -31,6 +31,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.FormatterFactory.FormatterStyle;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 
 /**
  * Export the Network Monitor data to a CSV file.
@@ -40,7 +41,7 @@ public class CSVExport extends TableFileExport {
     private PrintWriter mPrintWriter;
 
     public CSVExport(Context context) {
-        super(context, new File(context.getExternalFilesDir(null), CSV_FILE), FormatterStyle.DEFAULT);
+        super(context, Share.getExportFile(context, CSV_FILE), FormatterStyle.DEFAULT);
     }
 
     @Override

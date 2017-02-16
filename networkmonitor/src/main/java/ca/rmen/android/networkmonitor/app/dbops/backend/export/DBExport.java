@@ -35,6 +35,7 @@ import java.io.OutputStream;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 import ca.rmen.android.networkmonitor.provider.NetMonDatabase;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -45,7 +46,7 @@ public class DBExport extends FileExport {
     private static final String TAG = Constants.TAG + DBExport.class.getSimpleName();
 
     public DBExport(Context context) {
-        super(context, new File(context.getExternalFilesDir(null), NetMonDatabase.DATABASE_NAME));
+        super(context, Share.getExportFile(context, NetMonDatabase.DATABASE_NAME));
     }
 
     @Override

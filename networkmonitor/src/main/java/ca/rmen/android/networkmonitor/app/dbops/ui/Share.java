@@ -24,9 +24,20 @@
 package ca.rmen.android.networkmonitor.app.dbops.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.FileProvider;
 
+import java.io.File;
+import java.util.List;
+
+import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService;
@@ -38,6 +49,50 @@ import ca.rmen.android.networkmonitor.util.Log;
  */
 public class Share {
     private static final String TAG = Constants.TAG + Share.class.getSimpleName();
+    private static final String EXPORT_FOLDER_PATH = "export";
+
+    @Nullable
+    public static File getExportFolder(Context context) {
+        File exportFolder = new File(context.getFilesDir(), EXPORT_FOLDER_PATH);
+        if (!exportFolder.exists() && !exportFolder.mkdirs()) {
+            Log.v(TAG, "Couldn't find or create export folder " + exportFolder);
+            return null;
+        }
+        return exportFolder;
+    }
+
+    private static Uri getUriForFilename(Context context, String filename) {
+        File exportFolder = new File(context.getFilesDir(), EXPORT_FOLDER_PATH);
+        return getUriForFile(context, new File(exportFolder, filename));
+    }
+
+    private static Uri getUriForFile(Context context, File file) {
+        return FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file);
+    }
+
+    public static void addFileToShareIntent(Context context, Intent intent, String filename) {
+        Uri uri = getUriForFilename(context, filename);
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.setType("message/rfc822");
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            List<ResolveInfo> resInfoList = context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+            for (ResolveInfo resolveInfo : resInfoList) {
+                String packageName = resolveInfo.activityInfo.packageName;
+                context.grantUriPermission(packageName, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                Log.v(TAG, "grant permission to " + packageName);
+            }
+        }
+    }
+
+    /**
+     * @return File in the share folder that we can write to before sharing.
+     */
+    @Nullable
+    public static File getExportFile(Context context, String filename) {
+        File exportFolder = getExportFolder(context);
+        if (exportFolder == null) return null;
+        return new File(exportFolder, filename);
+    }
 
     /**
      * Export the log file in the given format, and display the list of apps to share the file.
