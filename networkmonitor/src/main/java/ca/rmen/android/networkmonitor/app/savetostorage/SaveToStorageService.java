@@ -29,8 +29,6 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.net.Uri;
 
-import java.io.File;
-
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.util.IoUtil;
 import ca.rmen.android.networkmonitor.util.Log;

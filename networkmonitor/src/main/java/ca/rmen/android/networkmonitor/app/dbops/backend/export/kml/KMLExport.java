@@ -26,7 +26,6 @@ package ca.rmen.android.networkmonitor.app.dbops.backend.export.kml;
 import android.content.Context;
 import android.database.Cursor;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

@@ -72,6 +72,7 @@ final class SettingsExportImport {
             @SuppressLint("CommitPrefEdits")
             @Override
             protected Boolean doInBackground(Void... params) {
+                if (outputFile == null) return false;
                 // Just in case: make sure we don't have our temp setting.
                 SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
                 if (sharedPrefs.contains(PREF_IMPORT_VERIFICATION)) {

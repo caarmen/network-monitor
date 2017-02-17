@@ -25,7 +25,6 @@ package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;

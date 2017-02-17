@@ -23,7 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 

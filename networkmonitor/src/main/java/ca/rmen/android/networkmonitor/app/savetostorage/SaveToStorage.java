@@ -48,9 +48,7 @@ class SaveToStorage {
         handler.post(() -> Toast.makeText(context, context.getString(R.string.export_save_to_external_storage_success, displayName), Toast.LENGTH_LONG).show());
     }
 
-    @WorkerThread
     static void displayErrorToast(final Context context) {
-
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> Toast.makeText(context, R.string.export_notif_error_content, Toast.LENGTH_LONG).show());
     }
