@@ -41,7 +41,6 @@ limitations under the License.
     <string name="export_gnuplot_series_filter_title">Filtrar valores de %s</string>
     <string name="export_gnuplot_hint">Network Monitor producirá un fichero gnuplot. Habrá que ejecutar el programa gnuplot sobre este fichero para obtenir un imagen del gráfico.</string>
     <string name="export_progress_preparing_export">Preparación de la exportación&#8230;</string>
-    <string name="export_progress_finalizing_export">Finalización&#8230;</string>
     <string name="export_error_no_mobile_tests">Ninguna prueba ha sido realizada con una conexión de datos móviles.</string>
     <string name="export_message_text">El siguiente resumen enumera las estaciones base y puntos de acceso WiFi y los resultados de sus pruebas de conexión. Para cada estación o punto de acceso, puedes ver el %% de las pruebas de conexión que pasaron, y el número total de pruebas de conexión. 
 \n\nLas peores estaciones base aparecen por encima de la lista.

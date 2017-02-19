@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2015-2017 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ import java.util.Map;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 import ca.rmen.android.networkmonitor.util.IoUtil;
 import ca.rmen.android.networkmonitor.util.Log;
 
@@ -66,11 +67,12 @@ final class SettingsExportImport {
      */
     static void exportSettings(final Activity activity) {
         final File inputFile = getSharedPreferencesFile(activity);
-        final File outputFile = new File(activity.getExternalFilesDir(null), inputFile.getName());
+        final File outputFile = Share.getExportFile(activity, inputFile.getName());
         new AsyncTask<Void, Void, Boolean>() {
             @SuppressLint("CommitPrefEdits")
             @Override
             protected Boolean doInBackground(Void... params) {
+                if (outputFile == null) return false;
                 // Just in case: make sure we don't have our temp setting.
                 SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
                 if (sharedPrefs.contains(PREF_IMPORT_VERIFICATION)) {
@@ -88,8 +90,7 @@ final class SettingsExportImport {
                     sendIntent.setAction(Intent.ACTION_SEND);
                     sendIntent.putExtra(Intent.EXTRA_SUBJECT, activity.getString(R.string.export_subject_send_settings));
 
-                    sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + outputFile.getAbsolutePath()));
-                    sendIntent.setType("message/rfc822");
+                    Share.addFileToShareIntent(activity, sendIntent, outputFile.getName());
                     sendIntent.putExtra(Intent.EXTRA_TEXT, activity.getString(R.string.export_settings_message_text));
                     Intent chooserIntent = Intent.createChooser(sendIntent, activity.getResources().getText(R.string.action_share));
                     activity.startActivity(chooserIntent);
@@ -109,6 +110,7 @@ final class SettingsExportImport {
 
         new AsyncTask<Void, Void, Boolean>() {
 
+            private String mFileDisplayName;
             private void rollback() {
                 IoUtil.copy(backupFile, outputFile);
                 reloadSettings(activity);
@@ -123,6 +125,7 @@ final class SettingsExportImport {
             @Override
             protected Boolean doInBackground(Void... params) {
 
+                mFileDisplayName = Share.readDisplayName(activity, uri);
                 // Make a backup of our shared prefs in case the import file is corrupt.
                 if (!IoUtil.copy(outputFile, backupFile)) {
                     return false;
@@ -153,10 +156,10 @@ final class SettingsExportImport {
             @Override
             protected void onPostExecute(Boolean result) {
                 if (result) {
-                    Snackbar.make(activity.getWindow().getDecorView().getRootView(), activity.getString(R.string.import_notif_complete_content, uri), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(activity.getWindow().getDecorView().getRootView(), activity.getString(R.string.import_notif_complete_content, mFileDisplayName), Snackbar.LENGTH_LONG).show();
                     callback.onSettingsImported();
                 } else {
-                    Snackbar.make(activity.getWindow().getDecorView().getRootView(), activity.getString(R.string.import_notif_error_content, uri), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(activity.getWindow().getDecorView().getRootView(), activity.getString(R.string.import_notif_error_content, mFileDisplayName), Snackbar.LENGTH_LONG).show();
                 }
             }
         }.execute();

@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2015-2017 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ android {
         android.buildTypes.release.signingConfig = null
     }
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "25.0.2"
     dataBinding {
         enabled = true
     }
@@ -65,8 +65,8 @@ android {
         applicationId "ca.rmen.android.networkmonitor"
         minSdkVersion 9
         targetSdkVersion 25
-        versionName "1.28.10"
-        versionCode 12810
+        versionName "1.28.11"
+        versionCode 12811
         archivesBaseName += "-" + versionName
     }
 
@@ -99,10 +99,10 @@ android {
 dependencies {
 
     compile 'de.psdev.licensesdialog:licensesdialog:1.8.1'
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.android.support:design:25.0.1'
-    compile 'com.android.support:preference-v7:25.0.1'
-    compile 'com.android.support:preference-v14:25.0.1'
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:design:25.1.1'
+    compile 'com.android.support:preference-v7:25.1.1'
+    compile 'com.android.support:preference-v14:25.1.1'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile ('net.sourceforge.jexcelapi:jxl:2.6.12') {
         exclude group: "log4j"

@@ -8,7 +8,7 @@
  * repository.
  * 
  * Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
- * Copyright (C) 2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2015-2017 Carmen Alvarez (c@rmen.ca)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,13 +26,14 @@
 package ca.rmen.android.networkmonitor.app.savetostorage;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.WorkerThread;
 import android.widget.Toast;
 
-import java.io.File;
-
 import ca.rmen.android.networkmonitor.R;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 
 class SaveToStorage {
 
@@ -40,13 +41,14 @@ class SaveToStorage {
         // utility class
     }
 
-    static void displaySuccessToast(final Context context, final File dest) {
+    @WorkerThread
+    static void displaySuccessToast(final Context context, final Uri dest) {
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(() -> Toast.makeText(context, context.getString(R.string.export_save_to_external_storage_success, dest.getAbsolutePath()), Toast.LENGTH_LONG).show());
+        final String displayName = Share.readDisplayName(context, dest);
+        handler.post(() -> Toast.makeText(context, context.getString(R.string.export_save_to_external_storage_success, displayName), Toast.LENGTH_LONG).show());
     }
 
     static void displayErrorToast(final Context context) {
-
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> Toast.makeText(context, R.string.export_notif_error_content, Toast.LENGTH_LONG).show());
     }

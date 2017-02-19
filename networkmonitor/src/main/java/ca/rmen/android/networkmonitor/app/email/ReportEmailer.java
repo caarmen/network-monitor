@@ -111,7 +111,7 @@ public class ReportEmailer {
         else
             protocol = null;
         String from = getFromAddress(emailConfig);
-        String[] recipients = TextUtils.split(emailConfig.recipients, "[,; ]+");
+        String[] recipients = TextUtils.split(emailConfig.recipients.trim(), "[,; ]+");
         String subject = mContext.getString(R.string.export_subject_send_log);
         String body = getMessageBody(emailConfig);
 

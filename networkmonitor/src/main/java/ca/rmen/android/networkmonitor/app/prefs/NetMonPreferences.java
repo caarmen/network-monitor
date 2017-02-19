@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2014-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2014-2017 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,11 +28,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -76,16 +74,16 @@ public class NetMonPreferences {
     public static final String PREF_KML_EXPORT_COLUMN = "PREF_KML_EXPORT_COLUMN";
     public static final String PREF_FILTER_RECORD_COUNT = "PREF_FILTER_RECORD_COUNT";
     public static final String PREF_FILTER_RECORD_COUNT_DEFAULT = "100";
-    public static final String PREF_DB_RECORD_COUNT = "PREF_DB_RECORD_COUNT";
-    public static final String PREF_ENABLE_CONNECTION_TEST = "PREF_ENABLE_CONNECTION_TEST";
+    static final String PREF_DB_RECORD_COUNT = "PREF_DB_RECORD_COUNT";
+    static final String PREF_ENABLE_CONNECTION_TEST = "PREF_ENABLE_CONNECTION_TEST";
     public static final String PREF_CELL_ID_FORMAT = "PREF_CELL_ID_FORMAT";
     public static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
     public static final String PREF_LOCATION_FETCHING_STRATEGY = "PREF_LOCATION_FETCHING_STRATEGY";
-    public static final String PREF_NOTIFICATION_RINGTONE = "PREF_NOTIFICATION_RINGTONE";
-    public static final String PREF_NOTIFICATION_ENABLED = "PREF_NOTIFICATION_ENABLED";
+    static final String PREF_NOTIFICATION_RINGTONE = "PREF_NOTIFICATION_RINGTONE";
+    static final String PREF_NOTIFICATION_ENABLED = "PREF_NOTIFICATION_ENABLED";
     public static final String PREF_EXPORT_GNUPLOT_SERIES = "PREF_EXPORT_GNUPLOT_SERIES";
     public static final String PREF_EXPORT_GNUPLOT_Y_AXIS = "PREF_EXPORT_GNUPLOT_Y_AXIS";
-    public static final String PREF_THEME = "PREF_THEME";
+    static final String PREF_THEME = "PREF_THEME";
 
     private static final String PREF_FREEZE_HTML_TABLE_HEADER = "PREF_FREEZE_HTML_TABLE_HEADER";
     private static final boolean PREF_FREEZE_HTML_TABLE_HEADER_DEFAULT = false;
@@ -106,9 +104,6 @@ public class NetMonPreferences {
 
     private static final String PREF_SHOW_APP_WARNING = "show_app_warning";
     private static final boolean PREF_SHOW_APP_WARNING_DEFAULT = true;
-
-    private static final String PREF_EXPORT_FOLDER = "PREF_EXPORT_FOLDER";
-    private static final String PREF_IMPORT_FOLDER = "PREF_IMPORT_FOLDER";
 
     private static NetMonPreferences INSTANCE = null;
     private final SharedPreferences mSharedPrefs;
@@ -136,7 +131,7 @@ public class NetMonPreferences {
     /**
      * Use the default test server.
      */
-    public void resetTestServer() {
+    void resetTestServer() {
         setStringPreference(NetMonPreferences.PREF_TEST_SERVER, NetMonPreferences.PREF_TEST_SERVER_DEFAULT);
     }
 
@@ -260,7 +255,7 @@ public class NetMonPreferences {
     /**
      * set the list of columns to appear in the log view. This is only for display. All columns will be exported.
      */
-    public void setSelectedColumns(List<String> selectedColumns) {
+    void setSelectedColumns(List<String> selectedColumns) {
         String selectedColumnsString = TextUtils.join(",", selectedColumns);
         setStringPreference(NetMonPreferences.PREF_SELECTED_COLUMNS, selectedColumnsString);
     }
@@ -377,7 +372,7 @@ public class NetMonPreferences {
     /**
      * Set the Uri of the sound to play when a notification is created.
      */
-    public void setNotificationSoundUri(Uri uri) {
+    void setNotificationSoundUri(Uri uri) {
         if (uri == null) setStringPreference(PREF_NOTIFICATION_RINGTONE, null);
         else setStringPreference(PREF_NOTIFICATION_RINGTONE, uri.toString());
     }
@@ -385,29 +380,9 @@ public class NetMonPreferences {
     /**
      * Set the ringtone Uri to the default ringtone Uri.
      */
-    public void setDefaultNotificationSoundUri() {
+    void setDefaultNotificationSoundUri() {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         if (defaultSoundUri != null) setStringPreference(PREF_NOTIFICATION_RINGTONE, defaultSoundUri.toString());
-    }
-
-    public File getExportFolder() {
-        String folder = mSharedPrefs.getString(PREF_EXPORT_FOLDER, null);
-        if(folder != null) return new File(folder);
-        return Environment.getExternalStorageDirectory();
-    }
-
-    public void setExportFolder(File folder) {
-        setStringPreference(PREF_EXPORT_FOLDER, folder.getAbsolutePath());
-    }
-
-    public File getImportFolder() {
-        String folder = mSharedPrefs.getString(PREF_IMPORT_FOLDER, null);
-        if(folder != null) return new File(folder);
-        return Environment.getExternalStorageDirectory();
-    }
-
-    public void setImportFolder(File folder) {
-        setStringPreference(PREF_IMPORT_FOLDER, folder.getAbsolutePath());
     }
 
     public boolean getShowAppWarning() {

@@ -8,7 +8,7 @@
  * repository.
  *
  * Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
- * Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2013-2017 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -182,10 +182,14 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
         }
     }
 
+    private static String getFileOpenIntentAction() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) return Intent.ACTION_OPEN_DOCUMENT;
+        return Intent.ACTION_GET_CONTENT;
+    }
     private final Preference.OnPreferenceClickListener mOnPreferenceClickListener = preference -> {
         Log.v(TAG, "onPreferenceClick: " + preference);
         if (PREF_IMPORT_DB.equals(preference.getKey())) {
-            Intent importIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            Intent importIntent = new Intent(getFileOpenIntentAction());
             importIntent.setType("*/*");
             importIntent.addCategory(Intent.CATEGORY_OPENABLE);
             startActivityForResult(Intent.createChooser(importIntent, getResources().getText(R.string.pref_summary_import)), ACTIVITY_REQUEST_CODE_IMPORT_DB);
@@ -205,7 +209,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.pref_title_notification_ringtone));
             startActivityForResult(intent, ACTIVITY_REQUEST_CODE_RINGTONE);
         } else if (PREF_IMPORT_SETTINGS.equals(preference.getKey())) {
-            Intent importIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            Intent importIntent = new Intent(getFileOpenIntentAction());
             importIntent.setType("*/*");
             importIntent.addCategory(Intent.CATEGORY_OPENABLE);
             startActivityForResult(Intent.createChooser(importIntent, getResources().getText(R.string.pref_title_import_settings)), ACTIVITY_REQUEST_CODE_IMPORT_SETTINGS);

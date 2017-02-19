@@ -8,7 +8,7 @@
  * repository.
  * 
  * Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
- * Copyright (C) 2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2015-2017 Carmen Alvarez (c@rmen.ca)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,22 +27,20 @@ package ca.rmen.android.networkmonitor.app.savetostorage;
 
 import android.app.IntentService;
 import android.content.Intent;
-
-import java.io.File;
+import android.net.Uri;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.util.IoUtil;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
- * Reads the file in the {@link #EXTRA_SOURCE_FILE} File extra, and saves
- * a copy of that file to the {@link #EXTRA_DESTINATION_FILE} File extra. The destination may
- * be a file or a folder.
+ * Reads the file in the {@link #EXTRA_SOURCE_URI} Uri extra, and saves
+ * a copy of that file to the {@link #EXTRA_DESTINATION_URI} Uri extra.
  */
 public class SaveToStorageService extends IntentService {
     private static final String TAG = Constants.TAG + SaveToStorageService.class.getSimpleName();
-    public static final String EXTRA_SOURCE_FILE = "source_file";
-    public static final String EXTRA_DESTINATION_FILE = "destination_file";
+    public static final String EXTRA_SOURCE_URI = "source_uri";
+    public static final String EXTRA_DESTINATION_URI = "destination_uri";
 
     public SaveToStorageService() {
         super(TAG);
@@ -52,9 +50,9 @@ public class SaveToStorageService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Log.v(TAG, "onHandleIntent: intent = " + intent);
 
-        File src = (File) intent.getSerializableExtra(EXTRA_SOURCE_FILE);
-        File dest = (File) intent.getSerializableExtra(EXTRA_DESTINATION_FILE);
-        if (IoUtil.copy(src, dest))
+        Uri src = intent.getParcelableExtra(EXTRA_SOURCE_URI);
+        Uri dest = intent.getParcelableExtra(EXTRA_DESTINATION_URI);
+        if (IoUtil.copy(this, src, dest))
             SaveToStorage.displaySuccessToast(getApplicationContext(), dest);
         else
             SaveToStorage.displayErrorToast(getApplicationContext());

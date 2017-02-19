@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2015-2017 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -39,6 +38,7 @@ import java.util.Locale;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
@@ -61,7 +61,7 @@ public class GnuplotExport extends FileExport {
     private final SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 
     public GnuplotExport(Context context) {
-        super(context, new File(context.getExternalFilesDir(null), GNUPLOT_FILE));
+        super(context, Share.getExportFile(context, GNUPLOT_FILE));
         NetMonPreferences prefs = NetMonPreferences.getInstance(mContext);
         mSeriesField = prefs.getExportGnuplotSeriesField();
         mYAxisField = prefs.getExportGnuplotYAxisField();

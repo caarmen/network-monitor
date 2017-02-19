@@ -8,7 +8,7 @@ This source is part of the
                              /___/
 repository.
 
-Copyright (C) 2013-2016 Carmen Alvarez (c@rmen.ca)
+Copyright (C) 2013-2017 Carmen Alvarez (c@rmen.ca)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ limitations under the License.
 
     <!-- Strings for the about screen -->
     <string name="about_title">Acerca de</string>
-    <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2016 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
+    <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2017 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
     <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2014 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
     <string name="about_legal">Licencia/descargo de responsabilidad</string>
     <string name="about_projectUrl">Código fuente: https://github.com/caarmen/network-monitor</string>
@@ -122,7 +122,6 @@ limitations under the License.
     <string name="permission_data_usage_message"><![CDATA[<b>¯\\_(ツ)_/¯</b><br><br>\nEn la pantalla siguiente, conceder acceso a Network Monitor para leer las estadísticas de la consumación de datos por las aplicaciones.]]></string>
     <string name="permission_button_allow">Continuar</string>
     <string name="permission_button_deny">Cancelar</string>
-    <string name="permission_external_storage_rationale">Network Monitor necesita acceder al almacenamiento externo.  Sin acceso, sólo podrá mostrar los ficheros internos de la aplicación.</string>
     <string name="permission_location_denied">El archivo log no incluirá algunos campos.</string>
     <string name="permission_location_rationale">Network Monitor necesita aceder a la ubicación del dispositivo para rellenar alguos campos del archivo log. Sin este acceso, el archivo log no incluirá estos campos.</string>
     <string name="action_freeze_header">Fijar cabecera (beta)</string>

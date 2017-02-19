@@ -24,7 +24,6 @@
 package ca.rmen.android.networkmonitor.app.dbops.backend;
 
 import android.app.IntentService;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -54,7 +53,6 @@ import ca.rmen.android.networkmonitor.app.dbops.backend.export.GnuplotExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.HTMLExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.kml.KMLExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.imp0rt.DBImport;
-import ca.rmen.android.networkmonitor.app.main.MainActivity;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -283,15 +281,10 @@ public class DBOpIntentService extends IntentService {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         // Start the summary report
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-        Notification almostDoneNotification =
-                prepareFileExportNotification(R.drawable.ic_stat_db_op_export, getString(R.string.export_notif_progress_title), getString(R.string.export_progress_finalizing_export), pendingIntent, false).build();
-        notificationManager.notify(FileExport.class.hashCode(), almostDoneNotification);
-
         Intent shareIntent = FileExport.getShareIntent(this, file);
 
         // All done
-        pendingIntent = PendingIntent.getActivity(this, 0, shareIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, shareIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         final NotificationCompat.Builder notificationBuilder;
         if (fileExport != null && fileExport.isCanceled()) {
             notificationBuilder =  prepareFileExportNotification(R.drawable.ic_stat_action_done, getString(R.string.export_notif_canceled_title), getString(R.string.export_notif_canceled_content), pendingIntent, true);

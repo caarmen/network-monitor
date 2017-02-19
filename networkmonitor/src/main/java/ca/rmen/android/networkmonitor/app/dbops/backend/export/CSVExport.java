@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2013-2017 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -31,6 +30,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.FormatterFactory.FormatterStyle;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 
 /**
  * Export the Network Monitor data to a CSV file.
@@ -40,7 +40,7 @@ public class CSVExport extends TableFileExport {
     private PrintWriter mPrintWriter;
 
     public CSVExport(Context context) {
-        super(context, new File(context.getExternalFilesDir(null), CSV_FILE), FormatterStyle.DEFAULT);
+        super(context, Share.getExportFile(context, CSV_FILE), FormatterStyle.DEFAULT);
     }
 
     @Override

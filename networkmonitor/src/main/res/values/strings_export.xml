@@ -8,7 +8,7 @@ This source is part of the
                              /___/
 repository.
 
-Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+Copyright (C) 2013-2017 Carmen Alvarez (c@rmen.ca)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -41,7 +41,6 @@ limitations under the License.
     <string name="export_gnuplot_series_filter_title">Filter %s values</string>
     <string name="export_gnuplot_hint">Network Monitor will produce a gnuplot file.  You will have to run gnuplot on the exported file to obtain a graph image.</string>
     <string name="export_progress_preparing_export">Preparing export&#8230;</string>
-    <string name="export_progress_finalizing_export">Finalizing export&#8230;</string>
     <string name="export_error_no_mobile_tests">No connection tests have been done on a mobile connection.</string>
     <string name="export_message_text">The following summary lists the mobile cells and wifi access points, and their connection test results.  For each cell or access point, you can see the %% of connection tests which succeeded, and the number of attempted connection tests. 
 \n\nThe worst cells or access points are at the top of the list.
@@ -68,5 +67,7 @@ limitations under the License.
     <string name="export_subject_send_settings">Network Monitor settings</string>
     <string name="export_settings_failure">Could not export the settings</string>
     <string name="export_settings_message_text">Save the attached file to your device and use the \'Import settings\' feature of Network Monitor to import the settings.</string>
+
+    <bool name="sdkLevel19">false</bool>
 
 </resources>

@@ -8,7 +8,7 @@
  * repository.
  *
  * Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
- * Copyright (C) 2013-2016 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2013-2017 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ package ca.rmen.android.networkmonitor.app.about;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -41,12 +40,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import java.io.File;
-
 import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.Theme;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 import ca.rmen.android.networkmonitor.util.Log;
 import de.psdev.licensesdialog.LicensesDialogFragment;
 
@@ -125,9 +123,7 @@ public class AboutActivity extends AppCompatActivity {
                         //sendIntent.setData(Uri.fromParts("mailto", getString(R.string.send_logs_to), null));
                         sendIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.support_send_debug_logs_subject));
                         String messageBody = getString(R.string.support_send_debug_logs_body);
-                        File f = new File(getExternalFilesDir(null), Log.FILE);
-                        sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + f.getAbsolutePath()));
-                        sendIntent.setType("message/rfc822");
+                        Share.addFileToShareIntent(AboutActivity.this, sendIntent, Log.FILE);
                         sendIntent.putExtra(Intent.EXTRA_TEXT, messageBody);
                         sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { getString(R.string.support_send_debug_logs_to) });
                         startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.action_share)));

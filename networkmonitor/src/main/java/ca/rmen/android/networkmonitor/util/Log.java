@@ -8,7 +8,7 @@
  * repository.
  *
  * Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
- * Copyright (C) 2014-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2014-2017 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,8 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 
 
 /**
@@ -274,7 +276,8 @@ public class Log {
         try {
             if (sFile0.exists()) in0 = new BufferedInputStream(new FileInputStream(sFile0));
             if (sFile1.exists()) in1 = new BufferedInputStream(new FileInputStream(sFile1));
-            File outputFile = new File(context.getExternalFilesDir(null), FILE);
+            File outputFile = Share.getExportFile(context, FILE);
+            if (outputFile == null) return false;
             out = new BufferedOutputStream(new FileOutputStream(outputFile, false));
 
             if (sFile0.exists() && sFile1.exists()) {

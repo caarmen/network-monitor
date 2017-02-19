@@ -8,7 +8,7 @@ This source is part of the
                              /___/
 repository.
 
-Copyright (C) 2013-2016 Carmen Alvarez (c@rmen.ca)
+Copyright (C) 2013-2017 Carmen Alvarez (c@rmen.ca)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ limitations under the License.
 
     <!-- Strings for the about screen -->
     <string name="about_title">À propos</string>
-    <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2016 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
+    <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2017 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
     <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2014 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
     <string name="about_legal">License/avertissement</string>
     <string name="about_projectUrl">Code source : https://github.com/caarmen/network-monitor</string>
@@ -122,7 +122,6 @@ limitations under the License.
     <string name="permission_data_usage_message"><![CDATA[<b>¯\\_(ツ)_/¯</b><br><br>\nDans l\'écran suivant, veuillez donner accès à Network Monitor aux statistiques de consommation de données.]]></string>
     <string name="permission_button_allow">Continuer</string>
     <string name="permission_button_deny">Annuler</string>
-    <string name="permission_external_storage_rationale">Network Monitor a besoin d\'accéder au stockage externe.  Sans cet accès, seuls les fichiers internes de l\'application seront montrés.</string>
     <string name="permission_location_denied">Quelques champs seront absents du fichier journal.</string>
     <string name="permission_location_rationale">Network Monitor a besoin d\'accéder à la localisation du terminal pour remplir certains champs.  Sans cet accès, ces champs seront absents du fichier journal.</string>
     <string name="action_freeze_header">Bloquer les entêtes (beta)</string>

@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2014-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2014-2017 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,14 +27,12 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 
-import java.io.File;
 import java.util.Arrays;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.ChoiceDialogFragment.DialogItemListener;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment.DialogButtonListener;
-import ca.rmen.android.networkmonitor.app.dialog.filechooser.FileChooserDialogFragment;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -115,20 +113,6 @@ public class DialogFragmentFactory extends DialogFragment {
         arguments.putInt(EXTRA_SELECTED_ITEM, selectedItem);
         result.setArguments(arguments);
         result.show(activity.getSupportFragmentManager(), ChoiceDialogFragment.class.getSimpleName());
-    }
-
-    /**
-     * Show a visible dialog fragment to choose a folder or file
-     */
-    public static void showFileChooserDialog(FragmentActivity activity, File initialFolder, boolean foldersOnly, int actionId) {
-        Log.v(TAG, "showFileChooserDialog");
-        Bundle arguments = new Bundle(3);
-        arguments.putInt(EXTRA_ACTION_ID, actionId);
-        if(initialFolder != null) arguments.putSerializable(FileChooserDialogFragment.EXTRA_FILE_CHOOSER_INITIAL_FOLDER, initialFolder);
-        arguments.putBoolean(FileChooserDialogFragment.EXTRA_FILE_CHOOSER_FOLDERS_ONLY, foldersOnly);
-        FileChooserDialogFragment result = new FileChooserDialogFragment();
-        result.setArguments(arguments);
-        result.show(activity.getSupportFragmentManager(), FileChooserDialogFragment.class.getSimpleName());
     }
 
 }

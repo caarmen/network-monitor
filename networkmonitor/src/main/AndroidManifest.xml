@@ -9,7 +9,7 @@ This source is part of the
 repository.
 
 Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
-Copyright (C) 2013-2016 Carmen Alvarez (c@rmen.ca)
+Copyright (C) 2013-2017 Carmen Alvarez (c@rmen.ca)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,8 +40,6 @@ limitations under the License.
     <uses-permission-sdk-23 android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- system permissions -->
     <uses-permission-sdk-23 android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
@@ -250,7 +248,7 @@ limitations under the License.
         <activity
             android:name=".app.savetostorage.SaveToStorageActivity"
             android:excludeFromRecents="true"
-            android:exported="true"
+            android:enabled="@bool/sdkLevel19"
             android:icon="@drawable/ic_device_sd_storage"
             android:label="@string/export_save_to_external_storage"
             android:theme="@style/NetMonNoDisplayTheme" >
@@ -263,23 +261,6 @@ limitations under the License.
                 <data android:mimeType="message/rfc822" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".app.dialog.filechooser.FileChooserActivity"
-            android:excludeFromRecents="true"
-            android:exported="true"
-            android:icon="@drawable/ic_device_sd_storage"
-            android:label="@string/file_chooser_sdcard"
-            android:theme="@style/NetMonNoDisplayTheme" >
-            <intent-filter>
-                <action android:name="android.intent.action.GET_CONTENT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.OPENABLE" />
-
-                <data android:mimeType="*/*" />
-            </intent-filter>
-        </activity>
-
         <receiver android:name=".app.service.BootReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -290,6 +271,15 @@ limitations under the License.
             android:name=".app.dbops.backend.DBOpIntentService"
             android:exported="false" >
         </service>
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

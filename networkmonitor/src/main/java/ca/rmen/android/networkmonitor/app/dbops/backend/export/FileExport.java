@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2013-2017 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -34,6 +33,7 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 import ca.rmen.android.networkmonitor.app.dbops.backend.DBOperation;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -84,8 +84,7 @@ public abstract class FileExport implements DBOperation {
 
         String messageBody = context.getString(R.string.export_message_text, dateRange);
         if (exportedFile != null && exportedFile.exists()) {
-            sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + exportedFile.getAbsolutePath()));
-            sendIntent.setType("message/rfc822");
+            Share.addFileToShareIntent(context, sendIntent, exportedFile.getName());
             messageBody += context.getString(R.string.export_message_text_file_attached);
         } else {
             sendIntent.setType("text/plain");

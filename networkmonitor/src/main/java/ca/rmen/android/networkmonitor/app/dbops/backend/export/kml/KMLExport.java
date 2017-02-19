@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2013-2017 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ package ca.rmen.android.networkmonitor.app.dbops.backend.export.kml;
 import android.content.Context;
 import android.database.Cursor;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,6 +44,7 @@ import ca.rmen.android.networkmonitor.app.dbops.backend.export.FileExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.Formatter;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.FormatterFactory;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.FormatterFactory.FormatterStyle;
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences.Selection;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
@@ -66,7 +66,7 @@ public class KMLExport extends FileExport {
      * @param placemarkNameColumn the column whose value will be exported to the KML placemark names.
      */
     public KMLExport(Context context, String placemarkNameColumn) {
-        super(context, new File(context.getExternalFilesDir(null), KML_FILE_PREFIX + placemarkNameColumn + ".kml"));
+        super(context, Share.getExportFile(context, KML_FILE_PREFIX + placemarkNameColumn + ".kml"));
         mPlacemarkNameColumn = placemarkNameColumn;
     }
 

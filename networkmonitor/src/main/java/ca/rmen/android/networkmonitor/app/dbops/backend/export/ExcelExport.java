@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2013-2017 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,10 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 import jxl.CellView;
 import jxl.JXLException;
 import jxl.Workbook;
@@ -67,7 +67,7 @@ public class ExcelExport extends TableFileExport {
     private int mColumnCount;
 
     public ExcelExport(Context context) {
-        super(context, new File(context.getExternalFilesDir(null), EXCEL_FILE), FormatterStyle.DEFAULT);
+        super(context, Share.getExportFile(context, EXCEL_FILE), FormatterStyle.DEFAULT);
     }
 
     @Override
