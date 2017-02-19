@@ -148,7 +148,7 @@ public class DBImport implements DBOperation {
                         if (mIsCanceled.get())
                             listener.onError(mContext.getString(R.string.import_notif_canceled_content));
                         else
-                            listener.onComplete(mContext.getString(R.string.import_notif_complete_content, Share.readDisplayName(mContext, uri)));
+                            listener.onComplete(mContext.getString(R.string.import_notif_complete_content, Share.readDisplayName(mContext, mUri)));
                     }
                     return;
                 } finally {

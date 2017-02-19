@@ -98,7 +98,7 @@ public class Share {
         } finally {
             if (cursor != null) cursor.close();
         }
-        return null;
+        return uri.getLastPathSegment();
     }
 
     /**
