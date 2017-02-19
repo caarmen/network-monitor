@@ -41,7 +41,6 @@ limitations under the License.
     <string name="export_gnuplot_series_filter_title">Filter %s values</string>
     <string name="export_gnuplot_hint">Network Monitor will produce a gnuplot file.  You will have to run gnuplot on the exported file to obtain a graph image.</string>
     <string name="export_progress_preparing_export">Preparing export&#8230;</string>
-    <string name="export_progress_finalizing_export">Finalizing export&#8230;</string>
     <string name="export_error_no_mobile_tests">No connection tests have been done on a mobile connection.</string>
     <string name="export_message_text">The following summary lists the mobile cells and wifi access points, and their connection test results.  For each cell or access point, you can see the %% of connection tests which succeeded, and the number of attempted connection tests. 
 \n\nThe worst cells or access points are at the top of the list.

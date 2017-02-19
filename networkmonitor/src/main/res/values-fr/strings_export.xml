@@ -41,7 +41,6 @@ limitations under the License.
     <string name="export_choice_text">Résumé en texte</string>
     <string name="export_kml_choice_title">Choisissez un champ</string>
     <string name="export_progress_preparing_export">Préparation de l\'export&#8230;</string>
-    <string name="export_progress_finalizing_export">Finalisation&#8230;</string>
     <string name="export_error_no_mobile_tests">Aucun test n\'a été effectué avec une connexion data mobile.</string>
     <string name="export_message_text">Le résumé suivant énumère les antennes relais et points d\'accès WiFi, et les résultats de leurs tests. Pour chaque antenne relais ou point d\'accès WiFi, vous pouvez voir le %% de tests de connexion qui ont réussi, et le nombre total de tests effectués. 
 \n\nLes moins bons antennes relais et points d\'accès WiFi se trouvent en haut de la liste. 
