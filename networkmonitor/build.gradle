@@ -27,8 +27,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
-        classpath 'me.tatarka:gradle-retrolambda:3.4.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
+        classpath 'me.tatarka:gradle-retrolambda:3.6.0'
     }
 }
 apply plugin: 'com.android.application'
@@ -105,14 +105,14 @@ dependencies {
     compile ('net.sourceforge.jexcelapi:jxl:2.6.12') {
         exclude group: "log4j"
     }
-    compile 'commons-net:commons-net:3.5'
-    compile 'com.github.hotchemi:permissionsdispatcher:2.2.1'
-    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.2.1'
+    compile 'commons-net:commons-net:3.6'
+    compile 'com.github.hotchemi:permissionsdispatcher:2.3.1'
+    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.3.1'
 
     if (!gradle.isFoss) {
         proprietaryCompile 'com.google.android.gms:play-services-location:10.0.1'
     }
 
-    compile 'net.sourceforge.streamsupport:streamsupport:1.5.2'
-    retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
+    compile 'net.sourceforge.streamsupport:streamsupport:1.5.3'
+    retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.5.1'
 }
