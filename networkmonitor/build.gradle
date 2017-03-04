@@ -28,13 +28,11 @@ buildscript {
     }
     dependencies {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'me.tatarka:gradle-retrolambda:3.4.0'
     }
 }
 apply plugin: 'com.android.application'
 apply plugin: 'com.github.ben-manes.versions'
-apply plugin: 'android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
@@ -99,17 +97,17 @@ android {
 dependencies {
 
     compile 'de.psdev.licensesdialog:licensesdialog:1.8.1'
-    compile 'com.android.support:appcompat-v7:25.1.1'
-    compile 'com.android.support:design:25.1.1'
-    compile 'com.android.support:preference-v7:25.1.1'
-    compile 'com.android.support:preference-v14:25.1.1'
+    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.android.support:design:25.2.0'
+    compile 'com.android.support:preference-v7:25.2.0'
+    compile 'com.android.support:preference-v14:25.2.0'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile ('net.sourceforge.jexcelapi:jxl:2.6.12') {
         exclude group: "log4j"
     }
     compile 'commons-net:commons-net:3.5'
     compile 'com.github.hotchemi:permissionsdispatcher:2.2.1'
-    apt 'com.github.hotchemi:permissionsdispatcher-processor:2.2.1'
+    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.2.1'
 
     if (!gradle.isFoss) {
         proprietaryCompile 'com.google.android.gms:play-services-location:10.0.1'
