@@ -62,6 +62,7 @@ public class NetMonNotification {
         context.registerReceiver(sDisableBroadcastReceiver, new IntentFilter(ACTION_DISABLE));
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setOngoing(true);
+        builder.setPriority(NetMonPreferences.getInstance(context).getNotificationPriority());
         builder.setSmallIcon(R.drawable.ic_stat_service_running);
         builder.setTicker(context.getString(R.string.service_notification_ticker));
         builder.setContentTitle(context.getString(R.string.app_name));

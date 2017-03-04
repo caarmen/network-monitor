@@ -23,11 +23,13 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
+import android.app.Notification;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
@@ -84,6 +86,12 @@ public class NetMonPreferences {
     public static final String PREF_EXPORT_GNUPLOT_SERIES = "PREF_EXPORT_GNUPLOT_SERIES";
     public static final String PREF_EXPORT_GNUPLOT_Y_AXIS = "PREF_EXPORT_GNUPLOT_Y_AXIS";
     static final String PREF_THEME = "PREF_THEME";
+    public static final String PREF_NOTIFICATION_PRIORITY = "PREF_NOTIFICATION_PRIORITY";
+    private static final String PREF_NOTIFICATION_PRIORITY_MAX = "max";
+    private static final String PREF_NOTIFICATION_PRIORITY_HIGH = "high";
+    private static final String PREF_NOTIFICATION_PRIORITY_DEFAULT = "default";
+    private static final String PREF_NOTIFICATION_PRIORITY_LOW = "low";
+    private static final String PREF_NOTIFICATION_PRIORITY_MIN = "min";
 
     private static final String PREF_FREEZE_HTML_TABLE_HEADER = "PREF_FREEZE_HTML_TABLE_HEADER";
     private static final boolean PREF_FREEZE_HTML_TABLE_HEADER_DEFAULT = false;
@@ -396,6 +404,16 @@ public class NetMonPreferences {
     public NetMonTheme getTheme() {
         String themeStr = mSharedPrefs.getString(PREF_THEME, NetMonTheme.DAY.name());
         return NetMonTheme.valueOf(themeStr);
+    }
+
+    public int getNotificationPriority() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return 0;
+        String priorityPref = mSharedPrefs.getString(PREF_NOTIFICATION_PRIORITY, PREF_NOTIFICATION_PRIORITY_DEFAULT);
+        if (priorityPref.equals(PREF_NOTIFICATION_PRIORITY_MAX)) return Notification.PRIORITY_MAX;
+        if (priorityPref.equals(PREF_NOTIFICATION_PRIORITY_HIGH)) return Notification.PRIORITY_HIGH;
+        if (priorityPref.equals(PREF_NOTIFICATION_PRIORITY_LOW)) return Notification.PRIORITY_LOW;
+        if (priorityPref.equals(PREF_NOTIFICATION_PRIORITY_MIN)) return Notification.PRIORITY_MIN;
+        return Notification.PRIORITY_DEFAULT;
     }
 
     private int getIntPreference(String key, String defaultValue) {
