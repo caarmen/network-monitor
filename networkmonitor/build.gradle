@@ -63,8 +63,8 @@ android {
         applicationId "ca.rmen.android.networkmonitor"
         minSdkVersion 9
         targetSdkVersion 25
-        versionName "1.28.11"
-        versionCode 12811
+        versionName "1.29.0"
+        versionCode 12900
         archivesBaseName += "-" + versionName
     }
 
