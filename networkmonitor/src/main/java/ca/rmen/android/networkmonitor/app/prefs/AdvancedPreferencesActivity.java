@@ -107,6 +107,10 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
             Preference themePreference = mPreferenceFragment.findPreference(NetMonPreferences.PREF_THEME);
             themePreference.setVisible(false);
         }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            Preference notificationPriorityPreference = mPreferenceFragment.findPreference(NetMonPreferences.PREF_NOTIFICATION_PRIORITY);
+            notificationPriorityPreference.setVisible(false);
+        }
 
     }
 

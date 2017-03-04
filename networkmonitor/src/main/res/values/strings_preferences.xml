@@ -93,7 +93,14 @@ limitations under the License.
     <string name="pref_value_theme_day">Light</string>
     <string name="pref_value_theme_night">Dark</string>
     <string name="pref_value_theme_auto">Auto</string>
-    <string name="pref_title_notification_enabled">Enable notifications</string>
+    <string name="pref_title_notification_priority">Notification priority</string>
+    <string name="pref_summary_notification_priority">Ongoing notification priority: %s</string>
+    <string name="pref_value_notification_priority_max">Max</string>
+    <string name="pref_value_notification_priority_high">High</string>
+    <string name="pref_value_notification_priority_default">Default</string>
+    <string name="pref_value_notification_priority_low">Low</string>
+    <string name="pref_value_notification_priority_min">Min</string>
+    <string name="pref_title_notification_enabled">Alert notifications</string>
     <string name="pref_summary_notification_enabled">Notify when a network test fails.</string>
     <string name="pref_title_notification_ringtone">Notification ringtone</string>
     <string name="pref_summary_notification_ringtone">%s</string>

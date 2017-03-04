@@ -188,6 +188,12 @@ public class NetMonService extends Service {
         else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key) || NetMonPreferences.PREF_SCHEDULER.equals(key)) {
             scheduleTests();
         }
+        // Update the notification if the priority changed
+        else if (NetMonPreferences.PREF_NOTIFICATION_PRIORITY.equals(key)) {
+            // Show our ongoing notification
+            Notification notification = NetMonNotification.createOngoingNotification(this);
+            startForeground(NetMonNotification.NOTIFICATION_ID_ONGOING, notification);
+        }
     };
 
 }

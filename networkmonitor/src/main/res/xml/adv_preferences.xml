@@ -90,6 +90,16 @@ limitations under the License.
             android:title="@string/pref_title_location_fetching_strategy" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_notifications" >
+        <ListPreference
+            android:defaultValue="default"
+            android:dialogTitle="@string/pref_title_notification_priority"
+            android:entries="@array/preferences_notification_priority_labels"
+            android:entryValues="@array/preferences_notification_priority_values"
+            android:icon="@drawable/ic_pref_notification_priority"
+            android:key="PREF_NOTIFICATION_PRIORITY"
+            android:summary="@string/pref_summary_notification_priority"
+            android:title="@string/pref_title_notification_priority" />
+
         <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:icon="@drawable/ic_pref_notification_enabled"
