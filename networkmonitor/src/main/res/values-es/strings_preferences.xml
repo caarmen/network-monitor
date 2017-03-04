@@ -92,7 +92,7 @@ limitations under the License.
     <string name="pref_value_theme_day">Claro</string>
     <string name="pref_value_theme_night">Oscuro</string>
     <string name="pref_value_theme_auto">Automático</string>
-    <string name="pref_title_notification_enabled">Activar las notificaciones</string>
+    <string name="pref_title_notification_enabled">Notificaciones de alerta</string>
     <string name="pref_summary_notification_enabled">Notificar cuando una prueba falla.</string>
     <string name="pref_title_notification_ringtone">Tono de la notificación</string>
     <string name="pref_summary_notification_ringtone">%s</string>
