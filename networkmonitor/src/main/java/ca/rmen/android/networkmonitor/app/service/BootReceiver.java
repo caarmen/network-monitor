@@ -40,7 +40,7 @@ public class BootReceiver extends BroadcastReceiver {
         if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
             // Start the service if it is enabled.
             if (NetMonPreferences.getInstance(context).isServiceEnabled())
-                context.startService(new Intent(context, NetMonService.class));
+                NetMonService.start(context);
         }
     }
 

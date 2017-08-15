@@ -30,6 +30,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -57,6 +58,15 @@ public class NetMonService extends Service {
     private NetMonDataSources mDataSources;
     private ReportEmailer mReportEmailer;
     private Scheduler mScheduler;
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, NetMonService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intent);
+        } else {
+            context.startService(intent);
+        }
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
