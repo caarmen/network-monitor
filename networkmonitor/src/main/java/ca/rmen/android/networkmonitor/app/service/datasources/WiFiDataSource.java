@@ -68,7 +68,7 @@ public class WiFiDataSource implements NetMonDataSource {
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
         mContext = context;
-        mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        mWifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
     }
 
     @Override

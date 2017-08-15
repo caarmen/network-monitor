@@ -250,7 +250,7 @@ public class ConnectionTesterDataSource implements NetMonDataSource {
      */
     private boolean shouldHaveDataConnection() {
         // If we're connected to a WiFi access point, we should have an internet connection.
-        WifiManager wifiMgr = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiMgr = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo connectionInfo = wifiMgr.getConnectionInfo();
         if (connectionInfo != null && connectionInfo.getNetworkId() > -1) return true;
 

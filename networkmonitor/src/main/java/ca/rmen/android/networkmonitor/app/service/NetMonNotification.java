@@ -181,7 +181,7 @@ public class NetMonNotification {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.v(TAG, "onReceive: " + intent);
-            if (ACTION_DISABLE.equals(intent.getAction())) NetMonPreferences.getInstance(context).setServiceEnabled(false);
+            if (ACTION_DISABLE.equals(intent.getAction())) NetMonPreferences.getInstance(context).disableService();
         }
     };
 

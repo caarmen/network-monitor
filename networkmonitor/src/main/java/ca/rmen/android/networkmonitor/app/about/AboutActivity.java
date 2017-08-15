@@ -66,8 +66,8 @@ public class AboutActivity extends AppCompatActivity {
             throw new AssertionError(e);
         }
 
-        ((TextView) findViewById(R.id.txtVersion)).setText(getString(R.string.app_name) + " v" + versionName);
-        TextView tvLibraries = (TextView) findViewById(R.id.tv_about_libraries);
+        ((TextView) findViewById(R.id.txtVersion)).setText(getString(R.string.about_version, getString(R.string.app_name), versionName));
+        TextView tvLibraries = findViewById(R.id.tv_about_libraries);
         SpannableString content = new SpannableString(getString(R.string.about_libraries));
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         tvLibraries.setText(content);
@@ -86,7 +86,7 @@ public class AboutActivity extends AppCompatActivity {
 
     private void tintCompoundDrawables(@IdRes int... textViewIds) {
         for (int textViewId : textViewIds) {
-            Theme.tintCompoundDrawables(this, (TextView) findViewById(textViewId));
+            Theme.tintCompoundDrawables(this, findViewById(textViewId));
         }
     }
 

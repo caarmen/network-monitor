@@ -32,7 +32,6 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.JobIntentService;
@@ -256,7 +255,7 @@ public class DBOpIntentService extends JobIntentService {
                 fileExport = new ExcelExport(this);
                 break;
             case HTML:
-                fileExport = new HTMLExport(this, true);
+                fileExport = new HTMLExport(this);
                 break;
             case KML:
                 String placemarkColumnName = extras.getString(EXTRA_EXPORT_KML_PLACEMARK_COLUMN_NAME);
@@ -285,23 +284,23 @@ public class DBOpIntentService extends JobIntentService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, shareIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         final NotificationCompat.Builder notificationBuilder;
         if (fileExport != null && fileExport.isCanceled()) {
-            notificationBuilder =  prepareFileExportNotification(R.drawable.ic_stat_action_done, getString(R.string.export_notif_canceled_title), getString(R.string.export_notif_canceled_content), pendingIntent, true);
+            notificationBuilder =  prepareFileExportNotification(getString(R.string.export_notif_canceled_title), getString(R.string.export_notif_canceled_content), pendingIntent);
         } else {
-            notificationBuilder = prepareFileExportNotification(R.drawable.ic_stat_action_done, getString(R.string.export_notif_complete_title), getString(R.string.export_notif_complete_content), pendingIntent, true);
+            notificationBuilder = prepareFileExportNotification(getString(R.string.export_notif_complete_title), getString(R.string.export_notif_complete_content), pendingIntent);
         }
         notificationBuilder.addAction(R.drawable.ic_pref_share, getString(R.string.action_share), pendingIntent);
         notificationManager.notify(FileExport.class.hashCode(), notificationBuilder.build());
     }
 
-    private NotificationCompat.Builder prepareFileExportNotification(@DrawableRes int iconId, String titleText, String contentText, PendingIntent pendingIntent, boolean autoCancel) {
+    private NotificationCompat.Builder prepareFileExportNotification(String titleText, String contentText, PendingIntent pendingIntent) {
         return new NotificationCompat.Builder(this, NetMonNotification.createOngoingNotificationChannel(this))
-                .setSmallIcon(iconId)
+                .setSmallIcon(R.drawable.ic_stat_action_done)
                 .setTicker(titleText)
                 .setContentTitle(titleText)
                 .setContentText(contentText)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText))
-                .setAutoCancel(autoCancel)
-                .setOngoing(!autoCancel)
+                .setAutoCancel(true)
+                .setOngoing(false)
                 .setContentIntent(pendingIntent)
                 .setColor(ActivityCompat.getColor(this, R.color.netmon_color));
     }

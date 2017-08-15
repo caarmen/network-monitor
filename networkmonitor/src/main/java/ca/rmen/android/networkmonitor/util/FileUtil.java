@@ -37,7 +37,7 @@ public class FileUtil {
     /**
      * @return a file (existing or not) in external cache directory (if mounted) or the internal cache directory.
      */
-    public static File getCacheFile(Context context, String file) {
+    public static File getCacheFile(Context context, @SuppressWarnings("SameParameterValue") String file) {
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             File cacheDir = context.getExternalCacheDir();
             if (cacheDir != null && (cacheDir.mkdirs() || cacheDir.isDirectory())) {

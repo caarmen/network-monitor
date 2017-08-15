@@ -61,7 +61,7 @@ public class FilterColumnActivity extends AppCompatActivity { // NO_UCD (use def
         mListView = lvf.getListView();
 
         // Show a hint to the user, explaining what filtering this column does.
-        TextView tvHint = (TextView) findViewById(R.id.filter_columns_hint);
+        TextView tvHint = findViewById(R.id.filter_columns_hint);
         String columnName = getIntent().getStringExtra(EXTRA_COLUMN_NAME);
         String columnLabel = NetMonColumns.getColumnLabel(this, columnName);
         String hintText = getString(R.string.filter_columns_hint, columnLabel);

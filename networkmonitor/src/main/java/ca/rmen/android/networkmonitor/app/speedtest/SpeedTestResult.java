@@ -23,19 +23,15 @@
  */
 package ca.rmen.android.networkmonitor.app.speedtest;
 
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-
-
 public class SpeedTestResult {
     public enum SpeedTestStatus {
         SUCCESS, INVALID_FILE, FAILURE, AUTH_FAILURE, UNKNOWN
     }
 
-    public final long fileBytes;
+    final long fileBytes;
     public final SpeedTestStatus status;
-    private final long totalBytes;
-    private final long transferTime;
+    public final long totalBytes;
+    public final long transferTime;
 
     /**
      * @param totalBytes the total bytes transferred (either received or sent) during the time the file was being transferred.
@@ -43,7 +39,7 @@ public class SpeedTestResult {
      * @param transferTime the time in milliseconds it took to transfer the file
      * @param status the result of the file transfer
      */
-    public SpeedTestResult(long totalBytes, long fileBytes, long transferTime, SpeedTestStatus status) {
+    SpeedTestResult(long totalBytes, long fileBytes, long transferTime, SpeedTestStatus status) {
         this.totalBytes = totalBytes;
         this.fileBytes = fileBytes;
         this.transferTime = transferTime;
@@ -59,32 +55,6 @@ public class SpeedTestResult {
         long bits = bytesTransferred * 8;
         float megabits = (float) bits / 1000000;
         return megabits / seconds;
-    }
-
-    /**
-     * Persist this speed test result to the shared preferences.
-     *
-     * @param keyPrefix the first part of the key names of each field to persist.
-     */
-    void write(SharedPreferences prefs, String keyPrefix) {
-        Editor editor = prefs.edit();
-        editor.putLong(keyPrefix + "_TOTAL_BYTES", totalBytes);
-        editor.putLong(keyPrefix + "_FILE_BYTES", fileBytes);
-        editor.putLong(keyPrefix + "_TRANSFER_TIME", transferTime);
-        editor.putInt(keyPrefix + "_STATUS", status.ordinal());
-        editor.apply();
-    }
-
-    /**
-     * @param keyPrefix the first part of the key names of each persisted field.
-     * @return a speed test result which was stored in the shared preferences.
-     */
-    static SpeedTestResult read(SharedPreferences prefs, String keyPrefix) {
-        long totalBytes = prefs.getLong(keyPrefix + "_TOTAL_BYTES", 0);
-        long fileBytes = prefs.getLong(keyPrefix + "_FILE_BYTES", 0);
-        long transferTime = prefs.getLong(keyPrefix + "_TRANSFER_TIME", 0);
-        int statusInt = prefs.getInt(keyPrefix + "_STATUS", SpeedTestStatus.UNKNOWN.ordinal());
-        return new SpeedTestResult(totalBytes, fileBytes, transferTime, SpeedTestStatus.values()[statusInt]);
     }
 
     @Override

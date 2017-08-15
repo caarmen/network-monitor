@@ -50,6 +50,7 @@ limitations under the License.
     </FrameLayout>
 
     <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="?android:attr/dividerVertical"
@@ -58,6 +59,7 @@ limitations under the License.
         android:showDividers="middle">
 
         <Button
+            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/button_ok"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -66,6 +68,7 @@ limitations under the License.
             android:text="@string/speed_test_good_enough" />
 
         <Button
+            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/button_nok"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

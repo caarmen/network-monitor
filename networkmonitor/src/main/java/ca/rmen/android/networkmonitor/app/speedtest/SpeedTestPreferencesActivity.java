@@ -95,7 +95,7 @@ public class SpeedTestPreferencesActivity extends AppCompatActivity { // NO_UCD 
         if (speedTestEnabled) {
             SpeedTestDownloadConfig downloadConfig = mSpeedTestPrefs.getDownloadConfig(this);
             if (!downloadConfig.isValid()) {
-                mSpeedTestPrefs.setEnabled(false);
+                mSpeedTestPrefs.disable();
                 DialogFragmentFactory.showInfoDialog(this, getString(R.string.speed_test_missing_info_dialog_title),
                         getString(R.string.speed_test_missing_info_dialog_message));
             }

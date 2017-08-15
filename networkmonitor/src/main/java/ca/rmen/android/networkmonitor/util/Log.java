@@ -199,7 +199,7 @@ public class Log {
         i(tag, message, null);
     }
 
-    private static void i(String tag, String message, Throwable throwable) {
+    private static void i(String tag, String message, @SuppressWarnings("SameParameterValue") Throwable throwable) {
         if (throwable != null) {
             android.util.Log.i(tag, message, throwable);
         } else {

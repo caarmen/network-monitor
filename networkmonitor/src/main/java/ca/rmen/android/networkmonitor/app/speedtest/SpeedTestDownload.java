@@ -31,6 +31,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import android.content.SharedPreferences;
 import android.net.TrafficStats;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -48,6 +49,7 @@ public class SpeedTestDownload {
 
     // The maximum connection and read timeout 
     private static final int TIMEOUT = 5000;
+    private static final String PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT = "PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT";
 
     interface SpeedTestDownloadCallback {
         void onSpeedTestResult(@NonNull SpeedTestResult result);
@@ -131,4 +133,30 @@ public class SpeedTestDownload {
             Log.v(TAG, "download: END");
         }
     }
+
+    /**
+     * Persist this speed test result to the shared preferences.
+     *
+     * @param result the speed test result to save.
+     */
+    static void save(SharedPreferences prefs, SpeedTestResult result) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong(PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT + "_TOTAL_BYTES", result.totalBytes);
+        editor.putLong(PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT + "_FILE_BYTES", result.fileBytes);
+        editor.putLong(PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT + "_TRANSFER_TIME", result.transferTime);
+        editor.putInt(PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT + "_STATUS", result.status.ordinal());
+        editor.apply();
+    }
+
+    /**
+     * @return a speed test result which was stored in the shared preferences.
+     */
+    static SpeedTestResult read(SharedPreferences prefs) {
+        long totalBytes = prefs.getLong(PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT + "_TOTAL_BYTES", 0);
+        long fileBytes = prefs.getLong(PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT + "_FILE_BYTES", 0);
+        long transferTime = prefs.getLong(PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT + "_TRANSFER_TIME", 0);
+        int statusInt = prefs.getInt(PREF_SPEED_TEST_LAST_DOWNLOAD_RESULT + "_STATUS", SpeedTestStatus.UNKNOWN.ordinal());
+        return new SpeedTestResult(totalBytes, fileBytes, transferTime, SpeedTestStatus.values()[statusInt]);
+    }
+
 }

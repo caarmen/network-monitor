@@ -52,7 +52,6 @@ import ca.rmen.android.networkmonitor.app.bus.NetMonBus;
 import ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
-import ca.rmen.android.networkmonitor.app.email.EmailPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.LocationFetchingStrategy;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
 import ca.rmen.android.networkmonitor.util.Log;
@@ -99,14 +98,8 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
         Preference enableConnectionTest = mPreferenceFragment.findPreference(NetMonPreferences.PREF_ENABLE_CONNECTION_TEST);
         NetMonPreferences prefs = NetMonPreferences.getInstance(this);
         if (prefs.isFastPollingEnabled()) enableConnectionTest.setEnabled(false);
-        setOnPreferenceChangeListeners(NetMonPreferences.PREF_TEST_SERVER);
+        mPreferenceFragment.findPreference(NetMonPreferences.PREF_TEST_SERVER).setOnPreferenceChangeListener(mEnsureNonEmptyPreferenceChangeListener);
         setOnPreferenceClickListeners(PREF_IMPORT_DB, PREF_COMPRESS, NetMonPreferences.PREF_NOTIFICATION_RINGTONE, PREF_IMPORT_SETTINGS, PREF_EXPORT_SETTINGS);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            Preference emailPreference = mPreferenceFragment.findPreference(EmailPreferences.PREF_EMAIL_REPORTS);
-            emailPreference.setVisible(false);
-            Preference themePreference = mPreferenceFragment.findPreference(NetMonPreferences.PREF_THEME);
-            themePreference.setVisible(false);
-        }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             Preference notificationPriorityPreference = mPreferenceFragment.findPreference(NetMonPreferences.PREF_NOTIFICATION_PRIORITY);
             notificationPriorityPreference.setVisible(false);
@@ -118,13 +111,6 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
         for (String key : keys) {
             Preference preference = mPreferenceFragment.findPreference(key);
             preference.setOnPreferenceClickListener(mOnPreferenceClickListener);
-        }
-    }
-
-    private void setOnPreferenceChangeListeners(String... keys) {
-        for (String key : keys) {
-            Preference preference = mPreferenceFragment.findPreference(key);
-            preference.setOnPreferenceChangeListener(mOnPreferenceChangeListener);
         }
     }
 
@@ -223,20 +209,17 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
         return false;
     };
 
-    private final Preference.OnPreferenceChangeListener mOnPreferenceChangeListener = (preference, newValue) -> {
+    private final Preference.OnPreferenceChangeListener mEnsureNonEmptyPreferenceChangeListener = (preference, newValue) -> {
         // Ignore the value if it is empty.
-        if (NetMonPreferences.PREF_TEST_SERVER.equals(preference.getKey())) {
-            String newValueStr = (String) newValue;
-            return !TextUtils.isEmpty(newValueStr);
-        }
-        return true;
+        String newValueStr = (String) newValue;
+        return !TextUtils.isEmpty(newValueStr);
     };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.v(TAG, "onActivityResult: requestCode =  " + requestCode + ", resultCode = " + resultCode + ", data=" + data);
-        /**
+        /*
          * Allow the user to choose a DB to import
          */
         if (requestCode == ACTIVITY_REQUEST_CODE_IMPORT_DB) {

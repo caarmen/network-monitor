@@ -179,7 +179,7 @@ public class NetMonService extends Service {
             } catch (Throwable t) {
                 Log.v(TAG, "Error in monitorLoop: " + t.getMessage(), t);
             } finally {
-                if (wakeLock != null && wakeLock.isHeld()) wakeLock.release();
+                if (wakeLock != null) wakeLock.release();
             }
 
         }

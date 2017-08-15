@@ -39,7 +39,7 @@ public class EmailHelpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_help);
-        WebView wv = (WebView) findViewById(R.id.webview);
+        WebView wv = findViewById(R.id.webview);
         wv.setBackgroundColor(0);
         wv.getSettings().setDefaultFontSize(14);
         wv.loadUrl(getString(R.string.email_help_file));

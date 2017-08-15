@@ -208,9 +208,9 @@ public class MainActivity extends AppCompatActivity
                 }
             } else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
                 if (prefs.isFastPollingEnabled()) {
-                    prefs.setConnectionTestEnabled(false);
-                    if (prefs.getDBRecordCount() < 0) prefs.setDBRecordCount(10000);
-                    SpeedTestPreferences.getInstance(MainActivity.this).setEnabled(false);
+                    prefs.disableConnectionTest();
+                    if (prefs.getDBRecordCount() < 0) prefs.setMaxCappedDbRecordCount();
+                    SpeedTestPreferences.getInstance(MainActivity.this).disable();
                     DialogFragmentFactory.showWarningDialog(MainActivity.this, getString(R.string.warning_fast_polling_title),
                             getString(R.string.warning_fast_polling_message));
                 }
@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onAppWarningCancelClicked() {
-        NetMonPreferences.getInstance(this).setServiceEnabled(false);
+        NetMonPreferences.getInstance(this).disableService();
     }
 
     private final Preference.OnPreferenceClickListener mOnPreferenceClickListener = preference -> {

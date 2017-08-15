@@ -37,7 +37,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -91,7 +90,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.log);
         if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mWebView = (WebView) findViewById(R.id.web_view);
+        mWebView = findViewById(R.id.web_view);
         assert mWebView != null;
         mWebView.setBackgroundColor(Color.TRANSPARENT);
         mWebView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -196,7 +195,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
      */
     private void loadHTMLFile() {
         Log.v(TAG, "loadHTMLFile");
-        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        final ProgressBar progressBar = findViewById(R.id.progress_bar);
         assert progressBar != null;
         progressBar.setVisibility(View.VISIBLE);
         startRefreshIconAnimation();
@@ -323,7 +322,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
     public void onDestroy() {
         Log.v(TAG, "onDestroy");
         if (mWebView != null) {
-            if (Build.VERSION.SDK_INT >= 11) mWebView.getSettings().setDisplayZoomControls(false);
+            mWebView.getSettings().setDisplayZoomControls(false);
             mWebView.removeAllViews();
             ((ViewGroup) mWebView.getParent()).removeView(mWebView);
             mWebView.destroy();
@@ -413,7 +412,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         Animation rotation = AnimationUtils.loadAnimation(this, R.anim.rotate);
         rotation.setRepeatCount(Animation.INFINITE);
         refreshIcon.startAnimation(rotation);
-        MenuItemCompat.setActionView(menuItemRefresh, refreshIcon);
+        menuItemRefresh.setActionView(refreshIcon);
     }
 
     private void stopRefreshIconAnimation() {
@@ -421,10 +420,10 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         if(mMenu == null) return;
         MenuItem menuItemRefresh = mMenu.findItem(R.id.action_refresh);
         if(menuItemRefresh == null) return;
-        View refreshIcon = MenuItemCompat.getActionView(menuItemRefresh);
+        View refreshIcon = menuItemRefresh.getActionView();
         if (refreshIcon != null) {
             refreshIcon.clearAnimation();
-            MenuItemCompat.setActionView(menuItemRefresh, null);
+            menuItemRefresh.setActionView(null);
         }
     }
 
