@@ -27,7 +27,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
         configurations.classpath.exclude group: 'com.android.tools.external.lombok'
     }
@@ -36,5 +36,6 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        google()
     }
 }
