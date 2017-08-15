@@ -69,6 +69,7 @@ limitations under the License.
 
     <!-- Strings for the about screen -->
     <string name="about_title">About</string>
+    <string name="about_version" translatable="false">%1$s v%2$s</string>
     <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2017 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
     <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2014 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
     <string name="about_legal">License/disclaimer</string>
@@ -93,13 +94,6 @@ limitations under the License.
     <string name="service_alert_notification_channel_id" translatable="false">Network Monitor Alerts Channel</string>
     <string name="service_alert_notification_channel_name">Alerts</string>
     <string name="service_alert_notification_channel_description">Notifications for alerts</string>
-
-    <!-- Send debugging logs -->
-    <string name="action_send_logs">Send debugging logs</string>
-    <string name="support_send_debug_logs_subject">Debugging logs for Network Monitor</string>
-    <string name="support_send_debug_logs_body">Here are the logs ;)</string>
-    <string name="support_send_debug_logs_to">c@rmen.ca</string>
-    <string name="support_error">Error creating log file.  Make sure your device\'s SD card is present.</string>
 
     <!-- Strings about sending emails -->
     <string name="missing_email_settings_info_dialog_title">Missing information</string>

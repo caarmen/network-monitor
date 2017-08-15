@@ -29,7 +29,7 @@ import android.content.Intent;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 public class BootReceiver extends BroadcastReceiver {
     private static final String TAG = Constants.TAG + BootReceiver.class.getSimpleName();

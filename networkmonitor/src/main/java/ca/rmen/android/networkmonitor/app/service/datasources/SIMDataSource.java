@@ -28,7 +28,7 @@ import android.content.Context;
 import android.telephony.TelephonyManager;
 
 import ca.rmen.android.networkmonitor.util.AndroidConstantsUtil;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;

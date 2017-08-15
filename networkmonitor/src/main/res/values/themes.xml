@@ -68,12 +68,8 @@ limitations under the License.
         <item name="android:windowNoDisplay">true</item>
     </style>
 
-    <style name="NetMonPreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
+    <style name="NetMonPreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay.v14.Material">
         <item name="android:dividerHeight">0dp</item>
-        <item name="preferenceCategoryStyle">@style/NetMonPreferenceCategoryStyle</item>
     </style>
 
-    <style name="NetMonPreferenceCategoryStyle" parent="Preference.Category">
-        <item name="android:layout">@layout/netmon_preference_category</item>
-    </style>
 </resources>

@@ -25,6 +25,7 @@ package ca.rmen.android.networkmonitor.app.speedtest;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -32,7 +33,7 @@ import android.webkit.WebView;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * Activity which shows an HTML explanation of the speed test limitations
@@ -45,7 +46,7 @@ public class SpeedTestAboutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speed_test_about);
 
-        WebView wv = (WebView) findViewById(R.id.webview);
+        WebView wv = findViewById(R.id.webview);
         wv.setBackgroundColor(0);
         wv.getSettings().setDefaultFontSize(14);
         wv.loadUrl(getString(R.string.speed_test_about_file));
@@ -62,7 +63,10 @@ public class SpeedTestAboutActivity extends AppCompatActivity {
         Log.v(TAG, "playStoreClicked");
         String playStoreUrl = "https://play.google.com/store/search?c=apps&q=speed test";
         final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(playStoreUrl));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        }
         startActivity(intent);
 
     }

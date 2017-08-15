@@ -26,14 +26,13 @@ package ca.rmen.android.networkmonitor.app.service.datasources;
 import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Context;
-import android.os.Build;
 import android.telephony.CellLocation;
 import android.telephony.TelephonyManager;
 import android.telephony.cdma.CdmaCellLocation;
 import android.telephony.gsm.GsmCellLocation;
 
 
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
@@ -46,7 +45,7 @@ public class CellLocationDataSource implements NetMonDataSource {
 
     private static final String TAG = Constants.TAG + CellLocationDataSource.class.getSimpleName();
     /**
-     * @see {@link CdmaCellLocation#getBaseStationLatitude()}
+     * @see CdmaCellLocation#getBaseStationLatitude()
      */
     private static final int CDMA_COORDINATE_DIVISOR = 3600 * 4;
     private TelephonyManager mTelephonyManager;
@@ -83,7 +82,7 @@ public class CellLocationDataSource implements NetMonDataSource {
             if (rnc > 0) values.put(NetMonColumns.GSM_RNC, rnc);
             values.put(NetMonColumns.GSM_SHORT_CELL_ID, shortCid);
             values.put(NetMonColumns.GSM_CELL_LAC, gsmCellLocation.getLac());
-            if (Build.VERSION.SDK_INT >= 9) values.put(NetMonColumns.GSM_CELL_PSC, getPsc(gsmCellLocation));
+            values.put(NetMonColumns.GSM_CELL_PSC, getPsc(gsmCellLocation));
         } else if (cellLocation instanceof CdmaCellLocation) {
             CdmaCellLocation cdmaCellLocation = (CdmaCellLocation) cellLocation;
             values.put(NetMonColumns.CDMA_CELL_BASE_STATION_ID, cdmaCellLocation.getBaseStationId());

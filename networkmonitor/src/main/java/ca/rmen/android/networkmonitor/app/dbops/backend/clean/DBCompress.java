@@ -38,7 +38,7 @@ import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 import ca.rmen.android.networkmonitor.app.dbops.backend.DBOperation;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * Reduces groups of 3 or more consecutive rows with identical data (except the timestamp) into a single row.

@@ -29,7 +29,6 @@ import android.text.TextUtils;
 import java.io.File;
 import java.util.Set;
 
-import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.CSVExport;
@@ -44,7 +43,7 @@ import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailConfig;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailSecurity;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 import java8.util.stream.Collectors;
 import java8.util.stream.StreamSupport;
 
@@ -120,7 +119,7 @@ public class ReportEmailer {
                     emailConfig.user, emailConfig.password,
                     from, recipients,
                     subject,
-                    body, attachments, BuildConfig.DEBUG);
+                    body, attachments);
             Log.v(TAG, "sent message");
             // The mail was sent file.  Dismiss the e-mail error notification if it's showing.
             NetMonNotification.dismissEmailFailureNotification(mContext);
@@ -166,7 +165,7 @@ public class ReportEmailer {
                 fileExport = new CSVExport(mContext);
                 break;
             case "html":
-                fileExport = new HTMLExport(mContext, true);
+                fileExport = new HTMLExport(mContext);
                 break;
             case "excel":
                 fileExport = new ExcelExport(mContext);

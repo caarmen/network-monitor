@@ -42,6 +42,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
+import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.util.IoUtil;
 
 /**
@@ -58,24 +59,19 @@ class Emailer {
      *
      * @param protocol    this has been tested with "TLS", "SSL", and null.
      * @param attachments optional attachments to include in the mail.
-     * @param debug       if true, details about the smtp commands will be logged to stdout.
      */
     static void sendEmail(String protocol, String server, int port,
                           String user, String password,
                           String from, String[] recipients,
                           String subject,
-                          String body, Set<File> attachments,
-                          boolean debug) throws Exception {
+                          String body, Set<File> attachments) throws Exception {
 
         // Set up the mail connectivity
         final AuthenticatingSMTPClient client;
-        if (protocol == null)
-            client = new AuthenticatingSMTPClient();
-        else
-            client = new AuthenticatingSMTPClient(protocol);
+        if (protocol == null) client = new AuthenticatingSMTPClient();
+        else client = new AuthenticatingSMTPClient(protocol);
 
-        if (debug)
-            client.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out), true));
+        if (BuildConfig.DEBUG) client.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out), true));
 
         client.setDefaultTimeout(SMTP_TIMEOUT_MS);
         client.setCharset(Charset.forName(ENCODING));

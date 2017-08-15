@@ -26,6 +26,7 @@ package ca.rmen.android.networkmonitor.util;
 
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;

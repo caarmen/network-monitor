@@ -50,7 +50,7 @@ import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.databinding.SelectFieldsBinding;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 import ca.rmen.android.networkmonitor.util.PermissionUtil;
 import ca.rmen.android.networkmonitor.util.TextUtil;
 import permissions.dispatcher.NeedsPermission;

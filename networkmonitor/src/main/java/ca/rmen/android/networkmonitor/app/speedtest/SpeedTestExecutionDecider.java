@@ -40,8 +40,7 @@ import android.telephony.TelephonyManager;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import ca.rmen.android.networkmonitor.util.DBUtil;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 import ca.rmen.android.networkmonitor.util.NetMonSignalStrength;
 import ca.rmen.android.networkmonitor.util.TelephonyUtil;
 
@@ -71,7 +70,7 @@ public class SpeedTestExecutionDecider {
         mContext = context;
         mPreferences = SpeedTestPreferences.getInstance(context);
         mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        mWifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         mNetMonSignalStrength = new NetMonSignalStrength(context);
         if (mPreferences.isEnabled() && mPreferences.getSpeedTestInterval() == SpeedTestPreferences.PREF_SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE) {
@@ -114,7 +113,7 @@ public class SpeedTestExecutionDecider {
      * @return true if the current network type is different from the network type during the last speed test.
      */
     private boolean hasNetworkTypeChanged() {
-        String lastLoggedNetworkType = DBUtil.readLastLoggedValue(mContext, NetMonColumns.NETWORK_TYPE, QUERY_FILTER_HAS_SPEED_TEST);
+        String lastLoggedNetworkType = readLastLoggedValue(NetMonColumns.NETWORK_TYPE);
         String currentNetworkType = TelephonyUtil.getNetworkType(mContext);
 
         if (currentNetworkType == null) return false;
@@ -142,7 +141,7 @@ public class SpeedTestExecutionDecider {
      */
     private boolean hasCellSignalStrengthChanged() {
         Log.v(TAG, "hasCellSignalStrengthChanged by: " + SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM + '?');
-        String lastLoggedCellSignalStrength = DBUtil.readLastLoggedValue(mContext, NetMonColumns.CELL_SIGNAL_STRENGTH_DBM, QUERY_FILTER_HAS_SPEED_TEST);
+        String lastLoggedCellSignalStrength = readLastLoggedValue(NetMonColumns.CELL_SIGNAL_STRENGTH_DBM);
         return lastLoggedCellSignalStrength != null &&
                 signalStrengthChangeExceedsThreshold(Integer.valueOf(lastLoggedCellSignalStrength), mCurrentCellSignalStrengthDbm);
     }
@@ -154,7 +153,7 @@ public class SpeedTestExecutionDecider {
         Log.v(TAG, "hasWifiSignalStrengthChanged by: " + SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM + '?');
         WifiInfo connectionInfo = mWifiManager.getConnectionInfo();
         int currentWifiSignalStrengthDbm = connectionInfo.getRssi();
-        String lastLoggedWifiSignalStrength = DBUtil.readLastLoggedValue(mContext, NetMonColumns.WIFI_RSSI, QUERY_FILTER_HAS_SPEED_TEST);
+        String lastLoggedWifiSignalStrength = readLastLoggedValue(NetMonColumns.WIFI_RSSI);
         return lastLoggedWifiSignalStrength != null &&
                 signalStrengthChangeExceedsThreshold(Integer.valueOf(lastLoggedWifiSignalStrength), currentWifiSignalStrengthDbm);
     }
@@ -187,7 +186,7 @@ public class SpeedTestExecutionDecider {
     }
 
     private int readNumberOfRecordsSinceLastSpeedTest() {
-        String idOfLatestSpeedTest = DBUtil.readLastLoggedValue(mContext, BaseColumns._ID, QUERY_FILTER_HAS_SPEED_TEST);
+        String idOfLatestSpeedTest = readLastLoggedValue(BaseColumns._ID);
         if (idOfLatestSpeedTest == null) return 0;
         String orderBy = BaseColumns._ID + " DESC";
         String selection = BaseColumns._ID + " > " + idOfLatestSpeedTest;
@@ -210,6 +209,25 @@ public class SpeedTestExecutionDecider {
     private void unregisterPhoneStateListener() {
         Log.v(TAG, "unregisterPhoneStateListener");
         mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+    }
+
+    /**
+     * @return the most recent value we logged for the given columnName, which matches the given selection.  May return null.
+     */
+    private String readLastLoggedValue(String columnName) {
+        String[] projection = new String[]{columnName};
+        String orderBy = BaseColumns._ID + " DESC";
+        Cursor cursor = mContext.getContentResolver().query(NetMonColumns.CONTENT_URI, projection, QUERY_FILTER_HAS_SPEED_TEST, null, orderBy);
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    return cursor.getString(0);
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        return null;
     }
 
     private final PhoneStateListener mPhoneStateListener = new PhoneStateListener() {

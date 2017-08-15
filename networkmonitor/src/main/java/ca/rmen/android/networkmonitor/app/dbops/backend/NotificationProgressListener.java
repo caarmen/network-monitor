@@ -38,7 +38,7 @@ import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 import ca.rmen.android.networkmonitor.app.main.MainActivity;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * Displays task progress in a system notification.

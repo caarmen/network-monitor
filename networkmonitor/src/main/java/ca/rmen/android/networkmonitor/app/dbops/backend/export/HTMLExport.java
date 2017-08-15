@@ -42,7 +42,7 @@ import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences.SortOrder;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * Export the Network Monitor data to an HTML file. The HTML file includes CSS specified in the strings XML file.
@@ -58,10 +58,9 @@ public class HTMLExport extends TableFileExport {
     private final String mFixedTableHeight;
 
     /**
-     * @param external if true, the file will be exported to the sd card. Otherwise it will written to the application's internal storage.
      */
-    public HTMLExport(Context context, boolean external) {
-        this(context, external, TABLE_HEIGHT_FILE_EXPORT);
+    public HTMLExport(Context context) {
+        this(context, true, TABLE_HEIGHT_FILE_EXPORT);
     }
 
     /**

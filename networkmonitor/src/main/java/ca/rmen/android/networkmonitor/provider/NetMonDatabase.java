@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.Constants.ConnectionType;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 import ca.rmen.android.networkmonitor.util.TelephonyUtil;
 
 public class NetMonDatabase extends SQLiteOpenHelper {

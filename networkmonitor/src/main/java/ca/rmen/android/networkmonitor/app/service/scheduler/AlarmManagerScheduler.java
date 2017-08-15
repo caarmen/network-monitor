@@ -36,7 +36,7 @@ import android.os.HandlerThread;
 import android.os.SystemClock;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * Schedule a single Runnable periodically. Note that on KitKat devices (and emulator), the specified interval may not be respected, even if the target SDK is

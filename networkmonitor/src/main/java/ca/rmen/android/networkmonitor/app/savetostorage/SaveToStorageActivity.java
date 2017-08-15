@@ -34,7 +34,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * Invisible activity which expects a file as a Uri in the {@link Intent#EXTRA_STREAM} extra.

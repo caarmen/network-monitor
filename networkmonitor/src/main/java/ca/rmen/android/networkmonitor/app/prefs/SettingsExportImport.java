@@ -24,15 +24,14 @@
 package ca.rmen.android.networkmonitor.app.prefs;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 
 import java.io.File;
@@ -42,7 +41,7 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 import ca.rmen.android.networkmonitor.util.IoUtil;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * Export and import shared preferences.
@@ -67,24 +66,28 @@ final class SettingsExportImport {
      */
     static void exportSettings(final Activity activity) {
         final File inputFile = getSharedPreferencesFile(activity);
-        final File outputFile = Share.getExportFile(activity, inputFile.getName());
-        new AsyncTask<Void, Void, Boolean>() {
+        new AsyncTask<Void, Void, File>() {
             @SuppressLint("CommitPrefEdits")
             @Override
-            protected Boolean doInBackground(Void... params) {
-                if (outputFile == null) return false;
+            protected File doInBackground(Void... params) {
+                File outputFile = Share.getExportFile(activity, inputFile.getName());
+                if (outputFile == null) return null;
                 // Just in case: make sure we don't have our temp setting.
                 SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
                 if (sharedPrefs.contains(PREF_IMPORT_VERIFICATION)) {
                     Log.w(TAG, "Didn't expect to see the " + PREF_IMPORT_VERIFICATION + " setting when exporting");
-                    sharedPrefs.edit().remove(PREF_IMPORT_VERIFICATION).commit();
+                    sharedPrefs.edit().remove(PREF_IMPORT_VERIFICATION).apply();
                 }
-                return IoUtil.copy(inputFile, outputFile);
+                if (IoUtil.copy(inputFile, outputFile)) {
+                    return outputFile;
+                } else {
+                    return null;
+                }
             }
 
             @Override
-            protected void onPostExecute(Boolean result) {
-                if (result) {
+            protected void onPostExecute(File outputFile) {
+                if (outputFile != null) {
                     // Bring up the chooser to share the file.
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
@@ -121,7 +124,7 @@ final class SettingsExportImport {
                 Snackbar.make(activity.getWindow().getDecorView().getRootView(), R.string.import_settings_starting, Snackbar.LENGTH_LONG).show();
             }
 
-            @SuppressLint("CommitPrefEdits")
+            @SuppressLint({"CommitPrefEdits", "ApplySharedPref"})
             @Override
             protected Boolean doInBackground(Void... params) {
 
@@ -166,49 +169,26 @@ final class SettingsExportImport {
     }
 
     private static boolean reloadSettings(Context context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            if (!reloadSettingsPreV11(context)) return false;
-        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            if (!reloadSettingsV11(context)) return false;
-        } else {
-            if (!reloadSettingsV23(context)) return false;
+        String sharedPreferencesName = getSharedPreferencesName(context);
+        // This mode is deprecated but we still need this it in order to force a reread of preferences
+        // from the disk.
+        //noinspection deprecation
+        SharedPreferences sharedPreferences = context.getSharedPreferences(sharedPreferencesName, Context.MODE_MULTI_PROCESS);
+        Map<String, ?> allSettings = sharedPreferences.getAll();
+        Log.v(TAG, "allSettings: " + allSettings);
+        if (allSettings.isEmpty()) {
+            return false;
         }
 
         // We expect our temporary preference to have been erased.
         return !PreferenceManager.getDefaultSharedPreferences(context).contains(PREF_IMPORT_VERIFICATION);
     }
 
-    private static boolean reloadSettingsPreV11(Context context) {
-        return reloadSettings(context, Context.MODE_PRIVATE);
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private static boolean reloadSettingsV11(Context context) {
-        //noinspection deprecation
-        return reloadSettings(context, Context.MODE_MULTI_PROCESS);
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    private static boolean reloadSettingsV23(Context context) {
-        // This mode is deprecated but we still need this it in order to force a reread of preferences
-        // from the disk.
-        //noinspection deprecation
-        return reloadSettings(context, Context.MODE_MULTI_PROCESS);
-    }
-
-    private static boolean reloadSettings(Context context, int preferencesReadMode) {
-        String sharedPreferencesName = getSharedPreferencesName(context);
-        SharedPreferences sharedPreferences = context.getSharedPreferences(sharedPreferencesName, preferencesReadMode);
-        Map<String, ?> allSettings = sharedPreferences.getAll();
-        Log.v(TAG, "allSettings: " + allSettings);
-        return !allSettings.isEmpty();
-
-    }
-
     private static String getSharedPreferencesName(Context context) {
         return context.getPackageName() + "_preferences";
     }
 
+    @NonNull
     private static File getSharedPreferencesFile(Context context) {
         File dataDir = new File(context.getApplicationInfo().dataDir);
         File sharedPrefsDir = new File(dataDir, "shared_prefs");

@@ -36,7 +36,7 @@ import android.widget.CheckBox;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * Warn the user about battery and data consumption.
@@ -72,7 +72,7 @@ public class WarningDialogFragment extends DialogFragment { // NO_UCD (use defau
                 if (activity == null) {
                     Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
                 } else {
-                    CheckBox showWarningDialog = (CheckBox) view.findViewById(R.id.app_warning_cb_stfu);
+                    CheckBox showWarningDialog = view.findViewById(R.id.app_warning_cb_stfu);
                     NetMonPreferences.getInstance(activity).setShowAppWarning(!showWarningDialog.isChecked());
                     ((DialogButtonListener) activity).onAppWarningOkClicked();
                 }

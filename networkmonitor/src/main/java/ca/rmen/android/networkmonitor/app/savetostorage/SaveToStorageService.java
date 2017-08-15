@@ -33,7 +33,7 @@ import android.support.v4.app.JobIntentService;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.util.IoUtil;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * Reads the file in the {@link #EXTRA_SOURCE_URI} Uri extra, and saves

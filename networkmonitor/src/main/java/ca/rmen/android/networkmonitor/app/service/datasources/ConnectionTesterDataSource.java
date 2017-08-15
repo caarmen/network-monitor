@@ -46,7 +46,7 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 import ca.rmen.android.networkmonitor.util.TelephonyUtil;
 
 /**
@@ -250,7 +250,7 @@ public class ConnectionTesterDataSource implements NetMonDataSource {
      */
     private boolean shouldHaveDataConnection() {
         // If we're connected to a WiFi access point, we should have an internet connection.
-        WifiManager wifiMgr = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiMgr = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo connectionInfo = wifiMgr.getConnectionInfo();
         if (connectionInfo != null && connectionInfo.getNetworkId() > -1) return true;
 

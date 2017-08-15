@@ -38,7 +38,7 @@ import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * Tests download speed by downloading a file.

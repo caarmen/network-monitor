@@ -45,7 +45,7 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  *

@@ -49,7 +49,7 @@ import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences.Selection;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * Export the Network Monitor data to a KML file. The KML file placemark icon label and color depend on the field the user chose to export.

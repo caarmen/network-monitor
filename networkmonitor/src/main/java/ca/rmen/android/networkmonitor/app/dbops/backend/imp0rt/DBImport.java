@@ -49,7 +49,7 @@ import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.provider.NetMonProvider;
 import ca.rmen.android.networkmonitor.util.IoUtil;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * Replace the contents of the current database with the contents of another database.
@@ -114,8 +114,8 @@ public class DBImport implements DBOperation {
     /**
      * Read all cells from the given table from the dbImport database, and add corresponding insert operations to the operations parameter.
      *
-     * @throws OperationApplicationException
-     * @throws RemoteException
+     * @throws OperationApplicationException if the database couldn't insert the data.
+     * @throws RemoteException if the database couldn't insert the data.
      */
     private void buildInsertOperations(SQLiteDatabase dbImport, Uri uri, ArrayList<ContentProviderOperation> operations, ProgressListener listener)
             throws RemoteException, OperationApplicationException {

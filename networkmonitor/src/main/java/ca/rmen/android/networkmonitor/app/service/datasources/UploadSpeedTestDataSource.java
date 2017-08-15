@@ -38,7 +38,7 @@ import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestSta
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestUpload;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestUploadConfig;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * Tests upload speed by uploading a file.

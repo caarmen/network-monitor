@@ -44,7 +44,7 @@ import ca.rmen.android.networkmonitor.app.prefs.PreferencesMigrator;
 import ca.rmen.android.networkmonitor.app.service.datasources.NetMonDataSources;
 import ca.rmen.android.networkmonitor.app.service.scheduler.Scheduler;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * This service periodically retrieves network state information and writes it to the database.
@@ -179,7 +179,7 @@ public class NetMonService extends Service {
             } catch (Throwable t) {
                 Log.v(TAG, "Error in monitorLoop: " + t.getMessage(), t);
             } finally {
-                if (wakeLock != null && wakeLock.isHeld()) wakeLock.release();
+                if (wakeLock != null) wakeLock.release();
             }
 
         }

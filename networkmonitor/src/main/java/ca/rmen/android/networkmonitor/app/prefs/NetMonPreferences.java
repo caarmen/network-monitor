@@ -77,6 +77,8 @@ public class NetMonPreferences {
     public static final String PREF_FILTER_RECORD_COUNT = "PREF_FILTER_RECORD_COUNT";
     public static final String PREF_FILTER_RECORD_COUNT_DEFAULT = "100";
     static final String PREF_DB_RECORD_COUNT = "PREF_DB_RECORD_COUNT";
+    private static final String PREF_DB_RECORD_COUNT_MAX_CAPPED = "10000";
+
     static final String PREF_ENABLE_CONNECTION_TEST = "PREF_ENABLE_CONNECTION_TEST";
     public static final String PREF_CELL_ID_FORMAT = "PREF_CELL_ID_FORMAT";
     public static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
@@ -174,10 +176,10 @@ public class NetMonPreferences {
     }
 
     /**
-     * @param value true if we should collect and log data, false otherwise.
+     * Disable collecting and logging data.
      */
-    public void setServiceEnabled(boolean value) {
-        setBooleanPreference(NetMonPreferences.PREF_SERVICE_ENABLED, value);
+    public void disableService() {
+        setBooleanPreference(NetMonPreferences.PREF_SERVICE_ENABLED, false);
     }
 
     /**
@@ -208,8 +210,8 @@ public class NetMonPreferences {
         return getIntPreference(NetMonPreferences.PREF_DB_RECORD_COUNT, NetMonPreferences.PREF_DB_RECORD_COUNT_DEFAULT);
     }
 
-    public void setDBRecordCount(int recordCount) {
-        setIntPreference(NetMonPreferences.PREF_DB_RECORD_COUNT, recordCount);
+    public void setMaxCappedDbRecordCount() {
+        setStringPreference(NetMonPreferences.PREF_DB_RECORD_COUNT, PREF_DB_RECORD_COUNT_MAX_CAPPED);
     }
 
     /**
@@ -220,10 +222,10 @@ public class NetMonPreferences {
     }
 
     /**
-     * Enable or disable the data connection tests.
+     * Disable the data connection tests.
      */
-    public void setConnectionTestEnabled(boolean enabled) {
-        setBooleanPreference(NetMonPreferences.PREF_ENABLE_CONNECTION_TEST, enabled);
+    public void disableConnectionTest() {
+        setBooleanPreference(NetMonPreferences.PREF_ENABLE_CONNECTION_TEST, false);
     }
 
     /**
@@ -419,10 +421,6 @@ public class NetMonPreferences {
     private int getIntPreference(String key, String defaultValue) {
         String valueStr = mSharedPrefs.getString(key, defaultValue);
         return Integer.valueOf(valueStr);
-    }
-
-    private void setIntPreference(String key, int value) {
-        setStringPreference(key, String.valueOf(value));
     }
 
     private void setStringPreference(final String key, final String value) {

@@ -32,7 +32,7 @@ import android.telephony.TelephonyManager;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.AndroidConstantsUtil;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * Retrieves attributes of the service state.

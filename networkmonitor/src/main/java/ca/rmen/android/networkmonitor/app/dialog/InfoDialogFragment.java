@@ -38,7 +38,7 @@ import android.text.util.Linkify;
 import android.widget.TextView;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * Shows a dialog with a title, message, and a single button to dismiss the dialog.
@@ -72,7 +72,7 @@ public class InfoDialogFragment extends DialogFragment { // NO_UCD (use default)
         final Dialog dialog = builder.create();
         if (getActivity() instanceof OnDismissListener) dialog.setOnDismissListener((OnDismissListener) getActivity());
         dialog.setOnShowListener(dialogInterface -> {
-            TextView messageTextView = (TextView) ((Dialog) dialogInterface).findViewById(android.R.id.message);
+            TextView messageTextView = ((Dialog) dialogInterface).findViewById(android.R.id.message);
             if (messageTextView != null)
                 messageTextView.setMovementMethod(LinkMovementMethod.getInstance());
         });

@@ -66,7 +66,7 @@ public class EmailPreferences {
         /**
          * @return true if we have enough info to attempt to send a mail.
          */
-        public boolean isValid() {
+        boolean isValid() {
             return !TextUtils.isEmpty(server) && port > 0 && !TextUtils.isEmpty(user) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(recipients);
         }
 
@@ -78,7 +78,6 @@ public class EmailPreferences {
 
     }
 
-    public static final String PREF_EMAIL_REPORTS = "PREF_EMAIL_REPORTS";
     static final String PREF_EMAIL_INTERVAL = "PREF_EMAIL_INTERVAL";
     static final String PREF_EMAIL_REPORT_FORMATS = "PREF_EMAIL_REPORT_FORMATS";
     static final String PREF_EMAIL_SERVER = "PREF_EMAIL_SERVER";
@@ -108,21 +107,21 @@ public class EmailPreferences {
     /**
      * @return the interval, in milliseconds, between e-mailing reports.
      */
-    public int getEmailReportInterval() {
+    int getEmailReportInterval() {
         return getIntPreference(EmailPreferences.PREF_EMAIL_INTERVAL, "0") * 60 * 1000;
     }
 
-    public void setLastEmailSent(long when) {
+    void setLastEmailSent(long when) {
         Editor editor = mSharedPrefs.edit();
         editor.putLong(EmailPreferences.PREF_EMAIL_LAST_EMAIL_SENT, when);
         editor.apply();
     }
 
-    public long getLastEmailSent() {
+    long getLastEmailSent() {
         return mSharedPrefs.getLong(PREF_EMAIL_LAST_EMAIL_SENT, 0);
     }
 
-    public EmailConfig getEmailConfig() {
+    EmailConfig getEmailConfig() {
         Set<String> reportFormats = mSharedPrefs.getStringSet(PREF_EMAIL_REPORT_FORMATS, new HashSet<>());
         String server = mSharedPrefs.getString(PREF_EMAIL_SERVER, "").trim();
         int port = getIntPreference(PREF_EMAIL_PORT, PREF_EMAIL_PORT_DEFAULT);

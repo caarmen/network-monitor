@@ -127,10 +127,15 @@ body {
 </style>]]>
     </string>
 
-    <!-- CSS-styles specific for different android versions. This will be overridden in values-vX folders. -->
+    <!-- CSS-styles specific for different android versions -->
     <string name="css_api_level_custom" translatable="false">
 <![CDATA[
 <style type="text/css">
+a.filter_icon, a.filter_icon:link, a.filter_icon:visited {
+ position: absolute;
+ top: 0px;
+ right: 0px;
+}
 </style>]]>
     </string>
 

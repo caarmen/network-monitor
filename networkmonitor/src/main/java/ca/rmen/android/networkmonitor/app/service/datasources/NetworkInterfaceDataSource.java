@@ -31,12 +31,10 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Context;
-import android.os.Build;
 import android.text.TextUtils;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
@@ -92,11 +90,6 @@ public class NetworkInterfaceDataSource implements NetMonDataSource {
     }
 
     private boolean isValidNetworkInterface(NetworkInterface networkInterface) throws SocketException {
-        return Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD || isValidNetworkInterfaceApi9(networkInterface);
-    }
-
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    private boolean isValidNetworkInterfaceApi9(NetworkInterface networkInterface) throws SocketException {
         return networkInterface.isUp() && !networkInterface.isLoopback();
     }
 

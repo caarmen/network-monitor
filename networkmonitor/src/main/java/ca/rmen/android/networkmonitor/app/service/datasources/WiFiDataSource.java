@@ -34,7 +34,7 @@ import android.util.SparseIntArray;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 import ca.rmen.android.networkmonitor.util.PermissionUtil;
 
 /**
@@ -68,7 +68,7 @@ public class WiFiDataSource implements NetMonDataSource {
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
         mContext = context;
-        mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        mWifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
     }
 
     @Override

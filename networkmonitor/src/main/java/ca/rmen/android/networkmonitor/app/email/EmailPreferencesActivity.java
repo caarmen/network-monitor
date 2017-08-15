@@ -45,7 +45,7 @@ import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailConfig;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 @TargetApi(14)
 public class EmailPreferencesActivity extends AppCompatActivity {
