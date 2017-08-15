@@ -126,5 +126,9 @@ limitations under the License.
     <string name="permission_location_rationale">Network Monitor a besoin d\'accéder à la localisation du terminal pour remplir certains champs.  Sans cet accès, ces champs seront absents du fichier journal.</string>
     <string name="action_freeze_header">Bloquer les entêtes (beta)</string>
     <string name="action_unfreeze_header">Debloquer les entêtes</string>
+    <string name="service_alert_notification_channel_description">Notification des alertes</string>
+    <string name="service_alert_notification_channel_name">Alertes</string>
+    <string name="service_ongoing_notification_channel_description">Notification du service en cours</string>
+    <string name="service_ongoing_notification_channel_name">En cours</string>
 
 </resources>

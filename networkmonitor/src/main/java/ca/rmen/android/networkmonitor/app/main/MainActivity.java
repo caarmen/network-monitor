@@ -26,7 +26,6 @@ package ca.rmen.android.networkmonitor.app.main;
 
 import android.Manifest;
 import android.app.ActivityManager;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -90,7 +89,7 @@ public class MainActivity extends AppCompatActivity
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
         if (NetMonPreferences.getInstance(this).isServiceEnabled()) {
-            startService(new Intent(MainActivity.this, NetMonService.class));
+            NetMonService.start(this);
             MainActivityPermissionsDispatcher.requestPermissionsWithCheck(this);
         }
         // Use strict mode for monkey tests. We can't enable strict mode for normal use
@@ -246,7 +245,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onAppWarningOkClicked() {
-        startService(new Intent(MainActivity.this, NetMonService.class));
+        NetMonService.start(this);
     }
 
     @Override

@@ -37,6 +37,7 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 import ca.rmen.android.networkmonitor.app.main.MainActivity;
+import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
 import ca.rmen.android.networkmonitor.util.Log;
 
 /**
@@ -55,12 +56,12 @@ class NotificationProgressListener implements ProgressListener {
 
     private long mLastProgressUpdateTimestamp;
 
-    public NotificationProgressListener(Context context,
-                                        int notificationId,
-                                        @DrawableRes int notificationIcon,
-                                        @StringRes int notificationProgressTitleId,
-                                        @StringRes int notificationProgressContentId,
-                                        @StringRes int notificationCompleteTitleId) {
+    NotificationProgressListener(Context context,
+                                 int notificationId,
+                                 @DrawableRes int notificationIcon,
+                                 @StringRes int notificationProgressTitleId,
+                                 @StringRes int notificationProgressContentId,
+                                 @StringRes int notificationCompleteTitleId) {
         mContext = context;
         mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationId = notificationId;
@@ -76,7 +77,7 @@ class NotificationProgressListener implements ProgressListener {
         if(now - mLastProgressUpdateTimestamp < 500) return;
         mLastProgressUpdateTimestamp = now;
 
-        Notification notification = new NotificationCompat.Builder(mContext)
+        Notification notification = new NotificationCompat.Builder(mContext, NetMonNotification.createOngoingNotificationChannel(mContext))
                 .setSmallIcon(mNotificationIcon)
                 .setTicker(mContext.getString(mNotificationProgressTitleId))
                 .setContentTitle(mContext.getString(mNotificationProgressTitleId))
@@ -96,7 +97,7 @@ class NotificationProgressListener implements ProgressListener {
     @Override
     public void onComplete(String message) {
         Log.d(TAG, "onComplete() called with " + "message = [" + message + "]");
-        Notification notification = new NotificationCompat.Builder(mContext)
+        Notification notification = new NotificationCompat.Builder(mContext, NetMonNotification.createOngoingNotificationChannel(mContext))
                 .setSmallIcon(R.drawable.ic_stat_action_done)
                 .setTicker(mContext.getString(mNotificationCompleteTitleId))
                 .setContentTitle(mContext.getString(mNotificationCompleteTitleId))
@@ -114,7 +115,7 @@ class NotificationProgressListener implements ProgressListener {
     @Override
     public void onWarning(String message) {
         Log.d(TAG, "onWarning() called with " + "message = [" + message + "]");
-        Notification notification = new NotificationCompat.Builder(mContext)
+        Notification notification = new NotificationCompat.Builder(mContext, NetMonNotification.createOngoingNotificationChannel(mContext))
                 .setSmallIcon(R.drawable.ic_stat_warning)
                 .setTicker(mContext.getString(mNotificationProgressTitleId))
                 .setContentTitle(mContext.getString(mNotificationProgressTitleId))
@@ -131,7 +132,7 @@ class NotificationProgressListener implements ProgressListener {
     @Override
     public void onError(String message) {
         Log.d(TAG, "onError() called with " + "message = [" + message + "]");
-        Notification notification = new NotificationCompat.Builder(mContext)
+        Notification notification = new NotificationCompat.Builder(mContext, NetMonNotification.createOngoingNotificationChannel(mContext))
                 .setSmallIcon(R.drawable.ic_stat_warning)
                 .setTicker(mContext.getString(mNotificationProgressTitleId))
                 .setContentTitle(mContext.getString(mNotificationProgressTitleId))

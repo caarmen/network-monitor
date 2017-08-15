@@ -74,7 +74,7 @@ limitations under the License.
             android:exported="false" />
 
         <service android:name=".app.service.NetMonService" />
-        <service android:name=".app.savetostorage.SaveToStorageService" />
+        <service android:name=".app.savetostorage.SaveToStorageService" android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity
             android:name=".app.main.MainActivity"
@@ -269,6 +269,7 @@ limitations under the License.
 
         <service
             android:name=".app.dbops.backend.DBOpIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false" >
         </service>
         <provider

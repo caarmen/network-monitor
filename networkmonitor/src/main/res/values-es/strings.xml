@@ -126,5 +126,9 @@ limitations under the License.
     <string name="permission_location_rationale">Network Monitor necesita aceder a la ubicación del dispositivo para rellenar alguos campos del archivo log. Sin este acceso, el archivo log no incluirá estos campos.</string>
     <string name="action_freeze_header">Fijar cabecera (beta)</string>
     <string name="action_unfreeze_header">Desbloquear cabecera</string>
+    <string name="service_alert_notification_channel_description">Notificaciones de alertas</string>
+    <string name="service_alert_notification_channel_name">Alertas</string>
+    <string name="service_ongoing_notification_channel_description">Notificación del servicio en curso</string>
+    <string name="service_ongoing_notification_channel_name">En curso</string>
 
 </resources>

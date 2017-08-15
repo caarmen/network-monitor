@@ -87,6 +87,12 @@ limitations under the License.
     <string name="service_notification_text">Collecting data</string>
     <string name="service_notification_action_stop">Stop</string>
     <string name="service_notification_action_logs">Logs</string>
+    <string name="service_ongoing_notification_channel_id" translatable="false">Network Monitor Ongoing Channel</string>
+    <string name="service_ongoing_notification_channel_name">Ongoing</string>
+    <string name="service_ongoing_notification_channel_description">Notification for the ongoing service</string>
+    <string name="service_alert_notification_channel_id" translatable="false">Network Monitor Alerts Channel</string>
+    <string name="service_alert_notification_channel_name">Alerts</string>
+    <string name="service_alert_notification_channel_description">Notifications for alerts</string>
 
     <!-- Send debugging logs -->
     <string name="action_send_logs">Send debugging logs</string>

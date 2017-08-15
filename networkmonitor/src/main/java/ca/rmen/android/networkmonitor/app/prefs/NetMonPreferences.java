@@ -23,7 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
-import android.app.Notification;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -31,6 +30,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -409,11 +409,11 @@ public class NetMonPreferences {
     public int getNotificationPriority() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return 0;
         String priorityPref = mSharedPrefs.getString(PREF_NOTIFICATION_PRIORITY, PREF_NOTIFICATION_PRIORITY_DEFAULT);
-        if (priorityPref.equals(PREF_NOTIFICATION_PRIORITY_MAX)) return Notification.PRIORITY_MAX;
-        if (priorityPref.equals(PREF_NOTIFICATION_PRIORITY_HIGH)) return Notification.PRIORITY_HIGH;
-        if (priorityPref.equals(PREF_NOTIFICATION_PRIORITY_LOW)) return Notification.PRIORITY_LOW;
-        if (priorityPref.equals(PREF_NOTIFICATION_PRIORITY_MIN)) return Notification.PRIORITY_MIN;
-        return Notification.PRIORITY_DEFAULT;
+        if (priorityPref.equals(PREF_NOTIFICATION_PRIORITY_MAX)) return NotificationCompat.PRIORITY_MAX;
+        if (priorityPref.equals(PREF_NOTIFICATION_PRIORITY_HIGH)) return NotificationCompat.PRIORITY_HIGH;
+        if (priorityPref.equals(PREF_NOTIFICATION_PRIORITY_LOW)) return NotificationCompat.PRIORITY_LOW;
+        if (priorityPref.equals(PREF_NOTIFICATION_PRIORITY_MIN)) return NotificationCompat.PRIORITY_MIN;
+        return NotificationCompat.PRIORITY_DEFAULT;
     }
 
     private int getIntPreference(String key, String defaultValue) {

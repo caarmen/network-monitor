@@ -25,6 +25,7 @@
 package ca.rmen.android.networkmonitor.app.service;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -32,6 +33,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 
@@ -60,7 +62,8 @@ public class NetMonNotification {
     static Notification createOngoingNotification(Context context) {
         Log.v(TAG, "createNotification");
         context.registerReceiver(sDisableBroadcastReceiver, new IntentFilter(ACTION_DISABLE));
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, createOngoingNotificationChannel(context));
         builder.setOngoing(true);
         builder.setPriority(NetMonPreferences.getInstance(context).getNotificationPriority());
         builder.setSmallIcon(R.drawable.ic_stat_service_running);
@@ -76,6 +79,37 @@ public class NetMonNotification {
         return builder.build();
     }
 
+    public static String createOngoingNotificationChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(context.getString(R.string.service_ongoing_notification_channel_id),
+                    context.getString(R.string.service_ongoing_notification_channel_name),
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            notificationChannel.setDescription(context.getString(R.string.service_ongoing_notification_channel_description));
+            notificationChannel.enableLights(false);
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(notificationChannel);
+            return notificationChannel.getId();
+        } else {
+            return "";
+        }
+    }
+
+    private static String createAlertNotificationChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(context.getString(R.string.service_alert_notification_channel_id),
+                    context.getString(R.string.service_alert_notification_channel_name),
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            notificationChannel.setDescription(context.getString(R.string.service_alert_notification_channel_description));
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(ActivityCompat.getColor(context, R.color.netmon_color));
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(notificationChannel);
+            return notificationChannel.getId();
+        } else {
+            return "";
+        }
+    }
+
     static void dismissNotifications(Context context) {
         Log.v(TAG, "dismissNotification");
         context.unregisterReceiver(sDisableBroadcastReceiver);
@@ -86,7 +120,7 @@ public class NetMonNotification {
     }
 
     public static void showEmailFailureNotification(Context context) {
-        showNotification(context, NOTIFICATION_ID_FAILED_EMAIL, R.string.warning_notification_ticker_email_failed,
+        showAlertNotification(context, NOTIFICATION_ID_FAILED_EMAIL, R.string.warning_notification_ticker_email_failed,
                 R.string.warning_notification_message_email_failed, EmailPreferencesActivity.class);
     }
 
@@ -98,7 +132,7 @@ public class NetMonNotification {
     public static void showFailedTestNotification(Context context) {
         // Only show this notification if the preference is set to enabled.
         if (NetMonPreferences.getInstance(context).getShowNotificationOnTestFailure()) {
-            showNotification(context, NOTIFICATION_ID_FAILED_TEST, R.string.warning_notification_ticker_test_failed,
+            showAlertNotification(context, NOTIFICATION_ID_FAILED_TEST, R.string.warning_notification_ticker_test_failed,
                     R.string.warning_notification_message_test_failed, LogActivity.class);
         }
     }
@@ -112,8 +146,8 @@ public class NetMonNotification {
      * Shows a notification with the given ticker text and content text. The icon is a warning icon, and the notification title is the app name. Tapping on the
      * notification opens the given activity.
      */
-    private static void showNotification(Context context, int notificationId, int tickerTextId, int contentTextId, Class<?> activityClass) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+    private static void showAlertNotification(Context context, int notificationId, int tickerTextId, int contentTextId, Class<?> activityClass) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, createAlertNotificationChannel(context));
         builder.setSmallIcon(R.drawable.ic_stat_warning);
         builder.setAutoCancel(true);
         builder.setTicker(context.getString(tickerTextId));
@@ -124,10 +158,17 @@ public class NetMonNotification {
         builder.setSound(uri);
         builder.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, activityClass), PendingIntent.FLAG_UPDATE_CURRENT));
         Notification notification = builder.build();
-        notification.flags |= Notification.FLAG_SHOW_LIGHTS | Notification.FLAG_ONLY_ALERT_ONCE;
-        notification.ledARGB = 0xFFffff00;
-        notification.ledOnMS = 300;
-        notification.ledOffMS = 2000;
+        notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            //noinspection deprecation
+            notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+            //noinspection deprecation
+            notification.ledARGB = 0xFFffff00;
+            //noinspection deprecation
+            notification.ledOnMS = 300;
+            //noinspection deprecation
+            notification.ledOffMS = 2000;
+        }
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(notificationId, notification);
     }

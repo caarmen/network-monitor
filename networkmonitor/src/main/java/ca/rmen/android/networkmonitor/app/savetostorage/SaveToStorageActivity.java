@@ -74,7 +74,7 @@ public class SaveToStorageActivity extends FragmentActivity {
             Uri sourceUri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
             intent.putExtra(SaveToStorageService.EXTRA_SOURCE_URI, sourceUri);
             intent.putExtra(SaveToStorageService.EXTRA_DESTINATION_URI, data.getData());
-            startService(intent);
+            SaveToStorageService.enqueueWork(this, intent);
             finish();
         }
         super.onActivityResult(requestCode, resultCode, data);

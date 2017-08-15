@@ -23,7 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend;
 
-import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -34,7 +33,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.JobIntentService;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
@@ -53,13 +54,14 @@ import ca.rmen.android.networkmonitor.app.dbops.backend.export.GnuplotExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.HTMLExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.kml.KMLExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.imp0rt.DBImport;
+import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
 import ca.rmen.android.networkmonitor.util.Log;
 
-/**
- */
-public class DBOpIntentService extends IntentService {
+public class DBOpIntentService extends JobIntentService {
 
     private static final String TAG = Constants.TAG + DBOpIntentService.class.getSimpleName();
+    private static final int JOB_ID =  815;
+
     private NotificationProgressListener mCompressProgressListener;
     private NotificationProgressListener mPurgeProgressListener;
     private NotificationProgressListener mExportProgressListener;
@@ -93,13 +95,16 @@ public class DBOpIntentService extends IntentService {
     private NetMonBus.DBOperationStarted mDBOperationStarted;
     private Handler mHandler;
 
+    private static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, DBOpIntentService.class, JOB_ID, work);
+    }
 
     public static void startActionCompress(Context context) {
         Intent intent = new Intent(context, DBOpIntentService.class);
         intent.setAction(ACTION_COMPRESS);
         intent.putExtra(EXTRA_DB_OP_TOAST, context.getString(R.string.compress_toast_start));
         intent.putExtra(EXTRA_DB_OP_NAME, context.getString(R.string.compress_feature_name));
-        context.startService(intent);
+        enqueueWork(context, intent);
     }
 
     public static void startActionPurge(Context context, int numRowsToKeep) {
@@ -108,7 +113,7 @@ public class DBOpIntentService extends IntentService {
         intent.putExtra(EXTRA_PURGE_NUM_ROWS_TO_KEEP, numRowsToKeep);
         intent.putExtra(EXTRA_DB_OP_TOAST, context.getString(R.string.purge_toast_start));
         intent.putExtra(EXTRA_DB_OP_NAME, context.getString(R.string.purge_feature_name));
-        context.startService(intent);
+        enqueueWork(context, intent);
     }
 
     public static void startActionExport(Context context, ExportFormat exportFormat) {
@@ -117,7 +122,7 @@ public class DBOpIntentService extends IntentService {
         intent.putExtra(EXTRA_EXPORT_FORMAT, exportFormat);
         intent.putExtra(EXTRA_DB_OP_TOAST, context.getString(R.string.export_progress_preparing_export));
         intent.putExtra(EXTRA_DB_OP_NAME, context.getString(R.string.export_feature_name));
-        context.startService(intent);
+        enqueueWork(context, intent);
     }
 
     public static void startActionKMLExport(Context context, String placemarkNameColumn) {
@@ -127,7 +132,7 @@ public class DBOpIntentService extends IntentService {
         intent.putExtra(EXTRA_EXPORT_KML_PLACEMARK_COLUMN_NAME, placemarkNameColumn);
         intent.putExtra(EXTRA_DB_OP_TOAST, context.getString(R.string.export_progress_preparing_export));
         intent.putExtra(EXTRA_DB_OP_NAME, context.getString(R.string.export_feature_name));
-        context.startService(intent);
+        enqueueWork(context, intent);
     }
 
     public static void startActionImport(Context context, Uri uri) {
@@ -136,12 +141,7 @@ public class DBOpIntentService extends IntentService {
         intent.setData(uri);
         intent.putExtra(EXTRA_DB_OP_TOAST, context.getString(R.string.import_toast_start));
         intent.putExtra(EXTRA_DB_OP_NAME, context.getString(R.string.import_feature_name));
-        context.startService(intent);
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public DBOpIntentService() {
-        super("DBOpIntentService");
+        enqueueWork(context, intent);
     }
 
     @Override
@@ -180,48 +180,46 @@ public class DBOpIntentService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(final Intent intent) {
-        if (intent != null) {
-            final String action = intent.getAction();
-            String dbOp = intent.getStringExtra(EXTRA_DB_OP_NAME);
-            synchronized (lock) {
-                mDBOperationStarted = new NetMonBus.DBOperationStarted(getString(R.string.db_op_in_progress, dbOp));
-            }
+    protected void onHandleWork(@NonNull final Intent intent) {
+        final String action = intent.getAction();
+        String dbOp = intent.getStringExtra(EXTRA_DB_OP_NAME);
+        synchronized (lock) {
+            mDBOperationStarted = new NetMonBus.DBOperationStarted(getString(R.string.db_op_in_progress, dbOp));
+        }
 
-            // Show a toast
-            mHandler.post(() -> {
-                String toast = intent.getStringExtra(EXTRA_DB_OP_TOAST);
-                Toast.makeText(DBOpIntentService.this, toast, Toast.LENGTH_LONG).show();
-                synchronized (lock) {
-                    if (mDBOperationStarted != null) {
-                        NetMonBus.getBus().postSticky(mDBOperationStarted);
-                    }
+        // Show a toast
+        mHandler.post(() -> {
+            String toast = intent.getStringExtra(EXTRA_DB_OP_TOAST);
+            Toast.makeText(DBOpIntentService.this, toast, Toast.LENGTH_LONG).show();
+            synchronized (lock) {
+                if (mDBOperationStarted != null) {
+                    NetMonBus.getBus().postSticky(mDBOperationStarted);
                 }
-            });
+            }
+        });
 
-            // Do the db operation
-            if (ACTION_COMPRESS.equals(action)) {
-                handleActionCompress();
-                NetMonBus.post(new NetMonBus.DBOperationEnded(true));
-            } else if (ACTION_PURGE.equals(action)) {
-                final int numRowsToKeep = intent.getIntExtra(EXTRA_PURGE_NUM_ROWS_TO_KEEP, 0);
-                handleActionPurge(numRowsToKeep);
-                NetMonBus.post(new NetMonBus.DBOperationEnded(true));
-            } else if (ACTION_EXPORT.equals(action)) {
-                final ExportFormat exportFileFormat = (ExportFormat) intent.getSerializableExtra(EXTRA_EXPORT_FORMAT);
-                handleActionExport(exportFileFormat, intent.getExtras());
-                NetMonBus.post(new NetMonBus.DBOperationEnded(false));
-            } else if (ACTION_IMPORT.equals(action)) {
-                final Uri uri = intent.getData();
-                handleActionImport(uri);
-                NetMonBus.post(new NetMonBus.DBOperationEnded(true));
-            }
-            mDBOperation = null;
-            synchronized (lock) {
-                mDBOperationStarted = null;
-                NetMonBus.DBOperationStarted stickyEvent = NetMonBus.getBus().getStickyEvent(NetMonBus.DBOperationStarted.class);
-                if (stickyEvent != null) NetMonBus.getBus().removeStickyEvent(stickyEvent);
-            }
+        // Do the db operation
+        if (ACTION_COMPRESS.equals(action)) {
+            handleActionCompress();
+            NetMonBus.post(new NetMonBus.DBOperationEnded(true));
+        } else if (ACTION_PURGE.equals(action)) {
+            final int numRowsToKeep = intent.getIntExtra(EXTRA_PURGE_NUM_ROWS_TO_KEEP, 0);
+            handleActionPurge(numRowsToKeep);
+            NetMonBus.post(new NetMonBus.DBOperationEnded(true));
+        } else if (ACTION_EXPORT.equals(action)) {
+            final ExportFormat exportFileFormat = (ExportFormat) intent.getSerializableExtra(EXTRA_EXPORT_FORMAT);
+            handleActionExport(exportFileFormat, intent.getExtras());
+            NetMonBus.post(new NetMonBus.DBOperationEnded(false));
+        } else if (ACTION_IMPORT.equals(action)) {
+            final Uri uri = intent.getData();
+            handleActionImport(uri);
+            NetMonBus.post(new NetMonBus.DBOperationEnded(true));
+        }
+        mDBOperation = null;
+        synchronized (lock) {
+            mDBOperationStarted = null;
+            NetMonBus.DBOperationStarted stickyEvent = NetMonBus.getBus().getStickyEvent(NetMonBus.DBOperationStarted.class);
+            if (stickyEvent != null) NetMonBus.getBus().removeStickyEvent(stickyEvent);
         }
     }
 
@@ -296,7 +294,7 @@ public class DBOpIntentService extends IntentService {
     }
 
     private NotificationCompat.Builder prepareFileExportNotification(@DrawableRes int iconId, String titleText, String contentText, PendingIntent pendingIntent, boolean autoCancel) {
-        return new NotificationCompat.Builder(this)
+        return new NotificationCompat.Builder(this, NetMonNotification.createOngoingNotificationChannel(this))
                 .setSmallIcon(iconId)
                 .setTicker(titleText)
                 .setContentTitle(titleText)
