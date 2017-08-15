@@ -32,7 +32,7 @@ import java.io.File;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.util.FileUtil;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * Convenience methods for getting/setting shared preferences related to the speed test.

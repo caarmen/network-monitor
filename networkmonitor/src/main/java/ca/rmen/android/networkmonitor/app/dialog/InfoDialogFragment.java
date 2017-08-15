@@ -38,7 +38,7 @@ import android.text.util.Linkify;
 import android.widget.TextView;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * Shows a dialog with a title, message, and a single button to dismiss the dialog.

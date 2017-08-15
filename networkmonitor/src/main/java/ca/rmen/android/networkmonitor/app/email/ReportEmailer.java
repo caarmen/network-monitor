@@ -43,7 +43,7 @@ import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailConfig;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailSecurity;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 import java8.util.stream.Collectors;
 import java8.util.stream.StreamSupport;
 

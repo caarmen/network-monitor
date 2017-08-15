@@ -41,7 +41,7 @@ import ca.rmen.android.networkmonitor.Constants.ConnectionType;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.provider.ConnectionTestStatsColumns;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 public class SummaryExport {
     private static final String TAG = Constants.TAG + SummaryExport.class.getSimpleName();

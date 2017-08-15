@@ -27,25 +27,20 @@ package ca.rmen.android.networkmonitor.app.about;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.Theme;
-import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
-import ca.rmen.android.networkmonitor.util.Log;
 import de.psdev.licensesdialog.LicensesDialogFragment;
 
 public class AboutActivity extends AppCompatActivity {
@@ -91,53 +86,10 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.about, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem itemSendLogs = menu.findItem(R.id.action_send_logs);
-        itemSendLogs.setVisible(BuildConfig.DEBUG);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            case R.id.action_send_logs:
-                new AsyncTask<Void, Void, Boolean>() {
-
-                    @Override
-                    protected Boolean doInBackground(Void... params) {
-                        if (!Log.prepareLogFile(getApplicationContext())) {
-                            return false;
-                        }
-                        // Bring up the chooser to share the file.
-                        Intent sendIntent = new Intent();
-                        sendIntent.setAction(Intent.ACTION_SEND);
-                        //sendIntent.setData(Uri.fromParts("mailto", getString(R.string.send_logs_to), null));
-                        sendIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.support_send_debug_logs_subject));
-                        String messageBody = getString(R.string.support_send_debug_logs_body);
-                        Share.addFileToShareIntent(AboutActivity.this, sendIntent, Log.FILE);
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, messageBody);
-                        sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { getString(R.string.support_send_debug_logs_to) });
-                        startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.action_share)));
-                        return true;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Boolean result) {
-                        if (!result) Snackbar.make(getWindow().getDecorView().getRootView(), R.string.support_error, Snackbar.LENGTH_LONG).show();
-                    }
-
-
-                }.execute();
-                return true;
+        if (item.getItemId() == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

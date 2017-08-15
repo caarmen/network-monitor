@@ -25,6 +25,7 @@ package ca.rmen.android.networkmonitor.util;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.Closeable;
 import java.io.File;

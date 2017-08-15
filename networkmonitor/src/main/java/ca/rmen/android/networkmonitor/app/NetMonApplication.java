@@ -25,15 +25,12 @@ package ca.rmen.android.networkmonitor.app;
 
 import android.app.Application;
 
-import ca.rmen.android.networkmonitor.util.Log;
-
 public class NetMonApplication extends Application {
 
     @Override
     public void onCreate() {
         super.onCreate();
         Theme.setThemeFromSettings(this);
-        Log.init(this, 1000000, true);
     }
 
 }

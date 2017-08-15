@@ -54,7 +54,7 @@ import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.LocationFetchingStrategy;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 public class AdvancedPreferencesActivity extends AppCompatActivity implements ConfirmDialogFragment.DialogButtonListener {
     private static final String TAG = Constants.TAG + AdvancedPreferencesActivity.class.getSimpleName();

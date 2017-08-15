@@ -38,7 +38,7 @@ import android.support.annotation.NonNull;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 
 /**

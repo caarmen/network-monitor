@@ -33,7 +33,7 @@ import android.webkit.WebView;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 /**
  * Activity which shows an HTML explanation of the speed test limitations

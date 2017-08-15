@@ -50,7 +50,7 @@ import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 
 import ca.rmen.android.networkmonitor.Constants;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 import java8.util.stream.StreamSupport;
 
 public class NetMonProvider extends ContentProvider { // NO_UCD (use default)

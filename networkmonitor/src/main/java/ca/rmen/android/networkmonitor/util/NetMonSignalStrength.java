@@ -41,6 +41,7 @@ import android.telephony.CellSignalStrength;
 import android.telephony.CellSignalStrengthLte;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 

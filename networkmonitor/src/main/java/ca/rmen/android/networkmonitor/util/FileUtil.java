@@ -27,6 +27,7 @@ import java.io.File;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 

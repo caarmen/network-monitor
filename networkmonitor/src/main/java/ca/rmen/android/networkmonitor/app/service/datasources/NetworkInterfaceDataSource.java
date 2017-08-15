@@ -34,7 +34,7 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.text.TextUtils;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;

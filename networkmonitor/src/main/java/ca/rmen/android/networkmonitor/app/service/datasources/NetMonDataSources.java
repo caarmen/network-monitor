@@ -31,7 +31,7 @@ import android.content.Context;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.service.NetMonService;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 import java8.util.stream.StreamSupport;
 
 /**

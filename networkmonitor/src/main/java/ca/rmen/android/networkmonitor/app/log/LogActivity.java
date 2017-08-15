@@ -70,7 +70,7 @@ import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.SelectFieldsActivity;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences.SortOrder;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 public class LogActivity extends AppCompatActivity implements DialogButtonListener, ChoiceDialogFragment.DialogItemListener {
     private static final String TAG = Constants.TAG + LogActivity.class.getSimpleName();

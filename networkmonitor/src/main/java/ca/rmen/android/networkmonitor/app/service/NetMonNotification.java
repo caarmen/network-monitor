@@ -43,7 +43,7 @@ import ca.rmen.android.networkmonitor.app.email.EmailPreferencesActivity;
 import ca.rmen.android.networkmonitor.app.log.LogActivity;
 import ca.rmen.android.networkmonitor.app.main.MainActivity;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 public class NetMonNotification {
     private static final String TAG = Constants.TAG + NetMonNotification.class.getSimpleName();

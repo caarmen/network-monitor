@@ -54,7 +54,7 @@ import ca.rmen.android.networkmonitor.app.dbops.backend.export.HTMLExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.kml.KMLExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.imp0rt.DBImport;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 public class DBOpIntentService extends JobIntentService {
 

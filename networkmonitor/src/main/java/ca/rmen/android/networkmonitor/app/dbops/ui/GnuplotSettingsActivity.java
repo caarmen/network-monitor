@@ -38,7 +38,7 @@ import ca.rmen.android.networkmonitor.app.prefs.FilterColumnActivity;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import ca.rmen.android.networkmonitor.util.Log;
+import android.util.Log;
 
 public class GnuplotSettingsActivity extends AppCompatActivity {
     private static final String TAG = Constants.TAG + GnuplotSettingsActivity.class.getSimpleName();

@@ -82,13 +82,6 @@ limitations under the License.
     <string name="service_notification_action_stop">Arrêt</string>
     <string name="service_notification_action_logs">Fichier journal</string>
 
-    <!-- Send debugging logs -->
-    <string name="action_send_logs">Envoyer des logs au développeur</string>
-    <string name="support_send_debug_logs_subject">Fichiers journeaux de Network Monitor</string>
-    <string name="support_send_debug_logs_body">Ci joint les logs ;)</string>
-    <string name="support_send_debug_logs_to">c@rmen.ca</string>
-    <string name="support_error">Impossible de créer le fichier. Vérifier que la carte SD soit présente.</string>
-
     <!-- Strings about sending emails -->
     <string name="missing_email_settings_info_dialog_title">Informations manquantes</string>
     <string name="missing_email_settings_info_dialog_message">Impossible d\'envoyer des courriels, parce qu\'au moins un des champs n\'a pas été rempli. La fréquence de l\'envoi des rapports a été mis à \'jamais\'"</string>
