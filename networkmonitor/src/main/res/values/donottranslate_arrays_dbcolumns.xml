@@ -8,7 +8,7 @@ This source is part of the
                              /___/
 repository.
 
-Copyright (C) 2014-2016 Carmen Alvarez (c@rmen.ca)
+Copyright (C) 2014-2017 Carmen Alvarez (c@rmen.ca)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -74,6 +74,10 @@ limitations under the License.
         <item>gsm_short_cell_id</item>
         <item>gsm_cell_lac</item>
         <item>gsm_cell_psc</item>
+        <item>lte_cell_ci</item>
+        <item>lte_cell_earfcn</item>
+        <item>lte_cell_pci</item>
+        <item>lte_cell_tac</item>
         <item>network_interface</item>
         <item>ipv4_address</item>
         <item>ipv6_address</item>
@@ -134,6 +138,10 @@ limitations under the License.
         <item>gsm_short_cell_id</item>
         <item>gsm_cell_lac</item>
         <item>gsm_cell_psc</item>
+        <item>lte_cell_ci</item>
+        <item>lte_cell_earfcn</item>
+        <item>lte_cell_pci</item>
+        <item>lte_cell_tac</item>
     </string-array>
     <string-array name="db_columns_profile_mobile_cdma">
         <item>timestamp</item>
@@ -187,6 +195,9 @@ limitations under the License.
         <item>gsm_short_cell_id</item>
         <item>gsm_cell_lac</item>
         <item>gsm_cell_psc</item>
+        <item>lte_cell_ci</item>
+        <item>lte_cell_pci</item>
+        <item>lte_cell_tac</item>
         <item>network_interface</item>
         <item>ipv4_address</item>
         <item>ipv6_address</item>
@@ -247,6 +258,10 @@ limitations under the License.
         <item>gsm_short_cell_id</item>
         <item>gsm_cell_lac</item>
         <item>gsm_cell_psc</item>
+        <item>lte_cell_ci</item>
+        <item>lte_cell_earfcn</item>
+        <item>lte_cell_pci</item>
+        <item>lte_cell_tac</item>
         <item>network_interface</item>
         <item>ipv4_address</item>
         <item>ipv6_address</item>
@@ -281,6 +296,10 @@ limitations under the License.
     <string-array name="newer_api_db_columns">
         <item>most_consuming_app_name</item>
         <item>most_consuming_app_bytes</item>
+        <item>lte_cell_ci</item>
+        <item>lte_cell_earfcn</item>
+        <item>lte_cell_pci</item>
+        <item>lte_cell_tac</item>
     </string-array>
 
 </resources>

@@ -69,16 +69,20 @@ The list of data:
 * [ASU Level](https://developer.android.com/reference/android/telephony/SignalStrength.html) Requires the `READ_PHONE_STATE` permission.
 * [RxQual](https://developer.android.com/reference/android/telephony/SignalStrength.html#getGsmBitErrorRate()) Requires the `READ_PHONE_STATE` permission.
 * [LTE RSRQ](https://developer.android.com/reference/android/telephony/SignalStrength.html) Requires the `READ_PHONE_STATE` permission.
-* [CDMA Cell Base Station Id](https://developer.android.com/reference/android/telephony/cdma/CdmaCellLocation.html#getBaseStationId()) Requires the `ACCESS_COARSE_LOCATION` or `ACCESS_FINE_LOCATION` permission.
-* [CDMA Cell Latitude](https://developer.android.com/reference/android/telephony/cdma/CdmaCellLocation.html#getBaseStationLatitude()) Requires the `ACCESS_COARSE_LOCATION` or `ACCESS_FINE_LOCATION` permission.
-* [CDMA Cell Longitude](https://developer.android.com/reference/android/telephony/cdma/CdmaCellLocation.html#getBaseStationLongitude()) Requires the `ACCESS_COARSE_LOCATION` or `ACCESS_FINE_LOCATION` permission.
-* [CDMA Cell Network Id](https://developer.android.com/reference/android/telephony/cdma/CdmaCellLocation.html#getNetworkId()) Requires the `ACCESS_COARSE_LOCATION` or `ACCESS_FINE_LOCATION` permission.
-* [CDMA Cell System Id](https://developer.android.com/reference/android/telephony/cdma/CdmaCellLocation.html#getSystemId()) Requires the `ACCESS_COARSE_LOCATION` or `ACCESS_FINE_LOCATION` permission.
-* [GSM Full Cell Id](https://developer.android.com/reference/android/telephony/gsm/GsmCellLocation.html#getCid()) Requires the `ACCESS_COARSE_LOCATION` or `ACCESS_FINE_LOCATION` permission.
-* [GSM RNC](https://developer.android.com/reference/android/telephony/gsm/GsmCellLocation.html#getCid()) Requires the `ACCESS_COARSE_LOCATION` or `ACCESS_FINE_LOCATION` permission.
-* [GSM Short Cell Id](https://developer.android.com/reference/android/telephony/gsm/GsmCellLocation.html#getCid()) Requires the `ACCESS_COARSE_LOCATION` or `ACCESS_FINE_LOCATION` permission.
-* [GSM Cell LAC](https://developer.android.com/reference/android/telephony/gsm/GsmCellLocation.html#getLac()) Requires the `ACCESS_COARSE_LOCATION` or `ACCESS_FINE_LOCATION` permission.
-* [GSM Cell PSC](https://developer.android.com/reference/android/telephony/gsm/GsmCellLocation.html#getPsc()) Requires the `ACCESS_COARSE_LOCATION` or `ACCESS_FINE_LOCATION` permission.
+* [CDMA Cell Base Station Id](https://developer.android.com/reference/android/telephony/CellIdentityCdma.html#getBasestationId()) Requires the `ACCESS_COARSE_LOCATION` permission.
+* [CDMA Cell Latitude](https://developer.android.com/reference/android/telephony/CellIdentityCdma.html#getLatitude()) Requires the `ACCESS_COARSE_LOCATION` permission.
+* [CDMA Cell Longitude](https://developer.android.com/reference/android/telephony/CellIdentityCdma.html#getLongitude()) Requires the `ACCESS_COARSE_LOCATION` permission.
+* [CDMA Cell Network Id](https://developer.android.com/reference/android/telephony/CellIdentityCdma.html#getNetworkId()) Requires the `ACCESS_COARSE_LOCATION` permission.
+* [CDMA Cell System Id](https://developer.android.com/reference/android/telephony/CellIdentityCdma.html#getSystemId()) Requires the `ACCESS_COARSE_LOCATION` permission.
+* [GSM Full Cell Id](https://developer.android.com/reference/android/telephony/CellIdentityWcdma.html#getCid()) Requires the `ACCESS_COARSE_LOCATION` permission.
+* [GSM RNC](https://developer.android.com/reference/android/telephony/CellIdentityWcdma.html#getCid()) Requires the `ACCESS_COARSE_LOCATION` permission.
+* [GSM Short Cell Id](https://developer.android.com/reference/android/telephony/CellIdentityWcdma.html#getCid()) Requires the `ACCESS_COARSE_LOCATION` permission.
+* [GSM Cell LAC](https://developer.android.com/reference/android/telephony/CellIdentityWcdma.html#getLac()) Requires the `ACCESS_COARSE_LOCATION` permission.
+* [GSM Cell PSC](https://developer.android.com/reference/android/telephony/CellIdentityWcdma.html#getPsc()) Requires the `ACCESS_COARSE_LOCATION` permission.
+* [LTE Cell Id](https://developer.android.com/reference/android/telephony/CellIdentityLte.html#getCi()) Requires the `ACCESS_COARSE_LOCATION` permission.
+* [LTE Cell RF Channel](https://developer.android.com/reference/android/telephony/CellIdentityLte.html#getEarfcn()) Requires the `ACCESS_COARSE_LOCATION` permission.
+* [LTE Physical Cell Id](https://developer.android.com/reference/android/telephony/CellIdentityLte.html#getPci()) Requires the `ACCESS_COARSE_LOCATION` permission.
+* [LTE Cell Tracking Area Code](https://developer.android.com/reference/android/telephony/CellIdentityLte.html#getTac()) Requires the `ACCESS_COARSE_LOCATION` permission.
 * [Network Interface](https://developer.android.com/reference/java/net/NetworkInterface.html#getName())
 * [IPv4 Address](https://developer.android.com/reference/java/net/InetAddress.html#getHostAddress())
 * [IPv6 Address](https://developer.android.com/reference/java/net/InetAddress.html#getHostAddress())

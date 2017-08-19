@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2013-2017 Carmen Alvarez (c@rmen.ca)
  * Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,7 +43,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String TAG = Constants.TAG + NetMonDatabase.class.getSimpleName();
 
     public static final String DATABASE_NAME = "networkmonitor.db";
-    private static final int DATABASE_VERSION = 17;
+    private static final int DATABASE_VERSION = 18;
 
     // @formatter:off
     private static final String SQL_CREATE_TABLE_NETWORKMONITOR = "CREATE TABLE IF NOT EXISTS "
@@ -98,6 +98,10 @@ public class NetMonDatabase extends SQLiteOpenHelper {
             + NetMonColumns.GSM_SHORT_CELL_ID + " INTEGER, "
             + NetMonColumns.GSM_CELL_LAC + " INTEGER, "
             + NetMonColumns.GSM_CELL_PSC + " INTEGER, "
+            + NetMonColumns.LTE_CELL_CI + " INTEGER, "
+            + NetMonColumns.LTE_CELL_EARFCN + " INTEGER, "
+            + NetMonColumns.LTE_CELL_PCI + " INTEGER, "
+            + NetMonColumns.LTE_CELL_TAC + " INTEGER, "
             + NetMonColumns.NETWORK_INTERFACE+ " TEXT, "
             + NetMonColumns.IPV4_ADDRESS+ " TEXT,"
             + NetMonColumns.IPV6_ADDRESS+ " TEXT,"
@@ -202,6 +206,18 @@ public class NetMonDatabase extends SQLiteOpenHelper {
     private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V17_MOST_CONSUMING_APP_BYTES = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
             + NetMonColumns.MOST_CONSUMING_APP_BYTES + " INTEGER";
 
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V18_LTE_CELL_CI = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.LTE_CELL_CI + " INTEGER";
+
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V18_LTE_CELL_EARFCN = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.LTE_CELL_EARFCN + " INTEGER";
+
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V18_LTE_CELL_PCI = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.LTE_CELL_PCI + " INTEGER";
+
+    private static final String SQL_UPDATE_TABLE_NETWORKMONITOR_V18_LTE_CELL_TAC = "ALTER TABLE " + NetMonColumns.TABLE_NAME + " ADD COLUMN "
+            + NetMonColumns.LTE_CELL_TAC+ " INTEGER";
+
     private static final String SQL_CREATE_VIEW_CONNECTION_TEST_STATS = "CREATE VIEW " + ConnectionTestStatsColumns.VIEW_NAME + " AS "
             + buildConnectionTestQuery();
 
@@ -290,6 +306,13 @@ public class NetMonDatabase extends SQLiteOpenHelper {
         if (oldVersion < 17) {
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V17_MOST_CONSUMING_APP_NAME);
             db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V17_MOST_CONSUMING_APP_BYTES);
+        }
+
+        if (oldVersion < 18) {
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V18_LTE_CELL_CI);
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V18_LTE_CELL_EARFCN);
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V18_LTE_CELL_PCI);
+            db.execSQL(SQL_UPDATE_TABLE_NETWORKMONITOR_V18_LTE_CELL_TAC);
         }
     }
 
