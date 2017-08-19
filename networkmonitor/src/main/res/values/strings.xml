@@ -73,6 +73,7 @@ limitations under the License.
     <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2017 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
     <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2014 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
     <string name="about_legal">License/disclaimer</string>
+    <string name="about_privacyUrl">Privacy policy:\nhttps://github.com/caarmen/network-monitor/blob/master/PRIVACY.md</string>
     <string name="about_projectUrl">Source code:\nhttps://github.com/caarmen/network-monitor</string>
     <string name="about_issues">Report bugs:\nhttps://github.com/caarmen/network-monitor/issues</string>
     <string name="about_rate">Rate the app on the Play Store:\nhttps://play.google.com/store/apps/details?id=ca.rmen.android.networkmonitor</string>

@@ -72,6 +72,7 @@ public class AboutActivity extends AppCompatActivity {
         // We could just have different icon resources for night and day themes, but
         // I didn't feel like regenerating the icons :)
         tintCompoundDrawables(R.id.tv_about_legal,
+                R.id.tv_about_privacy,
             R.id.tv_about_bug,
             R.id.tv_about_contributions,
             R.id.tv_about_libraries,
