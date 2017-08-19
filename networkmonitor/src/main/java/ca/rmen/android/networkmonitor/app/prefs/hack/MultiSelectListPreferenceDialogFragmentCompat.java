@@ -1,7 +1,5 @@
 package ca.rmen.android.networkmonitor.app.prefs.hack;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v14.preference.MultiSelectListPreference;
 import android.support.v7.app.AlertDialog;
@@ -26,7 +24,6 @@ import java.util.Set;
  * This code was partially obtained from Android Studio's decompiling of
  * MultiSelectListPreferenceDialogFragment.
  */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MultiSelectListPreferenceDialogFragmentCompat extends PreferenceDialogFragmentCompat
         implements DialogPreference.TargetFragment {
     private final Set<String> mNewValues = new HashSet<>();

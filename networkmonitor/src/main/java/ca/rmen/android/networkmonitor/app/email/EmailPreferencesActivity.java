@@ -8,7 +8,7 @@
  * repository.
  *
  * Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
- * Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2013-2017 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@
  */
 package ca.rmen.android.networkmonitor.app.email;
 
-import android.annotation.TargetApi;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.support.v14.preference.MultiSelectListPreference;
@@ -47,7 +46,6 @@ import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailConfig;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
 import android.util.Log;
 
-@TargetApi(14)
 public class EmailPreferencesActivity extends AppCompatActivity {
     private static final String TAG = Constants.TAG + EmailPreferencesActivity.class.getSimpleName();
 

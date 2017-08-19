@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2014-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2014-2017 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ package ca.rmen.android.networkmonitor.app.email;
 import java.util.HashSet;
 import java.util.Set;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -36,7 +35,6 @@ import android.text.TextUtils;
 /**
  * Convenience methods for getting/setting shared preferences.
  */
-@TargetApi(11)
 public class EmailPreferences {
 
 

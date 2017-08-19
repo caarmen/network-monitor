@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2014-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2014-2017 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.service.datasources;
 
-import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Context;
 import android.telephony.CellLocation;
@@ -82,7 +81,7 @@ public class CellLocationDataSource implements NetMonDataSource {
             if (rnc > 0) values.put(NetMonColumns.GSM_RNC, rnc);
             values.put(NetMonColumns.GSM_SHORT_CELL_ID, shortCid);
             values.put(NetMonColumns.GSM_CELL_LAC, gsmCellLocation.getLac());
-            values.put(NetMonColumns.GSM_CELL_PSC, getPsc(gsmCellLocation));
+            values.put(NetMonColumns.GSM_CELL_PSC, gsmCellLocation.getPsc());
         } else if (cellLocation instanceof CdmaCellLocation) {
             CdmaCellLocation cdmaCellLocation = (CdmaCellLocation) cellLocation;
             values.put(NetMonColumns.CDMA_CELL_BASE_STATION_ID, cdmaCellLocation.getBaseStationId());
@@ -98,10 +97,5 @@ public class CellLocationDataSource implements NetMonDataSource {
             values.put(NetMonColumns.CDMA_CELL_SYSTEM_ID, cdmaCellLocation.getSystemId());
         }
         return values;
-    }
-
-    @TargetApi(9)
-    private int getPsc(GsmCellLocation gsmCellLocation) {
-        return gsmCellLocation.getPsc();
     }
 }
