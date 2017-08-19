@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2013-2017 Carmen Alvarez (c@rmen.ca)
  * Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -91,6 +91,10 @@ public class NetMonColumns implements BaseColumns {
     public static final String GSM_SHORT_CELL_ID = "gsm_short_cell_id";
     public static final String GSM_CELL_LAC = "gsm_cell_lac";
     public static final String GSM_CELL_PSC = "gsm_cell_psc";
+    public static final String LTE_CELL_CI = "lte_cell_ci";
+    public static final String LTE_CELL_EARFCN = "lte_cell_earfcn";
+    public static final String LTE_CELL_PCI = "lte_cell_pci";
+    public static final String LTE_CELL_TAC = "lte_cell_tac";
     public static final String NETWORK_INTERFACE = "network_interface";
     public static final String IPV4_ADDRESS = "ipv4_address";
     public static final String IPV6_ADDRESS = "ipv6_address";
@@ -148,15 +152,14 @@ public class NetMonColumns implements BaseColumns {
         String[] hiddenColumnNames = context.getResources().getStringArray(R.array.db_columns_hide);
         List<String> hiddenColumnNamesList = Arrays.asList(hiddenColumnNames);
         List<String> newerApiColumnNames = getNewerApiColumns(context);
-        String[] result = new String[columnNames.length - hiddenColumnNames.length];
-        int i = 0;
+        List<String> result = new ArrayList<>();
         for (String columnName : columnNames) {
             if (!hiddenColumnNamesList.contains(columnName)
                     && !newerApiColumnNames.contains(columnName)) {
-                result[i++] = columnName;
+                result.add(columnName);
             }
         }
-        return result;
+        return result.toArray(new String[result.size()]);
     }
 
     /**

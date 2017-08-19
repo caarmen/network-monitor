@@ -8,7 +8,7 @@ This source is part of the
                              /___/
 repository.
 
-Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+Copyright (C) 2013-2017 Carmen Alvarez (c@rmen.ca)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -74,6 +74,10 @@ limitations under the License.
     <string name="gsm_short_cell_id">GSM Short Cell Id</string>
     <string name="gsm_cell_lac">GSM Cell LAC</string>
     <string name="gsm_cell_psc">GSM Cell PSC</string>
+    <string name="lte_cell_ci">LTE Cell Id</string>
+    <string name="lte_cell_earfcn">LTE Cell RF Channel</string>
+    <string name="lte_cell_pci">LTE Physical Cell Id</string>
+    <string name="lte_cell_tac">LTE Cell Tracking Area Code</string>
     <string name="network_interface">Network Interface</string>
     <string name="ipv4_address">IPv4 Address</string>
     <string name="ipv6_address">IPv6 Address</string>

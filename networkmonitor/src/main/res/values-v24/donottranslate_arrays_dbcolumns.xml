@@ -8,7 +8,7 @@ This source is part of the
                              /___/
 repository.
 
-Copyright (C) 2016-2017 Carmen Alvarez (c@rmen.ca)
+Copyright (C) 2017 Carmen Alvarez (c@rmen.ca)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ limitations under the License.
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string-array name="newer_api_db_columns" tools:ignore="InconsistentArrays">
-        <item>lte_cell_earfcn</item>
     </string-array>
 
 </resources>
