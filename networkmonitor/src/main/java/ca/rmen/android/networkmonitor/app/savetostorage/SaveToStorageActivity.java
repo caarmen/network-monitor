@@ -25,6 +25,7 @@
 package ca.rmen.android.networkmonitor.app.savetostorage;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -70,11 +71,13 @@ public class SaveToStorageActivity extends FragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.v(TAG, "onActivityResult: resultCode = " + resultCode + ", data=" + data);
         if (requestCode == ACTION_SAVE_TO_STORAGE) {
-            Intent intent = new Intent(this, SaveToStorageService.class);
-            Uri sourceUri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
-            intent.putExtra(SaveToStorageService.EXTRA_SOURCE_URI, sourceUri);
-            intent.putExtra(SaveToStorageService.EXTRA_DESTINATION_URI, data.getData());
-            SaveToStorageService.enqueueWork(this, intent);
+            if (resultCode == Activity.RESULT_OK) {
+                Intent intent = new Intent(this, SaveToStorageService.class);
+                Uri sourceUri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+                intent.putExtra(SaveToStorageService.EXTRA_SOURCE_URI, sourceUri);
+                intent.putExtra(SaveToStorageService.EXTRA_DESTINATION_URI, data.getData());
+                SaveToStorageService.enqueueWork(this, intent);
+            }
             finish();
         }
         super.onActivityResult(requestCode, resultCode, data);
