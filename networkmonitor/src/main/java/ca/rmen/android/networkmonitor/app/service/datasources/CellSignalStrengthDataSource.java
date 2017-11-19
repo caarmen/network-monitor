@@ -30,10 +30,10 @@ import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import android.util.Log;
 import ca.rmen.android.networkmonitor.util.NetMonSignalStrength;
 
 /**
@@ -58,7 +58,9 @@ public class CellSignalStrengthDataSource implements NetMonDataSource {
         Log.v(TAG, "onCreate");
         mNetMonSignalStrength = new NetMonSignalStrength(context);
         mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_SERVICE_STATE);
+        if (mTelephonyManager != null) {
+            mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_SERVICE_STATE);
+        }
     }
 
     @Override

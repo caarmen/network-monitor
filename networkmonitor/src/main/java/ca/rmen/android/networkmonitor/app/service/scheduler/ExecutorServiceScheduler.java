@@ -26,6 +26,7 @@ package ca.rmen.android.networkmonitor.app.service.scheduler;
 import android.content.Context;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.util.Log;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -33,7 +34,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import ca.rmen.android.networkmonitor.Constants;
-import android.util.Log;
 
 /**
  * Uses a {@link ScheduledExecutorService} to schedule a single task to be run periodically.
@@ -56,15 +56,19 @@ public class ExecutorServiceScheduler implements Scheduler {
         mExecutorService = Executors.newSingleThreadScheduledExecutor();
         // Prevent the system from closing the connection after 30 minutes of screen off.
         PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+        if (powerManager != null) {
+            mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+        }
     }
 
     @Override
     public void schedule(Runnable runnable, int interval) {
         Log.v(TAG, "schedule at interval " + interval);
+        if (mWakeLock != null) {
         mRunnableImpl = runnable;
-        mWakeLock.acquire();
-        setInterval(interval);
+            mWakeLock.acquire();
+            setInterval(interval);
+        }
     }
 
     @Override

@@ -34,6 +34,7 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,6 @@ import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailConfig;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
-import android.util.Log;
 
 public class EmailPreferencesActivity extends AppCompatActivity {
     private static final String TAG = Constants.TAG + EmailPreferencesActivity.class.getSimpleName();
@@ -152,6 +152,9 @@ public class EmailPreferencesActivity extends AppCompatActivity {
             value = ((ListPreference)pref).getEntry();
         else
             return;
+        if (value == null) {
+            value = "";
+        }
         String summary = getString(summaryResId, value);
         pref.setSummary(summary);
     }

@@ -23,6 +23,7 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -32,6 +33,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -42,7 +44,6 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences.Selection;
 import ca.rmen.android.networkmonitor.provider.UniqueValuesColumns;
-import android.util.Log;
 
 /**
  * A list of the unique values for a particular column.
@@ -78,8 +79,11 @@ public class FilterColumnListFragment extends ListFragment {
     public void onAttach(Context context) {
         Log.v(TAG, "onAttach");
         super.onAttach(context);
-        mColumnName = getActivity().getIntent().getExtras().getString(FilterColumnActivity.EXTRA_COLUMN_NAME);
-        getLoaderManager().initLoader(URL_LOADER, null, mLoaderCallbacks);
+        Activity activity = getActivity();
+        if (activity != null) {
+            mColumnName = activity.getIntent().getStringExtra(FilterColumnActivity.EXTRA_COLUMN_NAME);
+            getLoaderManager().initLoader(URL_LOADER, null, mLoaderCallbacks);
+        }
 
     }
 
@@ -87,11 +91,13 @@ public class FilterColumnListFragment extends ListFragment {
         @Override
         public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
             Log.v(TAG, "onCreateLoader, loaderId = " + loaderId + ", bundle = " + bundle);
+            Activity activity = getActivity();
+            if (activity == null) return null;
             String[] projection = new String[] { UniqueValuesColumns.VALUE, UniqueValuesColumns.COUNT };
             // We only want to show values for this column that appear with all the filters for the other columns being used at the same time.
             // So we build a query with a selection applying the filters on all the other columns.
-            Selection selection = FilterPreferences.getSelectionClause(getActivity(), mColumnName);
-            return new CursorLoader(getActivity(), Uri.withAppendedPath(UniqueValuesColumns.CONTENT_URI, mColumnName), projection,
+            Selection selection = FilterPreferences.getSelectionClause(activity, mColumnName);
+            return new CursorLoader(activity, Uri.withAppendedPath(UniqueValuesColumns.CONTENT_URI, mColumnName), projection,
                     selection.selectionString, selection.selectionArgs, mColumnName + " ASC");
         }
 

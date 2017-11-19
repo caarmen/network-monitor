@@ -166,7 +166,7 @@ public class NetMonColumns implements BaseColumns {
      * @return the localized display name for a particular DB column name.
      */
     public static String getColumnLabel(Context context, String columnName) {
-        int columnLabelId = context.getResources().getIdentifier(columnName, "string", R.class.getPackage().getName());
+        int columnLabelId = context.getResources().getIdentifier(columnName, "string", context.getPackageName());
         return context.getString(columnLabelId);
     }
 

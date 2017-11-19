@@ -52,7 +52,6 @@ limitations under the License.
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_speed_test_upload_settings" >
         <EditTextPreference
-            android:defaultValue=""
             android:hint="@string/pref_hint_speed_test_upload_server"
             android:icon="@drawable/ic_pref_server"
             android:key="PREF_SPEED_TEST_UPLOAD_SERVER"
@@ -67,7 +66,6 @@ limitations under the License.
             android:summary="@string/pref_summary_speed_test_upload_port"
             android:title="@string/pref_title_speed_test_upload_port" />
         <EditTextPreference
-            android:defaultValue=""
             android:hint="@string/pref_hint_speed_test_upload_user"
             android:icon="@drawable/ic_pref_email_user"
             android:inputType="textEmailAddress"

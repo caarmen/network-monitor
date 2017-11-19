@@ -28,6 +28,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,7 +43,6 @@ import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.FilterColumnListFragment.FilterListItem;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import android.util.Log;
 
 /**
  * Activity which lets the user choose which values for a particular column will appear in the report.
@@ -109,21 +109,14 @@ public class FilterColumnActivity extends AppCompatActivity { // NO_UCD (use def
         for (int i = 0; i < mListView.getCount(); i++) {
             if (checkedPositions.get(i)) selectedValues.add(((FilterListItem) mListView.getAdapter().getItem(i)).value);
         }
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                // Update the filter preference for this column.
-                String columnName = getIntent().getExtras().getString(EXTRA_COLUMN_NAME);
-                NetMonPreferences.getInstance(FilterColumnActivity.this).setColumnFilterValues(columnName, selectedValues);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
+        AsyncTask.execute(() -> {
+            // Update the filter preference for this column.
+            String columnName = getIntent().getStringExtra(EXTRA_COLUMN_NAME);
+            NetMonPreferences.getInstance(FilterColumnActivity.this).setColumnFilterValues(columnName, selectedValues);
+            runOnUiThread(() -> {
                 setResult(Activity.RESULT_OK);
                 finish();
-            }
-        }.execute();
+            });
+        });
     }
 }

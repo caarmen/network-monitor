@@ -25,6 +25,7 @@ package ca.rmen.android.networkmonitor.app.email;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.File;
 import java.util.Set;
@@ -43,7 +44,6 @@ import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailConfig;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailSecurity;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import android.util.Log;
 import java8.util.stream.Collectors;
 import java8.util.stream.StreamSupport;
 
@@ -145,7 +145,7 @@ public class ReportEmailer {
         }
         // Otherwise we use the user@server.  We try to strip any "smtp" part of the server domain.
         else {
-            String server = emailConfig.server.replaceAll("smtp[^\\.]*\\.", "");
+            String server = emailConfig.server.replaceAll("smtp[^.]*\\.", "");
             from = emailConfig.user + "@" + server;
         }
         Log.v(TAG, "getFromAddress: Sending mail from " + from);

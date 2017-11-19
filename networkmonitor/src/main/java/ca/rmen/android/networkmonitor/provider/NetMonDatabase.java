@@ -30,13 +30,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v4.util.LongSparseArray;
+import android.util.Log;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.Constants.ConnectionType;
-import android.util.Log;
 import ca.rmen.android.networkmonitor.util.TelephonyUtil;
 
 public class NetMonDatabase extends SQLiteOpenHelper {
@@ -232,6 +232,7 @@ public class NetMonDatabase extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_VIEW_CONNECTION_TEST_STATS);
     }
 
+    @SuppressWarnings("ConstantConditions") // It's not THAT hard to analyze...
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion);

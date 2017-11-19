@@ -36,7 +36,6 @@ limitations under the License.
             android:title="@string/pref_title_email_report_interval" />
 
         <EditTextPreference
-            android:defaultValue=""
             android:hint="@string/pref_hint_email_recipients"
             android:icon="@drawable/ic_pref_email_recipients"
             android:inputType="textEmailAddress"
@@ -69,7 +68,6 @@ limitations under the License.
             android:summary="@string/pref_summary_email_port"
             android:title="@string/pref_title_email_port" />
         <EditTextPreference
-            android:defaultValue=""
             android:hint="@string/pref_hint_email_user"
             android:icon="@drawable/ic_pref_email_user"
             android:inputType="textEmailAddress"
@@ -77,7 +75,6 @@ limitations under the License.
             android:summary="@string/pref_summary_email_user"
             android:title="@string/pref_title_email_user" />
         <ca.rmen.android.networkmonitor.app.prefs.hack.PasswordPreference
-            android:defaultValue=""
             android:icon="@drawable/ic_pref_email_password"
             android:key="PREF_EMAIL_PASSWORD"
             android:title="@string/pref_title_email_password" />
@@ -93,7 +90,6 @@ limitations under the License.
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_email_status" >
         <Preference
-            android:defaultValue=""
             android:icon="@drawable/ic_pref_show_log"
             android:key="PREF_EMAIL_LAST_EMAIL_SENT"
             android:title="@string/pref_title_email_last_email_sent" />

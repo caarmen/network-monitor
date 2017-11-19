@@ -59,10 +59,4 @@ limitations under the License.
         <copyright>Copyright (c) Oracle</copyright>
         <license>GNU General Public License 2.0</license>
     </notice>
-    <notice>
-        <name>retrolambda</name>
-        <url>https://github.com/orfjackal/retrolambda</url>
-        <copyright>Copyright (c) Esko Luontola</copyright>
-        <license>Apache Software License 2.0</license>
-    </notice>
 </notices>

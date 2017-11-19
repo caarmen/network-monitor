@@ -23,6 +23,7 @@
  */
 package ca.rmen.android.networkmonitor.app.dialog;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -31,11 +32,10 @@ import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
-import android.util.Log;
 
 /**
  * A dialog fragment with a title, message, ok and cancel buttons. This is based on ConfirmDialogFragment from the scrum chatter project.
@@ -65,35 +65,35 @@ public class ConfirmDialogFragment extends DialogFragment { // NO_UCD (use defau
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.v(TAG, "onCreateDialog: savedInstanceState = " + savedInstanceState);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        Activity activity = getActivity();
         Bundle arguments = getArguments();
+        if (activity == null || arguments == null) return super.onCreateDialog(savedInstanceState);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(arguments.getCharSequence(DialogFragmentFactory.EXTRA_TITLE));
         builder.setMessage(arguments.getCharSequence(DialogFragmentFactory.EXTRA_MESSAGE));
         final int actionId = arguments.getInt(DialogFragmentFactory.EXTRA_ACTION_ID);
         final Bundle extras = arguments.getBundle(DialogFragmentFactory.EXTRA_EXTRAS);
         OnClickListener positiveListener = null;
         OnClickListener negativeListener = null;
-        if (getActivity() instanceof DialogButtonListener) {
+        if (activity instanceof DialogButtonListener) {
             positiveListener = (dialog, which) -> {
                 Log.v(TAG, "onClick (positive button");
-                FragmentActivity activity = getActivity();
-                if (activity == null) Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
+                if (activity.isFinishing()) Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
                 else
                     ((DialogButtonListener) activity).onOkClicked(actionId, extras);
             };
             negativeListener = (dialog, which) -> {
                 Log.v(TAG, "onClick (negative button");
-                FragmentActivity activity = getActivity();
-                if (activity == null) Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
+                if (activity.isFinishing()) Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
                 else
                     ((DialogButtonListener) activity).onCancelClicked(actionId, extras);
             };
         }
         builder.setNegativeButton(android.R.string.cancel, negativeListener);
         builder.setPositiveButton(android.R.string.ok, positiveListener);
-        if (getActivity() instanceof OnCancelListener) builder.setOnCancelListener((OnCancelListener) getActivity());
+        if (activity instanceof OnCancelListener) builder.setOnCancelListener((OnCancelListener) activity);
         final Dialog dialog = builder.create();
-        if (getActivity() instanceof OnDismissListener) dialog.setOnDismissListener((OnDismissListener) getActivity());
+        if (activity instanceof OnDismissListener) dialog.setOnDismissListener((OnDismissListener) activity);
         return dialog;
 
     }

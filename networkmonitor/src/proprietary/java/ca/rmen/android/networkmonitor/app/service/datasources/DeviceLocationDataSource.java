@@ -103,7 +103,7 @@ public class DeviceLocationDataSource implements NetMonDataSource {
             int playServicesAvailable = api.isGooglePlayServicesAvailable(mContext);
 
             if (playServicesAvailable == ConnectionResult.SUCCESS) {
-                mDeviceLocationDataSourceImpl = new GmsDeviceLocationDataSource(mGoogleApiClient);
+                mDeviceLocationDataSourceImpl = new GmsDeviceLocationDataSource();
             } else {
                 NetMonPreferences.getInstance(mContext).forceFossLocationFetchingStrategy();
             }

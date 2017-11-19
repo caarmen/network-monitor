@@ -92,11 +92,13 @@ public class TelephonyUtil {
     public static boolean isMobileDataEnabled(Context context) {
         // If we have no SIM card, then then mobile data can't be enabled
         TelephonyManager telMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        if (telMgr == null) return false;
         int simState = telMgr.getSimState();
         if (simState == TelephonyManager.SIM_STATE_ABSENT) return false;
 
         // http://stackoverflow.com/questions/12806709/android-how-to-tell-if-mobile-network-data-is-enabled-or-disabled-even-when
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null) return false;
         try {
             Class<?> cmClass = Class.forName(cm.getClass().getName());
             Method method = cmClass.getDeclaredMethod("getMobileDataEnabled");
@@ -117,6 +119,7 @@ public class TelephonyUtil {
      */
     public static String getNetworkType(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null) return null;
         NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
         if (activeNetworkInfo == null) return null;
         String networkType = activeNetworkInfo.getTypeName();

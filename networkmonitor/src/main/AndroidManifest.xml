@@ -70,7 +70,7 @@ limitations under the License.
         android:theme="@style/AppTheme" >
         <provider
             android:name=".provider.NetMonProvider"
-            android:authorities="ca.rmen.android.networkmonitor.provider"
+            android:authorities="${applicationId}.provider"
             android:exported="false" />
 
         <service android:name=".app.service.NetMonService" />

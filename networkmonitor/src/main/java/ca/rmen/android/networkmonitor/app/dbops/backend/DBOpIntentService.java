@@ -36,6 +36,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.JobIntentService;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
@@ -54,7 +55,6 @@ import ca.rmen.android.networkmonitor.app.dbops.backend.export.HTMLExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.kml.KMLExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.imp0rt.DBImport;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
-import android.util.Log;
 
 public class DBOpIntentService extends JobIntentService {
 
@@ -243,6 +243,8 @@ public class DBOpIntentService extends JobIntentService {
 
     private void handleActionExport(ExportFormat exportFileFormat, Bundle extras) {
         Log.d(TAG, "handleActionExport() called with exportFileFormat = [" + exportFileFormat + "]");
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager == null) return;
         FileExport fileExport;
         switch (exportFileFormat) {
             case CSV:
@@ -275,7 +277,6 @@ public class DBOpIntentService extends JobIntentService {
             file = fileExport.getFile();
         }
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         // Start the summary report
         Intent shareIntent = FileExport.getShareIntent(this, file);

@@ -38,6 +38,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,7 +51,6 @@ import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.databinding.SelectFieldsBinding;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import android.util.Log;
 import ca.rmen.android.networkmonitor.util.PermissionUtil;
 import ca.rmen.android.networkmonitor.util.TextUtil;
 import permissions.dispatcher.NeedsPermission;
@@ -132,20 +132,13 @@ public class SelectFieldsActivity extends AppCompatActivity
     public void onOk(View v) {
         Log.v(TAG, "onOk");
         final List<String> selectedColumns = mSelectFieldsAdapter.getSelectedColumns();
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                NetMonPreferences.getInstance(SelectFieldsActivity.this).setSelectedColumns(selectedColumns);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
+        AsyncTask.execute(() -> {
+            NetMonPreferences.getInstance(this).setSelectedColumns(selectedColumns);
+            runOnUiThread(() -> {
                 setResult(Activity.RESULT_OK);
                 finish();
-            }
-        }.execute();
+            });
+        });
     }
 
     private final RecyclerView.AdapterDataObserver mListener = new RecyclerView.AdapterDataObserver() {
@@ -219,7 +212,7 @@ public class SelectFieldsActivity extends AppCompatActivity
     public void onOkClicked(int actionId, Bundle extras) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (actionId == ACTION_REQUEST_PHONE_STATE_PERMISSION) {
-                SelectFieldsActivityPermissionsDispatcher.requestUsagePermissionWithCheck(this);
+                SelectFieldsActivityPermissionsDispatcher.requestUsagePermissionWithPermissionCheck(this);
             } else if (actionId == ACTION_REQUEST_USAGE_PERMISSION) {
                 startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
             }

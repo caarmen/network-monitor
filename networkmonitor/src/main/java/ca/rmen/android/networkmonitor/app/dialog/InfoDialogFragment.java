@@ -35,10 +35,10 @@ import android.support.v7.app.AlertDialog;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.widget.TextView;
 
 import ca.rmen.android.networkmonitor.Constants;
-import android.util.Log;
 
 /**
  * Shows a dialog with a title, message, and a single button to dismiss the dialog.
@@ -59,8 +59,9 @@ public class InfoDialogFragment extends DialogFragment { // NO_UCD (use default)
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.v(TAG, "onCreateDialog: savedInstanceState = " + savedInstanceState);
         Context context = getActivity();
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         Bundle arguments = getArguments();
+        if (context == null || arguments == null) return super.onCreateDialog(savedInstanceState);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         final int iconId = arguments.getInt(DialogFragmentFactory.EXTRA_ICON_ID);
         if (iconId > 0) builder.setIcon(iconId);
         CharSequence message = arguments.getString(DialogFragmentFactory.EXTRA_MESSAGE);

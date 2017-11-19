@@ -26,6 +26,7 @@ package ca.rmen.android.networkmonitor.app.prefs.hack;
 import android.os.Build;
 import android.support.v14.preference.MultiSelectListPreference;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
@@ -42,7 +43,10 @@ public class PreferenceFragmentCompatHack {
      * @return true if we managed a preference which isn't supported by default, false otherwise.
      */
     public static boolean onDisplayPreferenceDialog(PreferenceFragmentCompat preferenceFragmentCompat, Preference preference) {
-        DialogFragment dialogFragment = (DialogFragment) preferenceFragmentCompat.getFragmentManager().findFragmentByTag(FRAGMENT_TAG_DIALOG);
+        FragmentManager fragmentManager = preferenceFragmentCompat.getFragmentManager();
+        if (fragmentManager == null) return false;
+
+        DialogFragment dialogFragment = (DialogFragment) fragmentManager.findFragmentByTag(FRAGMENT_TAG_DIALOG);
         if (dialogFragment != null) return false;
 
         // Hack to allow a MultiSelectListPreference
@@ -58,7 +62,7 @@ public class PreferenceFragmentCompatHack {
         // We've created our own fragment:
         if (dialogFragment != null) {
             dialogFragment.setTargetFragment(preferenceFragmentCompat, 0);
-            dialogFragment.show(preferenceFragmentCompat.getFragmentManager(), FRAGMENT_TAG_DIALOG);
+            dialogFragment.show(fragmentManager, FRAGMENT_TAG_DIALOG);
             return true;
         }
 

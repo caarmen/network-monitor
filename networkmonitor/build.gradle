@@ -24,18 +24,17 @@
 
 buildscript {
     repositories {
+        google()
         jcenter()
     }
     dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
-        classpath 'me.tatarka:gradle-retrolambda:3.7.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
     }
 }
 apply plugin: 'com.android.application'
 apply plugin: 'com.github.ben-manes.versions'
-apply plugin: 'me.tatarka.retrolambda'
 
-ext.googleSupportLibVersion = "26.0.1"
+ext.googleSupportLibVersion = "27.0.1"
 
 android {
     File signFile = rootProject.file('signing.properties')
@@ -55,8 +54,8 @@ android {
     } else  {
         android.buildTypes.release.signingConfig = null
     }
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.1"
     dataBinding {
         enabled = true
     }
@@ -64,9 +63,9 @@ android {
     defaultConfig {
         applicationId "ca.rmen.android.networkmonitor"
         minSdkVersion 14
-        targetSdkVersion 26
-        versionName "1.29.2"
-        versionCode 12902
+        targetSdkVersion 27
+        versionName "1.30.0"
+        versionCode 13000
         archivesBaseName += "-" + versionName
     }
 
@@ -76,11 +75,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+        }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-project.txt'
         }
     }
+
+    flavorDimensions "featureSet"
 
     productFlavors {
         foss {
@@ -101,25 +105,24 @@ android {
 
 dependencies {
 
-    compile 'de.psdev.licensesdialog:licensesdialog:1.8.3'
-    compile "com.android.support:appcompat-v7:${project.googleSupportLibVersion}"
-    compile "com.android.support:design:${project.googleSupportLibVersion}"
-    compile "com.android.support:preference-v7:${project.googleSupportLibVersion}"
-    compile "com.android.support:preference-v14:${project.googleSupportLibVersion}"
-    compile 'org.greenrobot:eventbus:3.0.0'
-    compile ('net.sourceforge.jexcelapi:jxl:2.6.12') {
+    implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
+    implementation "com.android.support:appcompat-v7:${project.googleSupportLibVersion}"
+    implementation "com.android.support:design:${project.googleSupportLibVersion}"
+    implementation "com.android.support:preference-v7:${project.googleSupportLibVersion}"
+    implementation "com.android.support:preference-v14:${project.googleSupportLibVersion}"
+    implementation 'org.greenrobot:eventbus:3.0.0'
+    implementation ('net.sourceforge.jexcelapi:jxl:2.6.12') {
         exclude group: "log4j"
     }
-    compile 'commons-net:commons-net:3.6'
-    compile 'com.github.hotchemi:permissionsdispatcher:2.4.0'
-    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.4.0'
+    implementation 'commons-net:commons-net:3.6'
+    implementation 'com.github.hotchemi:permissionsdispatcher:3.0.1'
+    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:3.0.1'
 
     if (!gradle.isFoss) {
-        proprietaryCompile 'com.google.android.gms:play-services-location:11.2.0'
+        proprietaryImplementation 'com.google.android.gms:play-services-location:11.6.0'
     }
 
-    compile 'net.sourceforge.streamsupport:streamsupport:1.5.6'
-    retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.5.1'
+    implementation 'net.sourceforge.streamsupport:streamsupport:1.5.6'
 }
 
 dependencyUpdates.resolutionStrategy = {

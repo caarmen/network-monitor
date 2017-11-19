@@ -38,6 +38,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -69,8 +70,6 @@ import ca.rmen.android.networkmonitor.app.prefs.FilterColumnActivity;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.SelectFieldsActivity;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences;
-import ca.rmen.android.networkmonitor.app.prefs.SortPreferences.SortOrder;
-import android.util.Log;
 
 public class LogActivity extends AppCompatActivity implements DialogButtonListener, ChoiceDialogFragment.DialogItemListener {
     private static final String TAG = Constants.TAG + LogActivity.class.getSimpleName();
@@ -193,6 +192,7 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
     /**
      * Read the data from the DB, export it to an HTML file, and load the HTML file in the WebView.
      */
+    @SuppressLint("SetJavaScriptEnabled") // only loading local files, it's ok.
     private void loadHTMLFile() {
         Log.v(TAG, "loadHTMLFile");
         final ProgressBar progressBar = findViewById(R.id.progress_bar);
@@ -210,20 +210,14 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
         } else {
             fixedTableHeight = null;
         }
-        AsyncTask<Void, Void, File> asyncTask = new AsyncTask<Void, Void, File>() {
 
-            @Override
-            protected File doInBackground(Void... params) {
-                Log.v(TAG, "loadHTMLFile:doInBackground");
-                // Export the DB to the HTML file.
-                HTMLExport htmlExport = new HTMLExport(LogActivity.this, false, fixedTableHeight);
-                int recordCount = NetMonPreferences.getInstance(LogActivity.this).getFilterRecordCount();
-                return htmlExport.export(recordCount, null);
-            }
-
-            @SuppressLint("SetJavaScriptEnabled")
-            @Override
-            protected void onPostExecute(File result) {
+        AsyncTask.execute(() -> {
+            Log.v(TAG, "loadHTMLFile:doInBackground");
+            // Export the DB to the HTML file.
+            HTMLExport htmlExport = new HTMLExport(LogActivity.this, false, fixedTableHeight);
+            int recordCount = NetMonPreferences.getInstance(LogActivity.this).getFilterRecordCount();
+            File result = htmlExport.export(recordCount, null);
+            runOnUiThread(() -> {
                 Log.v(TAG, "loadHTMLFile:onPostExecute, result=" + result);
                 if (isFinishing()) {
                     Log.v(TAG, "finishing, ignoring loadHTMLFile result");
@@ -288,13 +282,13 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
                             SortPreferences oldSortPreferences = prefs.getSortPreferences();
                             // The new column used for sorting will be the one the user tapped on.
                             String newSortColumnName = url.substring(HTMLExport.URL_SORT.length());
-                            SortOrder newSortOrder = oldSortPreferences.sortOrder;
+                            SortPreferences.SortOrder newSortOrder = oldSortPreferences.sortOrder;
                             // If the user clicked on the column which is already used for sorting,
                             // toggle the sort order between ascending and descending.
                             if (newSortColumnName.equals(oldSortPreferences.sortColumnName)) {
-                                if (oldSortPreferences.sortOrder == SortOrder.DESC) newSortOrder = SortOrder.ASC;
+                                if (oldSortPreferences.sortOrder == SortPreferences.SortOrder.DESC) newSortOrder = SortPreferences.SortOrder.ASC;
                                 else
-                                    newSortOrder = SortOrder.DESC;
+                                    newSortOrder = SortPreferences.SortOrder.DESC;
                             }
                             // Update the sorting preferences (our shared preference change listener will be notified
                             // and reload the page).
@@ -313,9 +307,10 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
                         }
                     }
                 });
-            }
-        };
-        asyncTask.execute();
+
+            });
+
+        });
     }
 
     @Override

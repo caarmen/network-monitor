@@ -33,10 +33,10 @@ import android.os.HandlerThread;
 import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
-import android.util.Log;
 
 /**
  * Execute the runnable when the network changes.
@@ -61,7 +61,9 @@ public class NetworkChangeScheduler implements Scheduler {
         mHandler = new Handler(mHandlerThread.getLooper());
         mContext.registerReceiver(mBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION), null, mHandler);
         mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SERVICE_STATE);
+        if (mTelephonyManager != null) {
+            mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SERVICE_STATE);
+        }
     }
 
     @Override

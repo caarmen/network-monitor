@@ -23,8 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.dialog;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -36,9 +34,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import ca.rmen.android.networkmonitor.Constants;
-import android.util.Log;
 
 /**
  * A dialog fragment with a list of choices.
@@ -66,8 +66,9 @@ public class ChoiceDialogFragment extends DialogFragment { // NO_UCD (use defaul
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.v(TAG, "onCreateDialog: savedInstanceState = " + savedInstanceState);
         Context context = getActivity();
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         Bundle arguments = getArguments();
+        if (context == null || arguments == null) return super.onCreateDialog(savedInstanceState);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(arguments.getString(DialogFragmentFactory.EXTRA_TITLE));
         final int actionId = arguments.getInt(DialogFragmentFactory.EXTRA_ACTION_ID);
         int selectedItem = arguments.getInt(DialogFragmentFactory.EXTRA_SELECTED_ITEM);

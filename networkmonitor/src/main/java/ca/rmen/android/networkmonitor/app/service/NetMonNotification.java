@@ -36,6 +36,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
@@ -43,7 +44,6 @@ import ca.rmen.android.networkmonitor.app.email.EmailPreferencesActivity;
 import ca.rmen.android.networkmonitor.app.log.LogActivity;
 import ca.rmen.android.networkmonitor.app.main.MainActivity;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
-import android.util.Log;
 
 public class NetMonNotification {
     private static final String TAG = Constants.TAG + NetMonNotification.class.getSimpleName();
@@ -81,42 +81,46 @@ public class NetMonNotification {
 
     public static String createOngoingNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(context.getString(R.string.service_ongoing_notification_channel_id),
-                    context.getString(R.string.service_ongoing_notification_channel_name),
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            notificationChannel.setDescription(context.getString(R.string.service_ongoing_notification_channel_description));
-            notificationChannel.enableLights(false);
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.createNotificationChannel(notificationChannel);
-            return notificationChannel.getId();
-        } else {
-            return "";
+            if (notificationManager != null) {
+                NotificationChannel notificationChannel = new NotificationChannel(context.getString(R.string.service_ongoing_notification_channel_id),
+                        context.getString(R.string.service_ongoing_notification_channel_name),
+                        NotificationManager.IMPORTANCE_DEFAULT);
+                notificationChannel.setDescription(context.getString(R.string.service_ongoing_notification_channel_description));
+                notificationChannel.enableLights(false);
+                notificationManager.createNotificationChannel(notificationChannel);
+                return notificationChannel.getId();
+            }
         }
+        return "";
     }
 
     private static String createAlertNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(context.getString(R.string.service_alert_notification_channel_id),
-                    context.getString(R.string.service_alert_notification_channel_name),
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            notificationChannel.setDescription(context.getString(R.string.service_alert_notification_channel_description));
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(ActivityCompat.getColor(context, R.color.netmon_color));
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.createNotificationChannel(notificationChannel);
-            return notificationChannel.getId();
-        } else {
-            return "";
+            if (notificationManager != null) {
+                NotificationChannel notificationChannel = new NotificationChannel(context.getString(R.string.service_alert_notification_channel_id),
+                        context.getString(R.string.service_alert_notification_channel_name),
+                        NotificationManager.IMPORTANCE_DEFAULT);
+                notificationChannel.setDescription(context.getString(R.string.service_alert_notification_channel_description));
+                notificationChannel.enableLights(true);
+                notificationChannel.setLightColor(ActivityCompat.getColor(context, R.color.netmon_color));
+                notificationManager.createNotificationChannel(notificationChannel);
+                return notificationChannel.getId();
+            }
         }
+        return "";
     }
 
     static void dismissNotifications(Context context) {
         Log.v(TAG, "dismissNotification");
         context.unregisterReceiver(sDisableBroadcastReceiver);
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(NOTIFICATION_ID_ONGOING);
-        notificationManager.cancel(NOTIFICATION_ID_FAILED_EMAIL);
-        notificationManager.cancel(NOTIFICATION_ID_FAILED_TEST);
+        if (notificationManager != null) {
+            notificationManager.cancel(NOTIFICATION_ID_ONGOING);
+            notificationManager.cancel(NOTIFICATION_ID_FAILED_EMAIL);
+            notificationManager.cancel(NOTIFICATION_ID_FAILED_TEST);
+        }
     }
 
     public static void showEmailFailureNotification(Context context) {
@@ -126,7 +130,9 @@ public class NetMonNotification {
 
     public static void dismissEmailFailureNotification(Context context) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(NOTIFICATION_ID_FAILED_EMAIL);
+        if (notificationManager != null) {
+            notificationManager.cancel(NOTIFICATION_ID_FAILED_EMAIL);
+        }
     }
 
     public static void showFailedTestNotification(Context context) {
@@ -139,7 +145,9 @@ public class NetMonNotification {
 
     public static void dismissFailedTestNotification(Context context) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(NOTIFICATION_ID_FAILED_TEST);
+        if (notificationManager != null) {
+            notificationManager.cancel(NOTIFICATION_ID_FAILED_TEST);
+        }
     }
 
     /**
@@ -147,6 +155,8 @@ public class NetMonNotification {
      * notification opens the given activity.
      */
     private static void showAlertNotification(Context context, int notificationId, int tickerTextId, int contentTextId, Class<?> activityClass) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager == null) return;
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, createAlertNotificationChannel(context));
         builder.setSmallIcon(R.drawable.ic_stat_warning);
         builder.setAutoCancel(true);
@@ -169,7 +179,6 @@ public class NetMonNotification {
             //noinspection deprecation
             notification.ledOffMS = 2000;
         }
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(notificationId, notification);
     }
 

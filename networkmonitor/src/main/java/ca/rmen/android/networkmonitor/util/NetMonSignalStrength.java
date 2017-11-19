@@ -24,12 +24,8 @@
  */
 package ca.rmen.android.networkmonitor.util;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
-
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -42,6 +38,11 @@ import android.telephony.CellSignalStrengthLte;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 
 import ca.rmen.android.networkmonitor.Constants;
 
@@ -322,6 +323,7 @@ public class NetMonSignalStrength {
         // Two hacky ways to attempt to get the rsrq
         // First hacky way: reflection on the signalStrength object
         try {
+            @SuppressLint("PrivateApi")  // Yes, I know it's a hack, thanks.
             Method method = SignalStrength.class.getDeclaredMethod("getLteRsrq");
             int rsrq = (Integer) method.invoke(signalStrength);
             Log.v(TAG, "getLteRsrq: found " + rsrq + " using SignalStrength.getLteRsrq()");
