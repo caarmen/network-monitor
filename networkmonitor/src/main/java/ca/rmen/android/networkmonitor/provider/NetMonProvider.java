@@ -24,14 +24,6 @@
  */
 package ca.rmen.android.networkmonitor.provider;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java8.util.stream.Collectors;
-
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
@@ -48,9 +40,18 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
-
-import ca.rmen.android.networkmonitor.Constants;
 import android.util.Log;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import ca.rmen.android.networkmonitor.BuildConfig;
+import ca.rmen.android.networkmonitor.Constants;
+import java8.util.stream.Collectors;
 import java8.util.stream.StreamSupport;
 
 public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
@@ -59,7 +60,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     private static final String TYPE_CURSOR_ITEM = "vnd.android.cursor.item/";
     private static final String TYPE_CURSOR_DIR = "vnd.android.cursor.dir/";
 
-    public static final String AUTHORITY = "ca.rmen.android.networkmonitor.provider";
+    public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider";
     static final String CONTENT_URI_BASE = "content://" + AUTHORITY;
 
     public static final String QUERY_PARAMETER_NOTIFY = "QUERY_PARAMETER_NOTIFY";

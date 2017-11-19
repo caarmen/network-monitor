@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity
         }
         if (NetMonPreferences.getInstance(this).isServiceEnabled()) {
             NetMonService.start(this);
-            MainActivityPermissionsDispatcher.requestPermissionsWithCheck(this);
+            MainActivityPermissionsDispatcher.requestPermissionsWithPermissionCheck(this);
         }
         // Use strict mode for monkey tests. We can't enable strict mode for normal use
         // because, when sharing (exporting), the mail app may read the attachment in
@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity
                     } else {
                         onAppWarningOkClicked();
                     }
-                    MainActivityPermissionsDispatcher.requestPermissionsWithCheck(MainActivity.this);
+                    MainActivityPermissionsDispatcher.requestPermissionsWithPermissionCheck(MainActivity.this);
                 }
             } else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
                 if (prefs.isFastPollingEnabled()) {

@@ -219,7 +219,7 @@ public class SelectFieldsActivity extends AppCompatActivity
     public void onOkClicked(int actionId, Bundle extras) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (actionId == ACTION_REQUEST_PHONE_STATE_PERMISSION) {
-                SelectFieldsActivityPermissionsDispatcher.requestUsagePermissionWithCheck(this);
+                SelectFieldsActivityPermissionsDispatcher.requestUsagePermissionWithPermissionCheck(this);
             } else if (actionId == ACTION_REQUEST_USAGE_PERMISSION) {
                 startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
             }
