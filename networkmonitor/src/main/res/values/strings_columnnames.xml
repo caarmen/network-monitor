@@ -90,4 +90,6 @@ limitations under the License.
     <string name="gsm_ber_help">GSM bit error rate (0–7, 99) as defined in TS 27.007 8.5. May not be reported by many devices. Android documentation: https://goo.gl/v93sYj</string>
     <string name="most_consuming_app_name_help">The application which has consumed the most data for the given network type, since the boot of the device.</string>
     <string name="most_consuming_app_bytes_help">The data consumed by the application which has consumed the most data for the given network type, since the boot of the device.</string>
+    <string name="download_speed_help">You must enable the speed test in the advanced settings to collect download speed data.</string>
+    <string name="upload_speed_help">You must enable the speed test in the advanced settings, and specify an FTP server, to collect upload speed data.</string>
 </resources>
