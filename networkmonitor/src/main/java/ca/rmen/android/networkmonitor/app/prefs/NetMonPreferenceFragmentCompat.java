@@ -23,6 +23,7 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
@@ -45,9 +46,13 @@ public class NetMonPreferenceFragmentCompat extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
-        int preferenceFileResId = getArguments().getInt(EXTRA_PREFERENCE_FILE_RES_ID);
-        addPreferencesFromResource(preferenceFileResId);
-        PreferenceManager.setDefaultValues(getActivity(), preferenceFileResId, false);
+        Bundle arguments = getArguments();
+        Activity activity = getActivity();
+        if (activity != null && arguments != null) {
+            int preferenceFileResId = arguments.getInt(EXTRA_PREFERENCE_FILE_RES_ID);
+            addPreferencesFromResource(preferenceFileResId);
+            PreferenceManager.setDefaultValues(activity, preferenceFileResId, false);
+        }
     }
 
     @Override

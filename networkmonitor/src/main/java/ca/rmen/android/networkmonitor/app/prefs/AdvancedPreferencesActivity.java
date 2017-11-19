@@ -41,6 +41,7 @@ import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -54,7 +55,6 @@ import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.LocationFetchingStrategy;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
-import android.util.Log;
 
 public class AdvancedPreferencesActivity extends AppCompatActivity implements ConfirmDialogFragment.DialogButtonListener {
     private static final String TAG = Constants.TAG + AdvancedPreferencesActivity.class.getSimpleName();
@@ -226,10 +226,12 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
             if (resultCode == Activity.RESULT_OK) {
                 // Get the file the user selected, and show a dialog asking for confirmation to import the file.
                 Uri importFile = data.getData();
-                Bundle extras = new Bundle(1);
-                extras.putParcelable(EXTRA_IMPORT_URI, importFile);
-                DialogFragmentFactory.showConfirmDialog(this, getString(R.string.import_confirm_title),
-                        getString(R.string.import_confirm_message, importFile.getPath()), ID_ACTION_IMPORT_DB, extras);
+                if (importFile != null) {
+                    Bundle extras = new Bundle(1);
+                    extras.putParcelable(EXTRA_IMPORT_URI, importFile);
+                    DialogFragmentFactory.showConfirmDialog(this, getString(R.string.import_confirm_title),
+                            getString(R.string.import_confirm_message, importFile.getPath()), ID_ACTION_IMPORT_DB, extras);
+                }
             }
         } else if (requestCode == ACTIVITY_REQUEST_CODE_RINGTONE) {
             if (resultCode == Activity.RESULT_OK) {
@@ -240,10 +242,12 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
         } else if (requestCode == ACTIVITY_REQUEST_CODE_IMPORT_SETTINGS) {
             if (resultCode == Activity.RESULT_OK) {
                 Uri importFile = data.getData();
-                Bundle extras = new Bundle(1);
-                extras.putParcelable(EXTRA_IMPORT_URI, importFile);
-                DialogFragmentFactory.showConfirmDialog(this, getString(R.string.import_confirm_title),
-                        getString(R.string.import_settings_confirm_message, importFile.getPath()), ID_ACTION_IMPORT_SETTINGS, extras);
+                if (importFile != null) {
+                    Bundle extras = new Bundle(1);
+                    extras.putParcelable(EXTRA_IMPORT_URI, importFile);
+                    DialogFragmentFactory.showConfirmDialog(this, getString(R.string.import_confirm_title),
+                            getString(R.string.import_settings_confirm_message, importFile.getPath()), ID_ACTION_IMPORT_SETTINGS, extras);
+                }
             }
         }
     }
@@ -297,6 +301,7 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
     private void checkLocationSettings() {
         // If the user chose high accuracy, make sure we have at least one location provider.
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager == null) return;
         if (!(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))) {
             DialogFragmentFactory.showConfirmDialog(this, getString(R.string.no_location_confirm_dialog_title),
                     getString(R.string.no_location_confirm_dialog_message), ID_ACTION_LOCATION_SETTINGS, null);

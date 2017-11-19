@@ -28,11 +28,11 @@ import android.content.Context;
 import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.AndroidConstantsUtil;
-import android.util.Log;
 
 /**
  * Retrieves attributes of the service state.
@@ -47,7 +47,9 @@ public class ServiceStateDataSource implements NetMonDataSource {
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
         mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SERVICE_STATE);
+        if (mTelephonyManager != null) {
+            mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SERVICE_STATE);
+        }
     }
 
     @Override

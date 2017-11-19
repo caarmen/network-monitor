@@ -23,6 +23,12 @@
  */
 package ca.rmen.android.networkmonitor.app.speedtest;
 
+import android.content.SharedPreferences;
+import android.net.TrafficStats;
+import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.util.Log;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,14 +37,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import android.content.SharedPreferences;
-import android.net.TrafficStats;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
-import android.util.Log;
 
 
 /**
@@ -56,18 +56,26 @@ public class SpeedTestDownload {
     }
 
     public static void download(SpeedTestDownloadConfig config, SpeedTestDownloadCallback callback) {
-        new AsyncTask<SpeedTestDownloadConfig, Void, SpeedTestResult>(){
+        new DownloadAsyncTask(callback).execute(config);
+    }
 
-            @Override
-            protected SpeedTestResult doInBackground(SpeedTestDownloadConfig... speedTestDownloadConfigs) {
-                return download(speedTestDownloadConfigs[0]);
-            }
+    private static class DownloadAsyncTask extends AsyncTask<SpeedTestDownloadConfig, Void, SpeedTestResult> {
 
-            @Override
-            protected void onPostExecute(@NonNull SpeedTestResult speedTestResult) {
-                callback.onSpeedTestResult(speedTestResult);
-            }
-        }.execute(config);
+        private final SpeedTestDownloadCallback mCallback;
+
+        DownloadAsyncTask(SpeedTestDownloadCallback callback) {
+            mCallback = callback;
+        }
+
+        @Override
+        protected SpeedTestResult doInBackground(SpeedTestDownloadConfig... speedTestDownloadConfigs) {
+            return download(speedTestDownloadConfigs[0]);
+        }
+
+        @Override
+        protected void onPostExecute(@NonNull SpeedTestResult speedTestResult) {
+            mCallback.onSpeedTestResult(speedTestResult);
+        }
     }
 
     @NonNull

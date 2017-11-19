@@ -146,6 +146,7 @@ limitations under the License.
             android:layout_marginTop="16dp"
             android:autoLink="all"
             android:clickable="true"
+            android:focusable="true"
             android:drawableLeft="@drawable/ic_about_libraries"
             android:drawableStart="@drawable/ic_about_libraries"
             android:drawablePadding="8dp"

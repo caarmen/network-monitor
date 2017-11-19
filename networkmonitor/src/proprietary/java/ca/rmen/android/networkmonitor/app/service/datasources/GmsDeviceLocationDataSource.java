@@ -28,36 +28,37 @@ import android.content.Context;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.location.Location;
 import android.preference.PreferenceManager;
+import android.util.Log;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.LocationFetchingStrategy;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import android.util.Log;
 import ca.rmen.android.networkmonitor.util.PermissionUtil;
-
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 
 /**
  * Retrieves the device's location, using Google Play Services.
  */
 public class GmsDeviceLocationDataSource implements NetMonDataSource {
     private static final String TAG = Constants.TAG + GmsDeviceLocationDataSource.class.getSimpleName();
-    private final GoogleApiClient mLocationClient;
+    private FusedLocationProviderClient mLocationClient;
     private Location mMostRecentLocation;
     private Context mContext;
 
-    GmsDeviceLocationDataSource(Object locationClient) {
-        mLocationClient = (GoogleApiClient) locationClient;
+    GmsDeviceLocationDataSource() {
     }
 
     @Override
     public void onCreate(Context context) {
         Log.v(TAG, "onCreate");
         mContext = context;
+        mLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
         PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(mPreferenceListener);
         registerLocationListener();
     }
@@ -75,12 +76,7 @@ public class GmsDeviceLocationDataSource implements NetMonDataSource {
             Log.v(TAG, "No location permission.");
             return values;
         }
-        if (!mLocationClient.isConnected()) {
-            Log.v(TAG, "LocationClient not connected, doing nothing");
-            return values;
-        }
         // Try getting the location from the LocationClient
-        mMostRecentLocation = LocationServices.FusedLocationApi.getLastLocation(mLocationClient);
         Log.v(TAG, "Most recent location: " + mMostRecentLocation);
         if (mMostRecentLocation != null) {
             values.put(NetMonColumns.DEVICE_LATITUDE, mMostRecentLocation.getLatitude());
@@ -95,9 +91,8 @@ public class GmsDeviceLocationDataSource implements NetMonDataSource {
     public void onDestroy() {
         Log.v(TAG, "onDestroy");
         PreferenceManager.getDefaultSharedPreferences(mContext).unregisterOnSharedPreferenceChangeListener(mPreferenceListener);
-        if (mLocationClient != null && mLocationClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mLocationClient, mGmsLocationListener);
-            mLocationClient.disconnect();
+        if (mLocationClient != null) {
+            mLocationClient.removeLocationUpdates(mGmsLocationListener);
         }
     }
 
@@ -109,15 +104,11 @@ public class GmsDeviceLocationDataSource implements NetMonDataSource {
     private void registerLocationListener() {
         LocationFetchingStrategy locationFetchingStrategy = NetMonPreferences.getInstance(mContext).getLocationFetchingStrategy();
         Log.v(TAG, "registerLocationListener: strategy = " + locationFetchingStrategy);
-        if (!mLocationClient.isConnected()) {
-            Log.v(TAG, "LocationClient not connected, doing nothing");
-            return;
-        }
         if (!PermissionUtil.hasLocationPermission(mContext)) {
             Log.v(TAG, "LocationClient not connected, doing nothing");
             return;
         }
-        LocationServices.FusedLocationApi.removeLocationUpdates(mLocationClient, mGmsLocationListener);
+        LocationServices.getFusedLocationProviderClient(mContext).removeLocationUpdates(mGmsLocationListener);
         LocationRequest request = new LocationRequest();
         if (locationFetchingStrategy == LocationFetchingStrategy.HIGH_ACCURACY_GMS) {
             request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -128,14 +119,15 @@ public class GmsDeviceLocationDataSource implements NetMonDataSource {
             request.setPriority(LocationRequest.PRIORITY_LOW_POWER);
             request.setNumUpdates(1);
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(mLocationClient, request, mGmsLocationListener);
+        mLocationClient.requestLocationUpdates(request, mGmsLocationListener, null);
     }
 
-    private final LocationListener mGmsLocationListener = new LocationListener() {
+    private final LocationCallback mGmsLocationListener = new LocationCallback() {
         @Override
-        public void onLocationChanged(Location location) {
-            Log.v(TAG, "onLocationChanged, location = " + location);
-            mMostRecentLocation = location;
+        public void onLocationResult(LocationResult locationResult) {
+            for (Location location : locationResult.getLocations()) {
+                mMostRecentLocation = location;
+            }
         }
     };
 

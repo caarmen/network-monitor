@@ -23,6 +23,7 @@
  */
 package ca.rmen.android.networkmonitor.app.service.datasources;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Context;
@@ -91,47 +92,51 @@ public class CellLocationDataSource implements NetMonDataSource {
 
     private void fillCellLocation(ContentValues values) {
         //noinspection deprecation We only use this deprecated call when the new APIs aren't available or don't work.
-        CellLocation cellLocation = mTelephonyManager.getCellLocation();
-        if (cellLocation instanceof GsmCellLocation) {
-            GsmCellLocation gsmCellLocation = (GsmCellLocation) cellLocation;
-            setGsmCellInfo(values, gsmCellLocation.getCid(), gsmCellLocation.getLac());
-        } else if (cellLocation instanceof CdmaCellLocation) {
-            CdmaCellLocation cdmaCellLocation = (CdmaCellLocation) cellLocation;
-            setCdmaCellInfo(values, cdmaCellLocation.getBaseStationId(), cdmaCellLocation.getBaseStationLatitude(), cdmaCellLocation.getBaseStationLongitude(), cdmaCellLocation.getNetworkId(), cdmaCellLocation.getSystemId());
+        if (PermissionUtil.hasLocationPermission(mContext)) {
+            @SuppressLint("MissingPermission") CellLocation cellLocation = mTelephonyManager.getCellLocation();
+            if (cellLocation instanceof GsmCellLocation) {
+                GsmCellLocation gsmCellLocation = (GsmCellLocation) cellLocation;
+                setGsmCellInfo(values, gsmCellLocation.getCid(), gsmCellLocation.getLac());
+            } else if (cellLocation instanceof CdmaCellLocation) {
+                CdmaCellLocation cdmaCellLocation = (CdmaCellLocation) cellLocation;
+                setCdmaCellInfo(values, cdmaCellLocation.getBaseStationId(), cdmaCellLocation.getBaseStationLatitude(), cdmaCellLocation.getBaseStationLongitude(), cdmaCellLocation.getNetworkId(), cdmaCellLocation.getSystemId());
+            }
         }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void fillCellLocationV17(ContentValues values) {
-        List<CellInfo> cellInfos = mTelephonyManager.getAllCellInfo();
-        if (cellInfos == null || cellInfos.isEmpty()) {
-            fillCellLocation(values);
-        } else {
-            StreamSupport.stream(cellInfos).filter(CellInfo::isRegistered).forEach(cellInfo -> {
-                if (cellInfo instanceof CellInfoGsm) {
-                    CellInfoGsm gsmCellInfo = (CellInfoGsm) cellInfo;
-                    CellIdentityGsm cellIdentityGsm = gsmCellInfo.getCellIdentity();
-                    setGsmCellInfo(values, cellIdentityGsm.getCid(), cellIdentityGsm.getLac());
-                } else if (cellInfo instanceof CellInfoCdma) {
-                    CellInfoCdma cellInfoCdma = (CellInfoCdma) cellInfo;
-                    CellIdentityCdma cellIdentityCdma = cellInfoCdma.getCellIdentity();
-                    setCdmaCellInfo(values, cellIdentityCdma.getBasestationId(), cellIdentityCdma.getLatitude(), cellIdentityCdma.getLongitude(), cellIdentityCdma.getNetworkId(), cellIdentityCdma.getSystemId());
-                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 && cellInfo instanceof CellInfoWcdma) {
-                    CellInfoWcdma cellInfoWcdma = (CellInfoWcdma) cellInfo;
-                    CellIdentityWcdma cellIdentityWcdma = cellInfoWcdma.getCellIdentity();
-                    setGsmCellInfo(values, cellIdentityWcdma.getCid(), cellIdentityWcdma.getLac());
-                    values.put(NetMonColumns.GSM_CELL_PSC, cellIdentityWcdma.getPsc());
-                } else if (cellInfo instanceof CellInfoLte) {
-                    CellInfoLte cellInfoLte = (CellInfoLte) cellInfo;
-                    CellIdentityLte cellIdentityLte = cellInfoLte.getCellIdentity();
-                    values.put(NetMonColumns.LTE_CELL_CI, cellIdentityLte.getCi());
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        values.put(NetMonColumns.LTE_CELL_EARFCN, cellIdentityLte.getEarfcn());
+        if (PermissionUtil.hasLocationPermission(mContext)) {
+            @SuppressLint("MissingPermission") List<CellInfo> cellInfos = mTelephonyManager.getAllCellInfo();
+            if (cellInfos == null || cellInfos.isEmpty()) {
+                fillCellLocation(values);
+            } else {
+                StreamSupport.stream(cellInfos).filter(CellInfo::isRegistered).forEach(cellInfo -> {
+                    if (cellInfo instanceof CellInfoGsm) {
+                        CellInfoGsm gsmCellInfo = (CellInfoGsm) cellInfo;
+                        CellIdentityGsm cellIdentityGsm = gsmCellInfo.getCellIdentity();
+                        setGsmCellInfo(values, cellIdentityGsm.getCid(), cellIdentityGsm.getLac());
+                    } else if (cellInfo instanceof CellInfoCdma) {
+                        CellInfoCdma cellInfoCdma = (CellInfoCdma) cellInfo;
+                        CellIdentityCdma cellIdentityCdma = cellInfoCdma.getCellIdentity();
+                        setCdmaCellInfo(values, cellIdentityCdma.getBasestationId(), cellIdentityCdma.getLatitude(), cellIdentityCdma.getLongitude(), cellIdentityCdma.getNetworkId(), cellIdentityCdma.getSystemId());
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 && cellInfo instanceof CellInfoWcdma) {
+                        CellInfoWcdma cellInfoWcdma = (CellInfoWcdma) cellInfo;
+                        CellIdentityWcdma cellIdentityWcdma = cellInfoWcdma.getCellIdentity();
+                        setGsmCellInfo(values, cellIdentityWcdma.getCid(), cellIdentityWcdma.getLac());
+                        values.put(NetMonColumns.GSM_CELL_PSC, cellIdentityWcdma.getPsc());
+                    } else if (cellInfo instanceof CellInfoLte) {
+                        CellInfoLte cellInfoLte = (CellInfoLte) cellInfo;
+                        CellIdentityLte cellIdentityLte = cellInfoLte.getCellIdentity();
+                        values.put(NetMonColumns.LTE_CELL_CI, cellIdentityLte.getCi());
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            values.put(NetMonColumns.LTE_CELL_EARFCN, cellIdentityLte.getEarfcn());
+                        }
+                        values.put(NetMonColumns.LTE_CELL_TAC, cellIdentityLte.getTac());
+                        values.put(NetMonColumns.LTE_CELL_PCI, cellIdentityLte.getPci());
                     }
-                    values.put(NetMonColumns.LTE_CELL_TAC, cellIdentityLte.getTac());
-                    values.put(NetMonColumns.LTE_CELL_PCI, cellIdentityLte.getPci());
-                }
-            });
+                });
+            }
         }
     }
 

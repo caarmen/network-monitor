@@ -37,13 +37,13 @@ import android.os.Build;
 import android.os.RemoteException;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.List;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import android.util.Log;
 import ca.rmen.android.networkmonitor.util.PermissionUtil;
 
 /**
@@ -121,7 +121,7 @@ public class ConsumingAppDataSource implements NetMonDataSource {
         return values;
     }
 
-    @SuppressLint("HardwareIds")
+    @SuppressLint({"HardwareIds", "MissingPermission"})
     @TargetApi(Build.VERSION_CODES.M)
     private long getBytesForUid(int uid, int networkType) {
         Log.v(TAG, "getBytesForUid, uid = " + uid + ", networkType = " + networkType);

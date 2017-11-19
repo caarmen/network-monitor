@@ -35,6 +35,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.dbops.backend.clean.DBPurge;
@@ -44,7 +45,6 @@ import ca.rmen.android.networkmonitor.app.prefs.PreferencesMigrator;
 import ca.rmen.android.networkmonitor.app.service.datasources.NetMonDataSources;
 import ca.rmen.android.networkmonitor.app.service.scheduler.Scheduler;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import android.util.Log;
 
 /**
  * This service periodically retrieves network state information and writes it to the database.
@@ -52,6 +52,7 @@ import android.util.Log;
 public class NetMonService extends Service {
     private static final String TAG = Constants.TAG + NetMonService.class.getSimpleName();
 
+    private static final int PERIODIC_WAKEUP_WAKELOCK_TIMEOUT_MS = 5000;
 
     private PowerManager mPowerManager;
     private long mLastWakeUp = 0;
@@ -160,7 +161,7 @@ public class NetMonService extends Service {
                     Log.d(TAG, "acquiring lock");
                     //noinspection deprecation
                     wakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, TAG);
-                    wakeLock.acquire();
+                    wakeLock.acquire(PERIODIC_WAKEUP_WAKELOCK_TIMEOUT_MS);
                     mLastWakeUp = now;
                 }
 

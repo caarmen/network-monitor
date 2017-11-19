@@ -23,6 +23,7 @@
  */
 package ca.rmen.android.networkmonitor.app.main;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
@@ -30,13 +31,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
-import android.util.Log;
 
 /**
  * Warn the user about battery and data consumption.
@@ -59,17 +60,18 @@ public class WarningDialogFragment extends DialogFragment { // NO_UCD (use defau
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.v(TAG, "onCreateDialog: savedInstanceState = " + savedInstanceState);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        Activity activity = getActivity();
+        if (activity == null) return super.onCreateDialog(savedInstanceState);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(R.string.app_warning_title);
-        final View view = View.inflate(getActivity(), R.layout.warning_dialog, null);
+        final View view = View.inflate(activity, R.layout.warning_dialog, null);
         builder.setView(view);
         OnClickListener positiveListener = null;
         OnClickListener negativeListener = null;
-        if (getActivity() instanceof DialogButtonListener) {
+        if (activity instanceof DialogButtonListener) {
             positiveListener = (dialog, which) -> {
                 Log.v(TAG, "onClick (positive button");
-                FragmentActivity activity = getActivity();
-                if (activity == null) {
+                if (activity.isFinishing()) {
                     Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
                 } else {
                     CheckBox showWarningDialog = view.findViewById(R.id.app_warning_cb_stfu);
@@ -79,8 +81,7 @@ public class WarningDialogFragment extends DialogFragment { // NO_UCD (use defau
             };
             negativeListener = (dialog, which) -> {
                 Log.v(TAG, "onClick (negative button");
-                FragmentActivity activity = getActivity();
-                if (activity == null)
+                if (activity.isFinishing())
                     Log.w(TAG, "User clicked on dialog after it was detached from activity. Monkey?");
                 else
                     ((DialogButtonListener) activity).onAppWarningCancelClicked();

@@ -24,6 +24,15 @@
  */
 package ca.rmen.android.networkmonitor.app.service.datasources;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -34,19 +43,10 @@ import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.preference.PreferenceManager;
-
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import android.util.Log;
 import ca.rmen.android.networkmonitor.util.TelephonyUtil;
 
 /**
@@ -251,7 +251,7 @@ public class ConnectionTesterDataSource implements NetMonDataSource {
     private boolean shouldHaveDataConnection() {
         // If we're connected to a WiFi access point, we should have an internet connection.
         WifiManager wifiMgr = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiInfo connectionInfo = wifiMgr.getConnectionInfo();
+        WifiInfo connectionInfo = wifiMgr == null ? null : wifiMgr.getConnectionInfo();
         if (connectionInfo != null && connectionInfo.getNetworkId() > -1) return true;
 
         // If we're in airplane mode, we can't have an Internet connection.

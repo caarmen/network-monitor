@@ -31,6 +31,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
+import android.util.Log;
 
 import java.util.Locale;
 
@@ -41,7 +42,6 @@ import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestResult.SpeedTestStatus;
 import ca.rmen.android.networkmonitor.util.FileUtil;
-import android.util.Log;
 
 /**
  * Preferences for the speed test.
@@ -142,6 +142,9 @@ public class SpeedTestPreferencesActivity extends AppCompatActivity { // NO_UCD 
         Preference pref = mPreferenceFragment.findPreference(key);
         if (pref instanceof EditTextPreference) {
             CharSequence value = ((EditTextPreference) pref).getText();
+            if (value == null) {
+                value = "";
+            }
             String summary = getString(summaryResId, value);
             pref.setSummary(summary);
         }
