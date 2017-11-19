@@ -90,5 +90,7 @@ limitations under the License.
     <string name="gsm_ber_help">GSM bit error rate (0–7, 99) tal como se define en TS 27.007 8.5. Ausente en muchos dispositivos. Documentación: https://goo.gl/v93sYj</string>
     <string name="most_consuming_app_name_help">La aplicación que ha consumido el mayor número de datos por el tipo de red dado, desde el arranque del dispositivo.</string>
     <string name="most_consuming_app_bytes_help">La cantidad de datos consumidos por la aplicación que ha consumido el mayor número de datos por el tipo de red dado, desde el arranque del dispositivo.</string>
+    <string name="download_speed_help">Activar la prueba de velocidad en las opciones avanzadas para calcular la velocidad de descarga.</string>
+    <string name="upload_speed_help">Activar la prueba de velocidad en las opciones avanzadas, y proporcionar credenciales para un servidor FTP, para calcular la velocidad de subida.</string>
 
 </resources>
