@@ -28,13 +28,13 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
     }
 }
 apply plugin: 'com.android.application'
 apply plugin: 'com.github.ben-manes.versions'
 
-ext.googleSupportLibVersion = "27.0.1"
+ext.googleSupportLibVersion = "27.1.0"
 
 android {
     File signFile = rootProject.file('signing.properties')
@@ -55,7 +55,7 @@ android {
         android.buildTypes.release.signingConfig = null
     }
     compileSdkVersion 27
-    buildToolsVersion "27.0.1"
+    buildToolsVersion "28.0.1"
     dataBinding {
         enabled = true
     }
@@ -64,8 +64,8 @@ android {
         applicationId "ca.rmen.android.networkmonitor"
         minSdkVersion 14
         targetSdkVersion 27
-        versionName "1.30.0"
-        versionCode 13000
+        versionName "1.30.1"
+        versionCode 13001
         archivesBaseName += "-" + versionName
     }
 
@@ -115,14 +115,14 @@ dependencies {
         exclude group: "log4j"
     }
     implementation 'commons-net:commons-net:3.6'
-    implementation 'com.github.hotchemi:permissionsdispatcher:3.0.1'
-    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:3.0.1'
+    implementation 'com.github.hotchemi:permissionsdispatcher:3.3.1'
+    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:3.3.1'
 
     if (!gradle.isFoss) {
-        proprietaryImplementation 'com.google.android.gms:play-services-location:11.6.0'
+        proprietaryImplementation 'com.google.android.gms:play-services-location:12.0.1'
     }
 
-    implementation 'net.sourceforge.streamsupport:streamsupport:1.5.6'
+    implementation 'net.sourceforge.streamsupport:streamsupport:1.6.3'
 }
 
 dependencyUpdates.resolutionStrategy = {
