@@ -8,7 +8,7 @@
  * repository.
  *
  * Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
- * Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2013-2018 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().executePendingTransactions();
         mGPSVerifier = new GPSVerifier(this);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setIcon(R.drawable.ic_launcher);
+            getSupportActionBar().setIcon(R.mipmap.ic_launcher);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
         if (NetMonPreferences.getInstance(this).isServiceEnabled()) {
