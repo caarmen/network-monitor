@@ -8,7 +8,7 @@
  * repository.
  *
  * Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
- * Copyright (C) 2013-2015 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2013-2018 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.SwitchPreferenceCompat;
+import android.util.Log;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -54,7 +55,6 @@ import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.service.NetMonService;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
-import android.util.Log;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.OnShowRationale;
@@ -84,10 +84,6 @@ public class MainActivity extends AppCompatActivity
                 commit();
         getSupportFragmentManager().executePendingTransactions();
         mGPSVerifier = new GPSVerifier(this);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setIcon(R.drawable.ic_launcher);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
         if (NetMonPreferences.getInstance(this).isServiceEnabled()) {
             NetMonService.start(this);
             MainActivityPermissionsDispatcher.requestPermissionsWithPermissionCheck(this);
