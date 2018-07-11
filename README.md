@@ -1,4 +1,5 @@
-#Network Monitor
+Network Monitor
+===============
 
 A network monitor tool for Android that executes an http GET to google.com every x seconds and logs the results into a file. 
 
@@ -9,12 +10,14 @@ A network monitor tool for Android that executes an http GET to google.com every
 <a href="https://github.com/caarmen/network-monitor/releases" target="_blank">
 <img src="getapkfromgithub.png" alt="Download APK from GitHub" height="80"/></a>
 
-##Credits
+Credits
+-------
 
 This project was initially created by Benoit 'BoD' Lubek (BoD@JRAF.org / http://github.com/BoD),
 but most of the current code was contributed by Carmen Alvarez (c@rmen.ca / http://github.com/caarmen).
 
-##Licence
+Licence
+-------
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
