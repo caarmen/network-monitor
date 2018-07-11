@@ -38,6 +38,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.SwitchPreferenceCompat;
+import android.util.Log;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -54,7 +55,6 @@ import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.service.NetMonService;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
-import android.util.Log;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.OnShowRationale;
@@ -84,10 +84,6 @@ public class MainActivity extends AppCompatActivity
                 commit();
         getSupportFragmentManager().executePendingTransactions();
         mGPSVerifier = new GPSVerifier(this);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setIcon(R.mipmap.ic_launcher);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
         if (NetMonPreferences.getInstance(this).isServiceEnabled()) {
             NetMonService.start(this);
             MainActivityPermissionsDispatcher.requestPermissionsWithPermissionCheck(this);
