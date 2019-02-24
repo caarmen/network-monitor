@@ -26,7 +26,7 @@ package ca.rmen.android.networkmonitor.app;
 import android.content.Context;
 import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.AppCompatDelegate;
+import androidx.appcompat.app.AppCompatDelegate;
 import android.widget.TextView;
 
 import ca.rmen.android.networkmonitor.R;

@@ -35,11 +35,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.EditTextPreference;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceManager;
+import androidx.core.app.TaskStackBuilder;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.EditTextPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 

@@ -32,10 +32,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.OpenableColumns;
-import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.FileProvider;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+import androidx.fragment.app.FragmentActivity;
+import androidx.core.content.FileProvider;
 
 import java.io.File;
 import java.util.List;

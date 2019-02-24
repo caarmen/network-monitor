@@ -34,7 +34,7 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'com.github.ben-manes.versions'
 
-ext.googleSupportLibVersion = "27.1.0"
+ext.googleSupportLibVersion = '1.0.0-beta01'
 
 android {
     File signFile = rootProject.file('signing.properties')
@@ -106,10 +106,10 @@ android {
 dependencies {
 
     implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
-    implementation "com.android.support:appcompat-v7:${project.googleSupportLibVersion}"
-    implementation "com.android.support:design:${project.googleSupportLibVersion}"
-    implementation "com.android.support:preference-v7:${project.googleSupportLibVersion}"
-    implementation "com.android.support:preference-v14:${project.googleSupportLibVersion}"
+    implementation "androidx.appcompat:appcompat:${project.googleSupportLibVersion}"
+    implementation "com.google.android.material:material:${project.googleSupportLibVersion}"
+    implementation "androidx.preference:preference:${project.googleSupportLibVersion}"
+    implementation "androidx.legacy:legacy-preference-v14:${project.googleSupportLibVersion}"
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation ('net.sourceforge.jexcelapi:jxl:2.6.12') {
         exclude group: "log4j"

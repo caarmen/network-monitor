@@ -25,7 +25,7 @@ package ca.rmen.android.networkmonitor.app.main;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.support.design.widget.Snackbar;
+import com.google.android.material.snackbar.Snackbar;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;

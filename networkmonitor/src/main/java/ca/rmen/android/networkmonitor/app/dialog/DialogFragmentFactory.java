@@ -24,8 +24,8 @@
 package ca.rmen.android.networkmonitor.app.dialog;
 
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 
 import java.util.Arrays;
 

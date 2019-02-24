@@ -29,7 +29,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.WorkerThread;
 import android.widget.Toast;
 
 import ca.rmen.android.networkmonitor.R;
