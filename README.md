@@ -3,13 +3,6 @@ Network Monitor
 
 A network monitor tool for Android that executes an http GET to google.com every x seconds and logs the results into a file. 
 
-<a href="https://f-droid.org/app/ca.rmen.android.networkmonitor" target="_blank">
-<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80"/></a>
-<a href="https://play.google.com/store/apps/details?id=ca.rmen.android.networkmonitor" target="_blank">
-<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="80"/></a>
-<a href="https://github.com/caarmen/network-monitor/releases" target="_blank">
-<img src="getapkfromgithub.png" alt="Download APK from GitHub" height="80"/></a>
-
 Credits
 -------
 
