@@ -48,12 +48,6 @@ limitations under the License.
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
-        <name>PermissionsDispatcher</name>
-        <url>https://github.com/hotchemi/PermissionsDispatcher</url>
-        <copyright>Copyright (c) Shintaro Katafuchi, Marcel Schnelle, Yoshinori Isogai</copyright>
-        <license>Apache Software License 2.0</license>
-    </notice>
-    <notice>
         <name>streamsupport</name>
         <url>https://github.com/streamsupport/streamsupport</url>
         <copyright>Copyright (c) Oracle</copyright>

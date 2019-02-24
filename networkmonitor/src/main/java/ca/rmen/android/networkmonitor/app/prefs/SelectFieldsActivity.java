@@ -27,24 +27,26 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment;
@@ -53,16 +55,13 @@ import ca.rmen.android.networkmonitor.databinding.SelectFieldsBinding;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import ca.rmen.android.networkmonitor.util.PermissionUtil;
 import ca.rmen.android.networkmonitor.util.TextUtil;
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.OnPermissionDenied;
-import permissions.dispatcher.RuntimePermissions;
 
-@RuntimePermissions
 public class SelectFieldsActivity extends AppCompatActivity
         implements ConfirmDialogFragment.DialogButtonListener {
     private static final String TAG = Constants.TAG + SelectFieldsActivity.class.getSimpleName();
     private static final int ACTION_REQUEST_PHONE_STATE_PERMISSION = 1;
     private static final int ACTION_REQUEST_USAGE_PERMISSION = 2;
+    private static final int PERMISSION_PHONE_STATE_REQUEST_CODE = 9401;
     private SelectedFieldsAdapter mSelectFieldsAdapter;
     private SelectFieldsBinding mBinding;
 
@@ -177,7 +176,6 @@ public class SelectFieldsActivity extends AppCompatActivity
         }
     }
 
-    @NeedsPermission({Manifest.permission.READ_PHONE_STATE})
     @TargetApi(Build.VERSION_CODES.M)
     void requestUsagePermission() {
         Log.v(TAG, "Read phone state permission granted");
@@ -195,7 +193,6 @@ public class SelectFieldsActivity extends AppCompatActivity
         }
     }
 
-    @OnPermissionDenied({Manifest.permission.READ_PHONE_STATE})
     @TargetApi(Build.VERSION_CODES.M)
     void onPermissionsDenied() {
         Snackbar.make(getWindow().getDecorView().getRootView(), R.string.permission_data_usage_denied, Snackbar.LENGTH_LONG).show();
@@ -205,14 +202,20 @@ public class SelectFieldsActivity extends AppCompatActivity
     @TargetApi(Build.VERSION_CODES.M)
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        SelectFieldsActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+        if (PERMISSION_PHONE_STATE_REQUEST_CODE == requestCode) {
+            if (PermissionUtil.areAllGranted(grantResults)) {
+                requestUsagePermission();
+            } else {
+                onPermissionsDenied();
+            }
+        }
     }
 
     @Override
     public void onOkClicked(int actionId, Bundle extras) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (actionId == ACTION_REQUEST_PHONE_STATE_PERMISSION) {
-                SelectFieldsActivityPermissionsDispatcher.requestUsagePermissionWithPermissionCheck(this);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, PERMISSION_PHONE_STATE_REQUEST_CODE);
             } else if (actionId == ACTION_REQUEST_USAGE_PERMISSION) {
                 startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
             }
