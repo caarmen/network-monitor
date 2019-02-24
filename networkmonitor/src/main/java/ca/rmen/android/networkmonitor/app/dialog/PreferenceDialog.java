@@ -27,7 +27,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;

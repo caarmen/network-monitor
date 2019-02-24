@@ -24,11 +24,11 @@
 package ca.rmen.android.networkmonitor.app.prefs.hack;
 
 import android.os.Build;
-import android.support.v14.preference.MultiSelectListPreference;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
+import androidx.preference.MultiSelectListPreference;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
 
 public class PreferenceFragmentCompatHack {
     private static final String FRAGMENT_TAG_DIALOG = "android.support.v7.preference.PreferenceFragment.DIALOG";

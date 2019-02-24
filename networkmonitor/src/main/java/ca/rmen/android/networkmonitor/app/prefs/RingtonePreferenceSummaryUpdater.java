@@ -28,8 +28,8 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.v7.preference.Preference;
+import androidx.annotation.NonNull;
+import androidx.preference.Preference;
 
 import ca.rmen.android.networkmonitor.R;
 

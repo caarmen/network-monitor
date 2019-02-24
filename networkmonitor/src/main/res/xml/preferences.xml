@@ -28,7 +28,7 @@ limitations under the License.
 
     <PreferenceCategory android:title="@string/pref_category_monitoring_settings" >
         <!--suppress AndroidElementNotAllowed -->
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:icon="@drawable/ic_pref_enable_service"
             android:key="PREF_SERVICE_ENABLED"

@@ -32,7 +32,7 @@ import java.util.TreeSet;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Build;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
