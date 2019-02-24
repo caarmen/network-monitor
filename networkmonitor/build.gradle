@@ -64,7 +64,7 @@ android {
     defaultConfig {
         applicationId "ca.rmen.android.networkmonitor"
         minSdkVersion 14
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionName "1.31.0"
         versionCode 13100
         archivesBaseName += "-" + versionName
