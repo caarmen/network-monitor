@@ -31,11 +31,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import androidx.fragment.app.FragmentActivity;
 import android.text.TextUtils;
-
-import ca.rmen.android.networkmonitor.Constants;
 import android.util.Log;
+
+import androidx.fragment.app.FragmentActivity;
+import ca.rmen.android.networkmonitor.Constants;
 
 /**
  * Invisible activity which expects a file as a Uri in the {@link Intent#EXTRA_STREAM} extra.
@@ -53,7 +53,7 @@ public class SaveToStorageActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate: bundle=" + savedInstanceState);
         Parcelable extra = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
-        if (extra == null || !(extra instanceof Uri)) {
+        if (!(extra instanceof Uri)) {
             SaveToStorage.displayErrorToast(this);
             return;
         }

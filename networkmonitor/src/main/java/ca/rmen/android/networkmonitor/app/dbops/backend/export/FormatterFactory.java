@@ -26,6 +26,7 @@ package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -38,7 +39,6 @@ import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.CellIdFormat;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import android.util.Log;
 
 /**
  * Create the appropriate Formatter instance depending on the formatter style.
@@ -66,11 +66,11 @@ public class FormatterFactory {
      * This formats values with a format which is common to all export types.
      */
     private static class DefaultFormatter implements Formatter {
-        public final SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss", Locale.US);
+        final SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss", Locale.US);
         private final CellIdFormat mCellIdFormat;
         private final Context mContext;
 
-        public DefaultFormatter(Context context) {
+        DefaultFormatter(Context context) {
             mContext = context;
             mCellIdFormat = NetMonPreferences.getInstance(context).getCellIdFormat();
             Log.v(TAG, "Constructor: cellIdFormat = " + mCellIdFormat);
@@ -143,7 +143,7 @@ public class FormatterFactory {
 
         private final List<String> mTextColumnNames;
 
-        public XMLFormatter(Context context) {
+        XMLFormatter(Context context) {
             super(context);
             String[] textColumns = context.getResources().getStringArray(R.array.text_columns);
             mTextColumnNames = Arrays.asList(textColumns);

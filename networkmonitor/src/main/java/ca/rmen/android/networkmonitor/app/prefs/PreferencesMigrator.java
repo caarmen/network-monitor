@@ -25,8 +25,6 @@ package ca.rmen.android.networkmonitor.app.prefs;
 
 import android.content.Context;
 
-import ca.rmen.android.networkmonitor.BuildConfig;
-
 /**
  * Migrates/fixes any settings from previous installations.
  */

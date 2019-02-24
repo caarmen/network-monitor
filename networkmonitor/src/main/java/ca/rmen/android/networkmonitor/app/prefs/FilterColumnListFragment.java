@@ -28,10 +28,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.fragment.app.ListFragment;
-import androidx.loader.app.LoaderManager.LoaderCallbacks;
-import androidx.loader.content.CursorLoader;
-import androidx.loader.content.Loader;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.AbsListView;
@@ -40,6 +36,12 @@ import android.widget.ListView;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.ListFragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.app.LoaderManager.LoaderCallbacks;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.FilterPreferences.Selection;
@@ -59,16 +61,19 @@ public class FilterColumnListFragment extends ListFragment {
      */
     static class FilterListItem {
         // The value to use for the query selection.
+        @NonNull
         final String value;
 
         // The string to display for this item in the list.
+        @NonNull
         private final String label;
 
-        private FilterListItem(String value, String label) {
+        private FilterListItem(@NonNull String value, @NonNull String label) {
             this.value = value;
             this.label = label;
         }
 
+        @NonNull
         @Override
         public String toString() {
             return label;
@@ -82,17 +87,17 @@ public class FilterColumnListFragment extends ListFragment {
         Activity activity = getActivity();
         if (activity != null) {
             mColumnName = activity.getIntent().getStringExtra(FilterColumnActivity.EXTRA_COLUMN_NAME);
-            getLoaderManager().initLoader(URL_LOADER, null, mLoaderCallbacks);
+            LoaderManager.getInstance(this).initLoader(URL_LOADER, null, mLoaderCallbacks);
         }
 
     }
 
     private final LoaderCallbacks<Cursor> mLoaderCallbacks = new LoaderCallbacks<Cursor>() {
         @Override
+        @NonNull
         public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
             Log.v(TAG, "onCreateLoader, loaderId = " + loaderId + ", bundle = " + bundle);
-            Activity activity = getActivity();
-            if (activity == null) return null;
+            Activity activity = requireActivity();
             String[] projection = new String[] { UniqueValuesColumns.VALUE, UniqueValuesColumns.COUNT };
             // We only want to show values for this column that appear with all the filters for the other columns being used at the same time.
             // So we build a query with a selection applying the filters on all the other columns.
@@ -102,7 +107,7 @@ public class FilterColumnListFragment extends ListFragment {
         }
 
         @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
             Log.v(TAG, "onLoadFinished, loader = " + loader + ", cursor = " + cursor);
             Context context = getActivity();
             if (context == null) return;
@@ -141,7 +146,7 @@ public class FilterColumnListFragment extends ListFragment {
         }
 
         @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
+        public void onLoaderReset(@NonNull Loader<Cursor> loader) {
             Log.v(TAG, "onLoaderReset " + loader);
         }
     };

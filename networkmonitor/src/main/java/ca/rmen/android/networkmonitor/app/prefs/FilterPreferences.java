@@ -25,14 +25,15 @@ package ca.rmen.android.networkmonitor.app.prefs;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import android.util.Log;
 
 
 /**
@@ -53,6 +54,7 @@ public class FilterPreferences {
         }
 
         @Override
+        @NonNull
         public String toString() {
             return Selection.class.getSimpleName() + ": " + selectionString + ", " + Arrays.toString(selectionArgs);
         }
@@ -93,7 +95,7 @@ public class FilterPreferences {
             }
         }
         String selectionString = TextUtils.join(" AND ", selectionStrings);
-        Selection result = new Selection(selectionString, selectionArgs.toArray(new String[selectionArgs.size()]));
+        Selection result = new Selection(selectionString, selectionArgs.toArray(new String[0]));
         Log.v(TAG, "returning " + result);
         return result;
     }
@@ -130,7 +132,7 @@ public class FilterPreferences {
                 if (i < values.size() - 1) selectionString.append(",");
             }
             selectionString.append("))\n");
-            return new Selection(selectionString.toString(), selectionArgs.toArray(new String[selectionArgs.size()]));
+            return new Selection(selectionString.toString(), selectionArgs.toArray(new String[0]));
         }
         return null;
     }

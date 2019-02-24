@@ -23,6 +23,7 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
+import androidx.annotation.NonNull;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 
 /**
@@ -64,6 +65,7 @@ public class SortPreferences {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return SortPreferences.class.getSimpleName() + " " + sortColumnName + " " + sortOrder;
     }

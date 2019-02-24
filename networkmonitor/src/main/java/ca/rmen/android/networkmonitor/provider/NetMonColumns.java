@@ -159,7 +159,7 @@ public class NetMonColumns implements BaseColumns {
                 result.add(columnName);
             }
         }
-        return result.toArray(new String[result.size()]);
+        return result.toArray(new String[0]);
     }
 
     /**

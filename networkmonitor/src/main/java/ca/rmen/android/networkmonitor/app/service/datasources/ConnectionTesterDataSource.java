@@ -42,6 +42,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
@@ -154,7 +155,7 @@ public class ConnectionTesterDataSource implements NetMonDataSource {
 
             Log.d(TAG, "getSocketTestResult Sending GET...");
             OutputStream outputStream = socket.getOutputStream();
-            outputStream.write(HTTP_GET.getBytes("utf-8"));
+            outputStream.write(HTTP_GET.getBytes(StandardCharsets.UTF_8));
             outputStream.flush();
             Log.d(TAG, "getSocketTestResult Sent GET");
             InputStream inputStream = socket.getInputStream();

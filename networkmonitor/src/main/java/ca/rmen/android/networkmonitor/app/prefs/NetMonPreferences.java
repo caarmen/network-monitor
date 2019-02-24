@@ -30,13 +30,14 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import androidx.core.app.NotificationCompat;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.SortPreferences.SortOrder;
 import ca.rmen.android.networkmonitor.app.service.scheduler.AlarmManagerScheduler;
@@ -253,6 +254,7 @@ public class NetMonPreferences {
     /**
      * @return the list of columns which will appear in the log view. This is only for display. All columns will be exported.
      */
+    @NonNull
     public List<String> getSelectedColumns() {
         String selectedColumnsString = mSharedPrefs.getString(NetMonPreferences.PREF_SELECTED_COLUMNS, null);
         final String[] selectedColumns;

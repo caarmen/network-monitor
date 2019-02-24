@@ -23,6 +23,7 @@
  */
 package ca.rmen.android.networkmonitor.app.prefs;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -108,7 +109,7 @@ class SelectedFieldsAdapter extends RecyclerView.Adapter<SelectedFieldsAdapter.S
     }
 
     @Override
-    public void onBindViewHolder(SelectedFieldHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SelectedFieldHolder holder, int position) {
         final SelectedField selectedField = mSelectedFields[position];
         holder.binding.fieldName.setText(selectedField.label);
         holder.binding.fieldHelp.setVisibility(TextUtils.isEmpty(selectedField.tip) ? View.GONE : View.VISIBLE);
@@ -123,7 +124,8 @@ class SelectedFieldsAdapter extends RecyclerView.Adapter<SelectedFieldsAdapter.S
     }
 
     @Override
-    public SelectedFieldHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    public SelectedFieldHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new SelectedFieldHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.field_item, parent, false));
     }
 

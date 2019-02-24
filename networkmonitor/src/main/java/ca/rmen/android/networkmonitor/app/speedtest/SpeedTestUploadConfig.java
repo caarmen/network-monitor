@@ -23,9 +23,11 @@
  */
 package ca.rmen.android.networkmonitor.app.speedtest;
 
+import android.text.TextUtils;
+
 import java.io.File;
 
-import android.text.TextUtils;
+import androidx.annotation.NonNull;
 
 public class SpeedTestUploadConfig {
     final String server;
@@ -61,6 +63,7 @@ public class SpeedTestUploadConfig {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return SpeedTestUploadConfig.class.getSimpleName() + " [server=" + server + ", port=" + port + ", user=" + user + ", path=" + path + ", file=" + file
                 + "]";
