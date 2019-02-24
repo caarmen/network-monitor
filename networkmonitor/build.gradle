@@ -34,7 +34,7 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'com.github.ben-manes.versions'
 
-ext.googleSupportLibVersion = '1.0.0-beta01'
+ext.googleSupportLibVersion = '1.0.0'
 
 android {
     File signFile = rootProject.file('signing.properties')
