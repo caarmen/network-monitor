@@ -34,7 +34,6 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.os.RemoteException;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -151,7 +150,7 @@ public class ConsumingAppDataSource implements NetMonDataSource {
         }
         // I know it's not good to catch a generic RuntimeException, but I saw some undocumented
         // IllegalArgumentExceptions using the queryDetailsForUid() method.
-        catch (RuntimeException | RemoteException e) {
+        catch (RuntimeException e) {
             Log.v(TAG, "Error getting network stats for uid " + uid + ": " + e.getMessage(), e);
             return 0;
         }
