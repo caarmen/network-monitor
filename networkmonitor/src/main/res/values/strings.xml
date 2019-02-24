@@ -113,8 +113,7 @@ limitations under the License.
     <string name="speed_test_missing_info_dialog_title">Missing information</string>
     <string name="speed_test_missing_info_dialog_message">The speed test cannot be enabled because the URL field is empty</string>
     <string name="speed_test_disabled">Disabled</string>
-    <string name="speed_test_good_enough">Good enough!</string>
-    <string name="speed_test_play_store">I want more&#8230;</string>
+    <string name="speed_test_close">Close</string>
     <string name="speed_test_about_file">file:///android_asset/speed_test_about.html</string>
 
     <!-- Polling frequency strings -->

@@ -65,15 +65,7 @@ limitations under the License.
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="okClicked"
-            android:text="@string/speed_test_good_enough" />
+            android:text="@string/speed_test_close" />
 
-        <Button
-            style="?android:attr/buttonBarButtonStyle"
-            android:id="@+id/button_nok"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="playStoreClicked"
-            android:text="@string/speed_test_play_store" />
     </LinearLayout>
 </LinearLayout>

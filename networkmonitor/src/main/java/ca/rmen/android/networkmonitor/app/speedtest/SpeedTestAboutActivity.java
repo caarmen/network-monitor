@@ -23,17 +23,14 @@
  */
 package ca.rmen.android.networkmonitor.app.speedtest;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import android.util.Log;
 
 /**
  * Activity which shows an HTML explanation of the speed test limitations
@@ -56,19 +53,6 @@ public class SpeedTestAboutActivity extends AppCompatActivity {
     public void okClicked(View view) {
         Log.v(TAG, "okClicked");
         finish();
-    }
-
-    @SuppressWarnings("UnusedParameters")
-    public void playStoreClicked(View view) {
-        Log.v(TAG, "playStoreClicked");
-        String playStoreUrl = "https://play.google.com/store/search?c=apps&q=speed test";
-        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(playStoreUrl));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-        }
-        startActivity(intent);
-
     }
 
 }

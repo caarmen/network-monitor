@@ -100,8 +100,7 @@ limitations under the License.
     <string name="speed_test_missing_info_dialog_title">Informations manquantes</string>
     <string name="speed_test_missing_info_dialog_message">Le test de vitesse ne peut être activé parce que le champ URL est vide.</string>
     <string name="speed_test_disabled">Désactivé</string>
-    <string name="speed_test_good_enough">Très bien !</string>
-    <string name="speed_test_play_store">J\'en veux +&#8230;</string>
+    <string name="speed_test_close">Fermer</string>
     <string name="speed_test_about_file">file:///android_asset/speed_test_about-fr.html</string>
 
     <!-- Polling frequency strings -->
