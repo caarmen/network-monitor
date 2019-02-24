@@ -26,7 +26,7 @@ package ca.rmen.android.networkmonitor.app.speedtest;
 import android.content.SharedPreferences;
 import android.net.TrafficStats;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import java.io.FileOutputStream;

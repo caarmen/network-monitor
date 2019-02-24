@@ -34,8 +34,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import android.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;

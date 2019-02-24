@@ -24,7 +24,7 @@
 package ca.rmen.android.networkmonitor.app.prefs.hack;
 
 import android.content.Context;
-import android.support.v7.preference.EditTextPreference;
+import androidx.preference.EditTextPreference;
 import android.util.AttributeSet;
 
 

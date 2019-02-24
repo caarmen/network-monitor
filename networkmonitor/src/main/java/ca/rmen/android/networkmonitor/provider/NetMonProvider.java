@@ -39,7 +39,7 @@ import android.database.sqlite.SQLiteQuery;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import java.lang.reflect.Field;

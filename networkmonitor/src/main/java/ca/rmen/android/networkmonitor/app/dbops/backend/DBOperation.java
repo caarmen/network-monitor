@@ -23,7 +23,7 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import ca.rmen.android.networkmonitor.app.dbops.ProgressListener;
 

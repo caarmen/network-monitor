@@ -34,7 +34,8 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'com.github.ben-manes.versions'
 
-ext.googleSupportLibVersion = "27.1.0"
+ext.androidxVersion = '1.0.0'
+ext.appCompatVersion= '1.0.2'
 
 android {
     File signFile = rootProject.file('signing.properties')
@@ -106,10 +107,10 @@ android {
 dependencies {
 
     implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
-    implementation "com.android.support:appcompat-v7:${project.googleSupportLibVersion}"
-    implementation "com.android.support:design:${project.googleSupportLibVersion}"
-    implementation "com.android.support:preference-v7:${project.googleSupportLibVersion}"
-    implementation "com.android.support:preference-v14:${project.googleSupportLibVersion}"
+    implementation "androidx.appcompat:appcompat:${project.appCompatVersion}"
+    implementation "com.google.android.material:material:${project.androidxVersion}"
+    implementation "androidx.preference:preference:${project.androidxVersion}"
+    implementation "androidx.legacy:legacy-preference-v14:${project.androidxVersion}"
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation ('net.sourceforge.jexcelapi:jxl:2.6.12') {
         exclude group: "log4j"
@@ -138,14 +139,16 @@ dependencyUpdates.resolutionStrategy = {
   }
 }
 
+/* Not needed now, but keep for later (since I never remember how to do this when needed)
 configurations.all {
     resolutionStrategy {
         eachDependency { details ->
             if (details.requested.group == 'com.android.support'
                     && details.requested.name != 'multidex'
                     && details.requested.name != 'multidex-instrumentation') {
-                details.useVersion project.googleSupportLibVersion
+                details.useVersion project.androidxVersion
             }
         }
     }
 }
+*/

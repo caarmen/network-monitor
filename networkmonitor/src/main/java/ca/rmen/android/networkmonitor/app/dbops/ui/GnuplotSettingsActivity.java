@@ -25,9 +25,9 @@ package ca.rmen.android.networkmonitor.app.dbops.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.Preference;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
 import android.view.View;
 import android.widget.TextView;
 
