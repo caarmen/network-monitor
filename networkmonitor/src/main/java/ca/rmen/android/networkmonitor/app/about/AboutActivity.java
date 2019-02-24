@@ -8,7 +8,7 @@
  * repository.
  *
  * Copyright (C) 2013 Benoit 'BoD' Lubek (BoD@JRAF.org)
- * Copyright (C) 2013-2017 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2013-2019 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import androidx.annotation.IdRes;
-import androidx.core.app.NavUtils;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
@@ -38,6 +35,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.IdRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.Theme;

@@ -8,7 +8,7 @@
  * repository.
  *
  * Copyright (C) 2015 Rasmus Holm
- * Copyright (C) 2015 Carmen Alvarez
+ * Copyright (C) 2015-2019 Carmen Alvarez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
