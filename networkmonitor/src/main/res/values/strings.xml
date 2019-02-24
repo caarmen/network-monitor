@@ -70,7 +70,7 @@ limitations under the License.
     <!-- Strings for the about screen -->
     <string name="about_title">About</string>
     <string name="about_version" translatable="false">%1$s v%2$s</string>
-    <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2017 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
+    <string name="about_copyright_1" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2019 Carmen Alvarez\nc@rmen.ca\nhttp://rmen.ca</string>
     <string name="about_copyright_2" tools:ignore="TypographyOther">Copyright (C) 2013&#8211;2014 Benoit \'BoD\' Lubek\nBoD@JRAF.org\nhttp://JRAF.org</string>
     <string name="about_legal">License/disclaimer</string>
     <string name="about_privacyUrl">Privacy policy:\nhttps://github.com/caarmen/network-monitor/blob/master/PRIVACY.md</string>
