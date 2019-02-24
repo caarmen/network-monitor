@@ -21,10 +21,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-gradle.ext.isFoss = false
-for(String taskName : startParameter.taskNames) {
-    if(taskName.contains("Foss")) {
-        gradle.ext.isFoss = true
-    }
-}
 include ':networkmonitor'
