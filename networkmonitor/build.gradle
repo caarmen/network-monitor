@@ -106,8 +106,6 @@ dependencies {
         exclude group: "log4j"
     }
     implementation 'commons-net:commons-net:3.6'
-    implementation 'com.github.hotchemi:permissionsdispatcher:4.1.0'
-    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:4.1.0'
 
     implementation 'net.sourceforge.streamsupport:streamsupport:1.7.0'
 }

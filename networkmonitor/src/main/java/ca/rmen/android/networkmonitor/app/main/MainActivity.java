@@ -27,6 +27,7 @@ package ca.rmen.android.networkmonitor.app.main;
 import android.Manifest;
 import android.app.ActivityManager;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
@@ -40,6 +41,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreferenceCompat;
@@ -55,13 +57,8 @@ import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferenceFragmentCompat;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
 import ca.rmen.android.networkmonitor.app.service.NetMonService;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.OnPermissionDenied;
-import permissions.dispatcher.OnShowRationale;
-import permissions.dispatcher.PermissionRequest;
-import permissions.dispatcher.RuntimePermissions;
+import ca.rmen.android.networkmonitor.util.PermissionUtil;
 
-@RuntimePermissions
 public class MainActivity extends AppCompatActivity
         implements ConfirmDialogFragment.DialogButtonListener,
         ChoiceDialogFragment.DialogItemListener,
@@ -72,6 +69,7 @@ public class MainActivity extends AppCompatActivity
     private static final String PREF_CLEAR_LOG_FILE = "PREF_CLEAR_LOG_FILE";
     private static final int ID_ACTION_SHARE = 1;
     private static final int ID_ACTION_CLEAR = 2;
+    private static final int PERMISSIONS_REQUEST_LOCATION = 59559;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,11 +79,11 @@ public class MainActivity extends AppCompatActivity
                 beginTransaction().
                 replace(android.R.id.content, mPreferenceFragment).
                 commit();
-        getSupportFragmentManager().executePendingTransactions();
         if (NetMonPreferences.getInstance(this).isServiceEnabled()) {
             NetMonService.start(this);
-            MainActivityPermissionsDispatcher.requestPermissionsWithPermissionCheck(this);
+            requestPermissions();
         }
+        getSupportFragmentManager().executePendingTransactions();
         // Use strict mode for monkey tests. We can't enable strict mode for normal use
         // because, when sharing (exporting), the mail app may read the attachment in
         // the main thread.
@@ -94,32 +92,6 @@ public class MainActivity extends AppCompatActivity
 
         mPreferenceFragment.findPreference(PREF_SHARE).setOnPreferenceClickListener(mOnPreferenceClickListener);
         mPreferenceFragment.findPreference(PREF_CLEAR_LOG_FILE).setOnPreferenceClickListener(mOnPreferenceClickListener);
-    }
-
-    @NeedsPermission({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
-    void requestPermissions() {
-        Log.v(TAG, "Permissions granted");
-    }
-
-    @OnShowRationale({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
-    void showRationaleForPermissions(final PermissionRequest request) {
-        new AlertDialog.Builder(this)
-                .setMessage(R.string.permission_location_rationale)
-                .setPositiveButton(R.string.permission_button_allow, (dialogInterface, i) -> request.proceed())
-                .setNegativeButton(R.string.permission_button_deny, (dialogInterface, i) -> request.cancel())
-                .show();
-    }
-
-    @OnPermissionDenied({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
-    void onPermissionsDenied() {
-        Snackbar.make(getWindow().getDecorView().getRootView(), R.string.permission_location_denied, Snackbar.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        // NOTE: delegate the permission handling to generated method
-        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
     @Override
@@ -194,7 +166,6 @@ public class MainActivity extends AppCompatActivity
                 } else {
                     onAppWarningOkClicked();
                 }
-                MainActivityPermissionsDispatcher.requestPermissionsWithPermissionCheck(MainActivity.this);
             }
         } else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
             if (prefs.isFastPollingEnabled()) {
@@ -218,7 +189,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onCancelClicked(int actionId, Bundle extras) {
-
     }
 
     @Override
@@ -234,7 +204,44 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onAppWarningOkClicked() {
-        NetMonService.start(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions();
+        }
+    }
+
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                PERMISSIONS_REQUEST_LOCATION);
+    }
+
+    private void onPermissionGranted() {
+        Log.v(TAG, "Permissions granted");
+    }
+
+    private void onPermissionsDenied() {
+        Snackbar.make(getWindow().getDecorView().getRootView(), R.string.permission_location_denied, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (PERMISSIONS_REQUEST_LOCATION == requestCode) {
+            if (!PermissionUtil.areAllGranted(grantResults)) {
+                if (PermissionUtil.shouldShowRationale(this, permissions)) {
+                    new AlertDialog.Builder(this)
+                            .setMessage(R.string.permission_location_rationale)
+                            .setPositiveButton(R.string.permission_button_allow, (dialogInterface, i) -> requestPermissions())
+                            .setNegativeButton(R.string.permission_button_deny, (dialogInterface, i) -> onPermissionsDenied())
+                            .show();
+                } else {
+                    onPermissionsDenied();
+                }
+            } else {
+                onPermissionGranted();
+            }
+        }
     }
 
     @Override
