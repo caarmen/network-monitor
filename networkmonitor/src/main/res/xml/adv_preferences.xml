@@ -26,6 +26,7 @@ limitations under the License.
     android:key="preferenceScreen" >
 
     <PreferenceCategory android:title="@string/pref_category_report_content" >
+        <!--suppress AndroidElementNotAllowed -->
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:icon="@drawable/ic_pref_enable_connection_test"
@@ -100,6 +101,7 @@ limitations under the License.
             android:summary="@string/pref_summary_notification_priority"
             android:title="@string/pref_title_notification_priority" />
 
+        <!--suppress AndroidElementNotAllowed -->
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:icon="@drawable/ic_pref_notification_enabled"

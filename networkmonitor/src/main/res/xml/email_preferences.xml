@@ -43,6 +43,7 @@ limitations under the License.
             android:summary="@string/pref_summary_email_recipients"
             android:title="@string/pref_title_email_recipients" />
 
+        <!--suppress AndroidElementNotAllowed -->
         <androidx.preference.MultiSelectListPreference
             android:defaultValue="@array/empty_array"
             android:entries="@array/preferences_email_report_formats_labels"
@@ -74,6 +75,7 @@ limitations under the License.
             android:key="PREF_EMAIL_USER"
             android:summary="@string/pref_summary_email_user"
             android:title="@string/pref_title_email_user" />
+        <!--suppress AndroidElementNotAllowed -->
         <ca.rmen.android.networkmonitor.app.prefs.hack.PasswordPreference
             android:icon="@drawable/ic_pref_email_password"
             android:key="PREF_EMAIL_PASSWORD"
