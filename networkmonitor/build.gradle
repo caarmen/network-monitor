@@ -106,7 +106,7 @@ android {
 
 dependencies {
 
-    implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
+    implementation 'de.psdev.licensesdialog:licensesdialog:2.0.0'
     implementation "androidx.appcompat:appcompat:${project.appCompatVersion}"
     implementation "com.google.android.material:material:${project.androidxVersion}"
     implementation "androidx.preference:preference:${project.androidxVersion}"
@@ -116,8 +116,8 @@ dependencies {
         exclude group: "log4j"
     }
     implementation 'commons-net:commons-net:3.6'
-    implementation 'com.github.hotchemi:permissionsdispatcher:3.3.1'
-    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:3.3.1'
+    implementation 'com.github.hotchemi:permissionsdispatcher:4.1.0'
+    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:4.1.0'
 
     if (!gradle.isFoss) {
         proprietaryImplementation 'com.google.android.gms:play-services-location:16.0.0'
