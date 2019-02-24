@@ -102,12 +102,11 @@ public class AboutActivity extends AppCompatActivity {
                     .setNotices(R.raw.licenses)
                     .setThemeResourceId(R.style.AppCompatAlertDialogStyle)
                     .setShowFullLicenseText(false)
-                    .setUseAppCompat(true)
                     .setIncludeOwnLicense(true)
                     .setDividerColorRes(R.color.netmon_color)
                     .build();
 
-            fragment.show(getSupportFragmentManager(), null);
+            fragment.show(getSupportFragmentManager(), TAG);
         } catch (Exception e) {
             Log.w(TAG, "Couldn't show license dialog", e);
         }

@@ -54,8 +54,8 @@ android {
     } else  {
         android.buildTypes.release.signingConfig = null
     }
-    compileSdkVersion 27
-    buildToolsVersion "28.0.1"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
     dataBinding {
         enabled = true
     }
@@ -119,10 +119,10 @@ dependencies {
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:3.3.1'
 
     if (!gradle.isFoss) {
-        proprietaryImplementation 'com.google.android.gms:play-services-location:12.0.1'
+        proprietaryImplementation 'com.google.android.gms:play-services-location:16.0.0'
     }
 
-    implementation 'net.sourceforge.streamsupport:streamsupport:1.6.3'
+    implementation 'net.sourceforge.streamsupport:streamsupport:1.7.0'
 }
 
 dependencyUpdates.resolutionStrategy = {
