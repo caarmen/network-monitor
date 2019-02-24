@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity
         ChoiceDialogFragment.DialogItemListener,
         WarningDialogFragment.DialogButtonListener {
     private static final String TAG = Constants.TAG + MainActivity.class.getSimpleName();
-    private GPSVerifier mGPSVerifier;
     private NetMonPreferenceFragmentCompat mPreferenceFragment;
     private static final String PREF_SHARE = "PREF_SHARE";
     private static final String PREF_CLEAR_LOG_FILE = "PREF_CLEAR_LOG_FILE";
@@ -84,7 +83,6 @@ public class MainActivity extends AppCompatActivity
                 replace(android.R.id.content, mPreferenceFragment).
                 commit();
         getSupportFragmentManager().executePendingTransactions();
-        mGPSVerifier = new GPSVerifier(this);
         if (NetMonPreferences.getInstance(this).isServiceEnabled()) {
             NetMonService.start(this);
             MainActivityPermissionsDispatcher.requestPermissionsWithPermissionCheck(this);
@@ -138,7 +136,6 @@ public class MainActivity extends AppCompatActivity
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
         NetMonBus.getBus().unregister(this);
         super.onStop();
-        mGPSVerifier.dismissGPSDialog();
     }
 
     @Override
@@ -195,7 +192,6 @@ public class MainActivity extends AppCompatActivity
             NetMonPreferences prefs = NetMonPreferences.getInstance(MainActivity.this);
             if (NetMonPreferences.PREF_SERVICE_ENABLED.equals(key)) {
                 if (sharedPreferences.getBoolean(NetMonPreferences.PREF_SERVICE_ENABLED, NetMonPreferences.PREF_SERVICE_ENABLED_DEFAULT)) {
-                    mGPSVerifier.verifyGPS();
                     if (prefs.getShowAppWarning()) {
                         WarningDialogFragment.show(MainActivity.this);
                     } else {
