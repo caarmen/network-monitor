@@ -24,6 +24,7 @@
 package ca.rmen.android.networkmonitor.app.prefs;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,18 +47,22 @@ import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 class SelectedFieldsAdapter extends RecyclerView.Adapter<SelectedFieldsAdapter.SelectedFieldHolder> {
 
     private static class SelectedField {
+        @NonNull
         final String dbName;
+        @NonNull
         final String label;
+        @Nullable
         final String tip;
 
         // Build the list of choices for the user.  Look up the friendly label of each column name, and pre-select the one the user chose last time.
-        SelectedField(String dbName, String label, String tip) {
+        SelectedField(@NonNull String dbName, @NonNull String label, @Nullable String tip) {
             this.dbName = dbName;
             this.label = label;
             this.tip = tip;
         }
 
         @Override
+        @NonNull
         public String toString() {
             return label;
         }

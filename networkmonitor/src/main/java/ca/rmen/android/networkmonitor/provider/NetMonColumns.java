@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import ca.rmen.android.networkmonitor.R;
 
 public class NetMonColumns implements BaseColumns {
@@ -165,6 +166,7 @@ public class NetMonColumns implements BaseColumns {
     /**
      * @return the localized display name for a particular DB column name.
      */
+    @NonNull
     public static String getColumnLabel(Context context, String columnName) {
         int columnLabelId = context.getResources().getIdentifier(columnName, "string", context.getPackageName());
         return context.getString(columnLabelId);
