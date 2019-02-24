@@ -54,9 +54,7 @@ public class PreferencesMigrator {
     private void migrateLocationFetchingStrategy() {
         // If we previously had a proprietary build, and we switch to a foss build,
         // we can't use the proprietary (gms) location fetching strategies.
-        if ("Foss".equalsIgnoreCase(BuildConfig.FLAVOR)) {
-            mPrefs.forceFossLocationFetchingStrategy();
-        }
+        mPrefs.forceFossLocationFetchingStrategy();
     }
 
 }
