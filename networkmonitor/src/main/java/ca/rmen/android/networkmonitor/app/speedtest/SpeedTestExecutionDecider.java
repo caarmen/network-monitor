@@ -37,10 +37,10 @@ import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import android.util.Log;
 import ca.rmen.android.networkmonitor.util.NetMonSignalStrength;
 import ca.rmen.android.networkmonitor.util.TelephonyUtil;
 
@@ -100,13 +100,10 @@ public class SpeedTestExecutionDecider {
             return hasNetworkTypeChanged();
         } else if (speedTestInterval == SpeedTestPreferences.PREF_SPEED_TEST_INTERVAL_DBM_OR_NETWORK_CHANGE) {
             // check for change in network and for a difference in dbm by 5
-            if (hasSignalStrengthChanged() || hasNetworkTypeChanged()) {
-                return true;
-            }
-        } else if (isIntervalExceeded()) {
-            return true;
+            return hasSignalStrengthChanged() || hasNetworkTypeChanged();
+        } else {
+            return isIntervalExceeded();
         }
-        return false;
     }
 
     /**
@@ -165,10 +162,8 @@ public class SpeedTestExecutionDecider {
         Log.v(TAG, "signal strength has been changed from " + previousValue + " to " + currentValue);
         if (previousValue != NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
             if (currentValue != NetMonSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
-                if (currentValue >= previousValue + SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM
-                        || currentValue <= previousValue - SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM) {
-                    return true;
-                }
+                return currentValue >= previousValue + SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM
+                        || currentValue <= previousValue - SIGNAL_STRENGTH_VARIATION_THRESHOLD_DBM;
             }
         }
         return false;

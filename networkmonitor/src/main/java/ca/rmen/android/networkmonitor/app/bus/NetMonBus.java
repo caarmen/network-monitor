@@ -28,6 +28,8 @@ import android.os.Looper;
 
 import org.greenrobot.eventbus.EventBus;
 
+import androidx.annotation.NonNull;
+
 
 public class NetMonBus {
     private static final EventBus BUS = EventBus.getDefault();
@@ -56,6 +58,7 @@ public class NetMonBus {
         }
 
         @Override
+        @NonNull
         public String toString() {
             return "DBOperationStarted{" +
                     "name='" + name + '\'' +
@@ -71,6 +74,7 @@ public class NetMonBus {
         }
 
         @Override
+        @NonNull
         public String toString() {
             return "DBOperationEnded{" +
                     "isDataChanged=" + isDataChanged +

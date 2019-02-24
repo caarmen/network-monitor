@@ -23,14 +23,16 @@
  */
 package ca.rmen.android.networkmonitor.app.email;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import androidx.annotation.NonNull;
 
 /**
  * Convenience methods for getting/setting shared preferences.
@@ -69,6 +71,7 @@ public class EmailPreferences {
         }
 
         @Override
+        @NonNull
         public String toString() {
             return EmailPreferences.class.getSimpleName() + " [reportFormats=" + reportFormats + ", server=" + server + ", port=" + port + ", user=" + user
                     + ", password=******, recipients=" + recipients + ", security=" + security + "]";

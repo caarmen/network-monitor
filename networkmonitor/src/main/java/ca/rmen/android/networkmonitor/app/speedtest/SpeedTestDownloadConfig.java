@@ -23,9 +23,11 @@
  */
 package ca.rmen.android.networkmonitor.app.speedtest;
 
+import android.text.TextUtils;
+
 import java.io.File;
 
-import android.text.TextUtils;
+import androidx.annotation.NonNull;
 
 public class SpeedTestDownloadConfig {
     final String url;
@@ -49,6 +51,7 @@ public class SpeedTestDownloadConfig {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return SpeedTestDownloadConfig.class.getSimpleName() + "[url=" + url + "]";
     }

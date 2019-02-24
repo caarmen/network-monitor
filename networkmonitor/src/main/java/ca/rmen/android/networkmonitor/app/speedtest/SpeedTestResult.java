@@ -23,6 +23,8 @@
  */
 package ca.rmen.android.networkmonitor.app.speedtest;
 
+import androidx.annotation.NonNull;
+
 public class SpeedTestResult {
     public enum SpeedTestStatus {
         SUCCESS, INVALID_FILE, FAILURE, AUTH_FAILURE, UNKNOWN
@@ -58,6 +60,7 @@ public class SpeedTestResult {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return SpeedTestResult.class.getSimpleName() + "[totalBytes=" + totalBytes + ", fileBytes=" + fileBytes + ", transferTime=" + transferTime
                 + ", status=" + status + "]";

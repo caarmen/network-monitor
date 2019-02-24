@@ -71,7 +71,7 @@ public class SelectFieldsActivity extends AppCompatActivity
         Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.select_fields);
-        mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         mSelectFieldsAdapter = new SelectedFieldsAdapter(this);
         mBinding.recyclerView.setAdapter(mSelectFieldsAdapter);
         mSelectFieldsAdapter.registerAdapterDataObserver(mListener);

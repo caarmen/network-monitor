@@ -40,7 +40,7 @@ ext.appCompatVersion= '1.0.2'
 android {
     File signFile = rootProject.file('signing.properties')
     if (signFile.exists()) {
-        Properties p = new Properties();
+        Properties p = new Properties()
         p.load(new FileInputStream(signFile))
 
         signingConfigs {

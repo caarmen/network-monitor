@@ -34,7 +34,6 @@ limitations under the License.
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.BATTERY_STATS" />
     <!-- dangerous permissions: -->
     <!-- we only use READ_PHONE_STATE from api level 23+ -->
     <uses-permission-sdk-23 android:name="android.permission.READ_PHONE_STATE" />

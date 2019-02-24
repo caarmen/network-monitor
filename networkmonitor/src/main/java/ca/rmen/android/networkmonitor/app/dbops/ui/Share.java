@@ -32,20 +32,20 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.OpenableColumns;
-import androidx.annotation.Nullable;
-import androidx.annotation.WorkerThread;
-import androidx.fragment.app.FragmentActivity;
-import androidx.core.content.FileProvider;
+import android.util.Log;
 
 import java.io.File;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentActivity;
 import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService;
 import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
-import android.util.Log;
 
 /**
  *
@@ -89,14 +89,10 @@ public class Share {
 
     @WorkerThread
     public static String readDisplayName(Context context, Uri uri) {
-        Cursor cursor = null;
-        try {
-            cursor = context.getContentResolver().query(uri, null, null, null, null);
+        try (Cursor cursor = context.getContentResolver().query(uri, null, null, null, null)) {
             if (cursor != null && cursor.moveToFirst()) {
                 return cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
             }
-        } finally {
-            if (cursor != null) cursor.close();
         }
         return uri.getLastPathSegment();
     }

@@ -26,7 +26,6 @@ package ca.rmen.android.networkmonitor.app.main;
 
 import android.Manifest;
 import android.app.ActivityManager;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -186,27 +185,24 @@ public class MainActivity extends AppCompatActivity
         mPreferenceFragment.findPreference(PREF_CLEAR_LOG_FILE).setSummary(null);
     }
 
-    private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            NetMonPreferences prefs = NetMonPreferences.getInstance(MainActivity.this);
-            if (NetMonPreferences.PREF_SERVICE_ENABLED.equals(key)) {
-                if (sharedPreferences.getBoolean(NetMonPreferences.PREF_SERVICE_ENABLED, NetMonPreferences.PREF_SERVICE_ENABLED_DEFAULT)) {
-                    if (prefs.getShowAppWarning()) {
-                        WarningDialogFragment.show(MainActivity.this);
-                    } else {
-                        onAppWarningOkClicked();
-                    }
-                    MainActivityPermissionsDispatcher.requestPermissionsWithPermissionCheck(MainActivity.this);
+    private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = (sharedPreferences, key) -> {
+        NetMonPreferences prefs = NetMonPreferences.getInstance(MainActivity.this);
+        if (NetMonPreferences.PREF_SERVICE_ENABLED.equals(key)) {
+            if (sharedPreferences.getBoolean(NetMonPreferences.PREF_SERVICE_ENABLED, NetMonPreferences.PREF_SERVICE_ENABLED_DEFAULT)) {
+                if (prefs.getShowAppWarning()) {
+                    WarningDialogFragment.show(MainActivity.this);
+                } else {
+                    onAppWarningOkClicked();
                 }
-            } else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
-                if (prefs.isFastPollingEnabled()) {
-                    prefs.disableConnectionTest();
-                    if (prefs.getDBRecordCount() < 0) prefs.setMaxCappedDbRecordCount();
-                    SpeedTestPreferences.getInstance(MainActivity.this).disable();
-                    DialogFragmentFactory.showWarningDialog(MainActivity.this, getString(R.string.warning_fast_polling_title),
-                            getString(R.string.warning_fast_polling_message));
-                }
+                MainActivityPermissionsDispatcher.requestPermissionsWithPermissionCheck(MainActivity.this);
+            }
+        } else if (NetMonPreferences.PREF_UPDATE_INTERVAL.equals(key)) {
+            if (prefs.isFastPollingEnabled()) {
+                prefs.disableConnectionTest();
+                if (prefs.getDBRecordCount() < 0) prefs.setMaxCappedDbRecordCount();
+                SpeedTestPreferences.getInstance(MainActivity.this).disable();
+                DialogFragmentFactory.showWarningDialog(MainActivity.this, getString(R.string.warning_fast_polling_title),
+                        getString(R.string.warning_fast_polling_message));
             }
         }
     };

@@ -23,11 +23,11 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-
 import android.content.Context;
 import android.text.TextUtils;
+
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.FormatterFactory.FormatterStyle;
 import ca.rmen.android.networkmonitor.app.dbops.ui.Share;
@@ -67,7 +67,7 @@ public class CSVExport extends TableFileExport {
     }
 
     @Override
-    void writeFooter() throws IOException {
+    void writeFooter() {
         mPrintWriter.flush();
         mPrintWriter.close();
     }

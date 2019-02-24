@@ -23,25 +23,25 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.os.Build;
+import android.text.TextUtils;
+import android.text.format.DateUtils;
+import android.util.Log;
+
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import android.content.Context;
-import android.database.Cursor;
-import android.os.Build;
 import androidx.annotation.NonNull;
-import android.text.TextUtils;
-import android.text.format.DateUtils;
-
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.Constants.ConnectionType;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.provider.ConnectionTestStatsColumns;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
-import android.util.Log;
 
 public class SummaryExport {
     private static final String TAG = Constants.TAG + SummaryExport.class.getSimpleName();
@@ -86,6 +86,7 @@ public class SummaryExport {
         }
 
         @Override
+        @NonNull
         public String toString() {
             return passRate + "% (" + mTestCount + " tests)";
         }
@@ -131,6 +132,7 @@ public class SummaryExport {
         }
 
         @Override
+        @NonNull
         public String toString() {
             return "LAC=" + id1 + ",CID=" + id2 + "(" + id3 + "): " + super.toString();
         }
@@ -147,6 +149,7 @@ public class SummaryExport {
         }
 
         @Override
+        @NonNull
         public String toString() {
             return "BSSID=" + id1 + ",SID=" + id2 + ",NID=" + id3 + ": " + super.toString();
         }
@@ -162,6 +165,7 @@ public class SummaryExport {
         }
 
         @Override
+        @NonNull
         public String toString() {
             return "BSSID=" + id1 + ": " + super.toString();
         }
