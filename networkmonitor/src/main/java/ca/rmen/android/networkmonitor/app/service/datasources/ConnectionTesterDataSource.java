@@ -206,7 +206,7 @@ public class ConnectionTesterDataSource implements NetMonDataSource {
             };
             long before = System.currentTimeMillis();
             String host = NetMonPreferences.getInstance(mContext).getTestServer().trim();
-            URL url = new URL("https", host, PORT, "/");
+            URL url = new URL("https", host, HTTPS_PORT, "/");
             URLConnection connection = url.openConnection();
             Log.v(TAG, "Opened connection");
             connection.setConnectTimeout(mTimeout);
@@ -216,7 +216,8 @@ public class ConnectionTesterDataSource implements NetMonDataSource {
             if (connection instanceof HttpsURLConnection) {
                  ((HttpsURLConnection) connection).setInstanceFollowRedirects(false);
                  ((HttpsURLConnection) connection).setHostnameVerifier(hostnameVerifier);
-            }            Log.v(TAG, "Will open input stream");
+            }
+            Log.v(TAG, "Will open input stream");
             inputStream = connection.getInputStream();
             long after = System.currentTimeMillis();
             if (inputStream.read() > 0) {
