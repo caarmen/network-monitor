@@ -196,7 +196,7 @@ public class ConnectionTesterDataSource implements NetMonDataSource {
         try {
             long before = System.currentTimeMillis();
             String host = NetMonPreferences.getInstance(mContext).getTestServer().trim();
-            URL url = new URL("http", host, PORT, "/");
+            URL url = new URL("https", host, PORT, "/");
             URLConnection connection = url.openConnection();
             Log.v(TAG, "Opened connection");
             connection.setConnectTimeout(mTimeout);
