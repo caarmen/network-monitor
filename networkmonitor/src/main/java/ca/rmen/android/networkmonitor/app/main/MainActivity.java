@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity
                 replace(android.R.id.content, mPreferenceFragment).
                 commit();
         if (NetMonPreferences.getInstance(this).isServiceEnabled()) {
+            NetMonService.start(this);
             requestPermissions();
         }
         getSupportFragmentManager().executePendingTransactions();
@@ -207,6 +208,7 @@ public class MainActivity extends AppCompatActivity
             || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions();
         }
+        NetMonService.start(this);
     }
 
     private void requestPermissions() {
@@ -222,9 +224,6 @@ public class MainActivity extends AppCompatActivity
 
     private void onPermissionGranted() {
         Log.v(TAG, "Permissions granted");
-        if (NetMonPreferences.getInstance(this).isServiceEnabled()) {
-            NetMonService.start(this);
-        }
     }
 
     private void onPermissionsDenied() {
