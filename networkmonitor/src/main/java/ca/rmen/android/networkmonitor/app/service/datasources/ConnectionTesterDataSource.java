@@ -36,12 +36,15 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
@@ -61,6 +64,7 @@ public class ConnectionTesterDataSource implements NetMonDataSource {
     }
 
     private static final int PORT = 80;
+    private static final int HTTPS_PORT = 443;
     private static final int DURATION_SLOW = 5000;
 
     // The maximum connection and read timeout for a connection test, in ms.  We may actually set a lower timeout if the user has set the app to test very frequently (ex: every 10 seconds).
@@ -185,7 +189,7 @@ public class ConnectionTesterDataSource implements NetMonDataSource {
 
     /**
      * Try to open a connection to an HTTP server, and execute a simple GET request. If we can read a response to the GET request, we consider that the network
-     * is up. This test uses an HttpURLConnection.
+     * is up. This test uses an HttpsURLConnection.
      *
      * @return {@link NetworkTestResult#PASS} if we were able to read a response to a GET request quickly, {@link NetworkTestResult#FAIL} if any error occurred
      *         trying to execute the GET, or {@link NetworkTestResult#SLOW} if we were able to read a response, but it took too long.
@@ -194,6 +198,12 @@ public class ConnectionTesterDataSource implements NetMonDataSource {
         Log.v(TAG, "getHttpTestResult BEGIN");
         InputStream inputStream = null;
         try {
+            HostnameVerifier hostnameVerifier = new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            };
             long before = System.currentTimeMillis();
             String host = NetMonPreferences.getInstance(mContext).getTestServer().trim();
             URL url = new URL("https", host, PORT, "/");
@@ -203,8 +213,10 @@ public class ConnectionTesterDataSource implements NetMonDataSource {
             connection.setReadTimeout(mTimeout);
             connection.addRequestProperty("Cache-Control", "no-cache");
             connection.setUseCaches(false);
-            if (connection instanceof HttpURLConnection) ((HttpURLConnection) connection).setInstanceFollowRedirects(false);
-            Log.v(TAG, "Will open input stream");
+            if (connection instanceof HttpsURLConnection) {
+                 ((HttpsURLConnection) connection).setInstanceFollowRedirects(false);
+                 ((HttpsURLConnection) connection).setHostnameVerifier(hostnameVerifier);
+            }            Log.v(TAG, "Will open input stream");
             inputStream = connection.getInputStream();
             long after = System.currentTimeMillis();
             if (inputStream.read() > 0) {
