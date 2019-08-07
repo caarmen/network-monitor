@@ -28,7 +28,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.22.0'
     }
 }
 apply plugin: 'com.android.application'
@@ -65,8 +65,8 @@ android {
         applicationId "ca.rmen.android.networkmonitor"
         minSdkVersion 14
         targetSdkVersion 28
-        versionName "1.31.1"
-        versionCode 13101
+        versionName "1.32.0"
+        versionCode 13200
         archivesBaseName += "-" + versionName
     }
 
@@ -96,7 +96,7 @@ android {
 
 dependencies {
 
-    implementation 'de.psdev.licensesdialog:licensesdialog:2.0.0'
+    implementation 'de.psdev.licensesdialog:licensesdialog:2.1.0'
     implementation "androidx.appcompat:appcompat:${project.appCompatVersion}"
     implementation "com.google.android.material:material:${project.androidxVersion}"
     implementation "androidx.preference:preference:${project.androidxVersion}"
@@ -107,7 +107,7 @@ dependencies {
     }
     implementation 'commons-net:commons-net:3.6'
 
-    implementation 'net.sourceforge.streamsupport:streamsupport:1.7.0'
+    implementation 'net.sourceforge.streamsupport:streamsupport:1.7.1'
 }
 
 dependencyUpdates.resolutionStrategy = {
