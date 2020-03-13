@@ -257,7 +257,7 @@ public class NetMonProvider extends ContentProvider { // NO_UCD (use default)
     }
 
 
-    private QueryParams getQueryParams(Uri uri, String selection) {
+    private static QueryParams getQueryParams(Uri uri, String selection) {
         final QueryParams res = new QueryParams();
         String id = null;
         final int matchedId = URI_MATCHER.match(uri);
