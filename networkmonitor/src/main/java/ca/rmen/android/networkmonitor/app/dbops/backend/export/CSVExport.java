@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2013-2019 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2013-2020 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
-import android.content.Context;
-import android.text.TextUtils;
-
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import android.content.Context;
+import android.text.TextUtils;
 
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.FormatterFactory.FormatterStyle;
 import ca.rmen.android.networkmonitor.app.dbops.ui.Share;

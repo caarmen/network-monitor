@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2015-2019 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2015-2020 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,10 +28,16 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.2'
+        classpath 'com.android.tools.build:gradle:3.6.2'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
         configurations.classpath.exclude group: 'com.android.tools.external.lombok'
     }
+}
+
+// Run "./gradlew wrapper" to update the wrapper
+wrapper {
+    gradleVersion = '6.3'
+    distributionType = Wrapper.DistributionType.ALL
 }
 
 allprojects {

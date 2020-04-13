@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2013-2019 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2013-2020 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,16 +23,16 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.backend.export;
 
-import android.content.Context;
-import android.database.Cursor;
-import android.text.TextUtils;
-import android.util.Log;
-
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import android.content.Context;
+import android.database.Cursor;
+import android.text.TextUtils;
+import android.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;

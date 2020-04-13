@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2015-2019 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2015-2020 Carmen Alvarez (c@rmen.ca)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,14 +28,11 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.22.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.28.0'
     }
 }
 apply plugin: 'com.android.application'
 apply plugin: 'com.github.ben-manes.versions'
-
-ext.androidxVersion = '1.0.0'
-ext.appCompatVersion= '1.0.2'
 
 android {
     File signFile = rootProject.file('signing.properties')
@@ -65,7 +62,7 @@ android {
         applicationId "ca.rmen.android.networkmonitor"
         minSdkVersion 14
         targetSdkVersion 28
-        versionName "1.32.0"
+        versionName "1.32.1"
         versionCode 13200
         archivesBaseName += "-" + versionName
     }
@@ -97,17 +94,17 @@ android {
 dependencies {
 
     implementation 'de.psdev.licensesdialog:licensesdialog:2.1.0'
-    implementation "androidx.appcompat:appcompat:${project.appCompatVersion}"
-    implementation "com.google.android.material:material:${project.androidxVersion}"
-    implementation "androidx.preference:preference:${project.androidxVersion}"
-    implementation "androidx.legacy:legacy-preference-v14:${project.androidxVersion}"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.preference:preference:1.1.0'
+    implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation ('net.sourceforge.jexcelapi:jxl:2.6.12') {
         exclude group: "log4j"
     }
     implementation 'commons-net:commons-net:3.6'
 
-    implementation 'net.sourceforge.streamsupport:streamsupport:1.7.1'
+    implementation 'net.sourceforge.streamsupport:streamsupport:1.7.2'
 }
 
 dependencyUpdates.resolutionStrategy = {

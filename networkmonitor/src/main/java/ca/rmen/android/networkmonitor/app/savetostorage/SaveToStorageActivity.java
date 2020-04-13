@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  * 
- * Copyright (C) 2015-2019 Carmen Alvarez (c@rmen.ca)
+ * Copyright (C) 2015-2020 Carmen Alvarez (c@rmen.ca)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
