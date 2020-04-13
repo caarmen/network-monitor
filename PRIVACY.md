@@ -20,7 +20,7 @@ Network Monitor never shares or sends data without explicit action from you, the
 
 ## Interaction with servers
 * Network Monitor does not include any analytics tracking or ads. The developer is not interested in your data. Network Monitor has no back-end server. (Note, this is why you must enter FTP credentials if you want to use the upload test feature).
-* To perform the "Socket Connection Test" and "HTTP Connection Test" tests in each report, Network Monitor performs a "ping" of the Google home page, specifically at 216.58.208.206. Google's web servers will log an incoming connection from your IP address. 
+* To perform the "Socket Connection Test" and "HTTP Connection Test" tests in each report, Network Monitor performs a "ping" of the Google home page, specifically at google.com. Google's web servers will log an incoming connection from your IP address.
   - You can change this server in Advanced options: Server, if you wish to perform the tests connecting to a different server.
   - You can disable these tests altogether by toggling off Advanced options: Enable data connection tests.
 * If you enable the speed test (Advanced options: Speed test: Enable speed test), which is disabled by default, then Network Monitor will download a file from GitHub at the interval specified by the "Speed test frequency" setting. GitHub's web servers will log an incoming connection from your IP address. You can always disable the speed test at any time.

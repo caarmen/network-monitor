@@ -103,7 +103,8 @@ public class NetMonPreferences {
     private static final String PREF_DB_RECORD_COUNT_DEFAULT = "-1";
     private static final boolean PREF_ENABLE_CONNECTION_TEST_DEFAULT = true;
 
-    private static final String PREF_TEST_SERVER_DEFAULT = "216.58.208.206";
+    private static final String PREF_TEST_SERVER_DEFAULT = "google.com";
+    private static final String PREF_TEST_SERVER_LEGACY = "216.58.208.206";
     private static final String PREF_WAKE_INTERVAL_DEFAULT = "0";
     private static final String PREF_SCHEDULER_DEFAULT = ExecutorServiceScheduler.class.getSimpleName();
     private static final String PREF_SELECTED_COLUMNS = "PREF_SELECTED_COLUMNS";
@@ -130,6 +131,13 @@ public class NetMonPreferences {
     private NetMonPreferences(Context context) {
         mContext = context;
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        migrateLegacyGoogleServerIfNecessary();
+    }
+
+    private void migrateLegacyGoogleServerIfNecessary() {
+        if (getTestServer().equals(PREF_TEST_SERVER_LEGACY)) {
+            resetTestServer();
+        }
     }
 
     /**
