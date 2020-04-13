@@ -52,7 +52,7 @@ android {
     } else  {
         android.buildTypes.release.signingConfig = null
     }
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion "28.0.3"
     dataBinding {
         enabled = true
@@ -61,9 +61,9 @@ android {
     defaultConfig {
         applicationId "ca.rmen.android.networkmonitor"
         minSdkVersion 14
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionName "1.32.1"
-        versionCode 13200
+        versionCode 13201
         archivesBaseName += "-" + versionName
     }
 

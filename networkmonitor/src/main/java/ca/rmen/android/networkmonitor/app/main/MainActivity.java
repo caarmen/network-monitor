@@ -59,6 +59,8 @@ import ca.rmen.android.networkmonitor.app.service.NetMonService;
 import ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferences;
 import ca.rmen.android.networkmonitor.util.PermissionUtil;
 
+import static ca.rmen.android.networkmonitor.util.PermissionUtil.isPermissionMissing;
+
 public class MainActivity extends AppCompatActivity
         implements ConfirmDialogFragment.DialogButtonListener,
         ChoiceDialogFragment.DialogItemListener,
@@ -204,22 +206,37 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onAppWarningOkClicked() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (isPermissionMissing(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                || isPermissionMissing(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && isPermissionMissing(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION))) {
             requestPermissions();
         }
         NetMonService.start(this);
     }
 
     private void requestPermissions() {
-         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_REQUEST_LOCATION);
-         } else {
-             onPermissionGranted();
-         }
+        if (isPermissionMissing(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                || isPermissionMissing(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && isPermissionMissing(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION))) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                ActivityCompat.requestPermissions(this,
+                        new String[] {
+                                Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                        },
+                        PERMISSIONS_REQUEST_LOCATION);
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[] {
+                                Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION
+                        },
+                        PERMISSIONS_REQUEST_LOCATION);
+            }
+        } else {
+            onPermissionGranted();
+        }
     }
 
     private void onPermissionGranted() {
@@ -257,10 +274,12 @@ public class MainActivity extends AppCompatActivity
 
     private final Preference.OnPreferenceClickListener mOnPreferenceClickListener = preference -> {
         if (PREF_SHARE.equals(preference.getKey())) {
-            DialogFragmentFactory.showChoiceDialog(MainActivity.this, getString(R.string.export_choice_title), getResources().getStringArray(R.array.export_choices), -1,
-                    ID_ACTION_SHARE);
+            DialogFragmentFactory
+                    .showChoiceDialog(MainActivity.this, getString(R.string.export_choice_title), getResources().getStringArray(R.array.export_choices), -1,
+                            ID_ACTION_SHARE);
         } else if (PREF_CLEAR_LOG_FILE.equals(preference.getKey())) {
-            DialogFragmentFactory.showConfirmDialog(MainActivity.this, getString(R.string.action_clear), getString(R.string.confirm_logs_clear), ID_ACTION_CLEAR, null);
+            DialogFragmentFactory
+                    .showConfirmDialog(MainActivity.this, getString(R.string.action_clear), getString(R.string.confirm_logs_clear), ID_ACTION_CLEAR, null);
         }
         return false;
     };

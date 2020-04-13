@@ -39,14 +39,26 @@ public class PermissionUtil {
         // prevent instantiation
     }
 
-    public static boolean hasLocationPermission(Context context) {
-        return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    private static boolean isPermissionGranted(Context context, String permission) {
+        return ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
+    }
 
+    public static boolean isPermissionMissing(Context context, String permission) {
+        return !isPermissionGranted(context, permission);
+    }
+
+    /**
+     * Check if either fine or coarse location permission is granted.
+     * If running on Q or more, also check if background location permission is granted.
+     */
+    public static boolean hasLocationPermission(Context context) {
+        return (isPermissionGranted(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                || isPermissionGranted(context, Manifest.permission.ACCESS_COARSE_LOCATION))
+                && (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || isPermissionGranted(context, Manifest.permission.ACCESS_BACKGROUND_LOCATION));
     }
 
     public static boolean hasReadPhoneStatePermission(Context context) {
-        return ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
+        return isPermissionGranted(context, Manifest.permission.READ_PHONE_STATE);
     }
 
     @TargetApi(Build.VERSION_CODES.M)
