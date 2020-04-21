@@ -50,10 +50,4 @@ limitations under the License.
         android:icon="@drawable/ic_action_profile_mobile"
         app:showAsAction="never"
         android:title="@string/action_select_profile_mobile_cdma"/>
-    <item
-        android:id="@+id/action_select_profile_location"
-        android:icon="@drawable/ic_action_profile_location"
-        app:showAsAction="never"
-        android:title="@string/action_select_profile_location"/>
-
 </menu>

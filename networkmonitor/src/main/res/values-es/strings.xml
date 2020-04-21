@@ -53,16 +53,11 @@ limitations under the License.
     <string name="action_select_profile_wifi">Perfil WiFi</string>
     <string name="action_select_profile_mobile_gsm">Perfil móvil (GSM)</string>
     <string name="action_select_profile_mobile_cdma">Perfil móvil (CDMA)</string>
-    <string name="action_select_profile_location">Perfil localización</string>
 
     <!-- Strings for the filter_columns activity -->
     <string name="filter_columns_title">Filtrar valores (beta)</string>
     <string name="filter_columns_empty_value">Vacío</string>
     <string name="filter_columns_hint">Seleccionar los valores de \"%s\" que deseas ver en el informe. Si ningún valor es seleccionado, los datos no se filtrarán (todos los valores aparecerán).</string>
-
-    <!-- Strings for warning about location settings -->
-    <string name="no_location_confirm_dialog_title">Ubicación desactivada</string>
-    <string name="no_location_confirm_dialog_message">La ubicación está desactivada en los ajustes del sistema. Activar la ubicación para que Network Monitor pueda registrar las coordenadas del dispositivo.</string>
 
     <!-- Strings for the about screen -->
     <string name="about_title">Acerca de</string>
@@ -115,8 +110,6 @@ limitations under the License.
     <string name="permission_data_usage_message"><![CDATA[<b>¯\\_(ツ)_/¯</b><br><br>\nEn la pantalla siguiente, conceder acceso a Network Monitor para leer las estadísticas de la consumación de datos por las aplicaciones.]]></string>
     <string name="permission_button_allow">Continuar</string>
     <string name="permission_button_deny">Cancelar</string>
-    <string name="permission_location_denied">El archivo log no incluirá algunos campos.</string>
-    <string name="permission_location_rationale">Network Monitor necesita aceder a la ubicación del dispositivo para rellenar alguos campos del archivo log. Sin este acceso, el archivo log no incluirá estos campos.</string>
     <string name="action_freeze_header">Fijar cabecera (beta)</string>
     <string name="action_unfreeze_header">Desbloquear cabecera</string>
     <string name="service_alert_notification_channel_description">Notificaciones de alertas</string>

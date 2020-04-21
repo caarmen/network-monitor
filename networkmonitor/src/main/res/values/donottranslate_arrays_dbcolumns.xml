@@ -176,32 +176,6 @@ limitations under the License.
         <item>cdma_cell_network_id</item>
         <item>cdma_cell_system_id</item>
     </string-array>
-    <string-array name="db_columns_profile_location">
-        <item>timestamp</item>
-        <item>google_connection_test</item>
-        <item>http_connection_test</item>
-        <item>network_type</item>
-        <item>device_latitude</item>
-        <item>device_longitude</item>
-        <item>device_position_accuracy</item>
-        <item>device_speed</item>
-        <item>cdma_cell_base_station_id</item>
-        <item>cdma_cell_latitude</item>
-        <item>cdma_cell_longitude</item>
-        <item>cdma_cell_network_id</item>
-        <item>cdma_cell_system_id</item>
-        <item>gsm_full_cell_id</item>
-        <item>gsm_rnc</item>
-        <item>gsm_short_cell_id</item>
-        <item>gsm_cell_lac</item>
-        <item>gsm_cell_psc</item>
-        <item>lte_cell_ci</item>
-        <item>lte_cell_pci</item>
-        <item>lte_cell_tac</item>
-        <item>network_interface</item>
-        <item>ipv4_address</item>
-        <item>ipv6_address</item>
-    </string-array>
 
     <!-- These columns can have any text.  We need to make sure they don't have special characters when we export. -->
     <string-array name="text_columns">

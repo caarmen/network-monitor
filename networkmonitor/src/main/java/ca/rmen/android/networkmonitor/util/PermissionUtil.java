@@ -25,7 +25,6 @@ package ca.rmen.android.networkmonitor.util;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -41,20 +40,6 @@ public class PermissionUtil {
 
     private static boolean isPermissionGranted(Context context, String permission) {
         return ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public static boolean isPermissionMissing(Context context, String permission) {
-        return !isPermissionGranted(context, permission);
-    }
-
-    /**
-     * Check if either fine or coarse location permission is granted.
-     * If running on Q or more, also check if background location permission is granted.
-     */
-    public static boolean hasLocationPermission(Context context) {
-        return (isPermissionGranted(context, Manifest.permission.ACCESS_FINE_LOCATION)
-                || isPermissionGranted(context, Manifest.permission.ACCESS_COARSE_LOCATION))
-                && (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || isPermissionGranted(context, Manifest.permission.ACCESS_BACKGROUND_LOCATION));
     }
 
     public static boolean hasReadPhoneStatePermission(Context context) {
@@ -78,15 +63,6 @@ public class PermissionUtil {
             }
         }
         return true;
-    }
-
-    public static boolean shouldShowRationale(Activity activity, String[] permissions) {
-        for (String permission : permissions) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }

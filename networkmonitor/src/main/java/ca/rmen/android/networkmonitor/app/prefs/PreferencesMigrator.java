@@ -38,7 +38,6 @@ public class PreferencesMigrator {
 
     public void migratePreferences() {
         migrateTestServer();
-        migrateLocationFetchingStrategy();
     }
 
     private void migrateTestServer() {
@@ -47,12 +46,6 @@ public class PreferencesMigrator {
         if ("173.194.45.41".equals(mPrefs.getTestServer())) {
             mPrefs.resetTestServer();
         }
-    }
-
-    private void migrateLocationFetchingStrategy() {
-        // If we previously had a proprietary build, and we switch to a foss build,
-        // we can't use the proprietary (gms) location fetching strategies.
-        mPrefs.forceFossLocationFetchingStrategy();
     }
 
 }

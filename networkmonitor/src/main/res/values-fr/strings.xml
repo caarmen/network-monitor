@@ -53,16 +53,11 @@ limitations under the License.
     <string name="action_select_profile_wifi">Profil WiFi</string>
     <string name="action_select_profile_mobile_gsm">Profil mobile (GSM)</string>
     <string name="action_select_profile_mobile_cdma">Profil mobile (CDMA)</string>
-    <string name="action_select_profile_location">Profil localisation</string>
 
     <!-- Strings for the filter_columns activity -->
     <string name="filter_columns_title">Filtrer des valeurs (beta)</string>
     <string name="filter_columns_empty_value">Vide</string>
     <string name="filter_columns_hint">Selectionner les valeurs de \"%s\" à inclure dans le journal.  Si aucune valeur n\'est cochée, les données ne seront pas filtrées (toutes les valeurs apparaitront).</string>
-
-    <!-- Strings for warning about location settings -->
-    <string name="no_location_confirm_dialog_title">Localisation désactivée</string>
-    <string name="no_location_confirm_dialog_message">La localisation est désactivée dans les préférences systèmes. Activer la localisation pour que Network Monitor puisse récupérer vos coordonées.</string>
 
     <!-- Strings for the about screen -->
     <string name="about_title">À propos</string>
@@ -115,8 +110,6 @@ limitations under the License.
     <string name="permission_data_usage_message"><![CDATA[<b>¯\\_(ツ)_/¯</b><br><br>\nDans l\'écran suivant, veuillez donner accès à Network Monitor aux statistiques de consommation de données.]]></string>
     <string name="permission_button_allow">Continuer</string>
     <string name="permission_button_deny">Annuler</string>
-    <string name="permission_location_denied">Quelques champs seront absents du fichier journal.</string>
-    <string name="permission_location_rationale">Network Monitor a besoin d\'accéder à la localisation du terminal pour remplir certains champs.  Sans cet accès, ces champs seront absents du fichier journal.</string>
     <string name="action_freeze_header">Bloquer les entêtes (beta)</string>
     <string name="action_unfreeze_header">Debloquer les entêtes</string>
     <string name="service_alert_notification_channel_description">Notification des alertes</string>

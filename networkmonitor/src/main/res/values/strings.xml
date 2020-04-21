@@ -56,16 +56,11 @@ limitations under the License.
     <string name="action_select_profile_wifi">WiFi profile</string>
     <string name="action_select_profile_mobile_gsm">Mobile profile (GSM)</string>
     <string name="action_select_profile_mobile_cdma">Mobile profile (CDMA)</string>
-    <string name="action_select_profile_location">Location profile</string>
 
     <!-- Strings for the filter_columns activity -->
     <string name="filter_columns_title">Filter values (beta)</string>
     <string name="filter_columns_empty_value">Empty</string>
     <string name="filter_columns_hint">Select the values for \"%s\" you wish to appear in the report. If you select no values, no filtering will be done (all values will appear).</string>
-
-    <!-- Strings for warning about location settings -->
-    <string name="no_location_confirm_dialog_title">Locations not enabled</string>
-    <string name="no_location_confirm_dialog_message">You have disabled location tracking in your system settings.  Enable location tracking so that Network Monitor can log your location.</string>
 
     <!-- Strings for the about screen -->
     <string name="about_title">About</string>
@@ -127,8 +122,6 @@ limitations under the License.
     <string name="permission_read_phone_state_message"><![CDATA[<b>¯\\_(ツ)_/¯</b><br><br>\nNetwork Monitor needs access to your phone state to collect app mobile data usage stats. If you deny this permission, those fields will not be reported. Network Monitor <b>will not place any calls</b> and will only retrieve the number of bytes consumed by each app.]]></string>
     <string name="permission_data_usage_denied">App data usage statistics will not be reported.</string>
     <string name="permission_data_usage_message"><![CDATA[<b>¯\\_(ツ)_/¯</b><br><br>\nIn the following screen, please grant Network Monitor access to data usage statistics.]]></string>
-    <string name="permission_location_rationale">Network Monitor needs access to your location to report certain fields. If you deny this permission, those fields will not be reported.</string>
-    <string name="permission_location_denied">Some fields will not be included in the logs</string>
     <string name="permission_button_allow">Continue</string>
     <string name="permission_button_deny">Cancel</string>
 

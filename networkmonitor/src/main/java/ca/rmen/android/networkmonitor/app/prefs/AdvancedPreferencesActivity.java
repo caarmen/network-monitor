@@ -25,27 +25,24 @@
 package ca.rmen.android.networkmonitor.app.prefs;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.location.LocationManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import androidx.core.app.TaskStackBuilder;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.EditTextPreference;
-import androidx.preference.Preference;
-import androidx.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.TaskStackBuilder;
+import androidx.preference.EditTextPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceManager;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.Theme;
@@ -53,7 +50,6 @@ import ca.rmen.android.networkmonitor.app.bus.NetMonBus;
 import ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService;
 import ca.rmen.android.networkmonitor.app.dialog.ConfirmDialogFragment;
 import ca.rmen.android.networkmonitor.app.dialog.DialogFragmentFactory;
-import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.LocationFetchingStrategy;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
 
 public class AdvancedPreferencesActivity extends AppCompatActivity implements ConfirmDialogFragment.DialogButtonListener {
@@ -63,7 +59,6 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
     private static final int ACTIVITY_REQUEST_CODE_IMPORT_SETTINGS = 3;
     private static final String EXTRA_IMPORT_URI = AdvancedPreferencesActivity.class.getPackage().getName() + "_db_url";
     private static final int ID_ACTION_IMPORT_DB = 3;
-    private static final int ID_ACTION_LOCATION_SETTINGS = 4;
     private static final int ID_ACTION_COMPRESS = 5;
     private static final int ID_ACTION_IMPORT_SETTINGS = 6;
     private static final String PREF_COMPRESS = "PREF_COMPRESS";
@@ -136,11 +131,6 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
             updatePreferenceSummary(key, R.string.pref_summary_test_server);
         } else if (NetMonPreferences.PREF_NOTIFICATION_RINGTONE.equals(key)) {
             updatePreferenceSummary(key, R.string.pref_summary_notification_ringtone);
-        } else if (NetMonPreferences.PREF_LOCATION_FETCHING_STRATEGY.equals(key)) {
-            if (prefs.getLocationFetchingStrategy() == LocationFetchingStrategy.HIGH_ACCURACY
-                    || prefs.getLocationFetchingStrategy() == LocationFetchingStrategy.HIGH_ACCURACY_GMS) {
-                checkLocationSettings();
-            }
         } else if (NetMonPreferences.PREF_NOTIFICATION_ENABLED.equals(key)) {
             if (!prefs.getShowNotificationOnTestFailure()) NetMonNotification.dismissFailedTestNotification(AdvancedPreferencesActivity.this);
         } else if (NetMonPreferences.PREF_DB_RECORD_COUNT.equals(key)) {
@@ -262,9 +252,6 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
         // Compress the database in a background thread
         else if (actionId == ID_ACTION_COMPRESS) {
             DBOpIntentService.startActionCompress(this);
-        } else if (actionId == ID_ACTION_LOCATION_SETTINGS) {
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
         } else if (actionId == ID_ACTION_IMPORT_SETTINGS) {
             final Uri uri = extras.getParcelable(EXTRA_IMPORT_URI);
             SettingsExportImport.importSettings(this, uri, this::loadPreferences);
@@ -292,20 +279,6 @@ public class AdvancedPreferencesActivity extends AppCompatActivity implements Co
         mPreferenceFragment.findPreference(PREF_IMPORT_DB).setEnabled(true);
         mPreferenceFragment.findPreference(PREF_COMPRESS).setEnabled(true);
         mPreferenceFragment.findPreference(NetMonPreferences.PREF_DB_RECORD_COUNT).setEnabled(true);
-    }
-
-    /**
-     * Checks if we have either the GPS or Network location provider enabled. If not, shows a popup dialog telling the user they should go to the system
-     * settings to enable location tracking.
-     */
-    private void checkLocationSettings() {
-        // If the user chose high accuracy, make sure we have at least one location provider.
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager == null) return;
-        if (!(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))) {
-            DialogFragmentFactory.showConfirmDialog(this, getString(R.string.no_location_confirm_dialog_title),
-                    getString(R.string.no_location_confirm_dialog_message), ID_ACTION_LOCATION_SETTINGS, null);
-        }
     }
 
 }
