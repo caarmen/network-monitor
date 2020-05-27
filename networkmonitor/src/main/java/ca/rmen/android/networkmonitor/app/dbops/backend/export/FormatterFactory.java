@@ -31,13 +31,9 @@ import java.util.Locale;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.text.TextUtils;
-import android.util.Log;
 
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
-import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
-import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences.CellIdFormat;
 import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 
 /**
@@ -67,13 +63,10 @@ public class FormatterFactory {
      */
     private static class DefaultFormatter implements Formatter {
         final SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss", Locale.US);
-        private final CellIdFormat mCellIdFormat;
         private final Context mContext;
 
         DefaultFormatter(Context context) {
             mContext = context;
-            mCellIdFormat = NetMonPreferences.getInstance(context).getCellIdFormat();
-            Log.v(TAG, "Constructor: cellIdFormat = " + mCellIdFormat);
         }
 
         /**
@@ -88,34 +81,6 @@ public class FormatterFactory {
                 long timestamp = c.getLong(columnIndex);
                 Date date = new Date(timestamp);
                 result = mDateFormat.format(date);
-            }
-            // Format cell ids
-            else if (NetMonColumns.CDMA_CELL_BASE_STATION_ID.equals(columnName) || NetMonColumns.CDMA_CELL_NETWORK_ID.equals(columnName)
-                    || NetMonColumns.CDMA_CELL_SYSTEM_ID.equals(columnName) || NetMonColumns.GSM_FULL_CELL_ID.equals(columnName)
-                    || NetMonColumns.GSM_SHORT_CELL_ID.equals(columnName) || NetMonColumns.GSM_CELL_LAC.equals(columnName)
-                    || NetMonColumns.GSM_RNC.equals(columnName)) {
-                result = c.getString(columnIndex);
-                if (mCellIdFormat != CellIdFormat.DECIMAL) {
-                    if (!TextUtils.isEmpty(result)) {
-                        try {
-                            long cellId = Long.parseLong(result);
-                            String cellIdHex = Long.toHexString(cellId);
-                            if (mCellIdFormat == CellIdFormat.HEX) result = cellIdHex;
-                            else
-                                result = cellId + " (" + cellIdHex + ")";
-                        } catch (NumberFormatException e) {
-                            // Can't read the cell id as a hex number: just display the raw value.
-                        }
-                    }
-                }
-            }
-            // Latitude and longitude are stored in the DB with large precision,
-            // but this precision is lost if we retrieve them with getString().
-            else if (NetMonColumns.DEVICE_LATITUDE.equals(columnName)
-                    || NetMonColumns.DEVICE_LONGITUDE.equals(columnName)) {
-                double value = c.getDouble(columnIndex);
-                result = String.valueOf(value);
-                if ("0.0".equals(result)) result = "";
             }
             // bytes
             else if (NetMonColumns.MOST_CONSUMING_APP_BYTES.equals(columnName)) {

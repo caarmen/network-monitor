@@ -173,9 +173,6 @@ public class LogActivity extends AppCompatActivity implements DialogButtonListen
             case R.id.action_filter:
                 mDialog = PreferenceDialog.showFilterRecordCountChoiceDialog(this, mPreferenceChoiceDialogListener);
                 return true;
-            case R.id.action_cell_id_format:
-                mDialog = PreferenceDialog.showCellIdFormatChoiceDialog(this, mPreferenceChoiceDialogListener);
-                return true;
             case R.id.action_reset_filters:
                 DialogFragmentFactory.showConfirmDialog(this, getString(R.string.clear_filters_confirm_dialog_title),
                         getString(R.string.clear_filters_confirm_dialog_message), R.id.action_reset_filters, null);

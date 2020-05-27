@@ -67,11 +67,6 @@ limitations under the License.
     <string name="pref_summary_scheduler">Configuración actual : %s</string>
     <string name="pref_value_executor_service_scheduler">Intervalo preciso</string>
     <string name="pref_value_alarm_manager_scheduler">Economizar la batería</string>
-    <string name="pref_title_cell_id_format">Formato ids de estaciones base</string>
-    <string name="pref_summary_cell_id_format">Escoger el formato de los ids de las estaciones base: %s</string>
-    <string name="pref_value_cell_id_format_decimal">Decimal</string>
-    <string name="pref_value_cell_id_format_hex">Hexa</string>
-    <string name="pref_value_cell_id_format_decimal_hex">Ambos</string>
     <string name="pref_title_test_server">Servidor</string>
     <string name="pref_summary_test_server">El servidor que intentamos alcanzar para probar la conectividad: %s</string>
     <string name="pref_title_import">Importar una base de datos</string>

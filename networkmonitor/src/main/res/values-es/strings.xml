@@ -40,7 +40,6 @@ limitations under the License.
     <string name="action_refresh">Actualizar</string>
     <string name="action_clear">Reiniciar el archivo log</string>
     <string name="action_filter">Número de filas</string>
-    <string name="action_cell_id_format">Formato ids de las estaciones base</string>
     <string name="action_reset_filters">Borrar los filtros</string>
     <string name="error_reading_log">Imposible leer el archivo log.</string>
     <string name="confirm_logs_clear">¿Estás seguro de querer borrar los datos guardados?</string>

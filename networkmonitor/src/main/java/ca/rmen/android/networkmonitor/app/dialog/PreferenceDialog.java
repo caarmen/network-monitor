@@ -71,14 +71,6 @@ public class PreferenceDialog {
     }
 
     /**
-     * Show the user a dialog to choose the format for the cell ids.
-     */
-    public static Dialog showCellIdFormatChoiceDialog(Context context, PreferenceDialog.PreferenceChoiceDialogListener listener) {
-        return showPreferenceChoiceDialog(context, NetMonPreferences.PREF_CELL_ID_FORMAT, NetMonPreferences.PREF_CELL_ID_FORMAT_DEFAULT,
-                R.array.preferences_cell_id_format_values, R.array.preferences_cell_id_format_labels, R.string.pref_title_cell_id_format, listener);
-    }
-
-    /**
      * Show the user a preference choice dialog.
      */
     private static Dialog showPreferenceChoiceDialog(Context context, final String preferenceName, String defaultValue, int valuesArrayId,

@@ -40,7 +40,6 @@ limitations under the License.
     <string name="action_refresh">Actualiser</string>
     <string name="action_clear">Réinitialiser le fichier journal</string>
     <string name="action_filter">Nombre de lignes</string>
-    <string name="action_cell_id_format">Format des ids d\'antenne</string>
     <string name="action_reset_filters">Supprimer les filtres</string>
     <string name="error_reading_log">Impossible de lire le fichier journal.</string>
     <string name="confirm_logs_clear">Êtes-vous sur de vouloir supprimer les données enregistrées ?</string>

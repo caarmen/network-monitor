@@ -41,7 +41,6 @@ limitations under the License.
     <string name="action_refresh">Refresh</string>
     <string name="action_clear">Clear log file</string>
     <string name="action_filter">Number of rows</string>
-    <string name="action_cell_id_format">Cell id format</string>
     <string name="action_reset_filters">Clear all filters</string>
     <string name="action_freeze_header">Freeze header (beta)</string>
     <string name="action_unfreeze_header">Unfreeze header</string>

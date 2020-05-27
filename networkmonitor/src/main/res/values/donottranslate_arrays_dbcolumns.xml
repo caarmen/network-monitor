@@ -43,8 +43,6 @@ limitations under the License.
         <item>extra_info</item>
         <item>wifi_ssid</item>
         <item>wifi_bssid</item>
-        <item>wifi_frequency</item>
-        <item>wifi_channel</item>
         <item>wifi_signal_strength</item>
         <item>wifi_rssi</item>
         <item>sim_operator</item>
@@ -54,30 +52,12 @@ limitations under the License.
         <item>network_mcc</item>
         <item>network_mnc</item>
         <item>is_network_metered</item>
-        <item>device_latitude</item>
-        <item>device_longitude</item>
-        <item>device_position_accuracy</item>
-        <item>device_speed</item>
         <item>cell_signal_strength</item>
         <item>cell_signal_strength_dbm</item>
         <item>cell_asu_level</item>
         <item>gsm_ber</item>
         <!--item>evdo_ecio</item-->
         <item>lte_rsrq</item>
-        <item>cdma_cell_base_station_id</item>
-        <item>cdma_cell_latitude</item>
-        <item>cdma_cell_longitude</item>
-        <item>cdma_cell_network_id</item>
-        <item>cdma_cell_system_id</item>
-        <item>gsm_full_cell_id</item>
-        <item>gsm_rnc</item>
-        <item>gsm_short_cell_id</item>
-        <item>gsm_cell_lac</item>
-        <item>gsm_cell_psc</item>
-        <item>lte_cell_ci</item>
-        <item>lte_cell_earfcn</item>
-        <item>lte_cell_pci</item>
-        <item>lte_cell_tac</item>
         <item>network_interface</item>
         <item>ipv4_address</item>
         <item>ipv6_address</item>
@@ -101,8 +81,6 @@ limitations under the License.
         <item>network_type</item>
         <item>wifi_ssid</item>
         <item>wifi_bssid</item>
-        <item>wifi_frequency</item>
-        <item>wifi_channel</item>
         <item>wifi_signal_strength</item>
         <item>wifi_rssi</item>
     </string-array>
@@ -134,14 +112,6 @@ limitations under the License.
         <item>cell_signal_strength_dbm</item>
         <item>cell_asu_level</item>
         <item>gsm_full_cell_id</item>
-        <item>gsm_rnc</item>
-        <item>gsm_short_cell_id</item>
-        <item>gsm_cell_lac</item>
-        <item>gsm_cell_psc</item>
-        <item>lte_cell_ci</item>
-        <item>lte_cell_earfcn</item>
-        <item>lte_cell_pci</item>
-        <item>lte_cell_tac</item>
     </string-array>
     <string-array name="db_columns_profile_mobile_cdma">
         <item>timestamp</item>
@@ -170,11 +140,6 @@ limitations under the License.
         <item>cell_signal_strength</item>
         <item>cell_signal_strength_dbm</item>
         <item>cell_asu_level</item>
-        <item>cdma_cell_base_station_id</item>
-        <item>cdma_cell_latitude</item>
-        <item>cdma_cell_longitude</item>
-        <item>cdma_cell_network_id</item>
-        <item>cdma_cell_system_id</item>
     </string-array>
 
     <!-- These columns can have any text.  We need to make sure they don't have special characters when we export. -->
@@ -207,8 +172,6 @@ limitations under the License.
         <item>extra_info</item>
         <item>wifi_ssid</item>
         <item>wifi_bssid</item>
-        <item>wifi_frequency</item>
-        <item>wifi_channel</item>
         <item>wifi_signal_strength</item>
         <item>wifi_rssi</item>
         <item>sim_operator</item>
@@ -224,18 +187,6 @@ limitations under the License.
         <item>gsm_ber</item>
         <!--item>evdo_ecio</item-->
         <item>lte_rsrq</item>
-        <item>cdma_cell_base_station_id</item>
-        <item>cdma_cell_network_id</item>
-        <item>cdma_cell_system_id</item>
-        <item>gsm_full_cell_id</item>
-        <item>gsm_rnc</item>
-        <item>gsm_short_cell_id</item>
-        <item>gsm_cell_lac</item>
-        <item>gsm_cell_psc</item>
-        <item>lte_cell_ci</item>
-        <item>lte_cell_earfcn</item>
-        <item>lte_cell_pci</item>
-        <item>lte_cell_tac</item>
         <item>network_interface</item>
         <item>ipv4_address</item>
         <item>ipv6_address</item>
@@ -245,14 +196,8 @@ limitations under the License.
 
     <!-- These columns have numeric (integer or float) values -->
     <string-array name="numeric_columns">
-        <item>wifi_frequency</item>
-        <item>wifi_channel</item>
         <item>wifi_signal_strength</item>
         <item>wifi_rssi</item>
-        <item>device_latitude</item>
-        <item>device_longitude</item>
-        <item>device_position_accuracy</item>
-        <item>device_speed</item>
         <item>cell_signal_strength</item>
         <item>cell_signal_strength_dbm</item>
         <item>cell_asu_level</item>
@@ -270,10 +215,6 @@ limitations under the License.
     <string-array name="newer_api_db_columns">
         <item>most_consuming_app_name</item>
         <item>most_consuming_app_bytes</item>
-        <item>lte_cell_ci</item>
-        <item>lte_cell_earfcn</item>
-        <item>lte_cell_pci</item>
-        <item>lte_cell_tac</item>
     </string-array>
 
 </resources>

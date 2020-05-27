@@ -46,15 +46,6 @@ limitations under the License.
             <intent android:action="ca.rmen.android.networkmonitor.app.speedtest.SpeedTestPreferencesActivity" />
         </Preference>
 
-        <ListPreference
-            android:defaultValue="decimal"
-            android:entries="@array/preferences_cell_id_format_labels"
-            android:entryValues="@array/preferences_cell_id_format_values"
-            android:icon="@drawable/ic_pref_cell_id_format"
-            android:key="PREF_CELL_ID_FORMAT"
-            android:summary="@string/pref_summary_cell_id_format"
-            android:title="@string/pref_title_cell_id_format" />
-
         <EditTextPreference
             android:defaultValue="google.com"
             android:hint="google.com"

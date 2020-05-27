@@ -51,10 +51,6 @@ import ca.rmen.android.networkmonitor.provider.NetMonColumns;
  */
 public class NetMonPreferences {
 
-    public enum CellIdFormat {
-        DECIMAL, HEX, DECIMAL_HEX
-    }
-
     public enum NetMonTheme {
         DAY, NIGHT, AUTO
     }
@@ -76,8 +72,6 @@ public class NetMonPreferences {
     private static final String PREF_DB_RECORD_COUNT_MAX_CAPPED = "10000";
 
     static final String PREF_ENABLE_CONNECTION_TEST = "PREF_ENABLE_CONNECTION_TEST";
-    public static final String PREF_CELL_ID_FORMAT = "PREF_CELL_ID_FORMAT";
-    public static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
     static final String PREF_NOTIFICATION_RINGTONE = "PREF_NOTIFICATION_RINGTONE";
     static final String PREF_NOTIFICATION_ENABLED = "PREF_NOTIFICATION_ENABLED";
     public static final String PREF_EXPORT_GNUPLOT_SERIES = "PREF_EXPORT_GNUPLOT_SERIES";
@@ -229,16 +223,6 @@ public class NetMonPreferences {
      */
     public void disableConnectionTest() {
         setBooleanPreference(NetMonPreferences.PREF_ENABLE_CONNECTION_TEST, false);
-    }
-
-    /**
-     * @return the format in which numeric cell id fields should be displayed and exported.
-     */
-    public CellIdFormat getCellIdFormat() {
-        String cellIdFormat = mSharedPrefs.getString(NetMonPreferences.PREF_CELL_ID_FORMAT, NetMonPreferences.PREF_CELL_ID_FORMAT_DEFAULT);
-        if ("decimal".equals(cellIdFormat)) return CellIdFormat.DECIMAL;
-        if ("hex".equals(cellIdFormat)) return CellIdFormat.HEX;
-        return CellIdFormat.DECIMAL_HEX;
     }
 
     /**
