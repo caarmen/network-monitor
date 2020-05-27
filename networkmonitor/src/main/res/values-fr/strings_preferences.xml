@@ -67,17 +67,8 @@ limitations under the License.
     <string name="pref_summary_scheduler">Valeur actuelle : %s</string>
     <string name="pref_value_executor_service_scheduler">Précis</string>
     <string name="pref_value_alarm_manager_scheduler">Imprécis (économise la batterie)</string>
-    <string name="pref_title_cell_id_format">Format des ids d\'antenne</string>
-    <string name="pref_summary_cell_id_format">Choisir le format de l\'affichage des ids d\'antenne: %s</string>
-    <string name="pref_value_cell_id_format_decimal">Décimal</string>
-    <string name="pref_value_cell_id_format_hex">Hexa</string>
-    <string name="pref_value_cell_id_format_decimal_hex">Les deux</string>
     <string name="pref_title_test_server">Serveur</string>
     <string name="pref_summary_test_server">Le serveur qu\'on essaie de joindre pour tester la connectivité : %s</string>
-    <string name="pref_title_location_fetching_strategy">Précision de la localisation</string>
-    <string name="pref_summary_location_fetching_strategy">Choisir entre une haute précision ou un mode d\'économie de la batterie: %s</string>
-    <string name="pref_value_location_fetching_strategy_accurate">Haute précision</string>
-    <string name="pref_value_location_fetching_strategy_save_power">Économiser la batterie</string>
     <string name="pref_title_import">Importer une base de données</string>
     <string name="pref_summary_import">Importer une base de données exportée depuis Network Monitor.</string>
     <string name="pref_title_compress">Compresser la base de données.</string>

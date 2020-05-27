@@ -49,8 +49,6 @@ The list of data:
 * [Extra Info](https://developer.android.com/reference/android/net/NetworkInfo.html#getExtraInfo()) Requires the `ACCESS_NETWORK_STATE` permission.
 * [WiFi SSID](https://developer.android.com/reference/android/net/wifi/WifiInfo.html#getSSID())
 * [WiFi BSSID](https://developer.android.com/reference/android/net/wifi/WifiInfo.html#getBSSID())
-* [WiFi Frequency](https://developer.android.com/reference/android/net/wifi/ScanResult.html#frequency) Requires the `ACCESS_COARSE_LOCATION` or `ACCESS_FINE_LOCATION` permission.
-* [WiFi Channel](https://developer.android.com/reference/android/net/wifi/ScanResult.html#frequency) Requires the `ACCESS_COARSE_LOCATION` or `ACCESS_FINE_LOCATION` permission.
 * [WiFi Signal Strength (0-4)](https://developer.android.com/reference/android/net/wifi/WifiInfo.html#getRssi())
 * [SIM Operator](https://developer.android.com/reference/android/telephony/TelephonyManager.html#getSimOperatorName())
 * [SIM MCC](https://developer.android.com/reference/android/telephony/TelephonyManager.html#getSimOperator())
@@ -59,30 +57,13 @@ The list of data:
 * [Network MCC](https://developer.android.com/reference/android/telephony/TelephonyManager.html#getNetworkOperator())
 * [Network MNC](https://developer.android.com/reference/android/telephony/TelephonyManager.html#getNetworkOperator())
 * [Is Network Metered](https://developer.android.com/reference/android/net/ConnectivityManager.html#isActiveNetworkMetered()) Requires the `ACCESS_NETWORK_STATE` permission.
-* Device Latitude, Device Longitude. Requires the `ACCESS_COARSE_LOCATION` or `ACCESS_FINE_LOCATION` permission.
   - [Using Google Play Services](https://developers.google.com/android/reference/com/google/android/gms/location/FusedLocationProviderApi.html#requestLocationUpdates(com.google.android.gms.common.api.GoogleApiClient,+com.google.android.gms.location.LocationRequest,+com.google.android.gms.location.LocationListener))
   - [Not using Google Play Services](https://developer.android.com/reference/android/location/LocationManager.html#requestLocationUpdates(java.lang.String,+long,+float,+android.location.LocationListener))
-* [Device Position Accuracy (m)](https://developer.android.com/reference/android/location/Location.html#getAccuracy()) Requires the `ACCESS_COARSE_LOCATION` or `ACCESS_FINE_LOCATION` permission.
-* [Device Speed (m/s)](https://developer.android.com/reference/android/location/Location.html#getSpeed()) Requires the `ACCESS_COARSE_LOCATION` or `ACCESS_FINE_LOCATION` permission.
 * [Cell Signal Strength (0-4)](https://developer.android.com/reference/android/telephony/SignalStrength.html) Requires the `READ_PHONE_STATE` permission.
 * [Cell Signal Strength (dBm)](https://developer.android.com/reference/android/telephony/SignalStrength.html) Requires the `READ_PHONE_STATE` permission.
 * [ASU Level](https://developer.android.com/reference/android/telephony/SignalStrength.html) Requires the `READ_PHONE_STATE` permission.
 * [RxQual](https://developer.android.com/reference/android/telephony/SignalStrength.html#getGsmBitErrorRate()) Requires the `READ_PHONE_STATE` permission.
 * [LTE RSRQ](https://developer.android.com/reference/android/telephony/SignalStrength.html) Requires the `READ_PHONE_STATE` permission.
-* [CDMA Cell Base Station Id](https://developer.android.com/reference/android/telephony/CellIdentityCdma.html#getBasestationId()) Requires the `ACCESS_COARSE_LOCATION` permission.
-* [CDMA Cell Latitude](https://developer.android.com/reference/android/telephony/CellIdentityCdma.html#getLatitude()) Requires the `ACCESS_COARSE_LOCATION` permission.
-* [CDMA Cell Longitude](https://developer.android.com/reference/android/telephony/CellIdentityCdma.html#getLongitude()) Requires the `ACCESS_COARSE_LOCATION` permission.
-* [CDMA Cell Network Id](https://developer.android.com/reference/android/telephony/CellIdentityCdma.html#getNetworkId()) Requires the `ACCESS_COARSE_LOCATION` permission.
-* [CDMA Cell System Id](https://developer.android.com/reference/android/telephony/CellIdentityCdma.html#getSystemId()) Requires the `ACCESS_COARSE_LOCATION` permission.
-* [GSM Full Cell Id](https://developer.android.com/reference/android/telephony/CellIdentityWcdma.html#getCid()) Requires the `ACCESS_COARSE_LOCATION` permission.
-* [GSM RNC](https://developer.android.com/reference/android/telephony/CellIdentityWcdma.html#getCid()) Requires the `ACCESS_COARSE_LOCATION` permission.
-* [GSM Short Cell Id](https://developer.android.com/reference/android/telephony/CellIdentityWcdma.html#getCid()) Requires the `ACCESS_COARSE_LOCATION` permission.
-* [GSM Cell LAC](https://developer.android.com/reference/android/telephony/CellIdentityWcdma.html#getLac()) Requires the `ACCESS_COARSE_LOCATION` permission.
-* [GSM Cell PSC](https://developer.android.com/reference/android/telephony/CellIdentityWcdma.html#getPsc()) Requires the `ACCESS_COARSE_LOCATION` permission.
-* [LTE Cell Id](https://developer.android.com/reference/android/telephony/CellIdentityLte.html#getCi()) Requires the `ACCESS_COARSE_LOCATION` permission.
-* [LTE Cell RF Channel](https://developer.android.com/reference/android/telephony/CellIdentityLte.html#getEarfcn()) Requires the `ACCESS_COARSE_LOCATION` permission.
-* [LTE Physical Cell Id](https://developer.android.com/reference/android/telephony/CellIdentityLte.html#getPci()) Requires the `ACCESS_COARSE_LOCATION` permission.
-* [LTE Cell Tracking Area Code](https://developer.android.com/reference/android/telephony/CellIdentityLte.html#getTac()) Requires the `ACCESS_COARSE_LOCATION` permission.
 * [Network Interface](https://developer.android.com/reference/java/net/NetworkInterface.html#getName())
 * [IPv4 Address](https://developer.android.com/reference/java/net/InetAddress.html#getHostAddress())
 * [IPv6 Address](https://developer.android.com/reference/java/net/InetAddress.html#getHostAddress())
@@ -103,11 +84,9 @@ Main settings:
 Advanced settings:
 * `PREF_ENABLE_CONNECTION_TEST`: Whether the Socket Connection Test or HTTP Connection Test should be performed.
 * `PREF_SELECTED_COLUMNS`: The columns to display in the log view.
-* `PREF_CELL_ID_FORMAT`: The display format of the cell ids (hex, decimal, or both).
 * `PREF_TEST_SERVER`: The server which Network Monitor pings to test network connectivity. By default, this is the Google home page.
 * `PREF_WAKE_INTERVAL`: The value of the Advanced Options: Prevent sleep setting.
 * `PREF_SCHEDULER`: Indicates whether "Precise timing" or "Save battery" is chosen for the Advanced options: Polling interval setting.
-* `PREF_LOCATION_FETCHING_STRATEGY`: The value of the Advanced options: Location accuracy setting.
 * `PREF_NOTIFICATION_PRIORITY`: The priority of the ongoing notification which is displayed whenever the service is enabled.
 * `PREF_NOTIFICATION_ENABLED`: Whether alert notifications should be created when connectivity tests fail.
 * `PREF_NOTIFICATION_RINGTONE`: The ringtone for alert notifications.

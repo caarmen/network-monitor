@@ -111,10 +111,6 @@ public class SelectFieldsActivity extends AppCompatActivity
                 mSelectFieldsAdapter.selectColumns(getResources().getStringArray(R.array.db_columns_profile_mobile_cdma));
                 mBinding.okCancelBar.ok.setEnabled(true);
                 break;
-            case R.id.action_select_profile_location:
-                mSelectFieldsAdapter.selectColumns(getResources().getStringArray(R.array.db_columns_profile_location));
-                mBinding.okCancelBar.ok.setEnabled(true);
-                break;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -51,18 +51,9 @@ import ca.rmen.android.networkmonitor.provider.NetMonColumns;
  */
 public class NetMonPreferences {
 
-    public enum CellIdFormat {
-        DECIMAL, HEX, DECIMAL_HEX
-    }
-
-    public enum LocationFetchingStrategy {
-        SAVE_POWER, HIGH_ACCURACY, SAVE_POWER_GMS, HIGH_ACCURACY_GMS
-    }
-
     public enum NetMonTheme {
         DAY, NIGHT, AUTO
     }
-
 
     static final String PREF_TEST_SERVER = "PREF_TEST_SERVER";
     public static final int PREF_MIN_POLLING_INTERVAL = 10000;
@@ -74,16 +65,12 @@ public class NetMonPreferences {
     public static final String PREF_SORT_ORDER = "PREF_SORT_ORDER";
     public static final String PREF_SORT_COLUMN_NAME = "PREF_SORT_COLUMN_NAME";
 
-    public static final String PREF_KML_EXPORT_COLUMN = "PREF_KML_EXPORT_COLUMN";
     public static final String PREF_FILTER_RECORD_COUNT = "PREF_FILTER_RECORD_COUNT";
     public static final String PREF_FILTER_RECORD_COUNT_DEFAULT = "100";
     static final String PREF_DB_RECORD_COUNT = "PREF_DB_RECORD_COUNT";
     private static final String PREF_DB_RECORD_COUNT_MAX_CAPPED = "10000";
 
     static final String PREF_ENABLE_CONNECTION_TEST = "PREF_ENABLE_CONNECTION_TEST";
-    public static final String PREF_CELL_ID_FORMAT = "PREF_CELL_ID_FORMAT";
-    public static final String PREF_CELL_ID_FORMAT_DEFAULT = "decimal";
-    public static final String PREF_LOCATION_FETCHING_STRATEGY = "PREF_LOCATION_FETCHING_STRATEGY";
     static final String PREF_NOTIFICATION_RINGTONE = "PREF_NOTIFICATION_RINGTONE";
     static final String PREF_NOTIFICATION_ENABLED = "PREF_NOTIFICATION_ENABLED";
     public static final String PREF_EXPORT_GNUPLOT_SERIES = "PREF_EXPORT_GNUPLOT_SERIES";
@@ -238,16 +225,6 @@ public class NetMonPreferences {
     }
 
     /**
-     * @return the format in which numeric cell id fields should be displayed and exported.
-     */
-    public CellIdFormat getCellIdFormat() {
-        String cellIdFormat = mSharedPrefs.getString(NetMonPreferences.PREF_CELL_ID_FORMAT, NetMonPreferences.PREF_CELL_ID_FORMAT_DEFAULT);
-        if ("decimal".equals(cellIdFormat)) return CellIdFormat.DECIMAL;
-        if ("hex".equals(cellIdFormat)) return CellIdFormat.HEX;
-        return CellIdFormat.DECIMAL_HEX;
-    }
-
-    /**
      * @return the implementation of the {@link Scheduler} interface which schedules each logging of data.
      */
     public Class<?> getSchedulerClass() {
@@ -343,34 +320,6 @@ public class NetMonPreferences {
 
     public String getExportGnuplotYAxisField() {
         return mSharedPrefs.getString(PREF_EXPORT_GNUPLOT_Y_AXIS, PREF_EXPORT_GNUPLOT_Y_AXIS_DEFAULT);
-    }
-
-
-    /**
-     * @return the strategy we should use for requesting location updates.
-     */
-    public LocationFetchingStrategy getLocationFetchingStrategy() {
-        String value = mSharedPrefs.getString(PREF_LOCATION_FETCHING_STRATEGY, LocationFetchingStrategy.SAVE_POWER.name());
-        return LocationFetchingStrategy.valueOf(value);
-    }
-
-    /**
-     * Set the strategy we should use for requesting location updates.
-     */
-    private void setLocationFetchingStrategy(LocationFetchingStrategy strategy) {
-        setStringPreference(PREF_LOCATION_FETCHING_STRATEGY, strategy.name());
-    }
-
-    /**
-     * Don't use Google Play Services for requesting location.
-     */
-    public void forceFossLocationFetchingStrategy() {
-        LocationFetchingStrategy strategy = getLocationFetchingStrategy();
-        if (strategy == LocationFetchingStrategy.HIGH_ACCURACY_GMS) {
-            setLocationFetchingStrategy(LocationFetchingStrategy.HIGH_ACCURACY);
-        } else if (strategy == LocationFetchingStrategy.SAVE_POWER_GMS) {
-            setLocationFetchingStrategy(LocationFetchingStrategy.SAVE_POWER);
-        }
     }
 
     /**

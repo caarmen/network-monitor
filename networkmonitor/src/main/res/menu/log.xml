@@ -55,12 +55,6 @@ limitations under the License.
         android:title="@string/action_filter"/>
 
     <item
-        android:id="@+id/action_cell_id_format"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_action_cell_id_format"
-        android:title="@string/action_cell_id_format"/>
-    
-    <item
         android:id="@+id/action_reset_filters"
         app:showAsAction="never"
         android:title="@string/action_reset_filters"/>

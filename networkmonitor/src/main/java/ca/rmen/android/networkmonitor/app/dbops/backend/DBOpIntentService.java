@@ -52,7 +52,6 @@ import ca.rmen.android.networkmonitor.app.dbops.backend.export.ExcelExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.FileExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.GnuplotExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.HTMLExport;
-import ca.rmen.android.networkmonitor.app.dbops.backend.export.kml.KMLExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.imp0rt.DBImport;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
 
@@ -72,7 +71,6 @@ public class DBOpIntentService extends JobIntentService {
         DB,
         EXCEL,
         HTML,
-        KML,
         GNUPLOT,
         SUMMARY
     }
@@ -86,7 +84,6 @@ public class DBOpIntentService extends JobIntentService {
 
     private static final String EXTRA_PURGE_NUM_ROWS_TO_KEEP = "ca.rmen.android.networkmonitor.app.dbops.backend.extra.PURGE_NUM_ROWS_TO_KEEP";
     private static final String EXTRA_EXPORT_FORMAT = "ca.rmen.android.networkmonitor.app.dbops.backend.extra.EXPORT_FILE_FORMAT";
-    private static final String EXTRA_EXPORT_KML_PLACEMARK_COLUMN_NAME = "ca.rmen.android.networkmonitor.app.dbops.backend.extra.EXPORT_KML_PLACEMARK_COLUMN_NAME";
     private static final String EXTRA_DB_OP_TOAST = "ca.rmen.android.networkmonitor.app.dbops.backend.extra.DP_OP_TOAST";
     private static final String EXTRA_DB_OP_NAME = "ca.rmen.android.networkmonitor.app.dbops.backend.extra.DP_OP_NAME";
 
@@ -119,16 +116,6 @@ public class DBOpIntentService extends JobIntentService {
         Intent intent = new Intent(context, DBOpIntentService.class);
         intent.setAction(ACTION_EXPORT);
         intent.putExtra(EXTRA_EXPORT_FORMAT, exportFormat);
-        intent.putExtra(EXTRA_DB_OP_TOAST, context.getString(R.string.export_progress_preparing_export));
-        intent.putExtra(EXTRA_DB_OP_NAME, context.getString(R.string.export_feature_name));
-        enqueueWork(context, intent);
-    }
-
-    public static void startActionKMLExport(Context context, String placemarkNameColumn) {
-        Intent intent = new Intent(context, DBOpIntentService.class);
-        intent.setAction(ACTION_EXPORT);
-        intent.putExtra(EXTRA_EXPORT_FORMAT, ExportFormat.KML);
-        intent.putExtra(EXTRA_EXPORT_KML_PLACEMARK_COLUMN_NAME, placemarkNameColumn);
         intent.putExtra(EXTRA_DB_OP_TOAST, context.getString(R.string.export_progress_preparing_export));
         intent.putExtra(EXTRA_DB_OP_NAME, context.getString(R.string.export_feature_name));
         enqueueWork(context, intent);
@@ -258,10 +245,6 @@ public class DBOpIntentService extends JobIntentService {
                 break;
             case HTML:
                 fileExport = new HTMLExport(this);
-                break;
-            case KML:
-                String placemarkColumnName = extras.getString(EXTRA_EXPORT_KML_PLACEMARK_COLUMN_NAME);
-                fileExport = new KMLExport(this, placemarkColumnName);
                 break;
             case GNUPLOT:
                 fileExport = new GnuplotExport(this);

@@ -23,15 +23,15 @@
  */
 package ca.rmen.android.networkmonitor.app.service.datasources;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentValues;
-import android.content.Context;
-
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.app.service.NetMonService;
-import android.util.Log;
 import java8.util.stream.StreamSupport;
 
 /**
@@ -46,10 +46,8 @@ public class NetMonDataSources {
     private static final Class<?>[] DATA_SOURCE_CLASSES = new Class<?>[] { 
         ActiveNetworkInfoDataSource.class,
         BatteryDataSource.class,
-        CellLocationDataSource.class,
         CellSignalStrengthDataSource.class,
         ConnectionTesterDataSource.class,
-        DeviceLocationDataSource.class,
         MobileDataConnectionDataSource.class,
         SIMDataSource.class,
         ServiceStateDataSource.class,

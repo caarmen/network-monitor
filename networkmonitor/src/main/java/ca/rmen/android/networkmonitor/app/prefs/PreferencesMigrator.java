@@ -25,20 +25,28 @@ package ca.rmen.android.networkmonitor.app.prefs;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import ca.rmen.android.networkmonitor.provider.NetMonColumns;
+
 /**
  * Migrates/fixes any settings from previous installations.
  */
 public class PreferencesMigrator {
 
     private final NetMonPreferences mPrefs;
+    private final List<String> validColumns;
 
     public PreferencesMigrator(Context context) {
         mPrefs = NetMonPreferences.getInstance(context);
+        validColumns = Arrays.asList(NetMonColumns.getColumnNames(context));
     }
 
     public void migratePreferences() {
         migrateTestServer();
-        migrateLocationFetchingStrategy();
+        removeInvalidSelectedColumnNames();
     }
 
     private void migrateTestServer() {
@@ -49,10 +57,14 @@ public class PreferencesMigrator {
         }
     }
 
-    private void migrateLocationFetchingStrategy() {
-        // If we previously had a proprietary build, and we switch to a foss build,
-        // we can't use the proprietary (gms) location fetching strategies.
-        mPrefs.forceFossLocationFetchingStrategy();
+    private void removeInvalidSelectedColumnNames() {
+        List<String> selectedColumns = mPrefs.getSelectedColumns();
+        List<String> invalidColumns = new ArrayList<>();
+        for (String selectedColumn : selectedColumns) {
+            if (!validColumns.contains(selectedColumn)) invalidColumns.add(selectedColumn);
+        }
+        selectedColumns.removeAll(invalidColumns);
+        mPrefs.setSelectedColumns(selectedColumns);
     }
 
 }

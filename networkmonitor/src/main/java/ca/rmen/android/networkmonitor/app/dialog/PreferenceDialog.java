@@ -32,7 +32,6 @@ import androidx.appcompat.app.AlertDialog;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.prefs.NetMonPreferences;
-import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import android.util.Log;
 
 /**
@@ -54,28 +53,12 @@ public class PreferenceDialog {
     private static final String TAG = Constants.TAG + PreferenceDialog.class.getSimpleName();
 
     /**
-     * Show the user a dialog to select the primary data field for a KML export.
-     */
-    public static void showKMLExportColumnChoiceDialog(Context context, PreferenceDialog.PreferenceChoiceDialogListener listener) {
-        showPreferenceChoiceDialog(context, NetMonPreferences.PREF_KML_EXPORT_COLUMN, NetMonColumns.SOCKET_CONNECTION_TEST, R.array.db_columns,
-                NetMonColumns.getColumnLabels(context), R.string.export_kml_choice_title, listener);
-    }
-
-    /**
      * Show the user a dialog to select how many records to display in the log view.
      */
     public static Dialog showFilterRecordCountChoiceDialog(Context context, PreferenceDialog.PreferenceChoiceDialogListener listener) {
         return showPreferenceChoiceDialog(context, NetMonPreferences.PREF_FILTER_RECORD_COUNT, NetMonPreferences.PREF_FILTER_RECORD_COUNT_DEFAULT,
                 R.array.preferences_filter_record_count_values, R.array.preferences_filter_record_count_labels, R.string.pref_title_filter_record_count,
                 listener);
-    }
-
-    /**
-     * Show the user a dialog to choose the format for the cell ids.
-     */
-    public static Dialog showCellIdFormatChoiceDialog(Context context, PreferenceDialog.PreferenceChoiceDialogListener listener) {
-        return showPreferenceChoiceDialog(context, NetMonPreferences.PREF_CELL_ID_FORMAT, NetMonPreferences.PREF_CELL_ID_FORMAT_DEFAULT,
-                R.array.preferences_cell_id_format_values, R.array.preferences_cell_id_format_labels, R.string.pref_title_cell_id_format, listener);
     }
 
     /**

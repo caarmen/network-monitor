@@ -29,7 +29,6 @@ limitations under the License.
     <string name="export_choice_title">Choisissez le format</string>
     <string name="export_choice_csv">CSV</string>
     <string name="export_choice_html">HTML</string>
-    <string name="export_choice_kml">KML</string>
     <string name="export_choice_gnuplot">Gnuplot</string>
     <string name="export_gnuplot_title">Préférences de l\'exportation Gnuplot</string>
     <string name="export_gnuplot_y_axis_title">Champ de l\'axe des y</string>
@@ -39,7 +38,6 @@ limitations under the License.
     <string name="export_choice_excel">Excel</string>
     <string name="export_choice_db">Base de données</string>
     <string name="export_choice_text">Résumé en texte</string>
-    <string name="export_kml_choice_title">Choisissez un champ</string>
     <string name="export_progress_preparing_export">Préparation de l\'export&#8230;</string>
     <string name="export_error_no_mobile_tests">Aucun test n\'a été effectué avec une connexion data mobile.</string>
     <string name="export_message_text">Le résumé suivant énumère les antennes relais et points d\'accès WiFi, et les résultats de leurs tests. Pour chaque antenne relais ou point d\'accès WiFi, vous pouvez voir le %% de tests de connexion qui ont réussi, et le nombre total de tests effectués. 
