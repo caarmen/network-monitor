@@ -23,7 +23,6 @@
  */
 package ca.rmen.android.networkmonitor.app.dbops.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -45,7 +44,6 @@ import ca.rmen.android.networkmonitor.BuildConfig;
 import ca.rmen.android.networkmonitor.Constants;
 import ca.rmen.android.networkmonitor.R;
 import ca.rmen.android.networkmonitor.app.dbops.backend.DBOpIntentService;
-import ca.rmen.android.networkmonitor.app.dialog.PreferenceDialog;
 
 /**
  *
@@ -120,10 +118,6 @@ public class Share {
             exportFormat = DBOpIntentService.ExportFormat.CSV;
         } else if (activity.getString(R.string.export_choice_html).equals(selectedShareFormat)) {
             exportFormat = DBOpIntentService.ExportFormat.HTML;
-        } else if (activity.getString(R.string.export_choice_kml).equals(selectedShareFormat)) {
-            // The KML export requires a second dialog before we can share, so we return here.
-            shareKml(activity);
-            return;
         } else if (activity.getString(R.string.export_choice_gnuplot).equals(selectedShareFormat)) {
             // The gnuplot export requires a second activity before we can share, so we return here.
             shareGnuplot(activity);
@@ -136,26 +130,6 @@ public class Share {
             exportFormat = DBOpIntentService.ExportFormat.SUMMARY;
         }
         DBOpIntentService.startActionExport(activity, exportFormat);
-    }
-
-    /**
-     * Prompt a user for the field they want to export to KML, then do the export.
-     */
-    private static void shareKml(final FragmentActivity activity) {
-        Log.v(TAG, "shareKml");
-
-        PreferenceDialog.showKMLExportColumnChoiceDialog(activity, new PreferenceDialog.PreferenceChoiceDialogListener() {
-
-            @Override
-            public void onPreferenceValueSelected(String value) {
-                DBOpIntentService.startActionKMLExport(activity, value);
-            }
-
-            @Override
-            public void onCancel() {
-                activity.setResult(Activity.RESULT_CANCELED);
-            }
-        });
     }
 
     private static void shareGnuplot(final FragmentActivity activity) {

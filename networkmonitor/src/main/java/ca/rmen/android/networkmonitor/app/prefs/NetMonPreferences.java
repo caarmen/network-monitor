@@ -65,7 +65,6 @@ public class NetMonPreferences {
     public static final String PREF_SORT_ORDER = "PREF_SORT_ORDER";
     public static final String PREF_SORT_COLUMN_NAME = "PREF_SORT_COLUMN_NAME";
 
-    public static final String PREF_KML_EXPORT_COLUMN = "PREF_KML_EXPORT_COLUMN";
     public static final String PREF_FILTER_RECORD_COUNT = "PREF_FILTER_RECORD_COUNT";
     public static final String PREF_FILTER_RECORD_COUNT_DEFAULT = "100";
     static final String PREF_DB_RECORD_COUNT = "PREF_DB_RECORD_COUNT";

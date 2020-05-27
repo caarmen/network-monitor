@@ -39,11 +39,9 @@ import ca.rmen.android.networkmonitor.app.dbops.backend.export.FileExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.GnuplotExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.HTMLExport;
 import ca.rmen.android.networkmonitor.app.dbops.backend.export.SummaryExport;
-import ca.rmen.android.networkmonitor.app.dbops.backend.export.kml.KMLExport;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailConfig;
 import ca.rmen.android.networkmonitor.app.email.EmailPreferences.EmailSecurity;
 import ca.rmen.android.networkmonitor.app.service.NetMonNotification;
-import ca.rmen.android.networkmonitor.provider.NetMonColumns;
 import java8.util.stream.Collectors;
 import java8.util.stream.StreamSupport;
 
@@ -169,9 +167,6 @@ public class ReportEmailer {
                 break;
             case "excel":
                 fileExport = new ExcelExport(mContext);
-                break;
-            case "kml":
-                fileExport = new KMLExport(mContext, NetMonColumns.SOCKET_CONNECTION_TEST);
                 break;
             case "gnuplot":
                 fileExport = new GnuplotExport(mContext);

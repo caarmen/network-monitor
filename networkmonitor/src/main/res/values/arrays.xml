@@ -88,7 +88,6 @@ limitations under the License.
         <item>@string/export_choice_csv</item>
         <item>@string/export_choice_html</item>
         <item>@string/export_choice_excel</item>
-        <item>@string/export_choice_kml</item>
         <item>@string/export_choice_gnuplot</item>
         <item>@string/export_choice_db</item>
         <item>@string/export_choice_text</item>
@@ -169,7 +168,6 @@ limitations under the License.
         <item>CSV</item>
         <item>HTML</item>
         <item>Excel</item>
-        <item>KML</item>
         <item>Gnuplot</item>
         <item>@string/pref_value_email_report_format_db</item>
     </string-array>
@@ -177,7 +175,6 @@ limitations under the License.
         <item>csv</item>
         <item>html</item>
         <item>excel</item>
-        <item>kml</item>
         <item>gnuplot</item>
         <item>db</item>
     </string-array>
